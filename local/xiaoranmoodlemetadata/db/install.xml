@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/xiaoranmoodlemetadata/db" VERSION="20160201" COMMENT="XMLDB file for Moodle local/xiaoranmoodlemetadata"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="courseinfo" COMMENT="course general information">
+      <FIELDS>
+        <FIELD NAME="coursename" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="coursetopic" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="coursedescription" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="courseinstructor" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="coursereadings" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="coursefaculty" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="courseid" TYPE="primary" FIELDS="courseid" COMMENT="id of the course"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="local_xiaoranmoodlemetadata" COMMENT="Default comment for local_xiaoranmoodlemetadata, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="courseassessment" COMMENT="assessment info">
+      <FIELDS>
+        <FIELD NAME="assesmentname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="assesmentweight" TYPE="int" LENGTH="2" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="assessment's grade in %"/>
+        <FIELD NAME="assessmentduedate" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="assesmentid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="courseinfo" REFFIELDS="courseid"/>
+        <KEY NAME="assesmentid" TYPE="primary" FIELDS="assesmentid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="coursereadings" COMMENT="readings info include url">
+      <FIELDS>
+        <FIELD NAME="readingurl" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="readingname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="readingid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="readingid" TYPE="primary" FIELDS="readingid"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
