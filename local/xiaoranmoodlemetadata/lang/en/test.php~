@@ -6,7 +6,7 @@
 	$DBname = "moodledb";
 	$DBusername = "moodleuser";
 	$DBpassword = "moodlepassword";
-	$conn = new mysqli($DBname, $DBusername, $DBpassword);
+	$conn = new mysqli($DBname, $DBusername, $password);
 
 	// Check connection
 	if ($conn->connect_error) {
