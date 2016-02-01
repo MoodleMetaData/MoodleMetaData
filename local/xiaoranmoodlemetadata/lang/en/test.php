@@ -1,0 +1,3 @@
+<?php
+	$DBusername = "admin";
+?>
