@@ -7,7 +7,7 @@
     <TABLE NAME="courseinfo" COMMENT="course general information">
       <FIELDS>
         <FIELD NAME="coursename" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="coursetopic" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="courseobject" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="coursedescription" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="courseinstructor" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="coursefaculty" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
@@ -40,6 +40,16 @@
       <KEYS>
         <KEY NAME="readingid" TYPE="primary" FIELDS="readingid"/>
         <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="courseinfo" REFFIELDS="courseid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="changeme" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sessiondate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="sessiontopic" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="sessionid" TYPE="primary" FIELDS="sessionid"/>
       </KEYS>
     </TABLE>
   </TABLES>

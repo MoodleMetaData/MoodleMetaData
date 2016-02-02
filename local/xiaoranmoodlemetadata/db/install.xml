@@ -7,7 +7,7 @@
     <TABLE NAME="courseinfo" COMMENT="course general information">
       <FIELDS>
         <FIELD NAME="coursename" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="courseobject" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="coursetopic" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="coursedescription" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="courseinstructor" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="coursefaculty" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
