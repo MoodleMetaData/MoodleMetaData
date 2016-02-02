@@ -1,4 +1,4 @@
 <?php
-	$string['pluginname'] = 'CMPUT 401 Demo Plug-in';
+	$string['pluginname'] = 'xiaoran_moodle_Plug-in';
 	
 ?> 
