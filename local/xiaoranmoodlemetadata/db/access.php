@@ -1,6 +1,6 @@
 <?php
 	$capabilities = array(	    
-	    'local/feedback_ec10:add' => array(		
+	    'local/xiaoranmoodlemetadata:add' => array(		
 		'captype' => 'write',
 		'contextlevel' => CONTEXT_SYSTEM,
 		'archetypes' => array( // The roles that you want to allow
