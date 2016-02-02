@@ -13,7 +13,7 @@
 
         // Rename field courseobject on table courseinfo to NEWNAMEGOESHERE.
         $table = new xmldb_table('courseinfo');
-        $field = new xmldb_field('courseobject', XMLDB_TYPE_TEXT, null, null, null, null, null, 'coursename');
+        $field = new xmldb_field('coursetopic', XMLDB_TYPE_TEXT, null, null, null, null, null, 'coursename');
 
         // Launch rename field courseobject.
         $dbman->rename_field($table, $field, 'NEWNAMEGOESHERE');
