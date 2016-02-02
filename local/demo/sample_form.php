@@ -34,8 +34,20 @@ class sample_form extends moodleform {
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 
 		//Add all your form elements here
+		$mform->addElement('text', 'email', get_string('email'));
 
-	}
+$select = $mform->addElement('select', 'colors', get_string('colors'), array('red', 'blue', 'green'), $attributes);
+$select->setMultiple(true);
+
+		//normally you use add_action_buttons instead of this code
+	$buttonarray=array();
+	$buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
+	$buttonarray[] = &$mform->createElement('reset', 'resetbutton', get_string('revert'));
+	$buttonarray[] = &$mform->createElement('cancel');
+	$mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
+	$mform->closeHeaderBefore('buttonar');
+
+}
 	
 	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
 	function validation($data, $files) {
@@ -46,6 +58,6 @@ class sample_form extends moodleform {
 		//	$errors['element_to_display_error'] = get_string('error', 'local_demo_plug-in');
 		//}
 }
-
+}
 ?>
 

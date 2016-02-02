@@ -29,13 +29,16 @@ require_once('../../config.php');
 
 require_login();
 require_capability('local/demo:add', context_system::instance());
+require_once($CFG->dirroot.'/local/demo/sample_form.php');
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('pluginname', 'local_demo'));
 $PAGE->set_heading(get_string('pluginname', 'local_demo'));
-$PAGE->set_url($CFG->wwwroot.'/local/demo_plug-in/view.php');
+$PAGE->set_url($CFG->wwwroot.'/local/demo/view.php');
+$mform = new sample_form();
 
-//echo $OUTPUT->header();
-//echo $OUTPUT->footer();
+echo $OUTPUT->header();
+$mform->display();
+echo $OUTPUT->footer();
 
 ?>
