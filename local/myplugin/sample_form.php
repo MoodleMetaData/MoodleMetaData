@@ -9,7 +9,7 @@
             global $CFG, $DB, $USER; //Declare our globals for use
             $mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
             //Add all your form elements here
-            $mform->addElement('text', 'email', get_string('email'), 'maxlength="100" size="25" ');
+            $mform->addElement('text', 'email', get_string('email', 'local_myplugin'), 'maxlength="100" size="25" ');
         }
     }
     
