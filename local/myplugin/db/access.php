@@ -1,7 +1,7 @@
 <?php
 	$capabilities = array(
     
-    'local/demo:add' => array(
+    'local/myplugin:add' => array(
         
         'captype' => 'write',
         'contextlevel' => CONTEXT_SYSTEM,
