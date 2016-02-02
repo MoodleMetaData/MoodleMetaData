@@ -9,6 +9,41 @@
     	* Version 2015111701 adds new columns to the feedback_form to indicate who owns the form and the visibility of the form.
     	* The owner is identified by the user ID and is a foreign key reference.
     	*/
+    if ($oldversion < 20160202) {
+
+        // Rename field courseobject on table courseinfo to NEWNAMEGOESHERE.
+        $table = new xmldb_table('courseinfo');
+        $field = new xmldb_field('courseobject', XMLDB_TYPE_TEXT, null, null, null, null, null, 'coursename');
+
+        // Launch rename field courseobject.
+        $dbman->rename_field($table, $field, 'NEWNAMEGOESHERE');
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160202, 'local', 'xiaoranmoodlemetadata');
+    }
+
+    	if ($oldversion < 20160202) {
+
+      	  // Define table coursesession to be created.
+      	  $table = new xmldb_table('coursesession');
+
+      	  // Adding fields to table coursesession.
+      	  $table->add_field('sessionid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+      	  $table->add_field('sessiondate', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+      	  $table->add_field('sessiontopic', XMLDB_TYPE_TEXT, null, null, null, null, null);
+
+       	 // Adding keys to table coursesession.
+       	 $table->add_key('sessionid', XMLDB_KEY_PRIMARY, array('sessionid'));
+
+       	 // Conditionally launch create table for coursesession.
+        	if (!$dbman->table_exists($table)) {
+       	     		$dbman->create_table($table);
+        	}
+
+       	 // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160202, 'local', 'xiaoranmoodlemetadata');
+    	}
+
     	if ($oldversion < 20160201) {
 
 		// Define table courseinfo to be created.
