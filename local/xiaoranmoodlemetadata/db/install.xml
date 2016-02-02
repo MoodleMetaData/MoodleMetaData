@@ -10,7 +10,6 @@
         <FIELD NAME="coursetopic" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="coursedescription" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="courseinstructor" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="coursereadings" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="coursefaculty" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
@@ -44,9 +43,11 @@
         <FIELD NAME="readingurl" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="readingname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="readingid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="readingid" TYPE="primary" FIELDS="readingid"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="courseinfo" REFFIELDS="courseid"/>
       </KEYS>
     </TABLE>
   </TABLES>
