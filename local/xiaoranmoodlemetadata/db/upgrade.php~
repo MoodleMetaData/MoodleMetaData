@@ -11,16 +11,17 @@
     	*/
     if ($oldversion < 20160202) {
 
-        // Rename field courseobject on table courseinfo to NEWNAMEGOESHERE.
+        // Rename field courseobject on table courseinfo to courseobject.
         $table = new xmldb_table('courseinfo');
         $field = new xmldb_field('coursetopic', XMLDB_TYPE_TEXT, null, null, null, null, null, 'coursename');
 
         // Launch rename field courseobject.
-        $dbman->rename_field($table, $field, 'NEWNAMEGOESHERE');
+        $dbman->rename_field($table, $field, 'courseobject');
 
         // Xiaoranmoodlemetadata savepoint reached.
         upgrade_plugin_savepoint(true, 20160202, 'local', 'xiaoranmoodlemetadata');
     }
+
 
     	if ($oldversion < 20160202) {
 
