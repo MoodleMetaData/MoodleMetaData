@@ -11,6 +11,34 @@
     	*/
     if ($oldversion < 20160203) {
 
+        // Define key courseid (foreign) to be added to coursesession.
+        $table = new xmldb_table('coursesession');
+        $key = new xmldb_key('courseid', XMLDB_KEY_FOREIGN, array('courseid'), 'courseinfo', array('courseid'));
+
+        // Launch add key courseid.
+        $dbman->add_key($table, $key);
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160203, 'local', 'xiaoranmoodlemetadata');
+    }
+
+    if ($oldversion < 20160203) {
+
+        // Define field courseid to be added to coursesession.
+        $table = new xmldb_table('coursesession');
+        $field = new xmldb_field('courseid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null, 'sessiontopic');
+
+        // Conditionally launch add field courseid.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160203, 'local', 'xiaoranmoodlemetadata');
+    }
+
+    if ($oldversion < 20160203) {
+
         // Define field sessionname to be added to coursesession.
         $table = new xmldb_table('coursesession');
         $field = new xmldb_field('sessionname', XMLDB_TYPE_TEXT, null, null, null, null, null, 'sessiontopic');
