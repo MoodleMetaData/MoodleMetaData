@@ -9,6 +9,20 @@
     	* Version 2015111701 adds new columns to the feedback_form to indicate who owns the form and the visibility of the form.
     	* The owner is identified by the user ID and is a foreign key reference.
     	*/
+    if ($oldversion < 20160210) {
+
+        // Define field assessmenttype to be added to courseassessment.
+        $table = new xmldb_table('courseassessment');
+        $field = new xmldb_field('assessmenttype', XMLDB_TYPE_TEXT, null, null, null, null, null, 'description');
+
+        // Conditionally launch add field assessmenttype.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160210, 'local', 'xiaoranmoodlemetadata');
+    }
 
     if ($oldversion < 20160209) {
 
