@@ -10,7 +10,7 @@
     	* The owner is identified by the user ID and is a foreign key reference.
     	*/
 
-    if ($oldversion < 20160210) {
+    if ($oldversion < 20160209) {
 
         // Define field description to be added to courseassessment.
         $table = new xmldb_table('courseassessment');
