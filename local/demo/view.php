@@ -43,3 +43,30 @@ $mform->display();
 echo $OUTPUT->footer();
 
 ?>
+
+<html>
+    <div id="demo" class="yui3-skin-sam">
+  <ul>
+    <li><a href="#asparagus">Asparagus</a></li>
+    <li><a href="#bird">Bird</a></li>
+    <li><a href="#coffee">Coffee</a></li>
+  </ul>
+  <div>
+    <div id="asparagus">
+      <a href="http://www.flickr.com/photos/allenr/4686935131/">
+        <img src="http://farm5.static.flickr.com/4005/4686935131_253e921bf7_m.jpg" alt="Asparagus">
+      </a>
+    </div>
+    <div id="bird">
+      <a href="http://www.flickr.com/photos/allenr/66307916/">
+        <img src="http://farm1.static.flickr.com/26/66307916_811efccdfc_m.jpg" alt="Bird">
+      </a>
+    </div>
+    <div id="coffee">
+      <a href="http://www.flickr.com/photos/allenr/4638474362/">
+        <img src="http://farm4.static.flickr.com/3336/4638474362_093edb7565_m.jpg" alt="Coffee">
+      </a>
+    </div>
+  </div>
+</div>
+</html>
