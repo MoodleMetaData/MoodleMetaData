@@ -10,38 +10,7 @@
     	* The owner is identified by the user ID and is a foreign key reference.
     	*/
 
-    if ($oldversion < 20160209) {
-
-        // Define field objective to be added to courseassessment.
-        $table = new xmldb_table('courseassessment');
-        $field = new xmldb_field('objective', XMLDB_TYPE_TEXT, null, null, null, null, null, 'assessmenttype');
-
-        // Conditionally launch add field objective.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        // Xiaoranmoodlemetadata savepoint reached.
-        upgrade_plugin_savepoint(true, 20160209, 'local', 'xiaoranmoodlemetadata');
-    }
-
-
-    if ($oldversion < 20160209) {
-        // Define field type to be added to courseassessment.
-        $table = new xmldb_table('courseassessment');
-        $field = new xmldb_field('assessmenttype', XMLDB_TYPE_TEXT, null, null, null, null, null, 'description');
-
-        // Conditionally launch add field type.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        // Xiaoranmoodlemetadata savepoint reached.
-        upgrade_plugin_savepoint(true, 20160209, 'local', 'xiaoranmoodlemetadata');
-    }
-
-
-    if ($oldversion < 20160209) {
+    if ($oldversion < 20160210) {
 
         // Define field description to be added to courseassessment.
         $table = new xmldb_table('courseassessment');
@@ -55,8 +24,6 @@
         // Xiaoranmoodlemetadata savepoint reached.
         upgrade_plugin_savepoint(true, 20160209, 'local', 'xiaoranmoodlemetadata');
     }
-
-
 
 
     if ($oldversion < 20160208) {
