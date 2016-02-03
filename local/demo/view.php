@@ -5,17 +5,21 @@ require_once('../../config.php');
 require_login();
 require_capability('local/demo:add', context_system::instance());
 require_once($CFG->dirroot.'/local/demo/sample_form.php');
+require_once($CFG->dirroot.'/local/demo/second_form.php');
+
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('pluginname', 'local_demo'));
 $PAGE->set_heading(get_string('pluginname', 'local_demo'));
 $PAGE->set_url($CFG->wwwroot.'/local/demo/view.php');
 $PAGE->requires->js('/local/demo/tabview.js');
+
 $form_one = new sample_form();
 $form_two = new second_form();
 
 echo $OUTPUT->header();
 ?>
+
 <html>
     <div id="demo" class="yui3-skin-sam">
   <ul>
@@ -33,12 +37,11 @@ echo $OUTPUT->header();
     </div>
     <div id="tab_three">
       <!-- content TAB THREE -->
+      <b>This is the third tabview.</b>
     </div>
   </div>
 </div>
 </html>
 
-<?php
-echo $OUTPUT->footer();
-?>
+<?php echo $OUTPUT->footer(); ?>
 

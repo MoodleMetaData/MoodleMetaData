@@ -11,8 +11,16 @@ class sample_form extends moodleform {
 		//Add all your form elements here
 		$mform->addElement('text', 'email', get_string('email'));
 
-		$select = $mform->addElement('select', 'colors', get_string('colors'), array('red', 'blue', 'green'), $attributes);
-		$select->setMultiple(true);
+		//get all courses from database
+		$courses_query = "SELECT * FROM {course}";
+		$courses = array();
+		if($result=$DB->get_records_sql($courses_query)){
+			foreach($result as $item){
+				$courses[] = $item->shortname;
+			}
+		}
+		
+		$select = $mform->addElementaddElement('select', 'courses', get_string('courses'), $courses);
 
 		//normally you use add_action_buttons instead of this code
 		$buttonarray=array();

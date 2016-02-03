@@ -26,5 +26,6 @@
 
 //$string['menuoption'] = 'Demo Plug-in';
 $string['pluginname'] = 'CMPUT 401 Demo Plug-in';
+$string['courses'] = 'Courses';
 
 ?>
