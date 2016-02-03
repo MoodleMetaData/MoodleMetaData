@@ -11,7 +11,22 @@
     	*/
     if ($oldversion < 20160202) {
 
-        // Rename field courseobject on table courseinfo to courseobject.
+        // Define field sessionname to be added to coursesession.
+        $table = new xmldb_table('coursesession');
+        $field = new xmldb_field('sessionname', XMLDB_TYPE_TEXT, null, null, null, null, null, 'sessiontopic');
+
+        // Conditionally launch add field sessionname.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, XXXXXXXXXX, 'local', 'xiaoranmoodlemetadata');
+    }
+
+    if ($oldversion < 20160202) {
+
+        // Rename field coursetopic on table courseinfo to courseobject.
         $table = new xmldb_table('courseinfo');
         $field = new xmldb_field('coursetopic', XMLDB_TYPE_TEXT, null, null, null, null, null, 'coursename');
 
