@@ -9,7 +9,7 @@
     	* Version 2015111701 adds new columns to the feedback_form to indicate who owns the form and the visibility of the form.
     	* The owner is identified by the user ID and is a foreign key reference.
     	*/
-    if ($oldversion < 20160206) {
+    if ($oldversion < 20160207) {
 
         // Define key courseinstructor (foreign) to be added to courseinfo.
         $table = new xmldb_table('courseinfo');
@@ -19,8 +19,9 @@
         $dbman->add_key($table, $key);
 
         // Xiaoranmoodlemetadata savepoint reached.
-        upgrade_plugin_savepoint(true, 20160206, 'local', 'xiaoranmoodlemetadata');
+        upgrade_plugin_savepoint(true, 20160207, 'local', 'xiaoranmoodlemetadata');
     }
+
 
 
     if ($oldversion < 20160206) {
