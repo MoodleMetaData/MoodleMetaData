@@ -1,3 +1,5 @@
+// taken from http://yuilibrary.com/yui/docs/history/history-tabview.html#
+
 YUI().use('history', 'tabview', function (Y) {
   var history = new Y.HistoryHash(),
       tabview = new Y.TabView({srcNode: '#demo'});
