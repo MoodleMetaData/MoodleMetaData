@@ -9,6 +9,56 @@
     	* Version 2015111701 adds new columns to the feedback_form to indicate who owns the form and the visibility of the form.
     	* The owner is identified by the user ID and is a foreign key reference.
     	*/
+
+    if ($oldversion < 20160209) {
+
+        // Define field objective to be added to courseassessment.
+        $table = new xmldb_table('courseassessment');
+        $field = new xmldb_field('objective', XMLDB_TYPE_TEXT, null, null, null, null, null, 'assessmenttype');
+
+        // Conditionally launch add field objective.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160209, 'local', 'xiaoranmoodlemetadata');
+    }
+
+
+    if ($oldversion < 20160209) {
+        // Define field type to be added to courseassessment.
+        $table = new xmldb_table('courseassessment');
+        $field = new xmldb_field('assessmenttype', XMLDB_TYPE_TEXT, null, null, null, null, null, 'description');
+
+        // Conditionally launch add field type.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160209, 'local', 'xiaoranmoodlemetadata');
+    }
+
+
+    if ($oldversion < 20160209) {
+
+        // Define field description to be added to courseassessment.
+        $table = new xmldb_table('courseassessment');
+        $field = new xmldb_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null, 'assesmentid');
+
+        // Conditionally launch add field description.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160209, 'local', 'xiaoranmoodlemetadata');
+    }
+
+
+
+
     if ($oldversion < 20160208) {
 
         // Changing type of field assessmentduedate on table courseassessment to int.
@@ -22,36 +72,6 @@
         upgrade_plugin_savepoint(true, 20160208, 'local', 'xiaoranmoodlemetadata');
     }
 
-
-    if ($oldversion < 20160208) {
-
-        // Define field objective to be added to courseassessment.
-        $table = new xmldb_table('courseassessment');
-        $field = new xmldb_field('objective', XMLDB_TYPE_TEXT, null, null, null, null, null, 'assessmenttype');
-
-        // Conditionally launch add field objective.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        // Xiaoranmoodlemetadata savepoint reached.
-        upgrade_plugin_savepoint(true, 20160208, 'local', 'xiaoranmoodlemetadata');
-    }
-
-
-    if ($oldversion < 20160208) {
-        // Define field type to be added to courseassessment.
-        $table = new xmldb_table('courseassessment');
-        $field = new xmldb_field('assessmenttype', XMLDB_TYPE_TEXT, null, null, null, null, null, 'description');
-
-        // Conditionally launch add field type.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        // Xiaoranmoodlemetadata savepoint reached.
-        upgrade_plugin_savepoint(true, 20160208, 'local', 'xiaoranmoodlemetadata');
-    }
 
 
     if ($oldversion < 20160207) {
