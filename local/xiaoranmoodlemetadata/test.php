@@ -1,16 +1,17 @@
+
+
 <?php
 	global $PAGE, $CFG, $DB;
-	require_once $CFG->dirroot.'/lib/formslib.php';
-	require_once $CFG->dirroot.'/lib/datalib.php';
-   require_once('../../config.php');
+//	require_once $CFG->dirroot.'/lib/formslib.php';
+//	require_once $CFG->dirroot.'/lib/datalib.php';
+   	require_once('../../config.php');
    // $PAGE ->set_title(get_string('pluginname','local_xiaoranmoodlemetadata'));
-   //echo "this is just a test";
-	$sqlmy = "SELECT * FROM {mdl_courseinfo}");
+   	echo "this is just a test";
+	$sqlmy = "SELECT * FROM {courseinfo}";
  	if($result=$DB->get_records_sql($sqlmy)){
 	 	echo'<table border="1"><tr>
 		<th>coursename</th>
 		<th>courseobject</th>
-		<th>coursedescription</th>
 		<th>coursedescription</th>
 		<th>courseinstructor</th>
 		<th>coursefaculty</th>
@@ -23,4 +24,5 @@
 		echo '</table>';
 	}
 ?>
+
 
