@@ -35,6 +35,7 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('pluginname', 'local_demo'));
 $PAGE->set_heading(get_string('pluginname', 'local_demo'));
 $PAGE->set_url($CFG->wwwroot.'/local/demo/view.php');
+$PAGE->requires->js('/local/demo/tabview.js');
 $mform = new sample_form();
 
 echo $OUTPUT->header();
