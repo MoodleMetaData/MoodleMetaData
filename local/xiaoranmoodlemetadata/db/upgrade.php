@@ -27,7 +27,7 @@
 
         // Define field objective to be added to courseassessment.
         $table = new xmldb_table('courseassessment');
-        $field = new xmldb_field('objective', XMLDB_TYPE_TEXT, null, null, null, null, null, 'type');
+        $field = new xmldb_field('objective', XMLDB_TYPE_TEXT, null, null, null, null, null, 'assessmenttype');
 
         // Conditionally launch add field objective.
         if (!$dbman->field_exists($table, $field)) {
@@ -42,7 +42,7 @@
     if ($oldversion < 20160208) {
         // Define field type to be added to courseassessment.
         $table = new xmldb_table('courseassessment');
-        $field = new xmldb_field('type', XMLDB_TYPE_TEXT, null, null, null, null, null, 'description');
+        $field = new xmldb_field('assessmenttype', XMLDB_TYPE_TEXT, null, null, null, null, null, 'description');
 
         // Conditionally launch add field type.
         if (!$dbman->field_exists($table, $field)) {
