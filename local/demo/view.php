@@ -12,6 +12,7 @@ $PAGE->set_heading(get_string('pluginname', 'local_demo'));
 $PAGE->set_url($CFG->wwwroot.'/local/demo/view.php');
 $PAGE->requires->js('/local/demo/tabview.js');
 $form_one = new sample_form();
+$form_two = new second_form();
 
 echo $OUTPUT->header();
 ?>
@@ -28,7 +29,7 @@ echo $OUTPUT->header();
       <?php $form_one->display(); ?>
     </div>
     <div id="tab_two">
-      <!-- content TAB TWO -->
+      <?php $form_two->display(); ?>
     </div>
     <div id="tab_three">
       <!-- content TAB THREE -->
