@@ -9,7 +9,7 @@
     	* Version 2015111701 adds new columns to the feedback_form to indicate who owns the form and the visibility of the form.
     	* The owner is identified by the user ID and is a foreign key reference.
     	*/
-    if ($oldversion < 20160212) {
+    if ($oldversion < 20160213) {
 
         // Define field sessiondescription to be added to coursesession.
         $table = new xmldb_table('coursesession');

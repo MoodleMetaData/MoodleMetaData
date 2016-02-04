@@ -21,7 +21,7 @@
         }
 
         // Xiaoranmoodlemetadata savepoint reached.
-        upgrade_plugin_savepoint(true, 20160212, 'local', 'xiaoranmoodlemetadata');
+        upgrade_plugin_savepoint(true, 20160213, 'local', 'xiaoranmoodlemetadata');
     }
     	
     if ($oldversion < 20160212) {
