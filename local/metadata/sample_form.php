@@ -11,18 +11,16 @@ class sample_form extends moodleform {
 		//Add all your form elements here
 		$mform->addElement('text', 'email', get_string('email'));
 
-		/*
 		//get all courses from database
+		
 		$courses_query = "SELECT * FROM {course}";
+		$result = mysql_query($courses_query);
 		$courses = array();
-		if($result=$DB->get_records_sql($courses_query)){
-			foreach($result as $item){
-				$courses[] = $item->shortname;
-			}
+		while ($row = mysql_fetch_array($result)) {
+			array_push($courses, $row["shortname"]);
 		}
 		
 		$select = $mform->addElementaddElement('select', 'courses', get_string('courses'), $courses);
-		*/
 		
 		//normally you use add_action_buttons instead of this code
 		$buttonarray=array();
