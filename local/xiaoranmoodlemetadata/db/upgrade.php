@@ -9,6 +9,20 @@
     	* Version 2015111701 adds new columns to the feedback_form to indicate who owns the form and the visibility of the form.
     	* The owner is identified by the user ID and is a foreign key reference.
     	*/
+    if ($oldversion < 20160213) {
+
+        // Define field sessiondescription to be added to coursesession.
+        $table = new xmldb_table('coursesession');
+        $field = new xmldb_field('sessiondescription', XMLDB_TYPE_TEXT, null, null, null, null, null, 'sessiontype');
+
+        // Conditionally launch add field sessiondescription.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160212, 'local', 'xiaoranmoodlemetadata');
+    }
     	
     if ($oldversion < 20160212) {
 
@@ -40,22 +54,6 @@
         $field = new xmldb_field('sessiontype', XMLDB_TYPE_TEXT, null, null, null, null, null, 'courseid');
 
         // Conditionally launch add field sessiontype.
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        // Xiaoranmoodlemetadata savepoint reached.
-        upgrade_plugin_savepoint(true, 20160212, 'local', 'xiaoranmoodlemetadata');
-    }
-    	
-
-    if ($oldversion < 20160212) {
-
-        // Define field sessiondescription to be added to coursesession.
-        $table = new xmldb_table('coursesession');
-        $field = new xmldb_field('sessiondescription', XMLDB_TYPE_TEXT, null, null, null, null, null, 'sessiontype');
-
-        // Conditionally launch add field sessiondescription.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
