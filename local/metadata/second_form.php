@@ -3,7 +3,7 @@ require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
-class sample_form extends moodleform {
+class second_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
@@ -11,26 +11,8 @@ class sample_form extends moodleform {
 		//Add all your form elements here
 		$mform->addElement('text', 'email', get_string('email'));
 
-		/*
-		//get all courses from database
-		$courses_query = "SELECT * FROM {course}";
-		$courses = array();
-		if($result=$DB->get_records_sql($courses_query)){
-			foreach($result as $item){
-				$courses[] = $item->shortname;
-			}
-		}
-		
-		$select = $mform->addElementaddElement('select', 'courses', get_string('courses'), $courses);
-		*/
-		
-		//normally you use add_action_buttons instead of this code
-		$buttonarray=array();
-		$buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
-		$buttonarray[] = &$mform->createElement('reset', 'resetbutton', get_string('revert'));
-		$buttonarray[] = &$mform->createElement('cancel');
-		$mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
-		$mform->closeHeaderBefore('buttonar');
+		$select = $mform->addElement('select', 'colors', get_string('colors'), array('red', 'blue', 'green'), $attributes);
+		$select->setMultiple(true);
 	}
 	
 	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
@@ -45,4 +27,3 @@ class sample_form extends moodleform {
 }
 
 ?>
-
