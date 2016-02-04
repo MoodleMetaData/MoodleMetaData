@@ -9,6 +9,61 @@
     	* Version 2015111701 adds new columns to the feedback_form to indicate who owns the form and the visibility of the form.
     	* The owner is identified by the user ID and is a foreign key reference.
     	*/
+    	
+    if ($oldversion < 20160212) {
+
+        // Define table coursetag to be created.
+        $table = new xmldb_table('coursetag');
+
+        // Adding fields to table coursetag.
+        $table->add_field('tagid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('courseid', XMLDB_TYPE_INTEGER, '20', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table coursetag.
+        $table->add_key('tagid', XMLDB_KEY_PRIMARY, array('tagid'));
+        $table->add_key('courseid', XMLDB_KEY_FOREIGN, array('courseid'), 'courseinfo', array('courseid'));
+
+        // Conditionally launch create table for coursetag.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160212, 'local', 'xiaoranmoodlemetadata');
+    }    	
+    	
+    	
+    if ($oldversion < 20160212) {
+
+        // Define field sessiontype to be added to coursesession.
+        $table = new xmldb_table('coursesession');
+        $field = new xmldb_field('sessiontype', XMLDB_TYPE_TEXT, null, null, null, null, null, 'courseid');
+
+        // Conditionally launch add field sessiontype.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160212, 'local', 'xiaoranmoodlemetadata');
+    }
+    	
+
+    if ($oldversion < 20160212) {
+
+        // Define field sessiondescription to be added to coursesession.
+        $table = new xmldb_table('coursesession');
+        $field = new xmldb_field('sessiondescription', XMLDB_TYPE_TEXT, null, null, null, null, null, 'sessiontype');
+
+        // Conditionally launch add field sessiondescription.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Xiaoranmoodlemetadata savepoint reached.
+        upgrade_plugin_savepoint(true, 20160212, 'local', 'xiaoranmoodlemetadata');
+    }
+
     if ($oldversion < 20160211) {
 
         // Define field objective to be added to courseassessment.
