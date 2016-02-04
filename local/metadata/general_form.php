@@ -3,16 +3,14 @@ require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
-class second_form extends moodleform {
+class general_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 
-		//Add all your form elements here
-		$mform->addElement('text', 'email', get_string('email'));
+		// Form elements
+		//$mform->addElement('text', 'email', get_string('email'));
 
-		$select = $mform->addElement('select', 'colors', get_string('colors'), array('red', 'blue', 'green'), $attributes);
-		$select->setMultiple(true);
 	}
 	
 	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
@@ -27,3 +25,4 @@ class second_form extends moodleform {
 }
 
 ?>
+

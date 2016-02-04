@@ -4,8 +4,9 @@ require_once('../../config.php');
 
 require_login();
 require_capability('local/metadata:view', context_system::instance());
-require_once($CFG->dirroot.'/local/metadata/sample_form.php');
-require_once($CFG->dirroot.'/local/metadata/second_form.php');
+require_once($CFG->dirroot.'/local/metadata/general_form.php');
+require_once($CFG->dirroot.'/local/metadata/assessment_form.php');
+require_once($CFG->dirroot.'/local/metadata/session_form.php');
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard');
@@ -14,33 +15,35 @@ $PAGE->set_heading(get_string('pluginname', 'local_metadata'));
 $PAGE->set_url($CFG->wwwroot.'/local/metadata/view.php');
 $PAGE->requires->js('/local/metadata/tabview.js');
 
-$form_one = new sample_form();
-$form_two = new second_form();
+$general_form = new general_form();
+$assessment_form = new assessment_form();
+$session_form = new session_form();
 
 echo $OUTPUT->header();
 ?>
 
 <html>
     <div id="metadata" class="yui3-skin-sam">
-  <ul>
-    <li><a href="#tab_one">ONE</a></li>
-    <li><a href="#tab_two">TWO</a></li>
-    <li><a href="#tab_three">THREE</a></li>
-  </ul>
-  <div>
-    <div id="tab_one">
-      <!-- content TAB ONE -->
-      <?php $form_one->display(); ?>
+        <ul>
+            <li><a href="#general_tab">General</a></li>
+            <li><a href="#assessment_tab">Assessment</a></li>
+            <li><a href="#session_tab">Session</a></li>
+        </ul>
+        <div>
+            <div id="general_tab">
+                <!-- content TAB ONE -->
+                <?php $general_form->display(); ?>
+                </div>
+            <div id="assessment_tab">
+                <!-- content TAB TWO -->
+                <?php $assessment_form->display(); ?>
+                </div>
+            <div id="session_tab">
+                <!-- content TAB THREE -->
+                <?php $session_form->display(); ?>
+            </div>
+        </div>
     </div>
-    <div id="tab_two">
-      <?php $form_two->display(); ?>
-    </div>
-    <div id="tab_three">
-      <!-- content TAB THREE -->
-      <b>This is the third tabview.</b>
-    </div>
-  </div>
-</div>
 </html>
 
 <?php echo $OUTPUT->footer(); ?>
