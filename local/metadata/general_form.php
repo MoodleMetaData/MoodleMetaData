@@ -10,28 +10,40 @@ class general_form extends moodleform {
 
 		// Form elements
 		
-		// add textbox
-		$mform->addElement('text', 'email', get_string('email'));
-		
-		// display course from database
-		$courses = array();
-		$course_query = "SELECT * FROM {course}";
-		if($result=$DB->get_records_sql($course_query)){
-			foreach($result as $item){
-				$courses[] = $item->shortname;
-			}
-		}
-		$mform->addElement('select', 'type', get_string('courses', 'local_metadata'), $courses, $attributes);
-		
-		// add buttons
-		// normally you use add_action_buttons instead of this code
-		$buttonarray=array();
-		$buttonarray[] = &$mform->createElement('submit', 'submitbutton', get_string('savechanges'));
-		$buttonarray[] = &$mform->createElement('reset', 'resetbutton', get_string('revert'));
-		$buttonarray[] = &$mform->createElement('cancel');
-		$mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
-		$mform->closeHeaderBefore('buttonar');
+		// Add text area for course description
+		$course_description_text = $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'));
+		$course_description_text->setType('course_description', PARAM_RAW);
+
+		// Add selection list for course type		
+		// ---------- testing purpose ----------
+		$course_types = array();
+		$course_types[] = 'type 1';
+		$course_types[] = 'type 2';
+		// -------------------------------------
+		$course_type_selection = $mform->addElement('select', 'course_type', get_string('course_type', 'local_metadata'), $course_types, '');
 	
+		// Add multi-selection list for course topics
+		// ---------- testing purpose ----------
+		$course_topics = array();
+		$course_topics[] = 'topic 1';
+		$course_topics[] = 'topic 2';
+		// -------------------------------------
+		$course_topic_selection = $mform->addElement('select', 'course_topic', get_string('course_topic', 'local_metadata'), $course_topics, '');
+		$course_topic_selection->setMultiple(true);
+		
+		// Add multi-selection list for course learning objectives
+		// ---------- testing purpose ----------
+		$course_objectives = array();
+		$course_objectives[] = 'objective 1';
+		$course_objectives[] = 'objective 2';
+		// -------------------------------------
+		$course_objective_selection = $mform->addElement('select', 'course_objective', get_string('course_objective', 'local_metadata'), $course_objectives, '');
+		$course_objective_selection->setMultiple(true);
+		
+		// US 1.05
+		// some code here
+		
+		// 
 	}
 	
 	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
