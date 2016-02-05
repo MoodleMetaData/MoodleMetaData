@@ -11,8 +11,9 @@ class general_form extends moodleform {
 		// Form elements
 		
 		// Add text area for course description
-		$course_description_text = $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'));
-		$course_description_text->setType('course_description', PARAM_RAW);
+		$course_description_text = $mform->addElement('editor', '_courseDescription', get_string('course_description', 'local_metadata'));
+		$mform->setType('_courseDescription', PARAM_RAW);
+
 
 		// Add selection list for course type		
 		// ---------- testing purpose ----------
@@ -20,7 +21,7 @@ class general_form extends moodleform {
 		$course_types[] = 'type 1';
 		$course_types[] = 'type 2';
 		// -------------------------------------
-		$course_type_selection = $mform->addElement('select', 'course_type', get_string('course_type', 'local_metadata'), $course_types, '');
+		$course_type_selection = $mform->addElement('select', '_courseType', get_string('course_type', 'local_metadata'), $course_types, '');
 	
 		// Add multi-selection list for course topics
 		// ---------- testing purpose ----------

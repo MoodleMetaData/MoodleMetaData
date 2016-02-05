@@ -1,9 +1,9 @@
 <?php
 
-$string['menuoption'] = 'Yunita Plug-in';
+$string['menuoption'] = 'Extra Plug-in';
 $string['pluginname'] = 'Moodle Metadata';
 
-// General tab elements
+// General form elements
 $string['course_description'] = 'Course description: ';
 $string['course_type'] = 'Course type: ';
 $string['course_topic'] = 'Course topic(s): ';
