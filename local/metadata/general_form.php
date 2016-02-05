@@ -11,9 +11,10 @@ class general_form extends moodleform {
 		// Form elements
 		
 		// Add text area for course description
-		$course_description_text = $mform->addElement('editor', '_courseDescription', get_string('course_description', 'local_metadata'));
-		$mform->setType('_courseDescription', PARAM_RAW);
-
+		$course_description_text = $mform->addElement('textarea', 'course_description', get_string('course_description', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
+		//$course_description_text = $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'));
+		$mform->addRule('course_description', get_string('required'), 'required', null, 'client');
+		$mform->setType('course_description', PARAM_RAW);	
 
 		// Add selection list for course type		
 		// ---------- testing purpose ----------
@@ -21,8 +22,9 @@ class general_form extends moodleform {
 		$course_types[] = 'type 1';
 		$course_types[] = 'type 2';
 		// -------------------------------------
-		$course_type_selection = $mform->addElement('select', '_courseType', get_string('course_type', 'local_metadata'), $course_types, '');
-	
+		$course_type_selection = $mform->addElement('select', 'course_type', get_string('course_type', 'local_metadata'), $course_types, '');
+		$mform->addRule('course_type', get_string('required'), 'required', null, 'client');
+
 		// Add multi-selection list for course topics
 		// ---------- testing purpose ----------
 		$course_topics = array();
@@ -31,6 +33,7 @@ class general_form extends moodleform {
 		// -------------------------------------
 		$course_topic_selection = $mform->addElement('select', 'course_topic', get_string('course_topic', 'local_metadata'), $course_topics, '');
 		$course_topic_selection->setMultiple(true);
+		$mform->addRule('course_topic', get_string('required'), 'required', null, 'client');
 		
 		// Add multi-selection list for course learning objectives
 		// ---------- testing purpose ----------
@@ -40,11 +43,20 @@ class general_form extends moodleform {
 		// -------------------------------------
 		$course_objective_selection = $mform->addElement('select', 'course_objective', get_string('course_objective', 'local_metadata'), $course_objectives, '');
 		$course_objective_selection->setMultiple(true);
+		$mform->addRule('course_objective', get_string('required'), 'required', null, 'client');
 		
+
 		// US 1.05
 		// some code here
 		
-		// 
+		// US 1.06
+		// some code here
+
+		// US 1.07
+		// some code here
+
+		// Add form buttons
+		$this->add_action_buttons();
 	}
 	
 	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
