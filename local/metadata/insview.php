@@ -1,23 +1,40 @@
 <?php
-global $PAGE, $CFG, $DB;
+global $PAGE, $CFG, $DB, $COURSE, $USER;
 require_once('../../config.php');
+require_once 'lib.php';
 
+
+// Check that they can access
 require_login();
-require_capability('local/metadata:ins_view', context_system::instance());
+
+// TODO: Get permissions working
+$csid = get_course_id();
+$context = context_course::instance($csid);
+//require_capability('local/metadata:ins_view', $context);
+
+
 require_once($CFG->dirroot.'/local/metadata/general_form.php');
 require_once($CFG->dirroot.'/local/metadata/assessment_form.php');
 require_once($CFG->dirroot.'/local/metadata/session_form.php');
 
-$PAGE->set_context(context_system::instance());
+// TODO: Work around until can get the other stuff working
+$course = $DB->get_record('course', array('id'=>$csid));
+
+
+// Set up page information
+$PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
-$PAGE->set_heading(get_string('ins_pluginname', 'local_metadata'));
+$heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->shortname, $course->fullname);
+$PAGE->set_heading($heading);
 $PAGE->set_url($CFG->wwwroot.'/local/metadata/insview.php');
 $PAGE->requires->js('/local/metadata/tabview.js');
 
+// Create forms
 $general_form = new general_form();
 $assessment_form = new assessment_form();
 $session_form = new session_form();
+
 
 echo $OUTPUT->header();
 ?>
