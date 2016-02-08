@@ -14,6 +14,9 @@ $string['course_type'] = 'Course type: ';
 $string['course_topic'] = 'Course topic(s): ';
 $string['course_objective'] = 'Course learning objective(s): ';
 
+$string['course_data'] = 'Course data';
+
+$string['instructor_heading'] = 'Metadata for %s: %s';
 
 
 ?>
