@@ -1,5 +1,5 @@
 <?php
-global $PAGE, $CFG, $DB, $COURSE, $USER;
+global $PAGE, $CFG, $DB;
 require_once('../../config.php');
 require_once 'lib.php';
 
@@ -8,8 +8,8 @@ require_once 'lib.php';
 require_login();
 
 // TODO: Get permissions working
-$csid = get_course_id();
-$context = context_course::instance($csid);
+$courseId = get_course_id();
+$context = context_course::instance($courseId);
 //require_capability('local/metadata:ins_view', $context);
 
 
@@ -17,8 +17,7 @@ require_once($CFG->dirroot.'/local/metadata/general_form.php');
 require_once($CFG->dirroot.'/local/metadata/assessment_form.php');
 require_once($CFG->dirroot.'/local/metadata/session_form.php');
 
-// TODO: Work around until can get the other stuff working
-$course = $DB->get_record('course', array('id'=>$csid));
+$course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
 
 
 // Set up page information
@@ -31,9 +30,53 @@ $PAGE->set_url($CFG->wwwroot.'/local/metadata/insview.php');
 $PAGE->requires->js('/local/metadata/tabview.js');
 
 // Create forms
-$general_form = new general_form();
-$assessment_form = new assessment_form();
-$session_form = new session_form();
+$base_url = create_insview_url($courseId);
+$general_form = new general_form($base_url);
+$assessment_form = new assessment_form($base_url);
+$session_form = new session_form($base_url);
+
+$assessment_url = create_insview_url($courseId, 1);
+$session_url = create_insview_url($courseId, 2);
+$general_url = create_insview_url($courseId);
+
+
+// Case where they cancelled the form. Just redirect to it, to reset values
+if ($general_form->is_cancelled()) {
+    redirect($general_url);
+} else if ($assessment_form->is_cancelled()) {
+    redirect($assessment_url);
+} else if ($session_form->is_cancelled()) {
+    redirect($session_url);
+}
+
+
+// Submitted the data
+if ($data = $general_form->get_data()) {
+    // TODO: Save the submission data, use a function/class from different file
+    echo "General";
+    print_object($data);
+
+    // TODO: Then, redirect
+    // redirect($general_url);
+
+} else if ($data = $assessment_form->get_data()) {
+    // TODO: Save the submission data, use a function/class from different file
+    echo "Assessment";
+    print_object($data);
+
+    // TODO: Then, redirect
+    // redirect($assessment_url);
+
+} else if ($data = $session_form->get_data()) {
+    // TODO: Save the submission data, use a function/class from different file
+    echo "Session";
+    print_object($data);
+
+    // TODO: Then, redirect
+    // redirect($session_url);
+}
+
+
 
 
 echo $OUTPUT->header();

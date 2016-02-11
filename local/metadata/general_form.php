@@ -70,6 +70,7 @@ class general_form extends moodleform {
 		//if ($data['data_name'] Some condition here)  {
 		//	$errors['element_to_display_error'] = get_string('error', 'local_demo_plug-in');
 		//}
+		return $errors;
 	}
 }
 
