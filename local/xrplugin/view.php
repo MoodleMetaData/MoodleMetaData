@@ -29,6 +29,9 @@ require_once('../../config.php');
 
 require_login();
 require_capability('local/xrplugin:add', context_system::instance());
+require_once($CFG->dirroot.'/local/xrplugin/my_form.php');
+
+
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('pluginname', 'local_xrplugin'));
