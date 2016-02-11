@@ -36,4 +36,20 @@ function local_metadata_extends_settings_navigation($settingsnav, $context) {
 function get_course_id() {
     return required_param('id', PARAM_INT);
 }
+
+function get_table_data_for_course($table) {
+    global $DB;
+
+    $courseId = get_course_id();
+    return $DB->get_records($table, array('courseid'=>$courseId));
+}
+
+
+function create_insview_url($courseId, $anchor=null) {
+    if ($anchor) {
+        return new moodle_url('/local/metadata/insview.php', array('id' => $courseId), 'tab='.$anchor);
+    }
+    return new moodle_url('/local/metadata/insview.php', array('id' => $courseId), $anchor);
+}
+
 ?>
