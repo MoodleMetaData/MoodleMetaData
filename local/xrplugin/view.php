@@ -35,6 +35,12 @@ $PAGE->set_title(get_string('pluginname', 'local_xrplugin'));
 $PAGE->set_heading(get_string('pluginname', 'local_xrplugin'));
 $PAGE->set_url($CFG->wwwroot.'/local/xrplugin/view.php');
 
+
+$my_form = new manage_form();
+echo $OUTPUT->header();
+$my_form->display();
+echo $OUTPUT->footer();
+
 //echo $OUTPUT->header();
 //new_form->display()
 //echo $OUTPUT->footer();
