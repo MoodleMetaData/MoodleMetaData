@@ -18,5 +18,9 @@ $string['course_data'] = 'Course data';
 
 $string['instructor_heading'] = 'Metadata for %s: %s';
 
+$string['assessment_description'] = 'Description of the Assessment: ';
 
+$string['leaning_objective_selection_description']= 'Select the Learning Objective(s): ';
+
+$string['assessment_type'] = 'Type of Assessment: ';
 ?>
