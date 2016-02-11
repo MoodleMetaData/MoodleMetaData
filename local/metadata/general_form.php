@@ -9,8 +9,11 @@ class general_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
-                $courseId = get_course_id();
+        $courseId = get_course_id();
 
+		$mform->addElement('static', 'course_id', get_string('course_id', 'local_metadata'));
+        $mform->setDefault('course_id', $courseId);
+				
 		// Form elements
 		
 		// Add text area for course description
@@ -48,15 +51,15 @@ class general_form extends moodleform {
 		$course_objective_selection->setMultiple(true);
 		$mform->addRule('course_objective', get_string('required'), 'required', null, 'client');
 		
+        // Add number of assessment
+        $course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'), $attributes);
+        $mform->addRule('course_assessment', get_string('required'), 'required', null, 'client');
+        $mform->addRule('course_assessment', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
-		// US 1.05
-		// some code here
-		
-		// US 1.06
-		// some code here
-
-		// US 1.07
-		// some code here
+        // Add number of session
+        $course_assessment = $mform->addElement('text', 'course_session', get_string('session_counter', 'local_metadata'), $attributes);
+        $mform->addRule('course_session', get_string('required'), 'required', null, 'client');
+        $mform->addRule('course_session', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
 		// Add form buttons
 		$this->add_action_buttons();
