@@ -1,6 +1,6 @@
 <?php
 	$capabilities = array(	    
-	    'local/xiaoranmoodlemetadata:add' => array(		
+	    'local/xrplugin:add' => array(		
 		'captype' => 'write',
 		'contextlevel' => CONTEXT_SYSTEM,
 		'archetypes' => array( // The roles that you want to allow
