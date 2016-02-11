@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="local/xiaoranmoodlemetadata/db" VERSION="20160203" COMMENT="XMLDB file for Moodle local/xiaoranmoodlemetadata"
+<XMLDB PATH="local/metadata/db" VERSION="20160211" COMMENT="XMLDB file for Moodle local/metadata"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -12,6 +12,8 @@
         <FIELD NAME="courseinstructor" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="coursefaculty" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="assessmentnumber" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="sessionnumber" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="courseid" TYPE="primary" FIELDS="courseid" COMMENT="id of the course"/>
@@ -52,6 +54,8 @@
         <FIELD NAME="sessiondate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="sessiontopic" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="sessiontype" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="sessiondescription" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="sessionid" TYPE="primary" FIELDS="sessionid"/>
@@ -68,6 +72,16 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="instructorid" TYPE="primary" FIELDS="instructorid"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="coursetag" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="tagid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="tagid" TYPE="primary" FIELDS="tagid"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="courseinfo" REFFIELDS="courseid"/>
       </KEYS>
     </TABLE>
   </TABLES>
