@@ -8,7 +8,7 @@
    	/**
     	* Version 2016020801 adds all the basic tables
          */
-    if ($oldversion < 2016020802) {
+    if ($oldversion < 2016020803) {
 
         // Define field assessmentnumber to be added to courseinfo.
         $table = new xmldb_table('courseinfo');
@@ -20,10 +20,10 @@
                 }
     
         // Metadata savepoint reached.
-        upgrade_plugin_savepoint(true, 2016020802, 'local', 'metadata');
+        upgrade_plugin_savepoint(true, 2016020803, 'local', 'metadata');
     }        
 
-    if ($oldversion < 2016020802) {
+    if ($oldversion < 2016020803) {
 
     // Define field sessionnumber to be added to courseinfo.
         $table = new xmldb_table('courseinfo');
@@ -34,7 +34,7 @@
             $dbman->add_field($table, $field);
         }
         // Metadata savepoint reached.
-        upgrade_plugin_savepoint(true, 2016020802, 'local', 'metadata');
+        upgrade_plugin_savepoint(true, 2016020803, 'local', 'metadata');
     }
 
     if ($oldversion < 2016020801) {
