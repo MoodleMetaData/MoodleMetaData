@@ -18,5 +18,11 @@ $string['course_data'] = 'Course data';
 
 $string['instructor_heading'] = 'Metadata for %s: %s';
 
+$string['add_session'] = 'Add new session';
+$string['session_topic'] = 'Topic:';
+$string['session_description'] = 'Description:';
+$string['session_type'] = 'Type:';
+$string['session_date'] = 'Date:';
+
 
 ?>
