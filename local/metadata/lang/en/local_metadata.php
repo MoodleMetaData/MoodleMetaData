@@ -25,4 +25,8 @@ $string['session_type'] = 'Type:';
 $string['session_date'] = 'Date:';
 
 
-?>
+$string['assessment_description'] = 'Description of the Assessment: ';
+$string['learning_objective_selection_description']= 'Select the Learning Objective(s): ';
+$string['assessment_type'] = 'Type of Assessment: ';
+$string['grade_weight'] = 'Weight: ';
+$string['objective_description'] = 'Description: ';
