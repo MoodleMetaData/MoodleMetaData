@@ -43,3 +43,10 @@ YUI().use('history', 'tabview', function (Y) {
     }
   });
 });
+
+
+// handle "add session button"
+YUI().use('event', function (Y) {
+    var form = Y.one('#mform3');
+    form.set('action', '#tab=2');
+});
