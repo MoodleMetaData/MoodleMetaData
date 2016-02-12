@@ -1,5 +1,5 @@
 <?php
-global $PAGE, $CFG, $DB;
+global $PAGE, $CFG, $DB, $USER;
 require_once('../../config.php');
 require_once 'lib.php';
 
@@ -56,6 +56,17 @@ if ($data = $general_form->get_data()) {
     echo "General";
     print_object($data);
 
+    $course_info = new stdClass();
+    $course_info->courseid = $courseId;
+    $course_info->courseinstructor = $USER->id;   
+    $course_info->coursedescription = $data->course_description;
+    $course_info->coursetopic = $data->course_topic;
+    $course_info->coursefaculty = $data->course_faculty;
+    $course_info->assessmentnumber = $data->assessment_counter;
+    $course_info->sessionnumber = $data->session_counter;
+
+//   $insert_courseinfo = $DB->insert_record('courseinfo', $course_info, false);
+    echo 'Saved';
     // TODO: Then, redirect
     // redirect($general_url);
 
