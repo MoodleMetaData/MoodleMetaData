@@ -14,7 +14,7 @@ class assessment_form extends moodleform {
 		// Form elements
 		//$mform->addElement('text', 'email', get_string('email'));
 		$assessment_description_text = $mform->addElement('textarea', 'assessment_description', get_string('assessment_description', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
-		$mform->addRule('course_description', get_string('required'),'required', null, 'client');
+		$mform->addRule('assessment_description', get_string('required'),'required', null, 'client');
 		$mform->setType('assessment_description',PARAM_RAW);
 		
 		//REPLACE WITH DB CALLS		
