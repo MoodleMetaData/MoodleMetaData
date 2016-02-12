@@ -8,8 +8,21 @@ require_once 'lib.php';
 class general_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
-		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
+                global $course, $USER;
+
+                $mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
+
                 $courseId = get_course_id();
+		$mform->addElement('static', 'course_id', get_string('course_id', 'local_metadata'));
+                $mform->setDefault('course_id', $courseId);
+            
+                $courseName = $course->fullname;
+                $mform->addElement('static', 'course_name', get_string('course_name', 'local_metadata'));
+                $mform->setDefault('course_name', $courseName);
+
+                $courseInstructor = $USER->firstname.' '.$USER->lastname;
+                $mform->addElement('static', 'course_instructor', get_string('course_instructor', 'local_metadata'));
+                $mform->setDefault('course_instructor', $courseInstructor);
 
 		// Form elements
 		
@@ -48,16 +61,22 @@ class general_form extends moodleform {
 		$course_objective_selection->setMultiple(true);
 		$mform->addRule('course_objective', get_string('required'), 'required', null, 'client');
 		
+                // Add number of assessment
+                $course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'), $attributes);
+                $mform->addRule('course_assessment', get_string('required'), 'required', null, 'client');
+                $mform->addRule('course_assessment', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
-		// US 1.05
-		// some code here
-		
-		// US 1.06
-		// some code here
+                // Add number of session
+                $course_assessment = $mform->addElement('text', 'course_session', get_string('session_counter', 'local_metadata'), $attributes);
+                $mform->addRule('course_session', get_string('required'), 'required', null, 'client');
+                $mform->addRule('course_session', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
-		// US 1.07
-		// some code here
 
+/*                
+                if ($mform->is_cancelled()) {
+                    echo 'IS CANCELLED';                
+                }
+ */
 		// Add form buttons
 		$this->add_action_buttons();
 	}
