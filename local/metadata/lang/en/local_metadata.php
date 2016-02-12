@@ -1,5 +1,6 @@
 <?php
 
+$string['pluginname'] = 'Moodle Metadata';
 $string['menuoption'] = 'Extra Plug-in';
 $string['ins_pluginname'] = 'Instructor Moodle Metadata';
 $string['admin_pluginname'] = 'Admin Moodle Metadata';
