@@ -8,6 +8,22 @@
    	/**
     	* Version 2016020801 adds all the basic tables
          */
+	if ($oldversion < 2016020803) {
+
+        // Define field assessmentnumber to be added to courseinfo.
+        $table = new xmldb_table('courseinfo');
+        $field = new xmldb_field('assessmentnumber', XMLDB_TYPE_INTEGER, '20', null, null, null, null, 'courseid');
+
+        // Conditionally launch add field assessmentnumber.
+        if (!$dbman->field_exists($table, $field)) {
+                $dbman->add_field($table, $field);
+                }
+    
+        // Metadata savepoint reached.
+        upgrade_plugin_savepoint(true, 2016021204, 'local', 'metadata');
+    }        
+
+		
     if ($oldversion < 2016020803) {
 
         // Define field assessmentnumber to be added to courseinfo.
