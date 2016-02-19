@@ -51,7 +51,7 @@ class assessment_form extends moodleform {
         $repeateloptions['assessmentid']['default'] = -1;
 
         $this->repeat_elements($repeatArray, count($assessments),
-            $repeateloptions, 'option_repeats', 'option_add_fields', 1, get_string('add_assessment', 'local_metadata'), true);
+            $repeateloptions, 'assessment_repeats', 'option_add_fields_assessment', 1, get_string('add_assessment', 'local_metadata'), true);
 
 		$key = 0;
         foreach ($assessments as $assessment)

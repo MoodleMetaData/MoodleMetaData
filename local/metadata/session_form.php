@@ -35,7 +35,7 @@ class session_form extends moodleform {
         $repeateloptions['sessionid']['default'] = -1;
 
         $this->repeat_elements($repeatarray, count($sessions),
-            $repeateloptions, 'option_repeats', 'option_add_fields', 1, get_string('add_session', 'local_metadata'), true);
+            $repeateloptions, 'session_repeats', 'option_add_fields_session', 1, get_string('add_session', 'local_metadata'), true);
 
 
         $key = 0;
