@@ -26,11 +26,18 @@ class general_form extends moodleform {
 
 		// Form elements
 		
-		// Add text area for course description
-		$course_description_text = $mform->addElement('textarea', 'course_description', get_string('course_description', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
-		//$course_description_text = $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'));
+                // Add text area for course description
+                
+                // Get default course description from DB.
+                // If description does not exist in the extra table, display the default description.
+
+                //$_description = $DB->get_record('course', array('id'=>"'".$courseId."'"));
+                //echo 'Description '.$_description[0];
+                //$data = get_table_data_for_course('course');               
+                $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'))->setValue(array('text' => 'Default text!') );
 		$mform->addRule('course_description', get_string('required'), 'required', null, 'client');
-		$mform->setType('course_description', PARAM_RAW);	
+                $mform->setType('course_description', PARAM_RAW);
+                //$mform->setDefault('course_description', $_description);        
 
 		// Add selection list for course type		
 		// ---------- testing purpose ----------
