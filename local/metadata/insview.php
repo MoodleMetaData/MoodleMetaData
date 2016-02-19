@@ -17,9 +17,9 @@ require_once($CFG->dirroot.'/local/metadata/general_form.php');
 require_once($CFG->dirroot.'/local/metadata/assessment_form.php');
 require_once($CFG->dirroot.'/local/metadata/session_form.php');
 
+// Define global variable for DB result
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
-
-
+    
 // Set up page information
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');

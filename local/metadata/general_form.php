@@ -8,8 +8,9 @@ require_once 'lib.php';
 class general_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
-                global $course, $USER;
+                global $course;
 
+                // initialize the form.
                 $mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 
                 $courseId = get_course_id();
@@ -26,14 +27,23 @@ class general_form extends moodleform {
 
 		// Form elements
 		
-                // Add text area for course description.              
+                // Add editor for create or modify course description.              
                 // Get default course description from DB.
                 // If description does not exist in the extra table, display the default description.
-                $_description = $course->summary;
-                $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'))->setValue(array('text' => $_description) );
-		$mform->addRule('course_description', get_string('required'), 'required', null, 'client');
-                $mform->setType('course_description', PARAM_RAW);
-                //$mform->setDefault('course_description', $_description);        
+                $default_description = $course->summary;
+                $course_description_editor = $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'));
+                
+                if($courseinfo = $DB->get_record('courseinfo', array('courseid'=>$courseId))){
+                    //echo 'Exist.';
+                    $current_description = $courseinfo->coursedescription;
+                    $course_description_editor->setValue(array('text' => $current_description) );
+                }else{
+                    //echo 'Does not exist.';
+                    $course_description_editor->setValue(array('text' => $default_description) );
+                }
+
+                $mform->addRule('course_description', get_string('required'), 'required', null, 'client');
+                $mform->setType('course_description', PARAM_RAW);      
 
 		// Add selection list for course type		
 		// ---------- testing purpose ----------
