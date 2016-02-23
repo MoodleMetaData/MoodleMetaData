@@ -33,11 +33,13 @@ $PAGE->requires->js('/local/metadata/tabview.js');
 $base_url = create_insview_url($courseId);
 $general_form = new general_form($base_url);
 $assessment_form = new assessment_form($base_url);
-$session_form = new session_form($base_url);
 
+$sessions = get_table_data_for_course('coursesession');
+$session_form = new session_form($base_url, array('sessions' => $sessions));
+
+$general_url = create_insview_url($courseId);
 $assessment_url = create_insview_url($courseId, 1);
 $session_url = create_insview_url($courseId, 2);
-$general_url = create_insview_url($courseId);
 
 
 // Case where they cancelled the form. Just redirect to it, to reset values
@@ -68,12 +70,9 @@ if ($data = $general_form->get_data()) {
     // redirect($assessment_url);
 
 } else if ($data = $session_form->get_data()) {
-    // TODO: Save the submission data, use a function/class from different file
-    echo "Session";
-    print_object($data);
-
-    // TODO: Then, redirect
-    // redirect($session_url);
+    session_form::save_data($data);
+    
+    redirect($session_url);
 }
 
 

@@ -13,6 +13,8 @@ require_once 'lib.php';
  *       EG: coursesession_id
  *       Will be loaded into 'id' for each element
  *
+ *  For an example, see session_form::save_data
+ *
  */
 class recurring_element_parser {
     /**
