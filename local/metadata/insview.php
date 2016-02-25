@@ -54,21 +54,23 @@ if ($general_form->is_cancelled()) {
 
 // Submitted the data
 if ($data = $general_form->get_data()) {
-    // TODO: Save the submission data, use a function/class from different file
     echo "General";
-    print_object($data);
+    //print_object($data);
 
     $course_info = new stdClass();
-    $course_info->courseid = $courseId;
-    $course_info->courseinstructor = $USER->id;   
-    $course_info->coursedescription = $data->course_description;
+    $course_info->id = $courseId;
+    $course_info->coursename = $course->fullname;
     $course_info->coursetopic = $data->course_topic;
+    $course_info->coursedescription = $data->course_description['text'];
     $course_info->coursefaculty = $data->course_faculty;
-    $course_info->assessmentnumber = $data->assessment_counter;
-    $course_info->sessionnumber = $data->session_counter;
+    $course_info->assessmentnumber = $data->course_assessment;
+    $course_info->sessionnumber = $data->course_session;
 
-//   $insert_courseinfo = $DB->insert_record('courseinfo', $course_info, false);
-    echo 'Saved';
+    // If record does not exist in courseinfo, then add new record into it.
+    // Otherwise, update the data to the corresponding course id.
+    $insert_courseinfo = $DB->insert_record('courseinfo', $course_info, false);
+    echo 'New record is added.';
+
     // TODO: Then, redirect
     // redirect($general_url);
 
