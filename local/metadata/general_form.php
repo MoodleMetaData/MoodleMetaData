@@ -8,7 +8,7 @@ require_once 'lib.php';
 class general_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
-                global $course;
+                global $course;           
 
                 // initialize the form.
                 $mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
@@ -33,7 +33,7 @@ class general_form extends moodleform {
                 $default_description = $course->summary;
                 $course_description_editor = $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'));
                 
-                if($courseinfo = $DB->get_record('courseinfo', array('courseid'=>$courseId))){
+                if($courseinfo = $DB->get_record('courseinfo', array('id'=>$courseId))){
                     //echo 'Exist.';
                     $current_description = $courseinfo->coursedescription;
                     $course_description_editor->setValue(array('text' => $current_description) );
@@ -79,17 +79,20 @@ class general_form extends moodleform {
                 $mform->addRule('course_assessment', get_string('required'), 'required', null, 'client');
                 $mform->addRule('course_assessment', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
+                if($courseinfo){
+                    $mform->setDefault('course_assessment', $courseinfo->assessmentnumber);
+                }
+
                 // Add number of session
                 $course_assessment = $mform->addElement('text', 'course_session', get_string('session_counter', 'local_metadata'), $attributes);
                 $mform->addRule('course_session', get_string('required'), 'required', null, 'client');
                 $mform->addRule('course_session', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
-
-/*                
-                if ($mform->is_cancelled()) {
-                    echo 'IS CANCELLED';                
+                if($courseinfo){
+                    $mform->setDefault('course_session', $courseinfo->sessionnumber);
                 }
- */
+
+
 		// Add form buttons
 		$this->add_action_buttons();
 	}

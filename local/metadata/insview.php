@@ -57,16 +57,24 @@ if ($data = $general_form->get_data()) {
     print_object($data);
 
     $course_info = new stdClass();
-    $course_info->courseid = $courseId;
-    $course_info->courseinstructor = $USER->id;   
-    $course_info->coursedescription = $data->course_description;
+
+    //TODO: Fix the courseinfo tbl, id does not store course id properly. Need "courseid" in tbl.
+    $course_info->id = $courseId;
+    $course_info->coursename = $course->fullname;
+    $course_info->coursedescription = $data->course_description[text];
     $course_info->coursetopic = $data->course_topic;
     $course_info->coursefaculty = $data->course_faculty;
-    $course_info->assessmentnumber = $data->assessment_counter;
-    $course_info->sessionnumber = $data->session_counter;
+    $course_info->assessmentnumber = $data->course_assessment;
+    $course_info->sessionnumber = $data->course_session;
 
-//   $insert_courseinfo = $DB->insert_record('courseinfo', $course_info, false);
-    echo 'Saved';
+    if($isExist = $DB->record_exists('courseinfo', array('id'=>$courseId)) ){
+        // Must have an entry for 'id' to map the tabhe table specified.
+        $update_courseinfo = $DB->update_record('courseinfo', $course_info, false);
+        echo 'Existing data is updated.';
+    }else{
+        $insert_courseinfo = $DB->insert_record('courseinfo', $course_info, false);
+        echo 'New data is added.';
+    }
     // TODO: Then, redirect
     // redirect($general_url);
 
