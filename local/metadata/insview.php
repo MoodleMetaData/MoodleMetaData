@@ -33,11 +33,13 @@ $PAGE->requires->js('/local/metadata/tabview.js');
 $base_url = create_insview_url($courseId);
 $general_form = new general_form($base_url);
 $assessment_form = new assessment_form($base_url);
-$session_form = new session_form($base_url);
 
+$sessions = get_table_data_for_course('coursesession');
+$session_form = new session_form($base_url, array('sessions' => $sessions));
+
+$general_url = create_insview_url($courseId);
 $assessment_url = create_insview_url($courseId, 1);
 $session_url = create_insview_url($courseId, 2);
-$general_url = create_insview_url($courseId);
 
 
 // Case where they cancelled the form. Just redirect to it, to reset values
@@ -52,20 +54,20 @@ if ($general_form->is_cancelled()) {
 
 // Submitted the data
 if ($data = $general_form->get_data()) {
-    // TODO: Save the submission data, use a function/class from different file
     echo "General";
-    print_object($data);
+    //print_object($data);
 
     $course_info = new stdClass();
 
     //TODO: Fix the courseinfo tbl, id does not store course id properly. Need "courseid" in tbl.
     $course_info->id = $courseId;
     $course_info->coursename = $course->fullname;
-    $course_info->coursedescription = $data->course_description[text];
     $course_info->coursetopic = $data->course_topic;
+    $course_info->coursedescription = $data->course_description['text'];
     $course_info->coursefaculty = $data->course_faculty;
     $course_info->assessmentnumber = $data->course_assessment;
     $course_info->sessionnumber = $data->course_session;
+
 
     if($isExist = $DB->record_exists('courseinfo', array('id'=>$courseId)) ){
         // Must have an entry for 'id' to map the tabhe table specified.
@@ -87,12 +89,9 @@ if ($data = $general_form->get_data()) {
     // redirect($assessment_url);
 
 } else if ($data = $session_form->get_data()) {
-    // TODO: Save the submission data, use a function/class from different file
-    echo "Session";
-    print_object($data);
-
-    // TODO: Then, redirect
-    // redirect($session_url);
+    session_form::save_data($data);
+    
+    redirect($session_url);
 }
 
 
