@@ -60,7 +60,7 @@ if ($data = $general_form->get_data()) {
     $course_info = new stdClass();
 
     //TODO: Fix the courseinfo tbl, id does not store course id properly. Need "courseid" in tbl.
-    $course_info->id = $courseId;
+    $course_info->id = $course->id; //$courseId;
     $course_info->coursename = $course->fullname;
     $course_info->coursetopic = $data->course_topic;
     $course_info->coursedescription = $data->course_description['text'];
