@@ -28,8 +28,7 @@
 require_once(__DIR__ . '/../../../lib/behat/behat_files.php');
 
 use Behat\Mink\Exception\ExpectationException as ExpectationException,
-    Behat\Gherkin\Node\TableNode as TableNode,
-    Behat\Behat\Context\Step\Given as Given;
+    Behat\Gherkin\Node\TableNode as TableNode;
 
 /**
  * Steps definitions to deal with the filemanager and filepicker.
@@ -42,23 +41,6 @@ use Behat\Mink\Exception\ExpectationException as ExpectationException,
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class behat_filepicker extends behat_files {
-
-    /**
-     * Creates a folder with specified name in the current folder and in the specified filepicker field.
-     *
-     * Will be deprecated in 2.7
-     * @see behat_filepicker::i_create_folder_in_filemanager()
-     *
-     * @Given /^I create "(?P<foldername_string>(?:[^"]|\\")*)" folder in "(?P<filepicker_field_string>(?:[^"]|\\")*)" filepicker$/
-     * @throws ExpectationException Thrown by behat_base::find
-     * @param string $foldername
-     * @param string $filepickerelement
-     */
-    public function i_create_folder_in_filepicker($foldername, $filepickerelement) {
-        $alternative = 'I create "' . $this->escape($foldername) .
-                '" folder in "' . $this->escape($filepickerelement) . '" filemanager';
-        return array(new Given($alternative));
-    }
 
     /**
      * Creates a folder with specified name in the current folder and in the specified filemanager field.
@@ -86,23 +68,6 @@ class behat_filepicker extends behat_files {
         $dialognode = $this->find('css', '.moodle-dialogue-focused');
         $buttonnode = $this->find('css', '.fp-dlg-butcreate', $exception, $dialognode);
         $buttonnode->click();
-    }
-
-    /**
-     * Opens the contents of a filepicker folder. It looks for the folder in the current folder and in the path bar.
-     *
-     * Will be deprecated in 2.7
-     * @see behat_filepicker::i_open_folder_from_filemanager()
-     *
-     * @Given /^I open "(?P<foldername_string>(?:[^"]|\\")*)" folder from "(?P<filepicker_field_string>(?:[^"]|\\")*)" filepicker$/
-     * @throws ExpectationException Thrown by behat_base::find
-     * @param string $foldername
-     * @param string $filepickerelement
-     */
-    public function i_open_folder_from_filepicker($foldername, $filepickerelement) {
-        $alternative = 'I open "' . $this->escape($foldername) . '" folder from "' .
-                $this->escape($filepickerelement) . '" filemanager';
-        return array(new Given($alternative));
     }
 
     /**
@@ -153,23 +118,6 @@ class behat_filepicker extends behat_files {
     }
 
     /**
-     * Unzips the specified file from the specified filepicker field. The zip file has to be visible in the current folder.
-     *
-     * Will be deprecated in 2.7
-     * @see behat_filepicker::i_unzip_file_from_filemanager()
-     *
-     * @Given /^I unzip "(?P<filename_string>(?:[^"]|\\")*)" file from "(?P<filepicker_field_string>(?:[^"]|\\")*)" filepicker$/
-     * @throws ExpectationException Thrown by behat_base::find
-     * @param string $filename
-     * @param string $filepickerelement
-     */
-    public function i_unzip_file_from_filepicker($filename, $filepickerelement) {
-        $alternative = 'I unzip "' . $this->escape($filename) . '" file from "' .
-                $this->escape($filepickerelement) . '" filemanager';
-        return array(new Given($alternative));
-    }
-
-    /**
      * Unzips the specified file from the specified filemanager field. The zip file has to be visible in the current folder.
      *
      * @Given /^I unzip "(?P<filename_string>(?:[^"]|\\")*)" file from "(?P<filemanager_field_string>(?:[^"]|\\")*)" filemanager$/
@@ -188,22 +136,6 @@ class behat_filepicker extends behat_files {
     }
 
     /**
-     * Zips the specified folder from the specified filepicker field. The folder has to be in the current folder.
-     *
-     * Will be deprecated in 2.7
-     *
-     * @Given /^I zip "(?P<filename_string>(?:[^"]|\\")*)" folder from "(?P<filepicker_field_string>(?:[^"]|\\")*)" filepicker$/
-     * @throws ExpectationException Thrown by behat_base::find
-     * @param string $foldername
-     * @param string $filepickerelement
-     */
-    public function i_zip_folder_from_filepicker($foldername, $filepickerelement) {
-        $alternative = 'I zip "' . $this->escape($foldername) . '" folder from "' .
-                $this->escape($filepickerelement) . '" filemanager';
-        return array(new Given($alternative));
-    }
-
-    /**
      * Zips the specified folder from the specified filemanager field. The folder has to be in the current folder.
      *
      * @Given /^I zip "(?P<filename_string>(?:[^"]|\\")*)" folder from "(?P<filemanager_field_string>(?:[^"]|\\")*)" filemanager$/
@@ -219,23 +151,6 @@ class behat_filepicker extends behat_files {
         // Execute the action.
         $exception = new ExpectationException($foldername.' element can not be zipped', $this->getSession());
         $this->perform_on_element('zip', $exception);
-    }
-
-    /**
-     * Deletes the specified file or folder from the specified filepicker field.
-     *
-     * Will be deprecated in 2.7
-     * @see behat_filepicker::i_delete_file_from_filemanager()
-     *
-     * @Given /^I delete "(?P<file_or_folder_name_string>(?:[^"]|\\")*)" from "(?P<filepicker_field_string>(?:[^"]|\\")*)" filepicker$/
-     * @throws ExpectationException Thrown by behat_base::find
-     * @param string $name
-     * @param string $filepickerelement
-     */
-    public function i_delete_file_from_filepicker($name, $filepickerelement) {
-        $alternative = 'I delete "' . $this->escape($name) . '" from "' .
-                $this->escape($filepickerelement) . '" filemanager';
-        return array(new Given($alternative));
     }
 
     /**
@@ -291,7 +206,7 @@ class behat_filepicker extends behat_files {
      * @When /^I add "(?P<filepath_string>(?:[^"]|\\")*)" file from "(?P<repository_string>(?:[^"]|\\")*)" to "(?P<filemanagerelement_string>(?:[^"]|\\")*)" filemanager$/
      * @throws ExpectationException Thrown by behat_base::find
      * @param string $filepath
-     * @parma string $repository
+     * @param string $repository
      * @param string $filemanagerelement
      */
     public function i_add_file_from_repository_to_filemanager($filepath, $repository, $filemanagerelement) {
@@ -304,7 +219,7 @@ class behat_filepicker extends behat_files {
      * @When /^I add and overwrite "(?P<filepath_string>(?:[^"]|\\")*)" file from "(?P<repository_string>(?:[^"]|\\")*)" to "(?P<filemanagerelement_string>(?:[^"]|\\")*)" filemanager$/
      * @throws ExpectationException Thrown by behat_base::find
      * @param string $filepath
-     * @parma string $repository
+     * @param string $repository
      * @param string $filemanagerelement
      */
     public function i_add_and_overwrite_file_from_repository_to_filemanager($filepath, $repository, $filemanagerelement) {
@@ -318,7 +233,7 @@ class behat_filepicker extends behat_files {
      * @When /^I add "(?P<filepath_string>(?:[^"]|\\")*)" file from "(?P<repository_string>(?:[^"]|\\")*)" to "(?P<filemanager_field_string>(?:[^"]|\\")*)" filemanager as:$/
      * @throws ExpectationException Thrown by behat_base::find
      * @param string $filepath
-     * @parma string $repository
+     * @param string $repository
      * @param string $filemanagerelement
      * @param TableNode $data Data to fill the form in Select file dialogue
      */
@@ -332,7 +247,7 @@ class behat_filepicker extends behat_files {
      * @When /^I add and overwrite "(?P<filepath_string>(?:[^"]|\\")*)" file from "(?P<repository_string>(?:[^"]|\\")*)" to "(?P<filemanager_field_string>(?:[^"]|\\")*)" filemanager as:$/
      * @throws ExpectationException Thrown by behat_base::find
      * @param string $filepath
-     * @parma string $repository
+     * @param string $repository
      * @param string $filemanagerelement
      * @param TableNode $data Data to fill the form in Select file dialogue
      */
@@ -346,7 +261,7 @@ class behat_filepicker extends behat_files {
      *
      * @throws ExpectationException Thrown by behat_base::find
      * @param string $filepath
-     * @parma string $repository
+     * @param string $repository
      * @param string $filemanagerelement
      * @param TableNode $data Data to fill the form in Select file dialogue
      * @param false|string $overwriteaction false if we don't expect that file with the same name already exists,
@@ -366,11 +281,8 @@ class behat_filepicker extends behat_files {
 
         // The action depends on the field type.
         foreach ($datahash as $locator => $value) {
-            // Getting the node element pointed by the label.
-            $fieldnode = $this->find_field($locator);
 
-            // Gets the field type from a parent node.
-            $field = behat_field_manager::get_form_field($fieldnode, $this->getSession());
+            $field = behat_field_manager::get_form_field_from_label($locator, $this);
 
             // Delegates to the field class.
             $field->set_value($value);

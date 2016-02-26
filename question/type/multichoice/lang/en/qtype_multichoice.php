@@ -66,3 +66,7 @@ $string['shuffleanswers'] = 'Shuffle the choices?';
 $string['shuffleanswers_help'] = 'If enabled, the order of the answers is randomly shuffled for each attempt, provided that "Shuffle within questions" in the activity settings is also enabled.';
 $string['singleanswer'] = 'Choose one answer.';
 $string['toomanyselected'] = 'You have selected too many options.';
+$string['crossouttooltip'] = 'Click to cross out this answer. This will not affect your answer to the question.';
+$string['crossout'] = 'cross out';
+$string['undo'] = 'undo';
+

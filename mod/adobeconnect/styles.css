@@ -1,0 +1,119 @@
+.aconfldset fieldset legend {
+    font-weight: bold;
+    font-size:18px;
+}
+
+.recording_hidden {
+    color:  #9b9b9b !important;
+}
+
+.aconfldset {
+    margin:0 auto;
+}
+
+.aconmeetinforow {
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.aconmeetinforow .aconlabeltitle {
+    font-weight: bold;
+}
+
+.aconmeetinforow .aconlabeltitle .aconlabeltext  {
+    display: inline;
+}
+
+.aconbtnrow {
+    margin-left:auto;
+    margin-right:auto;
+}
+
+.aconrecordingbtnrow {
+    margin-top: 0.5em;
+    padding: 0.4em;
+    background-color: #ccc;
+}
+
+.aconrecordingtable {
+    width: 100%;
+}
+
+.aconbtnjoin, .aconbtnroles, .aconbtn {
+    display: inline;
+}
+
+#aconmeetnametitle {
+    margin-right: 30px;
+}
+
+#aconmeeturltitle {
+    margin-right: 40px;
+}
+
+#aconmeetstarttitle {
+    margin-right: 4px;
+}
+
+#aconmeetendtitle {
+    margin-right: 9px;
+}
+
+#aconmeetsummarytitle {
+    margin-right: 3px;
+}
+
+#aconmeetsummarytxt {
+/*    padding-left: 50px;*/
+}
+
+#aconmeeturlinfo {
+    margin-right: 20px;
+}
+
+/*Recording edit screen styles*/
+
+form#recEditForm textarea#description {
+    width: 100%;
+    height: 150px;
+}
+
+form#recEditForm input#name {
+    width: 100%;
+}
+
+#recEditArea {
+    max-width: 600px;
+    margin: auto;
+}
+
+.rectitle {
+    line-height: 1.5em;
+    display: block;
+    font-weight: bold;
+}
+
+.recResponseArea {
+    height: 18px;
+    display: inline;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#recResponse {
+    line-height: 18px;
+    vertical-align:middle
+}
+
+.rec_error {
+    color: RED;
+}
+
+.loader {
+    height: 18px;
+    vertical-align:middle
+}
+
+.loading_hidden {
+    display: none;
+}

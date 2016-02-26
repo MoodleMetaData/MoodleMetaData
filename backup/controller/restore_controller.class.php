@@ -57,6 +57,9 @@ class restore_controller extends base_controller {
 
     protected $checksum; // Cache @checksumable results for lighter @is_checksum_correct() uses
 
+    /** @var int Number of restore_controllers that are currently executing */
+    protected static $executing = 0;
+
     /**
      * Constructor.
      *
@@ -70,10 +73,10 @@ class restore_controller extends base_controller {
      * @param int $mode backup::MODE_[ GENERAL | HUB | IMPORT | SAMESITE ]
      * @param int $userid
      * @param int $target backup::TARGET_[ NEW_COURSE | CURRENT_ADDING | CURRENT_DELETING | EXISTING_ADDING | EXISTING_DELETING ]
-     * @param core_backup_progress $progress Optional progress monitor
+     * @param \core\progress\base $progress Optional progress monitor
      */
     public function __construct($tempdir, $courseid, $interactive, $mode, $userid, $target,
-            core_backup_progress $progress = null) {
+            \core\progress\base $progress = null) {
         $this->tempdir = $tempdir;
         $this->courseid = $courseid;
         $this->interactive = $interactive;
@@ -111,7 +114,7 @@ class restore_controller extends base_controller {
         if ($progress) {
             $this->progress = $progress;
         } else {
-            $this->progress = new core_backup_null_progress();
+            $this->progress = new \core\progress\null();
         }
         $this->progress->start_progress('Constructing restore_controller');
 
@@ -315,7 +318,7 @@ class restore_controller extends base_controller {
 
     public function execute_plan() {
         // Basic/initial prevention against time/memory limits
-        set_time_limit(1 * 60 * 60); // 1 hour for 1 course initially granted
+        core_php_time_limit::raise(1 * 60 * 60); // 1 hour for 1 course initially granted
         raise_memory_limit(MEMORY_EXTRA);
         // If this is not a course restore, inform the plan we are not
         // including all the activities for sure. This will affect any
@@ -325,7 +328,26 @@ class restore_controller extends base_controller {
             $this->log('notifying plan about excluded activities by type', backup::LOG_DEBUG);
             $this->plan->set_excluding_activities();
         }
-        return $this->plan->execute();
+        self::$executing++;
+        try {
+            $this->plan->execute();
+        } catch (Exception $e) {
+            self::$executing--;
+            throw $e;
+        }
+        self::$executing--;
+    }
+
+    /**
+     * Checks whether restore is currently executing. Certain parts of code that
+     * is called during restore, but not directly part of the restore system, may
+     * need to behave differently during restore (e.g. do not bother resetting a
+     * cache because we know it will be reset at end of operation).
+     *
+     * @return bool True if any restore is currently executing
+     */
+    public static function is_executing() {
+        return self::$executing > 0;
     }
 
     /**
@@ -349,7 +371,7 @@ class restore_controller extends base_controller {
             throw new restore_controller_exception('cannot_precheck_wrong_status', $this->status);
         }
         // Basic/initial prevention against time/memory limits
-        set_time_limit(1 * 60 * 60); // 1 hour for 1 course initially granted
+        core_php_time_limit::raise(1 * 60 * 60); // 1 hour for 1 course initially granted
         raise_memory_limit(MEMORY_EXTRA);
         $this->precheck = restore_prechecks_helper::execute_prechecks($this, $droptemptablesafter);
         if (!array_key_exists('errors', $this->precheck)) { // No errors, can be executed
@@ -420,7 +442,7 @@ class restore_controller extends base_controller {
         require_once($CFG->dirroot . '/backup/util/helper/convert_helper.class.php');
 
         // Basic/initial prevention against time/memory limits
-        set_time_limit(1 * 60 * 60); // 1 hour for 1 course initially granted
+        core_php_time_limit::raise(1 * 60 * 60); // 1 hour for 1 course initially granted
         raise_memory_limit(MEMORY_EXTRA);
         $this->progress->start_progress('Backup format conversion');
 

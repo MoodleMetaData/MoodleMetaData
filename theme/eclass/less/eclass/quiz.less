@@ -1,0 +1,236 @@
+// Quiz
+.path-mod-quiz .qnbutton {
+  min-width: 1.5em;
+  width:auto;
+}
+body[id^='page-mod-quiz-edit'] #region-main > div[role='main'] {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+body[id^='page-mod-quiz-edit'] #region-main > div[role='main'] .quizcontents,
+body[id^='page-mod-quiz-edit'] #region-main > div[role='main'] .questionbankwindow {
+  margin: 0px;
+}
+#page-mod-quiz-edit div.quizcontents {
+  width:68%;
+}
+#page-mod-quiz-edit div.quizwhenbankcollapsed {
+  width: 100%;
+}
+body[id^='page-mod-quiz-edit'] #region-main > div[role='main'] .quizcontents > span,
+body[id^='page-mod-quiz-edit'] #region-main > div[role='main'] .quizcontents > div,
+body[id^='page-mod-quiz-edit'] #region-main > div[role='main'] .quizcontents > form {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+body[id^='page-mod-quiz-edit'] #region-main > div[role='main'] .questionbankwindow {
+  margin: 10px 10px 10px 0px;
+  padding-bottom: 0px;
+}
+// Questions
+#page-mod-quiz-edit .questioncontentcontainer div.randomquestionqlist {
+  margin-top:1.5em;
+}
+#page-mod-quiz-edit div.question div.content div.questioncontrols {
+  width: 1.5em;
+  background: none;
+  position: initial;
+}
+
+#page-mod-quiz-edit div.editq div.question div.content {
+  min-height: 4.5em;
+}
+
+#page-mod-quiz-edit div.question div.content div.points {
+  background: none;
+  float: right;
+  position: initial;
+}
+#page-mod-quiz-edit .questioncontentcontainer div.singlequestion.truefalse a,
+#page-mod-quiz-edit .questioncontentcontainer div.singlequestion.multichoice a {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 10.2em);
+  max-width: -moz-calc(100% - 10.2em);
+  max-width: -webkit-calc(100% - 10.2em);
+}
+#page-mod-quiz-edit div.editq div.question div.content .questioncontentcontainer > div > .randomquestionfromcategory,
+#page-mod-quiz-edit div.editq div.question div.content .questioncontentcontainer > div > .randomquestioncategory {
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 10.2em);
+  max-width: -moz-calc(100% - 10.2em);
+  max-width: -webkit-calc(100% - 10.2em);
+}
+#page-mod-quiz-edit div.question div.content .questionname, #categoryquestions .questionname {
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#page-mod-quiz-edit div.question div.content .questiontext, #categoryquestions .questiontext {
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+// Question bank
+#page-mod-quiz-edit .quizcontents > h2 {
+  padding-left: 20px;
+}
+#page-mod-quiz-edit .questionbankwindow.block div.header {
+  background: none;
+  padding: 0px;
+  margin: 0px;
+}
+#page-mod-quiz-edit .questionbankwindow.block div.header div.title h2 {
+  color: @black;
+  font-size: 1.4em;
+  padding: 15px 0px 7px 0px;
+}
+#page-mod-quiz-edit .questionbankwindow a#showbankcmd,
+#page-mod-quiz-edit .questionbankwindow a#hidebankcmd {
+  color: @uLinkGreen;
+  background: none;
+  text-decoration: none;
+  &:hover {
+    color: @uHoverGreen;
+    background: none;
+    text-decoration: underline;
+  }
+  &:focus {
+    color: @uFocusGreen;
+    background: none;
+    text-decoration: underline;
+  }
+}
+// Edit
+#page-mod-quiz-edit .questionbankwindow .createnewquestion select,
+#page-mod-quiz-edit .questionbankwindow #catmenu select,
+#page-mod-quiz-edit .questionbankwindow #menucategory {
+  display: block;
+}
+.createnewquestion .singlebutton input[type="submit"] {
+  width: 100%;
+  margin: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+  white-space: nowrap;
+}
+.createnewquestion .singlebutton div {
+  margin: 5px 0px;
+  width: auto;
+  display: block;
+}
+.path-mod-quiz input[size] {
+  margin-bottom: 0px;
+}
+#page-mod-quiz-edit .modulespecificbuttonscontainer {
+  width: auto;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+#page-mod-quiz-edit div.question div.content div.qorder,
+#page-mod-quiz-edit div.question div.content div.questioncontrols {
+  z-index: 5;
+}
+#page-mod-quiz-edit #page .mod-quiz-edit-content .maxgrade .invisiblefieldset>input[type='submit'] {
+  margin-bottom: 0;
+}
+#page-mod-quiz-edit.editing #page ul.slots li.section li.activity .activityinstance {
+  padding-right: 100px;
+}
+#page-mod-quiz-edit #page ul.slots li.section li.activity .activityinstance {
+  position: inherit;
+  width: 80%;
+}
+#page-mod-quiz-edit #page ul.slots li.section li.activity .mod-indent-outer {
+  display: flex;
+}
+#page-mod-quiz-report #page {
+  padding: 0;
+  margin: 0;
+  max-width: none;
+}
+#page-mod-quiz-report table#attempts {
+  width: 100%;
+}
+#page-mod-quiz-report table#attempts td {
+  border-color: @uGreyBorder;
+}
+// Quiz Timer.
+#quiz-timer {
+  margin: 0px;
+  transition: 300ms;
+  background-color: @warningBackground;
+  border-color: @warningBorder;
+  color: @warningText;
+  .border-radius(4px);
+  .box-shadow(0 0 10px rgba(0,0,0,0.1));
+  font-size: 1.5em;
+  padding: 0.5em 1em;
+  z-index: 1;
+}
+//Quiz order and paging
+#page-mod-quiz-edit .reorder .questioncontentcontainer {
+  max-width: calc(~" 100% - - 140px ");
+  max-width: -moz-calc(~" 100% - - 140px ");
+  max-width: -webkit-calc(~" 100% - - 140px ");
+}
+//Question Bank
+#page-question-edit .questionbankwindow {
+  width: 95%;
+}
+#page-question-edit .questionbankwindow .modulespecificbuttonscontainer #menucategory {
+  margin-bottom: 10px;
+}
+#page-question-preview #page-header {
+  display:none;
+}
+
+// Essay
+.que.essay .qtype_essay_response.readonly {
+  overflow: scroll;
+}
+
+// Update display on force saved for quiz.
+#last-saved{
+  -webkit-animation: color-change 1s;
+  -moz-animation: color-change 1s;
+  -o-animation: color-change 1s;
+  -ms-animation: color-change 1s;
+  animation: color-change 1s;
+  margin-top: 20px;
+  clear: left;
+}
+
+@-webkit-keyframes color-change {
+  0% { background-color: white; }
+  50% { background-color: #d9edf7; }
+  100% { background-color: white; }
+}
+@-moz-keyframes color-change {
+  0% { background-color: white; }
+  50% { background-color: #d9edf7; }
+  100% { background-color: white; }
+}
+@-ms-keyframes color-change {
+  0% { background-color: white; }
+  50% { background-color: #d9edf7; }
+  100% { background-color: white; }
+}
+@-o-keyframes color-change {
+  0% { background-color: white; }
+  50% { background-color: #d9edf7; }
+  100% { background-color: white; }
+}
+@keyframes color-change {
+  0% { background-color: white; }
+  50% { background-color: #d9edf7; }
+  100% { background-color: white; }
+}
+
+.path-mod-quiz .quizcontents .question .questioncontentcontainer {
+  display:block;
+}

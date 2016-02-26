@@ -1,0 +1,44 @@
+<form id="mod-iclickerregistration-form"
+      class="col-xs-12 col-md-6">
+    <!--div necessary for bootstrap validation styling to work.-->
+    <div ng-class="inputErrors.length > 0? 'has-error' : '' ">
+        <input type="text" name="clicker-id"
+               class="input-lg form-control col-xs-12"
+               ng-model="inputValue"
+               ng-trim="true"
+               placeholder={{inputTextPlaceHolder}}
+               required>
+    </div>
+    <div class="btn-group btn-group-lg col-xs-12 no-side-padding">
+        <button type="button" class="btn btn btn-primary col-xs-12 col-md-6"
+                ng-click="submitCallBack(inputValue)">
+            {{submitText}}
+        </button>
+        <button type="button" class="cancel-btn btn btn-default col-xs-12 col-md-6"
+                ng-click="cancelCallBack()">
+            {{cancelText}}
+        </button>
+    </div>
+
+    <!--Validation info box
+       @see http://getbootstrap.com/css/#forms-control-validation-->
+    <div id="mod-iclickerregistration-validation-info-box"
+         class="col-xs-12 no-side-padding">
+        <ul ng-show="inputErrors.length > 0 || inputSuccess" class="list-group col-xs-12">
+            <li ng-repeat="input_error in inputErrors"
+                class="list-group-item list-group-item-danger col-xs-12">{{input_error}}</li>
+            <li ng-show="inputSuccess"
+                class="list-group-item list-group-item-success col-xs-12">{{inputSuccess}}</li>
+        </ul>
+    </div>
+</form>
+<div id="form-instruction"
+     class="col-xs-12 col-md-6">
+    <hr id="hr-between-form-and-instruction"
+        class="clearfix visible-xs visible-sm">
+    <h1>{{lang.instructionheadingtext}}</h1>
+    <p>
+        {{lang.instructiontext}}
+    <div id="iclicker-id-img"></div>
+    </p>
+</div>

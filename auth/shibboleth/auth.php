@@ -29,6 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/authlib.php');
+require_once($CFG->dirroot . '/cohort/lib.php');
 
 /**
  * Shibboleth authentication plugin.
@@ -81,6 +82,24 @@ class auth_plugin_shibboleth extends auth_plugin_base {
         }
     }
 
+    function sync_cohorts($cohorts,$userid) {
+        global $DB;
+        try {
+            $queryparams = array($userid);
+            $pattern = '/\\d{4}.\\d{5}/is';
+            preg_match_all($pattern, str_replace(':','.',$cohorts), $matches);
+            list($insql, $inparams) = $DB->get_in_or_equal( $matches[0]);
+            $params = array_merge($queryparams,  $inparams);
+            $cohortsnotenroled = $DB->get_records_sql("select id from {cohort} where idnumber not in (select c.idnumber from {user} u, {cohort} c, {cohort_members} cm where u.id=?".
+                " and u.id=cm.userid and cm.cohortid=c.id ) and idnumber $insql",$params);
+            foreach ($cohortsnotenroled as $cohort) {
+                cohort_add_member($cohort->id, $userid);
+            }
+        } catch (moodle_exception $e) {
+            error_log('Error in sync_cohorts for user '.$userid);
+            continue;
+        }
+    }
 
 
     /**
@@ -143,7 +162,8 @@ class auth_plugin_shibboleth extends auth_plugin_base {
         $configarray = (array) $this->config;
 
         $moodleattributes = array();
-        foreach ($this->userfields as $field) {
+        $userfields = array_merge($this->userfields, $this->get_custom_user_profile_fields());
+        foreach ($userfields as $field) {
             if (isset($configarray["field_map_$field"])) {
                 $moodleattributes[$field] = $configarray["field_map_$field"];
             }
@@ -280,6 +300,16 @@ class auth_plugin_shibboleth extends auth_plugin_base {
         set_config('convert_data',      $config->convert_data,      'auth/shibboleth');
         set_config('auth_instructions', $config->auth_instructions, 'auth/shibboleth');
         set_config('changepasswordurl', $config->changepasswordurl, 'auth/shibboleth');
+
+        //sync_cohorts checkbox
+        if (isset($config->sync_cohorts) && $config->sync_cohorts == 'on'){
+            set_config('sync_cohorts',    $config->sync_cohorts,    'auth/shibboleth');
+        } else {
+            if (isset($this->config->sync_cohorts) and $this->config->sync_cohorts == 'on'){
+                set_config('sync_cohorts',    'off',    'auth/shibboleth');
+            }
+            $config->sync_cohorts = 'off';
+        }
 
         // Overwrite alternative login URL if integrated WAYF is used
         if (isset($config->alt_login) && $config->alt_login == 'on'){
@@ -442,6 +472,5 @@ class auth_plugin_shibboleth extends auth_plugin_base {
 
         return $CookieArray;
     }
-
 
 

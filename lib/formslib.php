@@ -211,7 +211,9 @@ abstract class moodleform {
      * @return string form identifier.
      */
     protected function get_form_identifier() {
-        return get_class($this);
+        $class = get_class($this);
+
+        return preg_replace('/[^a-z0-9_]/i', '_', $class);
     }
 
     /**
@@ -345,16 +347,8 @@ abstract class moodleform {
                 continue;
             }
 
-/*
-  // TODO: rethink the file scanning MDL-19380
-            if ($CFG->runclamonupload) {
-                if (!clam_scan_moodle_file($_FILES[$elname], $COURSE)) {
-                    $errors[$elname] = $_FILES[$elname]['uploadlog'];
-                    unset($_FILES[$elname]);
-                    continue;
-                }
-            }
-*/
+            // NOTE: the viruses are scanned in file picker, no need to deal with them here.
+
             $filename = clean_param($_FILES[$elname]['name'], PARAM_FILE);
             if ($filename === '') {
                 // TODO: improve error message - wrong chars
@@ -2889,7 +2883,7 @@ class MoodleQuickForm_Rule_Required extends HTML_QuickForm_Rule {
         }
         $stripvalues = array(
             '#</?(?!img|canvas|hr).*?>#im', // all tags except img, canvas and hr
-            '#(\xc2|\xa0|\s|&nbsp;)#', //any whitespaces actually
+            '#(\xc2\xa0|\s|&nbsp;)#', // Any whitespaces actually.
         );
         if (!empty($CFG->strictformsrequired)) {
             $value = preg_replace($stripvalues, '', (string)$value);
@@ -2911,7 +2905,7 @@ class MoodleQuickForm_Rule_Required extends HTML_QuickForm_Rule {
         global $CFG;
         if (!empty($CFG->strictformsrequired)) {
             if (!empty($format) && $format == FORMAT_HTML) {
-                return array('', "{jsVar}.replace(/(<[^img|hr|canvas]+>)|&nbsp;|\s+/ig, '') == ''");
+                return array('', "{jsVar}.replace(/(<(?!img|hr|canvas)[^>]*>)|&nbsp;|\s+/ig, '') == ''");
             } else {
                 return array('', "{jsVar}.replace(/^\s+$/g, '') == ''");
             }

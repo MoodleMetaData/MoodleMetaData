@@ -1,0 +1,7 @@
+# In the future, when our forked moodle have a mature javascript front end, in which everything is
+# similar to node's packaging system, and node_moduls are generated just like how we automatically
+# compile theme's less files.
+node_modules
+
+public/css/main.css
+public/js/main.js

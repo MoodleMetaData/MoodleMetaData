@@ -1,0 +1,118 @@
+.no-side-padding {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.mod-iclickerregistration-delete-confirmation-dialog,
+#mod-iclickerregistration {
+  @import "../node_modules/bootstrap/less/bootstrap";
+
+  .no-side-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  &:extend(.no-side-padding);
+
+  #mod-iclickerregistration-validation-info-box {
+    margin-top: 1em;
+
+    ul {
+      margin-left: 0px;
+    }
+  }
+
+  .background-size(@width, @height) {
+    width: @width;
+    height: @height;
+    -webkit-background-size: @width @height;
+    background-size: @width @height;
+    background-repeat: no-repeat;
+  }
+
+  #mod-iclickerregistration-iclicker-info {
+    padding: 1em;
+  }
+
+  #mod-iclickerregistration-form,
+  #form-instruction,
+  div#iclicker-id-img {
+    margin-top: 1em;
+  }
+
+  #mod-iclickerregistration-form {
+    input, button {
+      margin-top: 1em;
+    }
+
+    button {
+      margin-left: 0px;
+      margin-right: 0px;
+    }
+
+    @media screen and (max-width: @screen-desktop) {
+      button.update {
+        margin-bottom: 0px;
+      }
+
+      button.registration {
+        margin-bottom: 0px;
+      }
+
+      button.cancel,
+      button.cancel-btn {
+        margin-top: 0px;
+      }
+    }
+  }
+
+  div#registration-iclicker-id-img,
+  div#iclicker-id-img {
+    // Note this is going to be compiled and placed in public directory. The img path
+    // is adjusted according to that.
+    background-image: url('../img/clickers.png');
+    .background-size(256px, 256px);
+  }
+
+  // Make #registration-form-instruction display a left border (act as a horizontal divider) when min-width is
+  // screen-desktop (aka md).
+  @media screen and (min-width: @screen-desktop) {
+    #form-instruction {
+      border-left: 1px solid lightgrey;
+    }
+  }
+
+  #mod-iclickerregistration-iclicker-info-list table {
+    width: 100%;
+  }
+
+  #mod-iclickerregistration-iclicker-info-list {
+    margin-bottom: 20px;
+  }
+
+  #mod-iclickerregistration-iclicker-info-list > * {
+    margin-top: 20px;
+    margin-bottom: 0px;
+  }
+
+  .iclicker-list-controls > span {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  #mod-tab-hide-unregistered-button {
+    margin-left: 1em;
+  }
+}
+
+/*
+ * All the children of this class are with bootstrap 3, but the parent is under bootstrap 2. This
+ * have some rules that don't makes sense, hence it is ammended here.
+ */
+.mod-iclickerregistration-delete-confirmation-dialog {
+  border: 0px;
+  background: transparent;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}

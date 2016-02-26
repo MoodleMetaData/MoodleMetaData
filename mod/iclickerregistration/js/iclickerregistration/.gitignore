@@ -1,0 +1,4 @@
+# We rely on the compiled files thus the following only exist in dev environment for debugging purposes.
+node_modules
+public/css/main.css
+public/js/main.js

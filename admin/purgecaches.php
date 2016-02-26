@@ -33,21 +33,31 @@ $returnurl = optional_param('returnurl', null, PARAM_LOCALURL);
 if ($confirm && isloggedin() && confirm_sesskey()) {
     require_capability('moodle/site:config', context_system::instance());
 
-    // Valid request. Purge, and redirect the user back to where they came from.
-    purge_all_caches();
-
-    if ($returnurl) {
-        $returnurl = $CFG->wwwroot . $returnurl;
+    /* eClass modification: LMS-206 Disable dangerous functions from GUI. */
+    if (isset($CFG->eclassdisabledisasters)) {
+        if ($returnurl) {
+            $returnurl = $CFG->wwwroot . $returnurl;
+        } else {
+            $returnurl = new moodle_url('/admin/purgecaches.php');
+        }
+        redirect($returnurl, get_string('purgecachesdisabled', 'admin'));
     } else {
-        $returnurl = new moodle_url('/admin/purgecaches.php');
+        // Valid request. Purge, and redirect the user back to where they came from.
+        purge_all_caches();
+
+        if ($returnurl) {
+            $returnurl = $CFG->wwwroot . $returnurl;
+        } else {
+            $returnurl = new moodle_url('/admin/purgecaches.php');
+        }
+        redirect($returnurl, get_string('purgecachesfinished', 'admin'));
     }
-    redirect($returnurl, get_string('purgecachesfinished', 'admin'));
 }
 
 // Otherwise, show a button to actually purge the caches.
 admin_externalpage_setup('purgecaches');
 
-$actionurl = new moodle_url('/admin/purgecaches.php', array('sesskey'=>sesskey(), 'confirm'=>1));
+$actionurl = new moodle_url('/admin/purgecaches.php', array('sesskey' => sesskey(), 'confirm' => 1));
 if ($returnurl) {
     $actionurl->param('returnurl', $returnurl);
 }
@@ -56,8 +66,13 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('purgecaches', 'admin'));
 
 echo $OUTPUT->box_start('generalbox', 'notice');
-echo html_writer::tag('p', get_string('purgecachesconfirm', 'admin'));
-echo $OUTPUT->single_button($actionurl, get_string('purgecaches', 'admin'), 'post');
+/* eClass modification: LMS-206 Disable dangerous functions from GUI. */
+if (isset($CFG->eclassdisabledisasters)) {
+    echo html_writer::tag('p', get_string('purgecachesdisabled', 'admin'));
+} else {
+    echo html_writer::tag('p', get_string('purgecachesconfirm', 'admin'));
+    echo $OUTPUT->single_button($actionurl, get_string('purgecaches', 'admin'), 'post');
+}
 echo $OUTPUT->box_end();
 
 echo $OUTPUT->footer();

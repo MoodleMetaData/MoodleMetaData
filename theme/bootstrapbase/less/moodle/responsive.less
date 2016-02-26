@@ -99,9 +99,18 @@
         }
     }
 
+    .fp-formset div {
+        height: auto;
+    }
 }
 
 @media (min-width: 1200px) {
+    // Editor on question page
+    .path-question {
+        #id_answerhdr div.fitem_feditor {
+            padding-right: 6px;
+        }
+    }
     // Login page.
     .loginbox.twocolumns .loginpanel {
         margin-left: 0;
@@ -162,7 +171,8 @@
     .fluid-span (@columns) {
         .fluid-span-full(@columns, @fluidGridColumnWidth1200, @fluidGridGutterWidth1200);
     }
-    .empty-region-side-post.used-region-side-pre { // Post region is empty and pre region is in use.
+    .empty-region-side-post.used-region-side-pre, // Post region is empty and pre region is in use.
+    .jsenabled.docked-region-side-post.used-region-side-pre { // All post blocks docked and pre region is in use.
         #region-main.span8 {
             /** increase the span size by 1 **/
             .fluid-span(9);
@@ -199,7 +209,8 @@
     .fluid-span (@columns) {
         .fluid-span-full(@columns, @fluidGridColumnWidth768, @fluidGridGutterWidth768);
     }
-    .empty-region-side-post.used-region-side-pre { // Post region is empty and pre region is in use.
+    .empty-region-side-post.used-region-side-pre, // Post region is empty and pre region is in use.
+    .jsenabled.docked-region-side-post.used-region-side-pre { // All post blocks docked and pre region is in use.
         #region-main.span8 {
             /** increase the span size by 1 **/
             .fluid-span(9);
@@ -220,6 +231,16 @@
          margin-left: 0;
          .box-sizing(border-box);
      }
+     #page-mod-quiz-edit div.quizcontents,
+    .questionbankwindow.block {
+        width: 100%;
+        float: none;
+    }
+    #page-mod-quiz-edit #block-region-side-pre,
+    #page-mod-quiz-edit #block-region-side-post {
+        clear: both;
+    }
+
  }
 
 @media (max-width: 480px) {
@@ -369,6 +390,34 @@
     }
 }
 
+.dir-rtl {
+    .dropdown-menu {
+        right:0;
+        left:auto;
+        margin-right: 0px;
+    }
+    .navbar .nav > li > .dropdown-menu:before {
+        right:9px;
+        left:auto;
+    }
+    .navbar .nav > li > .dropdown-menu:after {
+        right: 10px;
+        left:auto;
+    }
+    .dropdown-submenu > a:after {
+        margin-right: 0;
+        margin-left: -10px;
+        float: left;
+        border-right-color: #ccc;
+        border-left-color: transparent;
+        border-width: 5px 5px 5px 0px;
+    }
+    .dropdown-submenu > .dropdown-menu {
+        right:100%;
+        left:auto;
+    }
+}
+
 @media (max-width: 979px) {
     .nav-collapse {
          height: 0;
@@ -391,6 +440,18 @@
     }
     .nav-collapse.active {
         height: auto;
+        .usermenu .moodle-actionmenu[data-enhanced] {
+            .toggle-display {
+                display: none;
+            }
+            .menu {
+                display: block;
+
+                li {
+                    margin: 0 0.5em;
+                }
+            }
+        }
     }
     .path-mod-data .box > table > tbody > tr > td {
         display: block;
@@ -409,6 +470,142 @@
             }
         }
     }
+
+    .navbar {
+        .nav-collapse.active {
+            border-top: 1px solid @navbarBorder;
+            &.pull-left,
+            &.pull-right {
+                float: none;
+            }
+            > .nav {
+                margin: 0;
+
+                // Add padding to first-level links.
+                > li > a {
+                    padding-left: 20px;
+                    border-radius: 0px;
+                }
+                .dropdown-menu {
+                    margin: 0px 0px 0px 15px;
+                    li > a {
+                        border-radius: 0px;
+                    }
+                }
+            }
+
+            .nav, .nav .dropdown-menu {
+                .dropdown-submenu {
+                    .dropdown-toggle {
+                        &:after {
+                            display: inline-block;
+                            float: none;
+                            .caret();
+                            border-top-color: @navbarBorder;
+                            margin-left: 4px;
+                            margin-top: 8px;
+                        }
+                    }
+
+                    &.open {
+                        > a {
+                            background-color: @navbarBackground;
+                        }
+                    }
+
+                    // Suppress showing of submenu menu content on hover.
+                    &:hover {
+                        .dropdown-menu {
+                            display: none;
+                        }
+                        &.open {
+                            > a {
+                                background: @navbarBackground;
+                            }
+                            > .dropdown-menu,
+                            .open > .dropdown-menu {
+                                display: block;
+                            }
+                        }
+                    }
+                }
+                .divider {
+                    width: auto;
+                    display: block;
+                    height: 0px;
+                    margin: 4px 1px;
+                    border-left: 0px none;
+                    border-right: 0px none;
+                    border-top: 1px solid @navbarBorder;
+                    border-bottom: 1px solid @navbarBackgroundHighlight;
+                }
+            }
+        }
+        &.navbar-inverse {
+            .nav-collapse.active {
+                border-top-color: @navbarInverseBorder;
+                .nav,
+                .nav .dropdown-menu {
+                    .dropdown-submenu {
+                        .dropdown-toggle {
+                            &:after {
+                                border-top-color: @navbarInverseBorder;
+                            }
+                        }
+                        &.open {
+                            > a {
+                                background-color: @navbarInverseBackground;
+                            }
+                        }
+
+                        &:hover {
+                            &.open {
+                                > a {
+                                    background: @navbarInverseBackground;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .dir-rtl {
+        .navbar {
+            .nav-collapse.active {
+                > .nav {
+                    margin: 0;
+                    > li > a {
+                        padding-left: 0px;
+                        padding-right: 20px;
+                    }
+                    .dropdown-menu {
+                        margin: 0px 15px 0px 0px;
+                    }
+                }
+                .dropdown-menu {
+                    > li {
+                        > a {
+                            padding: 9px 15px;
+                        }
+                    }
+                }
+                .nav,
+                .nav .dropdown-menu {
+                    .dropdown-submenu {
+                        .dropdown-toggle {
+                            &:after {
+                                margin-left: 0px;
+                                margin-right: 4px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
 
 @media (max-width: 767px) {
@@ -467,7 +664,8 @@
     // cases when we have content in the side-pre blockregion but not in the
     // side-post blockregion as there are more specific selectors in
     // core.less which take precedence which break responsiveness.
-    .empty-region-side-post.used-region-side-pre { // Post region is empty and pre region is in use.
+    .empty-region-side-post.used-region-side-pre, // Post region is empty and pre region is in use.
+    .jsenabled.docked-region-side-post.used-region-side-pre { // All post blocks docked and pre region is in use.
         #block-region-side-pre.span4,
         #region-main.span8 {
             .fluid-span(12);
@@ -513,7 +711,7 @@
     }
     // CSS for the course management pages.
     #course-category-listings.columns-3 {
-        background-color:transparent;
+        background-color: @tableBackground;
         border:0;
 
         #category-listing,
@@ -534,9 +732,17 @@
 
 // All widths up to 1199px.
 @media (max-width: 1199px) {
+
+    // Editor on question pages
+    .path-question {
+        #id_answerhdr div.fitem {
+            padding-right: 6px;
+            padding-left: 4px;
+        }
+    }
     // CSS for the course management pages.
     #course-category-listings.columns-3 {
-        background-color:transparent;
+        background-color: @tableBackground;
         border:0;
         #category-listing,
         #course-listing,
@@ -567,4 +773,27 @@
    #page-mod-forum-discuss.dir-rtl .discussioncontrols {
        text-align: left;
    }
+}
+
+
+// File Picker.
+@media (max-width: 768px) {
+    .fp-forminset .control-group .controls {
+        margin-left: 0;
+    }
+    .dir-rtl .fp-formset .control-group {
+        label.control-label {
+            text-align: right;
+            float: none;
+        }
+    }
+    .dir-rtl .fp-forminset .control-group {
+        label.control-label {
+            text-align: right;
+            float: none;
+        }
+        .controls {
+            margin-right: 0;
+        }
+    }
 }

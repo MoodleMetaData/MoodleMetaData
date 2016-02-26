@@ -27,6 +27,12 @@
     padding: 0.3em 25px 0.3em 0;
 }
 
+.tooltip.mcstrike {
+    position: relative;
+    float: right;
+    padding-left: 25px;
+}
+
 /* Editing form. */
 body#page-question-type-multichoice div[id^=fitem_id_][id*=answer_] {
     background: #EEE;

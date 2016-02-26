@@ -27,6 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/tablelib.php');
+require_once($CFG->dirroot.'/mod/quiz/report/default.php');
 
 
 /**
@@ -317,8 +318,9 @@ abstract class quiz_attempts_report extends quiz_default_report {
                 // Ensure the attempt belongs to a student included in the report. If not skip.
                 continue;
             }
-            add_to_log($quiz->course, 'quiz', 'delete attempt', 'report.php?id=' . $cm->id,
-                    $attemptid, $cm->id);
+
+            // Set the course module id before calling quiz_delete_attempt().
+            $quiz->cmid = $cm->id;
             quiz_delete_attempt($attempt, $quiz);
         }
     }

@@ -541,7 +541,7 @@ function file_get_draft_area_info($draftitemid, $filepath = '/') {
  * @param int $newfilesize the size that would be added to the current area.
  * @param bool $includereferences true to include the size of the references in the area size.
  * @return bool true if the area will/has exceeded its limit.
- * @since 2.4
+ * @since Moodle 2.4
  */
 function file_is_draft_area_limit_reached($draftitemid, $areamaxbytes, $newfilesize = 0, $includereferences = false) {
     if ($areamaxbytes != FILE_AREA_MAX_BYTES_UNLIMITED) {
@@ -788,7 +788,7 @@ function file_restore_source_field_from_draft_file($storedfile) {
  * @return string|null if $text was passed in, the rewritten $text is returned. Otherwise NULL.
  */
 function file_save_draft_area_files($draftitemid, $contextid, $component, $filearea, $itemid, array $options=null, $text=null, $forcehttps=false) {
-    global $USER;
+    global $CFG, $USER;
 
     $usercontext = context_user::instance($USER->id);
     $fs = get_file_storage();
@@ -963,7 +963,22 @@ function file_save_draft_area_files($draftitemid, $contextid, $component, $filea
     if (is_null($text)) {
         return null;
     } else {
-        return file_rewrite_urls_to_pluginfile($text, $draftitemid, $forcehttps);
+        $newtext = file_rewrite_urls_to_pluginfile($text, $draftitemid, $forcehttps);
+
+        if (extension_loaded('newrelic')) {
+            $draftfilestillpersist = preg_match("|$CFG->httpswwwroot/draftfile.php|", $newtext) == 1;
+            $pluginfilestillpersist = preg_match("|$CFG->httpswwwroot/pluginfile.php|", $newtext) == 1;
+
+            if ($draftfilestillpersist || $pluginfilestillpersist) {
+                $userid = isset($USER->id) ? $USER->id : "not_logged_in";
+                $isdraftfile = $draftfilestillpersist ? 'true' : 'false';
+                newrelic_notice_error(
+                    "Invalid url submitted. user: '$userid', component: '$component', " .
+                    "context id: '$contextid', filearea: $filearea, item id: $itemid, draftfile: $isdraftfile");
+            }
+        }
+
+        return $newtext;
     }
 }
 
@@ -1166,7 +1181,8 @@ function format_postdata_for_curlcall($postdata) {
  * @param string $tofile store the downloaded content to file instead of returning it.
  * @param bool $calctimeout false by default, true enables an extra head request to try and determine
  *   filesize and appropriately larger timeout based on $CFG->curltimeoutkbitrate
- * @return mixed false if request failed or content of the file as string if ok. True if file downloaded into $tofile successfully.
+ * @return stdClass|string|bool stdClass object if $fullresponse is true, false if request failed, true
+ *   if file downloaded into $tofile successfully or the file content as a string.
  */
 function download_file_content($url, $headers=null, $postdata=null, $fullresponse=false, $timeout=300, $connecttimeout=20, $skipcertverify=false, $tofile=NULL, $calctimeout=false) {
     global $CFG;
@@ -1388,6 +1404,7 @@ function &get_mimetypes_array() {
     static $mimearray = array (
         'xxx'  => array ('type'=>'document/unknown', 'icon'=>'unknown'),
         '3gp'  => array ('type'=>'video/quicktime', 'icon'=>'quicktime', 'groups'=>array('video'), 'string'=>'video'),
+        '7z'  => array ('type'=>'application/x-7z-compressed', 'icon'=>'archive', 'groups'=>array('archive'), 'string'=>'archive'),
         'aac'  => array ('type'=>'audio/aac', 'icon'=>'audio', 'groups'=>array('audio'), 'string'=>'audio'),
         'accdb'  => array ('type'=>'application/msaccess', 'icon'=>'base'),
         'ai'   => array ('type'=>'application/postscript', 'icon'=>'eps', 'groups'=>array('image'), 'string'=>'image'),
@@ -1410,6 +1427,9 @@ function &get_mimetypes_array() {
         'dmg'  => array ('type'=>'application/octet-stream', 'icon'=>'unknown'),
 
         'doc'  => array ('type'=>'application/msword', 'icon'=>'document', 'groups'=>array('document')),
+        'bdoc' => array ('type'=>'application/x-digidoc', 'icon'=>'document', 'groups'=>array('archive')),
+        'cdoc' => array ('type'=>'application/x-digidoc', 'icon'=>'document', 'groups'=>array('archive')),
+        'ddoc' => array ('type'=>'application/x-digidoc', 'icon'=>'document', 'groups'=>array('archive')),
         'docx' => array ('type'=>'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'icon'=>'document', 'groups'=>array('document')),
         'docm' => array ('type'=>'application/vnd.ms-word.document.macroEnabled.12', 'icon'=>'document'),
         'dotx' => array ('type'=>'application/vnd.openxmlformats-officedocument.wordprocessingml.template', 'icon'=>'document'),
@@ -1465,6 +1485,8 @@ function &get_mimetypes_array() {
         'mhtml'=> array ('type'=>'message/rfc822', 'icon'=>'archive'),
         'mov'  => array ('type'=>'video/quicktime', 'icon'=>'quicktime', 'groups'=>array('video','web_video'), 'string'=>'video'),
         'movie'=> array ('type'=>'video/x-sgi-movie', 'icon'=>'quicktime', 'groups'=>array('video'), 'string'=>'video'),
+        'mw'   => array ('type'=>'application/maple', 'icon'=>'math'),
+        'mws'  => array ('type'=>'application/maple', 'icon'=>'math'),
         'm3u'  => array ('type'=>'audio/x-mpegurl', 'icon'=>'mp3', 'groups'=>array('audio'), 'string'=>'audio'),
         'mp3'  => array ('type'=>'audio/mp3', 'icon'=>'mp3', 'groups'=>array('audio','web_audio'), 'string'=>'audio'),
         'mp4'  => array ('type'=>'video/mp4', 'icon'=>'mpeg', 'groups'=>array('video','web_video'), 'string'=>'video'),
@@ -1502,7 +1524,6 @@ function &get_mimetypes_array() {
         'pic'  => array ('type'=>'image/pict', 'icon'=>'image', 'groups'=>array('image'), 'string'=>'image'),
         'pict' => array ('type'=>'image/pict', 'icon'=>'image', 'groups'=>array('image'), 'string'=>'image'),
         'png'  => array ('type'=>'image/png', 'icon'=>'png', 'groups'=>array('image', 'web_image'), 'string'=>'image'),
-
         'pps'  => array ('type'=>'application/vnd.ms-powerpoint', 'icon'=>'powerpoint', 'groups'=>array('presentation')),
         'ppt'  => array ('type'=>'application/vnd.ms-powerpoint', 'icon'=>'powerpoint', 'groups'=>array('presentation')),
         'pptx' => array ('type'=>'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'icon'=>'powerpoint'),
@@ -1512,11 +1533,13 @@ function &get_mimetypes_array() {
         'ppam' => array ('type'=>'application/vnd.ms-powerpoint.addin.macroEnabled.12', 'icon'=>'powerpoint'),
         'ppsx' => array ('type'=>'application/vnd.openxmlformats-officedocument.presentationml.slideshow', 'icon'=>'powerpoint'),
         'ppsm' => array ('type'=>'application/vnd.ms-powerpoint.slideshow.macroEnabled.12', 'icon'=>'powerpoint'),
-
         'ps'   => array ('type'=>'application/postscript', 'icon'=>'pdf'),
+        'pub'  => array ('type'=>'application/x-mspublisher', 'icon'=>'publisher', 'groups'=>array('presentation')),
+
         'qt'   => array ('type'=>'video/quicktime', 'icon'=>'quicktime', 'groups'=>array('video','web_video'), 'string'=>'video'),
         'ra'   => array ('type'=>'audio/x-realaudio-plugin', 'icon'=>'audio', 'groups'=>array('audio','web_audio'), 'string'=>'audio'),
         'ram'  => array ('type'=>'audio/x-pn-realaudio-plugin', 'icon'=>'audio', 'groups'=>array('audio'), 'string'=>'audio'),
+        'rar'  => array ('type'=>'application/x-rar-compressed', 'icon'=>'archive', 'groups'=>array('archive'), 'string'=>'archive'),
         'rhb'  => array ('type'=>'text/xml', 'icon'=>'markup'),
         'rm'   => array ('type'=>'audio/x-pn-realaudio-plugin', 'icon'=>'audio', 'groups'=>array('audio'), 'string'=>'audio'),
         'rmvb' => array ('type'=>'application/vnd.rn-realmedia-vbr', 'icon'=>'video', 'groups'=>array('video'), 'string'=>'video'),
@@ -1557,6 +1580,7 @@ function &get_mimetypes_array() {
         'webm'  => array ('type'=>'video/webm', 'icon'=>'video', 'groups'=>array('video'), 'string'=>'video'),
         'wmv'  => array ('type'=>'video/x-ms-wmv', 'icon'=>'wmv', 'groups'=>array('video'), 'string'=>'video'),
         'asf'  => array ('type'=>'video/x-ms-asf', 'icon'=>'wmv', 'groups'=>array('video'), 'string'=>'video'),
+        'wma'  => array ('type'=>'audio/x-ms-wma', 'icon'=>'audio', 'groups'=>array('audio'), 'string'=>'audio'),
 
         'xbk'  => array ('type'=>'application/x-smarttech-notebook', 'icon'=>'archive'),
         'xdp'  => array ('type'=>'application/pdf', 'icon'=>'pdf'),
@@ -1944,6 +1968,13 @@ function file_mimetype_in_typegroup($mimetype, $groups) {
  */
 function send_file_not_found() {
     global $CFG, $COURSE;
+
+    // Allow cross-origin requests only for Web Services.
+    // This allow to receive requests done by Web Workers or webapps in different domains.
+    if (WS_SERVER) {
+        header('Access-Control-Allow-Origin: *');
+    }
+
     send_header_404();
     print_error('filenotfound', 'error', $CFG->wwwroot.'/course/view.php?id='.$COURSE->id); //this is not displayed on IIS??
 }
@@ -2187,7 +2218,7 @@ function send_temp_file($path, $filename, $pathisstring=false) {
     }
 
     header('Content-Disposition: attachment; filename="'.$filename.'"');
-    if (strpos($CFG->wwwroot, 'https://') === 0) { //https sites - watch out for IE! KB812935 and KB316431
+    if (is_https()) { // HTTPS sites - watch out for IE! KB812935 and KB316431.
         header('Cache-Control: private, max-age=10, no-transform');
         header('Expires: '. gmdate('D, d M Y H:i:s', 0) .' GMT');
         header('Pragma: ');
@@ -2264,23 +2295,27 @@ function send_file($path, $filename, $lifetime = null , $filter=0, $pathisstring
 
     if ($forcedownload) {
         header('Content-Disposition: attachment; filename="'.$filename.'"');
-    } else {
+    } else if ($mimetype !== 'application/x-shockwave-flash') {
+        // If this is an swf don't pass content-disposition with filename as this makes the flash player treat the file
+        // as an upload and enforces security that may prevent the file from being loaded.
+
         header('Content-Disposition: inline; filename="'.$filename.'"');
     }
 
     if ($lifetime > 0) {
-        $private = '';
+        $cacheability = ' public,';
         if (isloggedin() and !isguestuser()) {
-            $private = ' private,';
+            // By default, under the conditions above, this file must be cache-able only by browsers.
+            $cacheability = ' private,';
         }
         $nobyteserving = false;
-        header('Cache-Control:'.$private.' max-age='.$lifetime.', no-transform');
+        header('Cache-Control:'.$cacheability.' max-age='.$lifetime.', no-transform');
         header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
         header('Pragma: ');
 
     } else { // Do not cache files in proxies and browsers
         $nobyteserving = true;
-        if (strpos($CFG->wwwroot, 'https://') === 0) { //https sites - watch out for IE! KB812935 and KB316431
+        if (is_https()) { // HTTPS sites - watch out for IE! KB812935 and KB316431.
             header('Cache-Control: private, max-age=10, no-transform');
             header('Expires: '. gmdate('D, d M Y H:i:s', 0) .' GMT');
             header('Pragma: ');
@@ -2347,7 +2382,10 @@ function send_file($path, $filename, $lifetime = null , $filter=0, $pathisstring
  *  (bool) dontdie - return control to caller afterwards. this is not recommended and only used for cleanup tasks.
  *      if this is passed as true, ignore_user_abort is called.  if you don't want your processing to continue on cancel,
  *      you must detect this case when control is returned using connection_aborted. Please not that session is closed
- *      and should not be reopened.
+ *      and should not be reopened
+ *  (string|null) cacheability - force the cacheability setting of the HTTP response, "private" or "public",
+ *      when $lifetime is greater than 0. Cacheability defaults to "private" when logged in as other than guest; otherwise,
+ *      defaults to "public".
  *
  * @category files
  * @param stored_file $stored_file local file object
@@ -2429,6 +2467,21 @@ function send_stored_file($stored_file, $lifetime=null, $filter=0, $forcedownloa
     $mimetype     = ($forcedownload and !$isFF) ? 'application/x-forcedownload' :
                          ($stored_file->get_mimetype() ? $stored_file->get_mimetype() : mimeinfo('type', $filename));
 
+    // EClass Modification.
+    $extns = empty($CFG->largefilenameextentions) ? '.mp4' : $CFG->largefilenameextentions;
+    $extns = preg_replace('/\./', '\.', $extns);
+    $extlist = explode(',', $extns);
+    foreach ($extlist as $ext) {
+        if (preg_match("/$ext$/", $filename)) {
+            // Only check newrelic before its needed so we can test the logic on UAT
+            if (extension_loaded('newrelic')) {
+                newrelic_ignore_apdex();
+            }
+            break;
+        }
+    }
+    // End EClass Modification.
+
     // if user is using IE, urlencode the filename so that multibyte file name will show up correctly on popup
     if (core_useragent::is_ie()) {
         $filename = rawurlencode($filename);
@@ -2436,21 +2489,30 @@ function send_stored_file($stored_file, $lifetime=null, $filter=0, $forcedownloa
 
     if ($forcedownload) {
         header('Content-Disposition: attachment; filename="'.$filename.'"');
-    } else {
+    } else if ($mimetype !== 'application/x-shockwave-flash') {
+        // If this is an swf don't pass content-disposition with filename as this makes the flash player treat the file
+        // as an upload and enforces security that may prevent the file from being loaded.
+
         header('Content-Disposition: inline; filename="'.$filename.'"');
     }
 
     if ($lifetime > 0) {
-        $private = '';
-        if (isloggedin() and !isguestuser()) {
-            $private = ' private,';
+        $cacheability = ' public,';
+        if (!empty($options['cacheability']) && ($options['cacheability'] === 'public')) {
+            // This file must be cache-able by both browsers and proxies.
+            $cacheability = ' public,';
+        } else if (!empty($options['cacheability']) && ($options['cacheability'] === 'private')) {
+            // This file must be cache-able only by browsers.
+            $cacheability = ' private,';
+        } else if (isloggedin() and !isguestuser()) {
+            $cacheability = ' private,';
         }
-        header('Cache-Control:'.$private.' max-age='.$lifetime.', no-transform');
+        header('Cache-Control:'.$cacheability.' max-age='.$lifetime.', no-transform');
         header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
         header('Pragma: ');
 
     } else { // Do not cache files in proxies and browsers
-        if (strpos($CFG->wwwroot, 'https://') === 0) { //https sites - watch out for IE! KB812935 and KB316431
+        if (is_https()) { // HTTPS sites - watch out for IE! KB812935 and KB316431.
             header('Cache-Control: private, max-age=10, no-transform');
             header('Expires: '. gmdate('D, d M Y H:i:s', 0) .' GMT');
             header('Pragma: ');
@@ -2459,6 +2521,12 @@ function send_stored_file($stored_file, $lifetime=null, $filter=0, $forcedownloa
             header('Expires: '. gmdate('D, d M Y H:i:s', 0) .' GMT');
             header('Pragma: no-cache');
         }
+    }
+
+    // Allow cross-origin requests only for Web Services.
+    // This allow to receive requests done by Web Workers or webapps in different domains.
+    if (WS_SERVER) {
+        header('Access-Control-Allow-Origin: *');
     }
 
     if (empty($filter)) {
@@ -2672,7 +2740,7 @@ function fulldelete($location) {
  */
 function byteserving_send_file($handle, $mimetype, $ranges, $filesize) {
     // better turn off any kind of compression and buffering
-    @ini_set('zlib.output_compression', 'Off');
+    ini_set('zlib.output_compression', 'Off');
 
     $chunksize = 1*(1024*1024); // 1MB chunks - must be less than 2MB!
     if ($handle === false) {
@@ -2693,7 +2761,7 @@ function byteserving_send_file($handle, $mimetype, $ranges, $filesize) {
 
         fseek($handle, $ranges[0][1]);
         while (!feof($handle) && $length > 0) {
-            @set_time_limit(60*60); //reset time limit to 60 min - should be enough for 1 MB chunk
+            core_php_time_limit::raise(60*60); //reset time limit to 60 min - should be enough for 1 MB chunk
             $buffer = fread($handle, ($chunksize < $length ? $chunksize : $length));
             echo $buffer;
             flush();
@@ -2722,7 +2790,7 @@ function byteserving_send_file($handle, $mimetype, $ranges, $filesize) {
             echo $range[0];
             fseek($handle, $range[1]);
             while (!feof($handle) && $length > 0) {
-                @set_time_limit(60*60); //reset time limit to 60 min - should be enough for 1 MB chunk
+                core_php_time_limit::raise(60*60); //reset time limit to 60 min - should be enough for 1 MB chunk
                 $buffer = fread($handle, ($chunksize < $length ? $chunksize : $length));
                 echo $buffer;
                 flush();
@@ -2749,21 +2817,17 @@ function file_modify_html_header($text) {
     global $CFG;
 
     $stylesheetshtml = '';
-/*    foreach ($CFG->stylesheets as $stylesheet) {
+/*
+    foreach ($CFG->stylesheets as $stylesheet) {
         //TODO: MDL-21120
         $stylesheetshtml .= '<link rel="stylesheet" type="text/css" href="'.$stylesheet.'" />'."\n";
-    }*/
-
-    $ufo = '';
-    if (filter_is_enabled('mediaplugin')) {
-        // this script is needed by most media filter plugins.
-        $attributes = array('type'=>'text/javascript', 'src'=>$CFG->httpswwwroot . '/lib/ufo.js');
-        $ufo = html_writer::tag('script', '', $attributes) . "\n";
     }
+*/
+    // TODO The code below is actually a waste of CPU. When MDL-29738 will be implemented it should be re-evaluated too.
 
     preg_match('/\<head\>|\<HEAD\>/', $text, $matches);
     if ($matches) {
-        $replacement = '<head>'.$ufo.$stylesheetshtml;
+        $replacement = '<head>'.$stylesheetshtml;
         $text = preg_replace('/\<head\>|\<HEAD\>/', $replacement, $text, 1);
         return $text;
     }
@@ -2772,7 +2836,7 @@ function file_modify_html_header($text) {
     preg_match('/\<html\>|\<HTML\>/', $text, $matches);
     if ($matches) {
         // replace <html> tag with <html><head>includes</head>
-        $replacement = '<html>'."\n".'<head>'.$ufo.$stylesheetshtml.'</head>';
+        $replacement = '<html>'."\n".'<head>'.$stylesheetshtml.'</head>';
         $text = preg_replace('/\<html\>|\<HTML\>/', $replacement, $text, 1);
         return $text;
     }
@@ -2780,13 +2844,13 @@ function file_modify_html_header($text) {
     // if not, look for <body> tag, and stick <head> before body
     preg_match('/\<body\>|\<BODY\>/', $text, $matches);
     if ($matches) {
-        $replacement = '<head>'.$ufo.$stylesheetshtml.'</head>'."\n".'<body>';
+        $replacement = '<head>'.$stylesheetshtml.'</head>'."\n".'<body>';
         $text = preg_replace('/\<body\>|\<BODY\>/', $replacement, $text, 1);
         return $text;
     }
 
     // if not, just stick a <head> tag at the beginning
-    $text = '<head>'.$ufo.$stylesheetshtml.'</head>'."\n".$text;
+    $text = '<head>'.$stylesheetshtml.'</head>'."\n".$text;
     return $text;
 }
 
@@ -2924,7 +2988,7 @@ class curl {
         }
 
         if (!isset($this->emulateredirects)) {
-            $this->emulateredirects = (ini_get('open_basedir') or ini_get('safe_mode'));
+            $this->emulateredirects = ini_get('open_basedir');
         }
     }
 
@@ -3132,14 +3196,6 @@ class curl {
      * @return resource The curl handle
      */
     private function apply_opt($curl, $options) {
-        // Some more security first.
-        if (defined('CURLOPT_PROTOCOLS')) {
-            $this->options['CURLOPT_PROTOCOLS'] = (CURLPROTO_HTTP | CURLPROTO_HTTPS);
-        }
-        if (defined('CURLOPT_REDIR_PROTOCOLS')) {
-            $this->options['CURLOPT_REDIR_PROTOCOLS'] = (CURLPROTO_HTTP | CURLPROTO_HTTPS);
-        }
-
         // Clean up
         $this->cleanopt();
         // set cookie
@@ -3201,12 +3257,14 @@ class curl {
             $this->options['CURLOPT_FOLLOWLOCATION'] = 0;
         }
 
+        // Limit the protocols to HTTP and HTTPS.
+        if (defined('CURLOPT_PROTOCOLS')) {
+            $this->options['CURLOPT_PROTOCOLS'] = (CURLPROTO_HTTP | CURLPROTO_HTTPS);
+            $this->options['CURLOPT_REDIR_PROTOCOLS'] = (CURLPROTO_HTTP | CURLPROTO_HTTPS);
+        }
+
         // Set options.
         foreach($this->options as $name => $val) {
-            if ($name === 'CURLOPT_PROTOCOLS' or $name === 'CURLOPT_REDIR_PROTOCOLS') {
-                // These can not be changed, sorry.
-                continue;
-            }
             if ($name === 'CURLOPT_FOLLOWLOCATION' and $this->emulateredirects) {
                 // The redirects are emulated elsewhere.
                 curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 0);
@@ -4052,7 +4110,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 0, 0, true, array('preview' => $preview));
 
         } else if ($filearea === 'event_description' and $context->contextlevel == CONTEXT_COURSE) {
 
@@ -4153,7 +4211,13 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
                 send_file($imagefile, basename($imagefile), 60*60*24*14);
             }
 
-            send_stored_file($file, 60*60*24*365, 0, false, array('preview' => $preview)); // enable long caching, there are many images on each page
+            $options = array('preview' => $preview);
+            if (empty($CFG->forcelogin) && empty($CFG->forceloginforprofileimage)) {
+                // Profile images should be cache-able by both browsers and proxies according
+                // to $CFG->forcelogin and $CFG->forceloginforprofileimage.
+                $options['cacheability'] = 'public';
+            }
+            send_stored_file($file, 60*60*24*365, 0, false, $options); // enable long caching, there are many images on each page
 
         } else if ($filearea === 'private' and $context->contextlevel == CONTEXT_USER) {
             require_login();

@@ -1,0 +1,24 @@
+/*
+ * atto editor specific styles. This is so we have a consistent theme even in editors.
+ *
+ * Try to divide this per atto subplugin.
+ *
+ * NOTE:
+ * Also just a note. If you are creating the plugin. Make sure that the local style.css is sufficient to make your
+ * app decent looking and usable. Parts here are just meant to override/add styles for site-wide consistency.
+ */
+
+/**********************************************************************************************************************
+ * atto_image section.*************************************************************************************************
+ **********************************************************************************************************************/
+
+// Header.
+// Override default skin-sam.
+.yui3-skin-sam .yui3-panel .yui3-widget-hd {
+  color: white;
+  background-color: @uGreen;
+  background: -moz-linear-gradient(0% 100% 90deg, darken(@uGreen, 10%) 7%, darken(@uGreen, 5%) 50%, @uGreen 100%);
+  background: -webkit-gradient(linear,left bottom,left top,from(darken(@uGreen, 10%)),color-stop(0.07,darken(@uGreen, 6%)),color-stop(0.5,darken(@uGreen, 4%)),to(@uGreen));
+}
+
+// @see style.css's and find 'overlay stuff' and it should have examples on how to change default icons.

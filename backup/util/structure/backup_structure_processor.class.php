@@ -38,7 +38,7 @@ class backup_structure_processor extends base_processor {
     protected $vars;   // array of backup::VAR_XXX => helper value pairs to be used by source specifications
 
     /**
-     * @var core_backup_progress Progress tracker (null if none)
+     * @var \core\progress\base Progress tracker (null if none)
      */
     protected $progress;
 
@@ -46,9 +46,9 @@ class backup_structure_processor extends base_processor {
      * Constructor.
      *
      * @param xml_writer $writer XML writer to save data
-     * @param core_backup_progress $progress Progress tracker (optional)
+     * @param c\core\progress\base$progress Progress tracker (optional)
      */
-    public function __construct(xml_writer $writer, core_backup_progress $progress = null) {
+    public function __construct(xml_writer $writer, \core\progress\base $progress = null) {
         $this->writer = $writer;
         $this->progress = $progress;
         $this->vars = array();
@@ -86,7 +86,7 @@ class backup_structure_processor extends base_processor {
                 foreach ($area as $filearea => $info) {
                     $contextid = !is_null($info->contextid) ? $info->contextid : $this->get_var(backup::VAR_CONTEXTID);
                     $itemid    = !is_null($info->element) ? $info->element->get_value() : null;
-                    backup_structure_dbops::annotate_files($backupid, $contextid, $component, $filearea, $itemid);
+                    backup_structure_dbops::annotate_files($backupid, $contextid, $component, $filearea, $itemid, $this->progress);
                 }
             }
         }

@@ -55,8 +55,19 @@ class grader_report_preferences_form extends moodleform {
         if (has_capability('moodle/grade:manage', $context)) {
 
             $preferences['prefshow'] = array();
-            $preferences['prefshow']['showcalculations']  = $checkbox_default;
+
+            $preferences['prefshow']['showcalculations'] = $checkbox_default;
+
             $preferences['prefshow']['showeyecons']       = $checkbox_default;
+			
+			/*********** eClass Modification ************
+			Extra Comments:
+			************/
+			//if (has_capability('gradereport/grader:viewempid', $context)) {
+			$preferences['prefshow']['showempid']       = $checkbox_default;
+			//}
+			/*********** End eClass Modification ********/
+			
             if ($canviewhidden) {
                 $preferences['prefshow']['showaverages']  = $checkbox_default;
             }

@@ -172,9 +172,15 @@ class quiz_overview_table extends quiz_attempts_report_table {
     }
 
     protected function submit_buttons() {
+        global $PAGE;
+
         if (has_capability('mod/quiz:regrade', $this->context)) {
             echo '<input type="submit" name="regrade" value="' .
                     get_string('regradeselected', 'quiz_overview') . '"/>';
+            echo '<input type="submit" id="forcesubmitselbutton" name="forcesubmit" value="' .
+                    get_string('forcesubmitselected', 'quiz_overview') . '"/>';
+            $PAGE->requires->event_handler('#forcesubmitselbutton', 'click', 'M.util.show_confirm_dialog',
+                    array('message' => get_string('areyousureforcesubmitattempts', 'quiz_overview')));
         }
         parent::submit_buttons();
     }

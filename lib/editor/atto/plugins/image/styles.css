@@ -1,0 +1,590 @@
+/**
+ * style.less
+ *
+ * @copyright  2015 Joey Andres <jandres@ualberta.ca>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * Note: less files are not normally found in atto_image sub-plugin of atto, but
+ *       thanks to background-image and animation stuff, repetition kept occuring
+ *       in which a good-ol mixin from less/sass would nicely fix.
+ *
+ * Also, note that these are overridden in atto.less in theme/eclass/less folder.
+ */
+/**
+ * Although atto_control class is crucial for proper operation of this plugin,
+ * I hate its styling.
+ *
+ * @see atto/yui/src/editor/js/editor/clean.js for why it is
+ * crucial and how ignoring its style in atto/style.css is not gonna affect this plugin's
+ * function.
+ */
+.atto_control {
+  /* Reset atto_control except for cursor. */
+  position: static;
+  right: auto;
+  bottom: auto;
+  display: inline;
+}
+.atto_control:hover {
+  display: inline;
+  margin-bottom: 0;
+  margin-left: 0;
+}
+.atto_control:focus {
+  display: inline;
+}
+/**
+ * Due to atto_control being more specific in atto's style.css, we cannot simply
+ * override it from this perspective. To fix this, we must manually extend
+ * elements.
+ */
+.nullify-atto_control,
+.atto-image-resize-container .atto-image-resize-overlay,
+.atto-image-resize-container .atto-image-resize-overlay .atto-image-ghost-node,
+.atto-image-resize-container .yui3-resize-handles-wrapper,
+.Mso-atto-image-resizable-node,
+.atto-image-overlay,
+.atto-image-overlay-node-wrapper,
+.atto-image-overlay.yui3-overlay-content,
+.atto-image-overlay.yui3-overlay-content.horizontal-align,
+.atto-image-overlay.yui3-overlay-content.horizontal-align button,
+.atto-image-resize-handle-ref-point.atto_control {
+  /* Reset atto_control except for cursor. */
+  position: static;
+  right: auto;
+  bottom: auto;
+  display: inline;
+}
+.nullify-atto_control:hover {
+  display: inline;
+  margin-bottom: 0;
+  margin-left: 0;
+}
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.hide-selection ::-moz-selection {
+  background: rgba(255, 255, 255, 0);
+}
+.hide-selection ::selection {
+  background: rgba(255, 255, 255, 0);
+}
+.yui3-overlay {
+  overflow: visible;
+}
+.atto_image_preview {
+  width: 100%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.atto_image_preview_box {
+  max-height: 200px;
+  margin-bottom: 1em;
+  overflow: auto;
+}
+.editor_atto_content img {
+  cursor: pointer;
+}
+.atto_image_size {
+  display: inline-block;
+}
+.atto_image_size input[type=checkbox] {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+.atto_image_size input[type=text] {
+  width: 3em;
+}
+.atto_image_size label {
+  display: inline-block;
+}
+.atto-image-resize-handle {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  z-index: 50;
+}
+.atto-image-resize-container {
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+}
+.atto-image-resize-container ::-moz-selection {
+  /* Code for Firefox */
+  background: rgba(255, 255, 0, 0.4);
+}
+.atto-image-resize-container ::selection {
+  background: rgba(255, 255, 0, 0.4);
+}
+.atto-image-resize-container::-moz-selection {
+  /* Code for Firefox */
+  background: rgba(255, 255, 0, 0.4);
+}
+.atto-image-resize-container::selection {
+  background: rgba(255, 255, 0, 0.4);
+}
+.atto-image-resize-container .atto-image-resize-overlay {
+  position: relative;
+  z-index: 50;
+  /**
+     * Why the !important(s)?
+     *
+     * When resizing a node, it is cloned for preview and ghosting. The problem with this is that some styles
+     * are in "style" attribute which takes precedence over all stylesheets styles. Although it is generally
+     * bad practice to do !important, I think it is used beautifully in this case, since we can pin point what bare
+     * essential styles are needed for a ghost node.
+     */
+}
+.atto-image-resize-container .atto-image-resize-overlay .atto-image-ghost-node {
+  position: relative !important;
+  -moz-box-sizing: border-box !important;
+  -webkit-box-sizing: border-box !important;
+  -ms-box-sizing: border-box !important;
+  box-sizing: border-box !important;
+  opacity: 0.0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.atto-image-resize-container .atto-image-resize-overlay .atto-image-ghost-node-active {
+  opacity: 0.4 !important;
+}
+.atto-image-resize-container .yui3-resize-handles-wrapper {
+  overflow: visible;
+}
+.atto-image-resize-container .yui3-resize-handles-wrapper ::-moz-selection {
+  background: rgba(255, 255, 255, 0);
+}
+.atto-image-resize-container .yui3-resize-handles-wrapper ::selection {
+  background: rgba(255, 255, 255, 0);
+}
+.atto-image-resize-container .yui3-resize-handles-wrapper * ::-moz-selection {
+  background: rgba(255, 255, 255, 0);
+}
+.atto-image-resize-container .yui3-resize-handles-wrapper * ::selection {
+  background: rgba(255, 255, 255, 0);
+}
+.atto-image-resize-container .yui3-resize-handles-wrapper .yui3-resize-handle {
+  overflow: visible;
+}
+.atto-image-resize-container .yui3-resize-handles-wrapper .yui3-resize-handle .yui3-resize-handle-inner > * {
+  overflow: visible;
+  background: none;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
+}
+.atto-image-resize-container .yui3-resize-handles-wrapper .yui3-resize-handle .yui3-resize-handle-inner > * svg {
+  overflow: visible;
+}
+.atto-image-resize-ghost {
+  border: 2px solid #000000;
+  z-index: 49;
+  opacity: 0.4;
+}
+.Mso-atto-image-resizable-node {
+  display: none;
+}
+/* Hide overlay markup while loading, if js is enabled */
+.yui3-js-enabled .yui3-overlay-loading {
+  position: absolute;
+}
+/**
+ * These look-n-feel of yui3-overlay-content specific for atto-image-overlay.
+ */
+.atto-image-overlay.yui3-overlay-content {
+  background-color: #ECEFFB;
+  border: 1px solid #9EA8C6;
+  border-radius: 3px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.25);
+  padding: 0.1em;
+  /* Reset atto_control's position. */
+  position: static;
+  /* Reset. */
+  -ms-word-break: normal;
+  word-break: normal;
+  word-wrap: normal;
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -ms-box-sizing: content-box;
+  box-sizing: content-box;
+  width: 100%;
+}
+/* By having a wrapper around an overlay with position relative, overlay should now scroll.
+   with the text-editor.*/
+.atto-image-overlay.atto-image-overlay-node-wrapper {
+  position: relative;
+  z-index: 48;
+}
+.atto-image-overlay.yui3-overlay-content.atto_control {
+  /* atto_control also touch these, so reset them. */
+  margin-left: 0;
+  margin-bottom: 0;
+}
+/**
+ * @param @duration Time in s.
+ * @param @x Pan the background by @x unites (px, em, or whatever).
+ * @param @y Pan the background by @y unites (px, em, or whatever).
+ */
+.atto-image-overlay-node-wrapper {
+  display: block;
+}
+.atto-image-overlay.yui3-overlay-content {
+  display: block;
+}
+.atto-image-overlay.yui3-overlay-content * {
+  position: static;
+}
+.atto-image-overlay.yui3-overlay-content .yui3-widget-hd {
+  background-color: #B6BFDA;
+  color: #30418C;
+  font-size: 120%;
+  font-weight: bold;
+  padding: 0.2em 0.5em 0.3em;
+  border-radius: 2px 2px 0 0;
+  /* Reset atto_control's position. */
+  position: static;
+}
+.atto-image-overlay.yui3-overlay-content .yui3-widget-bd {
+  padding: 0.4em 0.6em 0.5em;
+}
+.atto-image-overlay.yui3-overlay-content .yui3-widget-ft {
+  background-color: #DFE3F5;
+  padding: 0.4em 0.6em 0.5em;
+  border-radius: 0 0 2px 2px;
+}
+.atto-image-overlay.yui3-overlay-content button {
+  margin-left: 2px;
+  margin-bottom: 2px;
+  border-radius: 1px;
+  width: 32px;
+  height: 32px;
+  -webkit-background-size: 32px 32px;
+  background-size: 32px 32px;
+  background-repeat: no-repeat;
+  display: block;
+  background-color: floralwhite;
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-left {
+  background-image: url([[pix:atto_image|img-align-left]]);
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-left:hover {
+  color: #333;
+  text-decoration: none;
+  background-position: -5px 0px;
+  transform: scale(1);
+  /* CSS3 */
+  -moz-transform: scale(1);
+  /* Firefox */
+  -webkit-transform: scale(1);
+  /* Webkit */
+  -o-transform: scale(1);
+  /* Opera */
+  -ms-transform: scale(1);
+  /* IE 9 */
+  -webkit-transition: background-position 0.25s linear;
+  -moz-transition: background-position 0.25s linear;
+  -o-transition: background-position 0.25s linear;
+  transition: background-position 0.25s linear;
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-right {
+  background-image: url([[pix:atto_image|img-align-right]]);
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-right:hover {
+  color: #333;
+  text-decoration: none;
+  background-position: 5px 0px;
+  transform: scale(1);
+  /* CSS3 */
+  -moz-transform: scale(1);
+  /* Firefox */
+  -webkit-transform: scale(1);
+  /* Webkit */
+  -o-transform: scale(1);
+  /* Opera */
+  -ms-transform: scale(1);
+  /* IE 9 */
+  -webkit-transition: background-position 0.25s linear;
+  -moz-transition: background-position 0.25s linear;
+  -o-transition: background-position 0.25s linear;
+  transition: background-position 0.25s linear;
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-none {
+  background-image: url([[pix:atto_image|img-align-none]]);
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-none:hover {
+  color: #333;
+  text-decoration: none;
+  background-position: 0px -2px;
+  transform: scale(1);
+  /* CSS3 */
+  -moz-transform: scale(1);
+  /* Firefox */
+  -webkit-transform: scale(1);
+  /* Webkit */
+  -o-transform: scale(1);
+  /* Opera */
+  -ms-transform: scale(1);
+  /* IE 9 */
+  -webkit-transition: background-position 0.25s linear;
+  -moz-transition: background-position 0.25s linear;
+  -o-transition: background-position 0.25s linear;
+  transition: background-position 0.25s linear;
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-text-top {
+  background-image: url([[pix:atto_image|img-text-top]]);
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-text-top:hover {
+  color: #333;
+  text-decoration: none;
+  background-position: 0px 5px;
+  transform: scale(1);
+  /* CSS3 */
+  -moz-transform: scale(1);
+  /* Firefox */
+  -webkit-transform: scale(1);
+  /* Webkit */
+  -o-transform: scale(1);
+  /* Opera */
+  -ms-transform: scale(1);
+  /* IE 9 */
+  -webkit-transition: background-position 0.25s linear;
+  -moz-transition: background-position 0.25s linear;
+  -o-transition: background-position 0.25s linear;
+  transition: background-position 0.25s linear;
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-baseline {
+  background-image: url([[pix:atto_image|img-text-bottom]]);
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-baseline:hover {
+  color: #333;
+  text-decoration: none;
+  background-position: 0px -5px;
+  transform: scale(1);
+  /* CSS3 */
+  -moz-transform: scale(1);
+  /* Firefox */
+  -webkit-transform: scale(1);
+  /* Webkit */
+  -o-transform: scale(1);
+  /* Opera */
+  -ms-transform: scale(1);
+  /* IE 9 */
+  -webkit-transition: background-position 0.25s linear;
+  -moz-transition: background-position 0.25s linear;
+  -o-transition: background-position 0.25s linear;
+  transition: background-position 0.25s linear;
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-text-bottom {
+  background-image: url([[pix:atto_image|img-text-bottom]]);
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-text-bottom:hover {
+  color: #333;
+  text-decoration: none;
+  background-position: 0px -5px;
+  transform: scale(1);
+  /* CSS3 */
+  -moz-transform: scale(1);
+  /* Firefox */
+  -webkit-transform: scale(1);
+  /* Webkit */
+  -o-transform: scale(1);
+  /* Opera */
+  -ms-transform: scale(1);
+  /* IE 9 */
+  -webkit-transition: background-position 0.25s linear;
+  -moz-transition: background-position 0.25s linear;
+  -o-transition: background-position 0.25s linear;
+  transition: background-position 0.25s linear;
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-border {
+  background-image: url([[pix:atto_image|img-border]]);
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-border:hover {
+  color: #333;
+  text-decoration: none;
+  background-position: 0px 0px;
+  transform: scale(1.2);
+  /* CSS3 */
+  -moz-transform: scale(1.2);
+  /* Firefox */
+  -webkit-transform: scale(1.2);
+  /* Webkit */
+  -o-transform: scale(1.2);
+  /* Opera */
+  -ms-transform: scale(1.2);
+  /* IE 9 */
+  -webkit-transition: background-position 2s linear;
+  -moz-transition: background-position 2s linear;
+  -o-transition: background-position 2s linear;
+  transition: background-position 2s linear;
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-spacing {
+  background-image: url([[pix:atto_image|img-spacing]]);
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-spacing:hover {
+  color: #333;
+  text-decoration: none;
+  background-position: 0px 0px;
+  transform: scale(1.2);
+  /* CSS3 */
+  -moz-transform: scale(1.2);
+  /* Firefox */
+  -webkit-transform: scale(1.2);
+  /* Webkit */
+  -o-transform: scale(1.2);
+  /* Opera */
+  -ms-transform: scale(1.2);
+  /* IE 9 */
+  -webkit-transition: background-position 2s linear;
+  -moz-transition: background-position 2s linear;
+  -o-transition: background-position 2s linear;
+  transition: background-position 2s linear;
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-custom {
+  background-image: url([[pix:atto_image|img-custom]]);
+}
+.atto-image-overlay.yui3-overlay-content button.atto-image-custom:hover {
+  color: #333;
+  text-decoration: none;
+  background-position: 0px 0px;
+  transform: scale(1.2);
+  /* CSS3 */
+  -moz-transform: scale(1.2);
+  /* Firefox */
+  -webkit-transform: scale(1.2);
+  /* Webkit */
+  -o-transform: scale(1.2);
+  /* Opera */
+  -ms-transform: scale(1.2);
+  /* IE 9 */
+  -webkit-transition: background-position 2s linear;
+  -moz-transition: background-position 2s linear;
+  -o-transition: background-position 2s linear;
+  transition: background-position 2s linear;
+}
+.atto-image-overlay.yui3-overlay-content.horizontal-align {
+  width: auto;
+  display: inline-block;
+  white-space: nowrap;
+}
+.atto-image-overlay.yui3-overlay-content.horizontal-align button {
+  display: inline-block;
+}
+.atto-image-panel div.atto-image-input label {
+  display: inline-block;
+  margin-left: 1em;
+}
+.atto-image-border-panel div.atto-image-input label,
+.atto-image-spacing-panel div.atto-image-input label {
+  display: inline-block;
+  width: 5em;
+}
+.atto-image-border-panel div.atto-image-input input,
+.atto-image-spacing-panel div.atto-image-input input {
+  display: inline-block;
+  width: 4em;
+  margin-right: 0.5em;
+}
+.atto-image-border-panel .atto-image-illustration {
+  width: 24px;
+  height: 24px;
+  -webkit-background-size: 24px 24px;
+  background-size: 24px 24px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  margin-left: 1em;
+}
+.atto-image-border-panel .atto-image-border-top .atto-image-illustration {
+  background-image: url([[pix:atto_image|img-border-top]]);
+}
+.atto-image-border-panel .atto-image-border-right .atto-image-illustration {
+  background-image: url([[pix:atto_image|img-border-right]]);
+}
+.atto-image-border-panel .atto-image-border-bottom .atto-image-illustration {
+  background-image: url([[pix:atto_image|img-border-bottom]]);
+}
+.atto-image-border-panel .atto-image-border-left .atto-image-illustration {
+  background-image: url([[pix:atto_image|img-border-left]]);
+}
+.atto-image-spacing-panel .atto-image-illustration {
+  width: 24px;
+  height: 24px;
+  -webkit-background-size: 24px 24px;
+  background-size: 24px 24px;
+  background-repeat: no-repeat;
+  display: inline-block;
+  margin-left: 1em;
+}
+.atto-image-spacing-panel .atto-image-spacing-top .atto-image-illustration {
+  background-image: url([[pix:atto_image|img-spacing-top]]);
+}
+.atto-image-spacing-panel .atto-image-spacing-right .atto-image-illustration {
+  background-image: url([[pix:atto_image|img-spacing-right]]);
+}
+.atto-image-spacing-panel .atto-image-spacing-bottom .atto-image-illustration {
+  background-image: url([[pix:atto_image|img-spacing-bottom]]);
+}
+.atto-image-spacing-panel .atto-image-spacing-left .atto-image-illustration {
+  background-image: url([[pix:atto_image|img-spacing-left]]);
+}
+.atto-image-custom-panel hr {
+  border-top: 1px solid #eee;
+  border-bottom: 2px solid #eee;
+}
+.atto-image-custom-panel textarea {
+  width: 100%;
+  min-height: 128px;
+}
+.atto-image-contenteditable-container {
+  height: 128px;
+  overflow: auto;
+  border: 1px solid grey;
+  padding: 0.2em;
+}
+.atto-image-contenteditable-container pre {
+  display: block;
+  padding: 0px;
+  margin: 0px;
+  font-size: 13px;
+  line-height: 20px;
+  word-break: break-all;
+  white-space: pre;
+  white-space: pre-wrap;
+  background: none;
+  border: none;
+}
+.atto-image-contenteditable-container .atto-image-contenteditable {
+  min-height: 128px;
+}
+/*
+@see yui/src/button/js/todo folder for related js. At the moment, I am not
+going forward with these just to minimize bugs. There are already crap load of changes.
+I'm going with a much simpler solution unless this feature is requested. Plus, my prototype
+didn't went well. I was running out of real estate, it was getting really cluttered (resize
+handles over interactive-margi-border is an ugly site).
+
+div.atto-image-interactive-margin-border {
+  background-color: purple;
+  opacity: 0.4;
+
+  left: initial;
+  top: initial;
+  right: auto;
+  bottom: auto;
+}*/
+#overlay {
+  position: absolute;
+}
+.atto-image-resize-container {
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+  border: 2px solid black;
+}

@@ -80,7 +80,8 @@ class behat_admin extends behat_base {
             // Single element settings.
             try {
                 $fieldxpath = "//*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]" .
-                    "[@id=//label[contains(normalize-space(.), $label)]/@for]";
+                    "[@id=//label[contains(normalize-space(.), $label)]/@for or " .
+                    "@id=//span[contains(normalize-space(.), $label)]/preceding-sibling::label[1]/@for]";
                 $fieldnode = $this->find('xpath', $fieldxpath, $exception);
 
                 $formfieldtypenode = $this->find('xpath', $fieldxpath . "/ancestor::div[@class='form-setting']" .
@@ -89,7 +90,7 @@ class behat_admin extends behat_base {
             } catch (ElementNotFoundException $e) {
 
                 // Multi element settings, interacting only the first one.
-                $fieldxpath = "//descendant::label[.= $label]/ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' form-item ')]" .
+                $fieldxpath = "//*[label[.= $label]|span[.= $label]]/ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' form-item ')]" .
                     "/descendant::div[@class='form-group']/descendant::*[self::input | self::textarea | self::select][not(./@type = 'submit' or ./@type = 'image' or ./@type = 'hidden')]";
                 $fieldnode = $this->find('xpath', $fieldxpath);
 
@@ -124,18 +125,5 @@ class behat_admin extends behat_base {
         if ($this->running_javascript()) {
             $this->getSession()->wait($timeout, $javascript);
         }
-    }
-
-    /**
-     * Will be deprecated in 2.7. Goes to notification page.
-     *
-     * @Given /^I go to notifications page$/
-     * @return Given[]
-     */
-    public function i_go_to_notifications_page() {
-        return array(
-            new Given('I expand "' . get_string('administrationsite') . '" node'),
-            new Given('I follow "' . get_string('notifications') . '"')
-        );
     }
 }

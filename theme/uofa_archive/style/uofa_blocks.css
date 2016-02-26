@@ -1,0 +1,263 @@
+/*
+Block
+-----------------------*/
+.block {
+    border:0px dotted #ddd;
+    margin-bottom:1em;
+}
+/* Headers */
+.block .header { 
+    border:none;
+    padding: 6px 0 4px;
+    width: 100%;
+}
+.block .header div.commands {
+    margin-left: 10px;
+}
+	.block .commands img {
+		margin-right: 2px;
+	}
+.block .header .block_action {
+    float: right;
+    margin: 0 4px;
+    vertical-align: top;
+}
+	.block .header .block_action img {
+		margin-right: 1px;
+	}
+	.block .header .block_action input {
+		margin-right: 2px;
+	}
+/* Content */
+.block .content {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+	.block_course_summary .content {
+		border-top: 1px solid #ddd;
+	}
+.block.hidden .content {
+    display: none;
+}
+.block .content img.userpicture {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+}
+	img.userpicture {
+		margin-right: 5px;
+	}
+.block_online_users .content .info {
+	font-size: 0.9em;
+	font-style: italic;
+	margin-bottom: 5px;
+}
+.block_eclass_course_overview table td {
+	vertical-align: top;
+}
+.block .content .list li.listentry {
+    clear:both;
+}
+.block .content .list .c0 {
+    display:inline;
+}
+.block .content .list .c1 {
+    margin-left:5px;
+    display:inline;
+}
+.block .blockannotation {
+    font-size:0.75em;
+    margin: -1em 0 1em;
+}
+.block.beingmoved {
+    border-width: 2px;
+    border-style: dashed;
+}
+.blockmovetarget {
+    display: block;
+    height: 1em;
+    margin-bottom: 1em;
+    border-width: 2px;
+    border-style: dashed;
+}
+.block-region .invisible {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+.block .block-hider-show,
+.block .block-hider-hide {
+    cursor:pointer;
+}
+.block .block-hider-show,
+.block.hidden .block-hider-hide {
+    display:none;
+}
+.block.hidden .block-hider-show {
+    display:inline;
+}
+.block-region {
+    float: left;
+    padding: 0;
+    font-size: 12px;
+}
+.block .region-content {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+.block-region ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.block-region li {
+    margin: 5px 0;
+}
+.block-region li ul {
+}
+.block-region li li {
+    margin: 0 20px 0 10px;
+    padding: 8px 0px;
+}
+.region-content ul.unlist li { /* Remove bullets from news & activities blocks */
+	list-style-type: none;
+}
+/* HTML Blocks */
+.block.block_html .content {
+	padding: 6px;
+}
+.block_html ul {
+	list-style-type: disc;
+	padding-left: 15px;
+}
+	.block_html ul ul {
+		padding: 0;
+	}
+	.block_html ul ul li {
+		list-style-type: circle;
+		padding: 5px 0;
+		margin: 0 0 0 15px;
+	}
+.block_html ul.no_bullet { /* removes bullet in an html block ul */
+	list-style-type: none;
+	padding-left: 0;
+}
+/* Footer */
+.block .footer { 
+	font-size: 0.9em;
+	margin-top: 10px;
+	margin-bottom: 4px;
+}
+/* Side block headers
+   Default headers are grey for archive */
+#region-pre .header, #region-post .header {
+    background: url([[pix:theme|images/blocktitle_grey]]);
+    border-bottom: 1px solid #9f9f9f; /* Grey */
+    -webkit-border-top-left-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-right-radius: 3px;
+}
+/*
+	#region-pre .block_navigation .header, 
+	#region-post .block_navigation .header {
+		background: url([[pix:theme|images/blocktitle_lime]]);
+		border-bottom: 1px solid #6BA000; 
+    }
+	#region-pre .block_settings .header,
+	#region-post .block_settings .header {
+		background: url([[pix:theme|images/blocktitle_orange]]);
+		border-bottom: 1px solid #CA7700; 
+	}
+*/
+#region-pre .block .header .title h2,
+#region-post .block .header .title h2 {
+    font-size: 1.2em;
+    margin: 4px 0 4px 10px;
+    padding: 0;
+    color: #fff;
+    -webkit-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    -moz-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+}
+/* Navigation & Settings blocks */
+.block_navigation .block_tree li.item_with_icon.contains_branch .tree_item {
+	padding-left: 36px;
+}
+.block_settings .block_tree .tree_item,
+.block_navigation .block_tree .tree_item {
+	padding-left: 20px;
+	margin: 4px 0;
+}
+	.block_navigation .block_tree .tree_item {
+		margin: 2px 0;
+	}
+/* Main block headers */
+#region-main .block .header {
+	border-bottom: 1px dotted gray;
+}
+.block .minicalendar {
+    margin:10px auto;
+    width:100%;
+}
+.block .calendar_filters li {
+	list-style-type: none;
+}
+/** List block contents **/
+.block .list .c0 {
+    display:inline;
+}
+.block .list .c0 img.icon {
+    vertical-align: middle
+}
+.block .list .c1 {
+    margin-left:5px;
+    display:inline;
+}
+.block_course_list ul li { /* Remove bullets from course list */
+	list-style-type: none;
+}
+/* News block */
+.block .name {
+	font-style: italic;
+}
+.block .date {
+	color: #999;
+}
+/* Event block */
+.block .event .icon {
+	vertical-align: top;
+}
+.block .event a {
+	font-weight: bold;
+	display: inline-block;
+	width: 155px;
+}
+	.block .event .date a {
+		font-weight: normal;
+		margin-left: 20px;
+	}
+/** Bugfixes Smallicon & Navicon **/
+.block_settings .block_tree li.item_with_icon > p img,
+.block_navigation .block_tree li.item_with_icon > p img {
+    left: 0;
+    position: absolute;
+    top: 0px !important;
+    vertical-align: middle;
+}
+.block_settings .block_tree li.item_with_icon p img.smallicon,
+.block_settings .block_tree li.item_with_icon p img.navicon,
+.block_navigation .block_tree li.item_with_icon p img.smallicon,
+.block_navigation .block_tree li.item_with_icon p img.navicon {
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+}
+.block_navigation .block_tree .type_activity > .tree_item.branch img {
+    left: 0px;
+    bottom: 0px;
+    position: absolute;
+}

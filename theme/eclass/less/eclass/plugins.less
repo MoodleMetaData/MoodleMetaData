@@ -1,0 +1,271 @@
+/*
+ Local Plugins
+ */
+.categorylist .category {
+  padding: 5px 0px;
+}
+// CTL Context Admin
+.categorylist .category .image,
+.categorylist .category .name {
+  display: inline-block;
+}
+.categorylist .category .indentation {
+  margin-left: 20px;
+}
+.path-local-contextadmin .box.generalbox > center > ul {
+  list-style-type: none;
+}
+.path-local-contextadmin #coursesearch .coursesearchbox{
+  margin-bottom: 4px;
+}
+.path-local-contextadmin #coursesearch {
+  padding: 20px;
+}
+.path-local-contextadmin fieldset.coursesearchbox label {
+  display: inline-block;
+  padding: 10px;
+}
+// eClass_course_management
+#page-blocks-eclass_course_management-configure div#dateselector-calendar-panel {
+  z-index: 31000;
+}
+
+/*
+ Modules
+ */
+div[role='main'] > h2 > .icon.iconlarge {
+  margin-top: 4px;
+  vertical-align: top;
+}
+// Form
+#id_summary_editor {
+  width: 98%;
+}
+
+// Forum
+body[id^='page-mod-'] #region-main > div[role='main'] > div.indent {
+  margin-left: 55px;
+}
+.path-mod-anonforum .anonforumheaderlist th,
+.path-mod-anonforum .anonforumheaderlist td,
+.path-mod-forum .forumheaderlist th,
+.path-mod-forum .forumheaderlist td {
+  padding: 5px;
+}
+.path-mod-anonforum .anonforumheaderlist,
+.path-mod-forum .forumheaderlist {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+#page-mod-anonforum-discuss .discussioncontrols .discussioncontrol,
+#page-mod-forum-discuss .discussioncontrols .discussioncontrol {
+  display: inline-block;
+  width: auto;
+  margin: 0 3px .5em;
+}
+.forumpost .row {
+  background-color: none;
+}
+
+.forumpost .row:before,
+.forumpost .row:after {
+  content: "";
+}
+
+// Anon Forum
+.anonforumaddnew {
+  text-align: left !important;
+}
+
+table.anonforumheaderlist .r0 {
+  background-color: #f9f9f9;
+}
+
+.anonforumheaderlist .discussion .starter{
+  text-align: left !important;
+}
+
+.path-mod-anonforum .forumsearch {
+  input,
+  .helptooltip {
+    margin: 0 3px;
+  }
+}
+
+.anonforumpost .picture img {
+  margin: 3px;
+}
+
+.anonforumpost .row {
+  background-color: #eee!important;
+}
+
+#turnitintool_style .row, .anonforumpost .row {
+  margin-left: 0!important;
+}
+
+.anonforumpost .topic .author {
+  font-size: 14px;
+  padding: 0;
+}
+
+.anonforumpost .content div, .anonforumpost .options div {
+  padding: 0;
+}
+
+.path-mod-anonforum .anonforumheaderlist,
+.path-mod-anonforum .anonforumheaderlist td {
+  border: none;
+}
+
+.path-mod-anonforum .anonforumheaderlist {
+  thead .header {
+    white-space: normal;
+    vertical-align: top;
+  }
+  thead .header.lastpost {
+    text-align: right;
+  }
+  .discussion {
+    .author, .replies, .lastpost {
+      white-space: normal;
+    }
+    .replies {
+      text-align: center;
+    }
+    .topic, .topic.starter, .picture, .author, .replies, .lastpost {
+      vertical-align: top;
+    }
+  }
+}
+
+.path-mod-feedback .generalbox div table tbody img {
+  height: 5px; // we should remove the bar height specification in core
+}
+
+.anonforumpost {
+  .well;
+  padding: 6px;
+  .header {
+    margin-bottom: 3px;
+  }
+  .maincontent {
+    .left {
+      padding: 0 0 0 0;
+    }
+  }
+  .fullpost {
+    margin-top: 8px;
+  }
+}
+
+.anonforumpost .row .topic, .anonforumpost .row .content-mask, .anonforumpost .row .options {
+  margin-left: 48px;
+}
+
+.anonforumpost .row .left {
+  width: 48;
+}
+
+.anonforumpost .options .commands {
+  margin-left: 0;
+}
+
+.anonforumpost .subject {
+  font-weight: bold;
+  padding: 0 !important;
+}
+
+// Override hardcoded forum modules styling
+.anonforumsearch input[type=text] {
+  margin-bottom: 0 !important;
+}
+
+#page-mod-anonforum-discuss .discussioncontrols {
+  width: auto!important;
+}
+
+// rtl overrides
+.dir-rtl {
+  .path-mod-anonforum .anonforumheaderlist {
+    thead .header.lastpost {
+      text-align: left;
+    }
+  }
+}
+
+// Choice
+.path-mod-choice .anonymous,
+.path-mod-choice .names {
+  width: auto;
+}
+// Adobe Connect
+.aconrecordingbtnrow {
+  background-color: @uOffWhite3;
+}
+
+// Assignment submission
+.generaltable tbody>tr:nth-child(odd)>td.submissionstatussubmitted {
+  color: black;
+  background-color: #cfefcf;
+}
+
+.gradingform_rubric.preview {
+  float: left;
+  max-width: 100%;
+}
+.gradingform_rubric.evaluate.editable {
+  float: left;
+  max-width: 100%;
+}
+
+// Grader report
+.tablet-edit {
+  width:  180px !important;
+}
+
+// Book module
+.path-mod-book .book_toc_bullets li li.clearfix:before {
+  display: none;
+}
+
+// Tab module.
+body[id^='page-mod-'] #region-main>div[role='main'] > div#mod-tab-content {
+  #mod-tab-side-menu li.mod-tab-side-menu-tab-button.active > a {
+    background-color: @uLinkGreen;
+  }
+
+  #mod-tab-side-menu li.mod-tab-side-menu-tab-button.active .glyphicon {
+    color: white;
+
+    &:hover {
+      color: @buttonAltHover;
+    }
+  }
+
+  #mod-tab-tab-set li.mod-tab-tab-set-button > a {
+    // White text and u of a background.
+    color: white;
+    background-color: @uLinkGreen;
+  }
+
+  #mod-tab-tab-set li.mod-tab-tab-set-button.active > a,
+  #mod_tab_update_this {
+    color: @buttonAltText;
+    text-shadow: none;
+    background-color: @buttonAltBg;
+    background-image: none;
+    border-color: @buttonAltBorder;
+    .box-shadow(none);
+    &:hover, &:focus {
+      color: @buttonAltText;
+      background-color: @buttonAltHover;
+      outline: none;
+    }
+  }
+}
+
+// Legacy object embed codes.
+.mod-tab-tab-content object {
+  width: 100%; height: 100vh; /* 100% won't work, and javascript solution results in xss with external content. */
+}

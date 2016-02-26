@@ -1,0 +1,292 @@
+// Navbar inner styling
+.navbar-fixed-top {
+  #gradient > .horizontal(@uGreenNavStart, @uGreenNavEnd);
+}
+.navbar-fixed-top .navbar-inner {
+  height:45px;
+  overflow: hidden;
+  background: transparent url("[[pix:theme|banner-bg]]") no-repeat center center;
+  border-bottom: 4px solid @uYellow;
+  .box-shadow(0 1px 1px rgba(0,0,0,0.1));
+}
+
+// Custom menu items
+.navbar .nav>li.nav-menu {
+  border-top: 3px solid @transparent;
+  height:42px;
+  &:hover, &:focus {
+    color: @white;
+    border-top: 3px solid @white;
+  }
+}
+.navbar .nav>li.nav-menu.active {
+  border-top: 3px solid @white;
+  &:hover, &:focus {
+    color: @white;
+    border-top: 3px solid @uHoverGreen;
+  }
+}
+.navbar .nav>li.nav-menu.active>a {
+  color: @white;
+  text-decoration: none;
+  background: none;
+  .box-shadow(none);
+  &:hover, &:focus {
+    color: @white;
+    text-decoration: none;
+    background: none;
+    .box-shadow(none);
+  }
+}
+.navbar .nav>li.nav-menu>a {
+  float: none;
+  color: @white;
+  padding: 9px 15px 12px;
+  text-decoration: none;
+  text-shadow: none;
+  font-weight: normal;
+  &:hover, &:focus {
+    color: @white;
+  }
+}
+
+.nav .nav-icon:before {
+  color: @white;
+  font-size: 22px;
+}
+.nav .nav-icon {
+  vertical-align: top;
+  padding-left: 35px;
+  color: @white;
+  &:hover, &:focus {
+    color: @black;
+  }
+}
+.navbar-inner > .container-fluid > div {
+  display: inline-block;
+}
+.navbar .scroll-top {
+  cursor: pointer;
+  height: 45px;
+}
+.navbar .scroll-top:hover .glyphicons:before,
+.navbar .scroll-top:focus .glyphicons:before {
+  color: @white;
+}
+.navbar .scroll-top .glyphicons:before {
+  color: @grayLighter;
+  font-size: 22px;
+  padding-left: 14px;
+}
+// Logo
+.uofa-logo {
+  float:left;
+  height:40px;
+  padding-top: 5px;
+}
+
+// Brand
+.navbar .brand {
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-weight: light;
+  color: @white;
+  text-shadow: none;
+  padding: 15px 20px 5px;
+  font-size: 25px;
+}
+
+.navbar-text {
+  margin-bottom: 0;
+  line-height: 45px;
+  color: @white;
+}
+// Login info
+.navbar-inner .logininfo {
+  float: right;
+  color: @white;
+  padding-left: 10px;
+  line-height: 40px;
+  height:45px;
+}
+.logininfo a {
+  padding-top: 0px;
+  color: @uLinkGreen;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 40px;
+  &:hover, &:focus  {
+    color: @uHoverGreen;
+    text-decoration: none;
+  }
+}
+.logininfo .userloginprofile {
+  display: inline-block;
+  margin: 0;
+  max-width: 250px;
+  overflow-x: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+.role-name {
+  display: inline-block;
+  line-height: 40px;
+  margin-left: 5px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+// User picture styling
+.nav_userpicture {
+  border-radius: 500px;
+  margin-right: 4px;
+  margin-top: -2px;
+  display: inline-block;
+}
+.userprofile:hover > .nav_userpicture,
+.userprofile:focus > .nav_userpicture {
+  .box-shadow(0px 0px 2px rgba(0, 0, 0, 0.5));
+}
+.navbar-inner .logininfo a {
+  color: @white;
+  &:hover, &:focus  {
+    color: @uYellow;
+    text-decoration: none;
+  }
+}
+.navbar-inner .logininfo small {
+  color: @grayLight;
+  height: 45px;
+  line-height: 45px;
+  vertical-align: middle;
+  &:hover, &:focus  {
+    color: @grayLight;
+  }
+}
+// Collapse button
+.navbar-inner .btn-collapse {
+  margin: 10px 5px 0px 15px;
+}
+.navbar .btn-navbar .icon-bar {
+  .box-shadow(none);
+  background-color: @grayLight;
+}
+.navbar .btn-navbar {
+  background: @white;
+  text-shadow: none;
+  .box-shadow(none);
+  .border-radius(4px);
+}
+
+// Mobile sliding buttons
+.toggle {
+  padding: 8px 25px 5px;
+  margin-bottom: 0;
+  color: @grayLight;
+}
+#toggle-left,
+#toggle-center,
+#toggle-right,
+#toggle-profile {
+  display: none;
+}
+.view-selector {
+  position: relative;
+  left: 0;
+  display: block;
+  float: left;
+  list-style: none;
+  margin: 0 10px 0 0;
+  background-color: @white;
+  width: 100%;
+  border-bottom: 1px solid @uGreyBorder;
+  .box-shadow(0 1px 1px rgba(0,0,0,0.1));
+}
+.view-selector > li {
+  float: left;
+  text-align: center;
+  border-bottom: 3px solid @white;
+}
+.view-selector > li:focus {
+  background-color: @grayLight;
+}
+
+.view-selector > li:hover .mobile-nav-icon:before {
+  color: @mobileIconActive;
+}
+
+.toggle, .mobile-nav {
+  max-height: 54px;
+  display: none;
+}
+.toggle span {
+  color: #000;
+  margin-left: 15px;
+}
+.mobile-nav-icon{
+  vertical-align: top;
+  padding-left: 15px;
+}
+.mobile-nav-icon:before {
+  vertical-align: top;
+  font-size: 20px;
+  color: @mobileIcon;
+}
+.active .mobile-nav-icon:before {
+  color: @mobileIconActive;
+}
+
+// Breadcrumb
+.breadcrumb-nav {
+  #gradient > .vertical(@uOffWhite2, @grayLighter);
+  .box-shadow(0 1px 2px rgba(0,0,0,0.2));
+  float: none;
+}
+
+.breadcrumb {
+  .border-radius(0);
+  background: none;
+  padding: 2px 12px 0px;
+}
+.breadcrumb>li {
+  font-size: 0.9em;
+  text-shadow: none;
+}
+
+// Mobile user profile
+#region-profile ul,
+#region-profile li {
+  list-style: none;
+  line-height: 26px;
+  margin: 0px;
+}
+#region-profile > ul {
+  padding-bottom: 20px;
+}
+#region-profile > ul > li {
+  padding: 10px;
+}
+#region-profile > ul > li > ul {
+  padding: 10px;
+}
+#region-profile > ul > li > ul {
+  list-style: none;
+  .card(0.05);
+}
+#region-profile > ul > li > ul li span {
+  padding: 4px 8px;
+  display: block;
+}
+#region-profile > ul > li > ul li a {
+  padding: 4px 8px;
+  display: block;
+  .border-radius(4px);
+  &:hover, &:focus {
+    text-decoration: none;
+    background-color: @buttonHover;
+  }
+}
+#region-profile > ul > li > ul > li > ul > li {
+  border-left: 1px solid @uGreyBorder;
+  padding-left: 4px;
+  margin-left: 10px;
+}
