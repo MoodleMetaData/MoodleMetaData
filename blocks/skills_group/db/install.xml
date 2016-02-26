@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="blocks/skills_group/db" VERSION="20110712" COMMENT="XMLDB file for Moodle blocks/skills_group"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="skills_group_settings" COMMENT="This table contains the skills_group settings for a particular course" NEXT="skills_group">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="courseid"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="feedbackid"/>
+        <FIELD NAME="feedbackid" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="courseid" NEXT="groupingid"/>
+        <FIELD NAME="groupingid" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="feedbackid" NEXT="maxsize"/>
+        <FIELD NAME="maxsize" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="groupingid" NEXT="threshold"/>
+        <FIELD NAME="threshold" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="1" UNSIGNED="false" SEQUENCE="false" PREVIOUS="maxsize" NEXT="date"/>
+        <FIELD NAME="date" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" PREVIOUS="threshold" NEXT="allownaming"/>
+        <FIELD NAME="allownaming" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="1" UNSIGNED="false" SEQUENCE="false" PREVIOUS="date"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="skills_group" COMMENT="This table contains information about whether others can join a group" PREVIOUS="skills_group_settings" NEXT="skills_group_student">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="groupid"/>
+        <FIELD NAME="groupid" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="allowjoin"/>
+        <FIELD NAME="allowjoin" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="groupid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="skills_group_student" COMMENT="This table contains information about whether a student has locked in their choice" PREVIOUS="skills_group">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="finalizegroup"/>
+        <FIELD NAME="finalizegroup" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="userid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>

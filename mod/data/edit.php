@@ -20,7 +20,7 @@
  *
  * @copyright 2005 Martin Dougiamas  http://dougiamas.com
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @package mod-data
+ * @package mod_data
  */
 
 require_once('../../config.php');
@@ -168,7 +168,6 @@ if ($datarecord = data_submitted() and confirm_sesskey()) {
             $record->approved = 0;
         }
 
-        $record->groupid = $currentgroup;
         $record->timemodified = time();
         $DB->update_record('data_records', $record);
 
@@ -186,7 +185,17 @@ if ($datarecord = data_submitted() and confirm_sesskey()) {
             }
         }
 
-        add_to_log($course->id, 'data', 'update', "view.php?d=$data->id&amp;rid=$rid", $data->id, $cm->id);
+        // Trigger an event for updating this record.
+        $event = \mod_data\event\record_updated::create(array(
+            'objectid' => $rid,
+            'context' => $context,
+            'courseid' => $course->id,
+            'other' => array(
+                'dataid' => $data->id
+            )
+        ));
+        $event->add_record_snapshot('data', $data);
+        $event->trigger();
 
         redirect($CFG->wwwroot.'/mod/data/view.php?d='.$data->id.'&rid='.$rid);
 
@@ -235,8 +244,6 @@ if ($datarecord = data_submitted() and confirm_sesskey()) {
                     }
                 }
             }
-
-            add_to_log($course->id, 'data', 'add', "view.php?d=$data->id&amp;rid=$recordid", $data->id, $cm->id);
 
             if (!empty($datarecord->saveandview)) {
                 redirect($CFG->wwwroot.'/mod/data/view.php?d='.$data->id.'&rid='.$recordid);
@@ -290,9 +297,13 @@ if ($data->addtemplate){
     ///then we generate strings to replace
     foreach ($possiblefields as $eachfield){
         $field = data_get_field($eachfield, $data);
-        $patterns[]="[[".$field->field->name."]]";
-        $replacements[] = $field->display_add_field($rid);
-        $patterns[]="[[".$field->field->name."#id]]";
+
+        // To skip unnecessary calls to display_add_field().
+        if (strpos($data->addtemplate, "[[".$field->field->name."]]") !== false) {
+            $patterns[] = "[[".$field->field->name."]]";
+            $replacements[] = $field->display_add_field($rid);
+        }
+        $patterns[] = "[[".$field->field->name."#id]]";
         $replacements[] = 'field_'.$field->field->id;
     }
     $newtext = str_ireplace($patterns, $replacements, $data->{$mode});

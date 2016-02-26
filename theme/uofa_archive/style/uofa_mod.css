@@ -1,0 +1,739 @@
+/*
+Generic module styles 
+-----------------------*/
+#intro.generalbox, .mod_introbox {
+	border: 1px dotted gray; /* Light grey */
+	margin-bottom: 10px;
+	padding: 5px 10px;
+}
+	#intro.generalbox p, .mod_introbox p {
+		margin: 0.5em 0;
+	}
+/*
+Assignment
+-----------------------*/
+table.ygtvtable tbody tr.ygtvrow {
+	border-bottom: none;
+}
+/*
+Messaging
+-----------------------*/
+#newmessageoverlay {
+	background-color: #eee; /* Light grey */
+	border: 1px solid #848484; /* Grey */
+}
+/*
+Course Message 
+-----------------------*/
+.block_course_message .footer { /* Block */
+	margin-top: 0;
+}
+input.block_input {
+	margin-bottom: 3px;
+}
+	input[type="text"]:-moz-placeholder { color: #999; }
+	input[type="text"]:-ms-input-placeholder{ color: #999; }
+	input[type="text"]::-webkit-input-placeholder { color: #999; }
+
+textarea#message_block { 
+	resize: vertical;
+	margin-bottom: 1px;
+}
+
+#fullWindow #leftContent { /* Inbox */
+	border-right: 0;
+	left: 10px;
+	width: 150px;
+}
+	#fullWindow #leftContent ul li {
+		list-style-type: none;
+	}
+	#leftContent button#composeli {
+		border: 1px solid #D4E0BA;
+		background-color: #E3EDCE;
+	}
+#fullWindow #rightContent {
+	border-left: 1px solid #cecece;
+	padding-left: 20px;
+	min-height: 150px;
+}
+#rightContent #composeview table {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+	#rightContent #composeview table tbody tr {
+		border-bottom: 0;
+	}
+	#rightContent #composeview button#submit {
+		margin-bottom: 5px;
+	}
+	#rightContent #composeview div.chzn-container ul.chzn-choices li.search-field {
+		width: 100%;
+	}
+#rightContent #sentview .ui-widget-content {
+	border: 1px solid #CECECE;
+}
+#add_attach {
+	margin: 10px 0;
+}
+	a#add_attach, a#close_attach {
+		color: #007C41; /* ua green */
+	}
+button.inbox_button {
+	border: auto;
+	height: auto;
+}
+button#composeli {
+	margin: 15px 0 0 25px;
+}
+.ui-jqgrid tr.ui-row-ltr td { /* Inbox/sent tables */
+	font-size: 1.2em;
+}
+	.ui-jqgrid-btable .ui-jqgrid tr.jqgrow td {
+		padding: 3px;
+	}
+/*
+Modules: Forum / Blog
+-----------------------*/
+.path-mod-forum .forumheaderlist, 
+.path-mod-forum .forumheaderlist td { /* Get rid of default borders to use table style */
+	border-width: 0;
+}
+	.path-mod-forum .forumheaderlist td {
+		border-bottom: 1px solid #ccc;
+	}
+/* Blog */
+.addbloglink {
+	text-align: right;
+	padding-right: 20px;
+	background: url([[pix:theme|forum/icon_add-entry]]) no-repeat top right;
+}
+	.addbloglink a:visited, .commands a:visited, .comment-area .fd a:visited,
+	.othernav a:visited, .commentlink a:visited, .finishreview a:visited {
+		color: #007C41; /* UA green */
+	}
+.forumpost .picture img {
+	margin: 4px 4px 0 0;
+}
+.forumpost .subject {
+	font-weight: bold;
+}
+.forumpost .author {
+	font-style: italic;
+}
+.forumpost .audience {
+	font-size: 0.9em;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+	border-bottom: 1px dotted #bfbfbf;
+}
+.forumpost .tags, .forumpost .commands {
+	font-size: 0.9em;
+	margin: 5px;
+}
+	.officialblogtags {
+		display: inline;
+	}
+.forumpost .content .posting {
+	margin-top: 10px;
+	max-width: 100%;
+	overflow: auto;
+}
+.forumpost .content .attachments {
+	margin: 10px 5px 0 0;
+}
+ul.comment-list { /* Comments */
+	background-color: #fff;
+	padding: 5px;
+	border: 1px solid #DDDDDD;
+}
+	ul.comment-list li {
+		padding: 5px 0;
+		border-bottom: 1px dotted #bfbfbf;
+		margin-bottom: 5px;
+	}
+.comment-content {
+	font-style: italic;
+}
+	.comment-content div {
+		font-style: normal;
+	}
+/* Forum */
+table.forumheaderlist th.lastpost {
+	text-align: right;
+}
+table.forumheaderlist th.replies {
+	text-align: center;
+}
+#page-mod-forum-discuss .discussioncontrols .discussioncontrol {
+	float: left;
+	display: inline-block;
+	width: auto;
+	margin: 0 10px 0 0;
+	padding: 0;
+}
+	#page-mod-forum-discuss .discussioncontrols .displaymode {
+		margin-top: 3px;
+	}
+	#forummenu input[type="submit"] {
+		margin-left: 3px;
+	}
+.forumpost {
+	border: 0;
+	padding: 5px;
+}
+	.forumpost .header {
+		text-align: left;
+		background-color: #fff;
+		border-bottom: 3px solid #ccc;
+	}
+	.forumpost .maincontent, .forumpost .side {
+		background-color: #efefef;
+	}
+		.forumpost.unread .maincontent, .forumpost.unread .side {
+			background-color: #FFFAB7; /* Light Yellow */
+		}
+	.forumpost .side {
+		margin-top: -5px;
+	}
+.forumthread {
+	padding: 2px 0;
+}
+.forumthread.unread {
+	padding-right: 20px;
+	background: url([[pix:theme|forum/icon_unread]]) no-repeat top right;
+}
+/*
+Database
+-----------------------*/
+.mod-data-default-template .template-field {
+	font-weight: bold;
+}
+table.mod-data-default-template {
+	width: 100%;
+}
+table.mod-data-default-template td.template-field {
+	width: 20%;
+}
+table.mod-data-default-template tbody tr {
+	background-color: #fff;
+	border: 0;
+}
+/*
+Feedback
+-----------------------*/
+div.feedback_item_number_left,
+div.feedback_item_left {
+	font-weight: bold;
+	margin-right: 10px;
+}
+
+/*
+Chat
+-----------------------*/
+table.chat-event, table.chat-message {
+	font-family: Helvetica, Arial, Verdana, sans-serif;
+	color: #4b4b4b;
+    line-height: 1.3em;
+}
+	table.chat-message .title, #messages dt.title {
+		font-weight: bold;
+	}
+/*
+Choice
+-----------------------*/
+.path-mod-choice .horizontal, .path-mod-choice .vertical {
+	margin: 20px 50px;
+}
+ul.choices {
+	margin: 20px 0;
+}
+ul.choices input[type="radio"] {
+	margin-right: 5px;
+}
+.path-mod-choice .horizontal ul.choices li.option {
+	display: inline-block;
+}
+/*
+Glossary 
+-----------------------*/
+table#id_definition_editor_tbl {
+	width: 300px;
+}
+td.entrylowersection table {
+	margin: 0;
+}
+#page-mod-glossary-view .glossarycontrol {
+	margin: 15px 5px;
+}
+.path-mod-glossary .glossarypost .entrylowersection .icons {
+	padding-left: 0;
+	text-align: left;
+}
+/*
+Lesson
+------------------------*/
+#page-mod-lesson-view .fitemtitle { /* Fixes matching width */
+	text-align:left; 
+	width:50%;
+}
+/*
+Quiz
+-----------------------*/
+#page-mod-quiz-attempt .que .formulation, #page-mod-quiz-review .que .formulation {
+	background-color: #FFF; /* Fixes quiz question bkgd color */
+}
+#page-mod-quiz-edit .statusbar {
+	margin-top: 15px;
+}
+#page-mod-quiz-edit div.quizpage span.pagetitle {
+	color: #4b4b4b;
+	margin-top: 20px;
+	font-weight: bold;
+}
+#page-mod-quiz-edit div.quizpage .pagecontent {
+    background-color: #D6D6D6;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    display: block;
+    float: left;
+    line-height: 1.3em;
+    border: 0;
+    margin: 10px;
+    padding: 5px;
+    width: 90%;
+}
+#page-mod-quiz-edit div.editq div.question div.content,
+#page-mod-quiz-edit div.pagecontent div.question div.content {
+    background-color: #fff;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    float: left;
+    line-height: 1.4em;
+    padding: 0.5em;
+    position: relative;
+    width: 87%;
+}
+	.questioncontentcontainer .questiontype, 
+	#page-mod-quiz-edit div.question div.content .singlequestion .questionpreview,
+	#page-mod-quiz-edit div.question div.content .questionpreview a,
+	#page-mod-quiz-edit div.question div.content div.questioncontrols {
+		margin-top: 5px;
+		background-color: #fff;
+	}
+	#page-mod-quiz-edit .editq div.questioncontentcontainer div.singlequestion img {
+		padding-top: 0;
+	}
+	#page-mod-quiz-edit div.question div.content div.points,
+	#page-mod-quiz-edit div.question div.content div.qorder {
+		background-color: #DDEAC2; /* Light lime */
+		border: 0;
+		-webkit-border-radius: 3px;
+		-moz-border-radius: 3px;
+		border-radius: 3px;
+		top: 5px;
+	}
+		#page-mod-quiz-edit div.question div.content div.points input {
+			padding: 3px;
+		}
+/* Question bank */
+#page-mod-quiz-edit .questionbankwindow div.header {
+	background-color: #7CB807; /* Lime */
+	border-bottom: 1px solid #6BA000; /* Dk lime */
+}
+	.questionbankwindow .header {
+		padding: 0;
+	}
+	.questionbankwindow .header .title h2 {
+		font-size: 1.1em;
+		color: #fff;
+		padding: 8px;
+		margin: 0;
+		-webkit-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+		-moz-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+		text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+	}
+#page-mod-quiz-edit .categoryinfo, 
+.questionbankwindow .choosecategory, 
+.questionbankwindow .createnewquestion,
+form#displayoptions, .modulespecificbuttonscontainer {
+	padding: 5px;
+}
+form#displayoptions, .categoryinfofield, 
+.categoryquestionscontainer table#categoryquestions {
+	font-size: 0.9em;
+}
+#page-mod-quiz-edit div.questionbank {
+	background-color: #DDEAC2; /* Light lime */
+	padding: 8px;
+}
+.categorypagingbarcontainer {
+	margin-bottom: 10px;
+}
+.categoryquestionscontainer table#categoryquestions th, 
+.cateogryquestionscontainer table#categoryquestions td,
+table#categoryquestions td.qtype {
+	padding: 3px;
+}
+.modulespecificbuttonscontainer hr {
+	margin: 15px 0;
+}
+/* Quiz form */
+.path-mod-quiz .que {
+	border-color: #ccc;
+}
+.path-mod-quiz table.quizreviewsummary th.cell {
+	border-bottom-width: 1px;
+	padding: 5px;
+}
+.path-mod-quiz table.quizreviewsummary td.cell {
+	padding: 5px;
+}
+.path-mod-quiz .qnbutton, .path-mod-quiz .qnbutton:hover {
+	color: #007C41; /* UA green */
+}
+.path-mod-quiz .qnbutton.partiallycorrect {
+	border-color: #D4BA00; /* Dk yellow */
+}
+.path-mod-quiz .qnbutton.incorrect {
+	border-color: #ED9090; /* Dk pink */
+}
+.path-mod-quiz .qnbutton.correct {
+	background-color: #AFDF53; /* Lime green */
+	border-color: #6BA000; /* Dk green */
+}
+/* Quiz attempts report */
+.pagelayout-report .no-overflow {
+	overflow: auto;
+}
+#page-mod-quiz-report table#attempts td {
+	border-color: #ccc;
+}
+/* Quiz timer */
+#quiz-timer {
+	background-color: #FFF7B7; /* Yellow */
+	position: fixed;
+	top: 12px;
+	right: 5%;
+	font-size: 1.5em;
+	padding: 1em;
+	z-index: 100;
+}
+/* 
+Survey
+-----------------------*/
+.path-mod-survey .smalltext {
+	font-size: 0.8em;
+	color: #284E36; /* Forest green */
+}
+.path-mod-survey #surveyform .smalltext th {
+	font-weight: bold;
+}
+.path-mod-survey .surveytable th.optioncell, .path-mod-survey th.optioncell {
+	border-width: 0 0 1px 0;
+}
+/*
+Tab Display
+-----------------------*/
+#region-main #tabcontent {
+	margin: 0;
+	padding: 0;
+}
+.region-content ul li.TabbedPanelsTab {
+	list-style-type: none;
+}
+#tabcontent .TabbedPanels {
+	padding: 0;
+}
+#tabcontent li.TabbedPanelsTab {
+	padding: 7px 10px;
+	background-color: #007C41; /* UA green */
+	-webkit-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    -moz-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+}
+#tabcontent li.TabbedPanelsTabSelected {
+	background-color: #fff;
+	border-bottom: 1px solid #fff;
+	-webkit-text-shadow: none;
+    -moz-text-shadow: none;
+    text-shadow: none;
+}
+#tabcontent li.TabbedPanelsTabHover {
+	background-color: #84C20B; /* Lime */
+}
+	#tabcontent li.TabbedPanelsTabSelected.TabbedPanelsTabHover {
+		background-color: #fff;
+	}
+#tabcontent .TabbedPanelsContentGroup {
+	border: 1px solid #ccc;
+	border-right: none;
+	border-bottom: none;
+}
+#tabcontent .TabbedPanelsContent {
+	padding: 5px 20px;
+	margin-bottom: 10px;
+}
+/* Tab menu */
+.region-content #tab-menu-wrapper {
+	width: 20%;
+}
+#tab-menu-wrapper ul.menutable {
+	margin-top: 30px;
+	margin-left: 0;
+	border-right: 0;
+	-webkit-border-radius: 5px 0 0 0;
+	-moz-border-radius: 5px 0 0 0;
+	border-radius: 5px 0 0 0;
+}
+#tab-menu-wrapper ul.menutable li {
+	padding: 4px 10px;
+	background-color: #DDEAC2; /* Light lime */
+	border-bottom: 1px solid #fff;
+}
+#tab-menu-wrapper ul.menutable li.menutitle {
+	background-color: #284E36; /* Forest green */
+	font-weight: bold;
+	-webkit-border-top-left-radius: 4px;
+	-moz-border-top-left-radius: 4px;
+	border-top-left-radius: 4px;
+}
+#tab-menu-wrapper ul.menutable li.row {
+	background: #fff url([[pix:theme|images/icon_arrow]]) no-repeat right 3px;
+	padding-right: 15px;
+}
+	#tab-menu-wrapper ul.menutable li.row a,
+	#tab-menu-wrapper ul.menutable li.row a:visited {
+		color: #000;
+	}
+	#tab-menu-wrapper ul.menutable li.row a:hover {
+		text-decoration: none;
+	}
+/*
+Workshop
+-----------------------*/
+.path-mod-workshop .userplan {
+	font-size: 0.9em;
+}
+	.path-mod-workshop .userplan td.active .title a,
+	.path-mod-workshop .userplan td.active .title a:link, 
+	.path-mod-workshop .userplan td.active .title a:visited {
+		color: #007C41; /* UA green */
+	}
+	.path-mod-workshop .userplan td.active a:hover {
+		color: #72a807; /* Lime */
+	}
+.path-mod-workshop .userplan th {
+	text-align: center;
+}
+.path-mod-workshop .userplan th, .path-mod-workshop .userplan td {
+	padding: 8px;
+}
+.path-mod-workshop .userplan th.active {
+	font-size: 1.2em;
+	color: #284E36; /* Forest green */
+}
+.path-mod-workshop .userplan tr.phasetasks li.info {
+    background-image: url([[pix:theme|images/icon_info]]);
+}
+.path-mod-workshop .userplan tr.phasetasks td.active li.info {
+	color: #4b4b4b;
+}
+.path-mod-workshop .grading-report {
+	font-size: 0.9em;
+}
+/*
+Grader Report
+-----------------------*/
+/* Grader Report */
+table#user-grades, table#user-grades tr, table#user-grades th.categoryitem, 
+table#user-grades th.courseitem, table#user-grades td.topleft {
+	font-size: 1em;
+	border-style: none;
+}
+table#user-grades th.category {
+	border: 1px dotted #ccc;
+	padding: 5px;
+}
+table#user-grades tr.heading {
+	text-align: left;
+	background-color: #fff;
+	border-bottom: 3px solid #ccc;
+}
+	table#user-grades tr.heading th {
+		padding: 5px;
+		border-right: 1px solid #ccc;
+	}
+	table#user-grades tr.heading th.item, table#user-grades tr.heading th.courseitem {
+		background-color: #fff;
+		border-top: 1px solid #ccc;
+	}
+table#user-grades tr th.user, table#user-grades tr th.userreport {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	padding: 3px;
+}
+	table#user-grades tr th.userreport {
+		border-right: 1px solid #ccc;
+	}
+table#user-grades tr.odd td.tooltipactive,
+table#user-grades tr td.tooltipactive {
+	background-color: #FFFAB7; /* Light yellow */
+}
+.graderreportoverlay {
+	background-color: #EEEEEE;
+    border: 1px solid #848484;
+    padding: 5px;
+    font-size: 0.9em;
+}
+	.graderreportoverlay .fullname, .graderreportoverlay .itemname {
+		font-weight: bold;
+	}
+	.graderreportoverlay .itemname {
+		font-style: italic;
+	}
+/* Grader report fixed column */
+.path-grade-report-grader .gradeparent {
+	overflow: scroll;
+}
+.path-grade-report-grader div.left_scroller tr, .path-grade-report-grader div.right_scroller tr, .path-grade-report-grader div.left_scroller td, .path-grade-report-grader div.right_scroller td, .path-grade-report-grader div.left_scroller th, .path-grade-report-grader div.right_scroller th {
+	font-size: 1em;
+	height: 4em;
+}
+.path-grade-report-grader table#fixed_column {
+	margin-top: 1px;
+}
+.path-grade-report-grader table td.topleft, .path-grade-report-grader table#fixed_column {
+	border: 0;
+	background-color: #fff;
+}
+	#page-grade-report-grader-index #fixed_column td.topleft {
+		padding: 5px;
+	}
+	*:first-child+html .path-grade-report-grader .left_scroller { /* IE7 */
+		padding-top: 27px;
+	}
+	.path-grade-report-grader .left_scroller { /* IE8 */
+		padding-top: 13px\0/;
+	}
+	*:first-child+html .path-grade-report-grader div.left_scroller table#fixed_column tbody tr th { /* IE7 */
+		height: 4em;
+		padding-bottom: 2px;
+	} 
+	.path-grade-report-grader div.left_scroller table#fixed_column tbody tr th { /* IE8 */
+		height: 4em\0/;
+		padding-bottom: 2px\0/;
+	} 
+.path-grade-report-grader table#fixed_column th {
+	border-color: #ccc;
+	border-width: 1px 3px 1px 0;
+}
+.path-grade-report-grader table#fixed_column th#studentheader,
+table#user-grades th.item, table#user-grades th.categoryitem, table#user-grades th.courseitem {
+	border-bottom: 3px solid #ccc;
+}
+	.path-grade-report-grader th, #page-grade-report-grader-index .right_scroller #user-grades td {
+		padding: 2px 5px;
+	}
+	.path-grade-report-grader table#fixed_column th.user {
+		border-right: 0;
+		background-color: #fff;
+	}
+	.path-grade-report-grader table#fixed_column th.userreport {
+		background-color: #fff;
+		vertical-align: top;
+	}
+table#user-grades .item {
+	background-color: #fff;
+}
+table#user-grades td {
+	background-color: #efefef; /* Light grey */
+}
+
+/* User report */
+table.user-grade, table.generaltable, table.generaltable h4.main {
+	border: 0;
+	font-size: 1em;
+}
+table.user-grade thead, table.generaltable thead {
+	background-color: #fff;
+	border-bottom: 3px solid #ccc;
+}
+table.user-grade tbody, table.generaltable tbody {
+	background-color: #fff;
+}
+table.user-grade tbody td {
+	padding: 5px;
+}
+table#user-grades tr.avg th, table#user-grades tr.avg td.cell,
+.path-grade-report-grader table tr.avg td.cell, table#user-grades td.controls, .path-grade-report-grader table tr.avg, .path-grade-report-grader table tr.avg td, .path-grade-report-grader table tr.avg th {
+	background-color: #DDEAC2; /* Light lime */
+	color: #284E36; /* Forest green */
+	text-align: right;
+}
+.user-grade td.oddd1 {
+    background-color: #fff;
+}
+.user-grade td.b1l, .user-grade td.b2l {
+    border-left: 0;
+}
+.user-grade td.b1b, .user-grade td.b2b {
+    border-bottom: 0;
+}
+.user-grade td.item {
+	border-color: #ccc;
+}
+.user-grade td.baggt {
+	border-top: 3px solid #ccc;
+}
+/* Simple view */
+.gradetreebox td.colspan, .gradetreebox tr.category .cell {
+	background-color: #fff;
+}
+table#grade_edit_tree_table th {
+	border-bottom: 0;
+}
+/* 
+User Section 
+------------------------*/
+#page-course-user .section {
+	border-color: #ddd;
+	margin: 10px 0; 
+}
+tr.discussion td.replies { text-align: center;}
+/*
+AJAX User Enroller Panel
+-----------------------*/
+.user-enroller-panel {
+    width:400px;
+    background-color:#666;
+    position:absolute;
+    top:10%;
+    left:10%;
+    border:1px solid #666;
+    border-width:0 5px 5px 0;
+    z-index: 99999!important;
+}
+#mod-committee-general, #mod-committee-create_topics, #mod-committee-participants_header, #mod-committee-topic_header  {
+    border-style: solid;
+    border-color: #036C43;
+    background: #FFFAD9;
+    -webkit-border-top-left-radius: 0px;
+    -moz-border-radius-topleft: 0px;
+    border-top-left-radius: 0px;
+    -webkit-border-bottom-left-radius: 15px;
+    -moz-border-radius-bottomleft: 15px;
+    border-bottom-left-radius: 15px;
+    -webkit-border-top-right-radius: 15px;
+    -moz-border-radius-topright: 15px;
+    border-top-right-radius: 15px;
+    -webkit-border-bottom-right-radius: 15px;
+    -moz-border-radius-bottomright: 15px;
+    border-bottom-right-radius: 15px;
+}
+#myuserselector_wrapper{
+    position: relative;
+    left: 9%;
+}

@@ -17,7 +17,7 @@
 /**
  * This file contains classes used to manage the repository plugins in Moodle
  *
- * @since 2.0
+ * @since Moodle 2.0
  * @package   core_repository
  * @copyright 2009 Dongsheng Cai {@link http://dongsheng.org}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -493,11 +493,22 @@ class repository_type implements cacheable_object {
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class repository implements cacheable_object {
-    /** Timeout in seconds for downloading the external file into moodle */
+    /**
+     * Timeout in seconds for downloading the external file into moodle
+     * @deprecated since Moodle 2.7, please use $CFG->repositorygetfiletimeout instead
+     */
     const GETFILE_TIMEOUT = 30;
-    /** Timeout in seconds for syncronising the external file size */
+
+    /**
+     * Timeout in seconds for syncronising the external file size
+     * @deprecated since Moodle 2.7, please use $CFG->repositorysyncfiletimeout instead
+     */
     const SYNCFILE_TIMEOUT = 1;
-    /** Timeout in seconds for downloading an image file from external repository during syncronisation */
+
+    /**
+     * Timeout in seconds for downloading an image file from external repository during syncronisation
+     * @deprecated since Moodle 2.7, please use $CFG->repositorysyncimagetimeout instead
+     */
     const SYNCIMAGE_TIMEOUT = 3;
 
     // $disabled can be set to true to disable a plugin by force
@@ -648,7 +659,7 @@ abstract class repository implements cacheable_object {
      * Returns the type name of the repository.
      *
      * @return string type name of the repository.
-     * @since  2.5
+     * @since  Moodle 2.5
      */
     public function get_typename() {
         if (empty($this->typename)) {
@@ -828,13 +839,14 @@ abstract class repository implements cacheable_object {
     }
 
     /**
-     * Parses the 'source' returned by moodle repositories and returns an instance of stored_file
+     * Parses the moodle file reference and returns an instance of stored_file
      *
-     * @param string $source
+     * @param string $reference reference to the moodle internal file as retruned by
+     *        {@link repository::get_file_reference()} or {@link file_storage::pack_reference()}
      * @return stored_file|null
      */
-    public static function get_moodle_file($source) {
-        $params = file_storage::unpack_reference($source, true);
+    public static function get_moodle_file($reference) {
+        $params = file_storage::unpack_reference($reference, true);
         $fs = get_file_storage();
         return $fs->get_file($params['contextid'], $params['component'], $params['filearea'],
                     $params['itemid'], $params['filepath'], $params['filename']);
@@ -846,13 +858,14 @@ abstract class repository implements cacheable_object {
      * This is checked when user tries to pick the file from repository to deal with
      * potential parameter substitutions is request
      *
-     * @param string $source
+     * @param string $source source of the file, returned by repository as 'source' and received back from user (not cleaned)
      * @return bool whether the file is accessible by current user
      */
     public function file_is_accessible($source) {
         if ($this->has_moodle_files()) {
+            $reference = $this->get_file_reference($source);
             try {
-                $params = file_storage::unpack_reference($source, true);
+                $params = file_storage::unpack_reference($reference, true);
             } catch (file_reference_exception $e) {
                 return false;
             }
@@ -1365,12 +1378,13 @@ abstract class repository implements cacheable_object {
      * again to another file area (also as a copy or as a reference), the value of
      * files.source is copied.
      *
-     * @param string $source the value that repository returned in listing as 'source'
+     * @param string $source source of the file, returned by repository as 'source' and received back from user (not cleaned)
      * @return string|null
      */
     public function get_file_source_info($source) {
         if ($this->has_moodle_files()) {
-            return $this->get_reference_details($source, 0);
+            $reference = $this->get_file_reference($source);
+            return $this->get_reference_details($reference, 0);
         }
         return $source;
     }
@@ -1651,13 +1665,25 @@ abstract class repository implements cacheable_object {
     /**
      * Prepare file reference information
      *
-     * @param string $source
-     * @return string file referece
+     * @param string $source source of the file, returned by repository as 'source' and received back from user (not cleaned)
+     * @return string file reference, ready to be stored
      */
     public function get_file_reference($source) {
-        if ($this->has_moodle_files() && ($this->supported_returntypes() & FILE_REFERENCE)) {
-            $params = file_storage::unpack_reference($source);
-            if (!is_array($params)) {
+        if ($source && $this->has_moodle_files()) {
+            $params = @json_decode(base64_decode($source), true);
+            if (!is_array($params) || empty($params['contextid'])) {
+                throw new repository_exception('invalidparams', 'repository');
+            }
+            $params = array(
+                'component' => empty($params['component']) ? ''   : clean_param($params['component'], PARAM_COMPONENT),
+                'filearea'  => empty($params['filearea'])  ? ''   : clean_param($params['filearea'], PARAM_AREA),
+                'itemid'    => empty($params['itemid'])    ? 0    : clean_param($params['itemid'], PARAM_INT),
+                'filename'  => empty($params['filename'])  ? null : clean_param($params['filename'], PARAM_FILE),
+                'filepath'  => empty($params['filepath'])  ? null : clean_param($params['filepath'], PARAM_PATH),
+                'contextid' => clean_param($params['contextid'], PARAM_INT)
+            );
+            // Check if context exists.
+            if (!context::instance_by_id($params['contextid'], IGNORE_MISSING)) {
                 throw new repository_exception('invalidparams', 'repository');
             }
             return file_storage::pack_reference($params);
@@ -1724,9 +1750,12 @@ abstract class repository implements cacheable_object {
      *   url: URL to the source (from parameters)
      */
     public function get_file($url, $filename = '') {
+        global $CFG;
+
         $path = $this->prepare_file($filename);
         $c = new curl;
-        $result = $c->download_one($url, null, array('filepath' => $path, 'timeout' => self::GETFILE_TIMEOUT));
+
+        $result = $c->download_one($url, null, array('filepath' => $path, 'timeout' => $CFG->repositorygetfiletimeout));
         if ($result !== true) {
             throw new moodle_exception('errorwhiledownload', 'repository', '', $result);
         }
@@ -1854,7 +1883,7 @@ abstract class repository implements cacheable_object {
      * can be edited.
      *
      * @return bool true if the user can edit the instance.
-     * @since 2.5
+     * @since Moodle 2.5
      */
     public final function can_be_edited_by_user() {
         global $USER;
@@ -1911,7 +1940,7 @@ abstract class repository implements cacheable_object {
      * the user instances will be protected when they need to.
      *
      * @return boolean True when the repository accesses private external data.
-     * @since  2.5
+     * @since  Moodle 2.5
      */
     public function contains_private_data() {
         return true;
@@ -2205,7 +2234,7 @@ abstract class repository implements cacheable_object {
      *
      * @param array $breadcrumb contains each element of the breadcrumb.
      * @return array of breadcrumb elements.
-     * @since 2.3.3
+     * @since Moodle 2.3.3
      */
     protected static function prepare_breadcrumb($breadcrumb) {
         global $OUTPUT;
@@ -2226,7 +2255,7 @@ abstract class repository implements cacheable_object {
      *
      * @param array $list of files and folders.
      * @return array of files and folders.
-     * @since 2.3.3
+     * @since Moodle 2.3.3
      */
     protected static function prepare_list($list) {
         global $OUTPUT;
@@ -2944,7 +2973,7 @@ abstract class repository implements cacheable_object {
 /**
  * Exception class for repository api
  *
- * @since 2.0
+ * @since Moodle 2.0
  * @package   core_repository
  * @copyright 2009 Dongsheng Cai {@link http://dongsheng.org}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -2955,7 +2984,7 @@ class repository_exception extends moodle_exception {
 /**
  * This is a class used to define a repository instance form
  *
- * @since 2.0
+ * @since Moodle 2.0
  * @package   core_repository
  * @copyright 2009 Dongsheng Cai {@link http://dongsheng.org}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -3075,7 +3104,7 @@ final class repository_instance_form extends moodleform {
 /**
  * This is a class used to define a repository type setting form
  *
- * @since 2.0
+ * @since Moodle 2.0
  * @package   core_repository
  * @copyright 2009 Dongsheng Cai {@link http://dongsheng.org}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

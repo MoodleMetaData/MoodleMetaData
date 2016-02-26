@@ -1,0 +1,164 @@
+// Core block theme
+.block {
+  min-height: 20px;
+  padding: 19px;
+  padding: 8px 0;
+  margin-bottom: 20px;
+  background: none;
+  border: 0;
+  .border-radius(0);
+  .box-shadow(none);
+}
+
+.block .title {
+  border-bottom: 1px solid @uGreyBorder;
+}
+
+.block .header h2 {
+  font-family: 'Open Sans', Arial, sans-serif;
+  color: @uH2;
+  font-size: 1.1em;
+  font-weight: 400;
+}
+
+.block .header .commands {
+  padding: 3px 0px;
+}
+
+
+.block .header .block_action .block-hider-show,
+.block .header .block_action .block-hider-hide {
+  max-height: 12px;
+  max-width: 12px;
+}
+
+// Region main (center) blocks
+#region-main .block {
+  .card(0.1);
+  padding-top: 0px;
+  padding-bottom: 15px;
+}
+
+#region-main .block .header h2 {
+  color: @uH2;
+  text-transform: none;
+  font-size: 2.2em;
+  font-weight: lighter;
+  line-height: 1.5em;
+  padding-top: 8px;
+}
+
+#region-main .block .header {
+  #gradient > .vertical(@uOffWhite1, @uOffWhite2);
+}
+
+// Course Overview
+.block_course_overview .coursebox {
+  padding: 0;
+  border: none;
+}
+.block_course_overview .content h2.title {
+  font-size: 20px;
+  width: 100%;
+}
+
+// Course Overview Lite
+.block_course_overview_lite #course_list_header {
+  padding-top: 10px;
+}
+.block_course_overview_lite .overview-tabs {
+  border: none;
+  margin: 0;
+}
+.block_course_overview_lite .overview-tabs li {
+  display: block;
+  float: left;
+}
+.block_course_overview_lite .overview-tabs li div {
+  padding: .2em .3em;
+  background: #e1e1df;
+  border: 1px solid #BCBCBC;
+  color: #4B4B4B;
+  font-size: 1em;
+  .border-radius(0px)
+}
+.block_course_overview_lite .overview-tabs li div.selected {
+  background: #88C217;
+  border: 1px solid #6BA000;
+  color: #FFF;
+  .border-radius(0px)
+}
+.block_course_overview_lite .overview-tabs li:first-child div {
+  .border-top-left-radius(3px);
+  .border-bottom-left-radius(3px);
+}
+.block_course_overview_lite .overview-tabs li:last-child div {
+  .border-top-right-radius(3px);
+  .border-bottom-right-radius(3px);
+}
+
+.block_course_overview_lite h3.title {
+  float: left;
+  margin: 0.2em 0 .2em 0;
+  position: relative;
+  font-size: 1.2em;
+  text-transform: none;
+  border-bottom: none;
+  width: 90%;
+  display: inline;
+  line-height: 2em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.editing .block_course_overview_lite h3.title {
+  width: 80%;
+}
+.yui3-dd-proxy.block_course_overview_lite .course_title {
+  padding-left: 20px;
+  line-height: 2em;
+}
+.block_course_overview_lite .hide_course {
+  padding-top: 12px;
+}
+.block_course_overview_lite .move {
+  line-height: 2em;
+}
+.block_course_overview_lite .coursebox {
+  padding: 0px;
+  margin: 0px;
+  border: none;
+  .border-radius(0px);
+  border-bottom: 1px solid #ddd;
+}
+.block_course_overview_lite .content .box.notice .singleselect > form > div > label {
+  display: inline;
+}
+.block_course_overview_lite .coursebox .overview {
+  padding: 4px;
+}
+.block_course_overview_lite .coursebox .overview .name {
+  font-size: 14px;
+  border-bottom: 1px solid @uGreyBorder;
+  padding: 4px 6px;
+  font-weight: bold;
+}
+.block_course_overview_lite .coursebox .overview .info,
+.block_course_overview_lite .coursebox .overview .details {
+  padding: 4px 10px;
+  font-style: italic;
+}
+.block_course_overview_lite .activity_info {
+  margin: 5px 15px;
+}
+.block_course_overview_lite .activity_overview {
+  border-top: 1px dotted #ddd;
+}
+@media (max-width:380px) {
+  .block_course_overview_lite #course_overview_lite_legend {
+    display: none;
+  }
+}
+// Using moodle
+.block_usingmoodle  h6  {
+  font-size: .9em;
+}

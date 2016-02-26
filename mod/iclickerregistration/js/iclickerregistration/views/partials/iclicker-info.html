@@ -1,0 +1,43 @@
+<div id="mod-iclickerregistration-iclicker-info"
+     class="col-xs-12"
+     ng-class="{'alert alert-danger': iclickerUser.duplicateprofile.length>0 || !iclickerUser.iclicker_id || manuallyEnrolled}">
+    <div class="non-manually-enrolled-user"
+         ng-hide="manuallyEnrolled">
+
+        <div>
+            <!--Duplicate msg.-->
+            <span ng-show="iclickerUser.duplicateprofile.length>0">
+                {{lang.duplicateiclickeridinsamecourse}}
+            </span>
+
+            <!--Registered-->
+            <div ng-hide="!iclickerUser.iclicker_id">
+                <h1>{{lang.youriclickeridis}}
+                    <span class="iclicker-id-display">{{iclickerUser.iclicker_id}}</span>
+                </h1>
+
+                <div class="pull-right">
+                    <button type="button" ng-click="unregisterCallBack()" class="unregister-btn btn btn-danger">
+                        {{lang.unregisterbuttontext}}
+                    </button>
+
+                    <button type="button" ng-click="editCallBack()" class="edit-btn btn btn-primary">
+                        {{lang.editbuttontext}}
+                    </button>
+                </div>
+            </div>
+
+            <!--Unregistered.-->
+            <div ng-hide="iclickerUser.iclicker_id">
+                <h1>{{lang.noiclickeridregistered}}</h1>
+                <button ng-click="registerCallBack()" type="button" class="edit-btn btn btn-default">
+                    {{lang.registrationbuttontext}}
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="manually-enrolled-user"
+         ng-hide="!manuallyEnrolled">
+        <h1>{{lang.youraccountismanuallyenrolled}}</h1>
+    </div>
+</div>

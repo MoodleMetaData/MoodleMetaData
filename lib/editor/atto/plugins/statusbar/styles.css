@@ -1,0 +1,43 @@
+/* Statusbar style. It is recommended to sync the color with atto's toolbar. */
+.editor_atto_statusbar {
+    background: #F2F2F2;
+    height: auto;  /* nullify height. */
+    min-height: 1.1em;
+    border: 1px solid #BBB;
+    border-top: 0px;
+    width: 100%;
+    /* Since editor_atto_statusbar_elem only provides top margin. */
+    padding-bottom: 5px;
+    text-align: right;  /* Right align all inline/inline-block contents. */
+}
+
+/* Text color. */
+.editor_atto_statusbar {
+    color: #111111;
+}
+
+/* Style for elements in statusbar. */
+.editor_atto_statusbar_elem {
+    border: 1px solid #CCC;
+    border-bottom: 1px solid #B3B3B3;
+    border-radius: 4px;
+
+    /*
+     * Since Right align, only apply margin to the right. So we can distance
+     * this thing from the wall.
+     */
+    margin: 5px 9px 0 0px;
+    padding: 0px 9px 0px 9px;
+    background: #FFF;
+    display: inline-block;  /* We don't want block. */
+}
+
+/* Separator style. */
+.editor_atto_statusbar_separator {
+    width: 2px;
+    height: 1.1em;
+    background-color: #BBBBBB;
+    display: inline-block;
+    margin-left: 4px;
+    margin-right: 4px;
+}

@@ -1,0 +1,29 @@
+<iclicker-info
+        lang="lang"
+        manually-enrolled="manually_enrolled"
+        iclicker-user="current_user_iclicker">
+</iclicker-info>
+
+<hr class="col-xs-12">
+
+<div id="mod-iclickerregistration-teacher-tools" class="col-xs-12">
+    <!--In this iteration. There is only one tool, thus a header won't makes sense.-->
+    <!--<h1>{{lang.teachertoolsheadertext}}</h1>-->
+    <div id="mod-iclickerregistration-teacher-tools-generate-roster">
+        <button type="button" class="btn btn-default" ng-click="generate_class_roster()">
+            <span class="glyphicon glyphicon-download-alt"></span>&nbsp;{{lang.generateclassrosterbuttontext}}
+        </button>
+        &nbsp;
+        <a href="" popover-placement="right" uib-popover-html="generateclassrotsterhelp">
+            <span class="glyphicon glyphicon-question-sign"
+                         style="font-size: 1.5em; vertical-align: middle;"></span>
+        </a>
+    </div>
+</div>
+
+<hr class="col-xs-12">
+
+<iclicker-info-list
+        lang="lang"
+        admin-mode="false">
+</iclicker-info-list>

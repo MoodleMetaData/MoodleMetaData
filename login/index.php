@@ -137,7 +137,7 @@ if ($frm and isset($frm->username)) {                             // Login WITH 
         $frm = false;
     } else {
         if (empty($errormsg)) {
-            $user = authenticate_user_login($frm->username, $frm->password);
+            $user = authenticate_user_login($frm->username, $frm->password, false, $errorcode);
         }
     }
 
@@ -233,8 +233,12 @@ if ($frm and isset($frm->username)) {                             // Login WITH 
 
     } else {
         if (empty($errormsg)) {
-            $errormsg = get_string("invalidlogin");
-            $errorcode = 3;
+            if ($errorcode == AUTH_LOGIN_UNAUTHORISED) {
+                $errormsg = get_string("unauthorisedlogin", "", $frm->username);
+            } else {
+                $errormsg = get_string("invalidlogin");
+                $errorcode = 3;
+            }
         }
     }
 }
@@ -252,6 +256,8 @@ if (empty($SESSION->wantsurl)) {
                           $_SERVER["HTTP_REFERER"] != $CFG->wwwroot &&
                           $_SERVER["HTTP_REFERER"] != $CFG->wwwroot.'/' &&
                           $_SERVER["HTTP_REFERER"] != $CFG->httpswwwroot.'/login/' &&
+			  $_SERVER["HTTP_REFERER"] != $CFG->httpswwwroot.'/login/index.php' &&
+			  $_SERVER["HTTP_REFERER"] != $CFG->httpswwwroot.'/login/index2.php' &&
                           strpos($_SERVER["HTTP_REFERER"], $CFG->httpswwwroot.'/login/?') !== 0 &&
                           strpos($_SERVER["HTTP_REFERER"], $CFG->httpswwwroot.'/login/index.php') !== 0) // There might be some extra params such as ?lang=.
         ? $_SERVER["HTTP_REFERER"] : NULL;

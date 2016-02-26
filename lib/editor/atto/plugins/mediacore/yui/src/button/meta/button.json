@@ -1,0 +1,7 @@
+{
+    "moodle-atto_mediacore-button": {
+        "requires": [
+            "moodle-editor_atto-plugin"
+        ]
+    }
+}

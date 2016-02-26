@@ -1,0 +1,161 @@
+/*
+AAS 2012-05-09
+Being called from eclass.srv.ualberta.ca!
+*/
+
+/* latin */
+@font-face {
+    font-family: 'Abel';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Abel'), local('Abel-Regular'), url(https://fonts.gstatic.com/s/abel/v6/UzN-iejR1VoXU2Oc-7LsbvesZW2xOQ-xsNqO47m55DA.woff2) format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+}
+
+.block_library {
+    width: 100%;
+    font-family: 'Open Sans', 'Abel', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+.block_library img {
+    display: block;
+    width: 100%;
+}
+
+.library-bottom {
+    background-color: #133e20;
+    color: #fff;
+    padding: 10px 0;
+}
+
+.library-bottom li {
+    list-style: none;
+    display: inline;
+}
+
+.block_library form {
+    padding: 5px 5px 0px 5px;
+}
+
+.block_library input {
+    font-size: 13px;
+    height: 22px;
+    padding: 5px;
+    width: 60%;
+}
+
+.block_library button {
+    background-color: #2a5d18;
+    color: #fff;
+    display: inline-block;
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    padding: 5px;
+    font-size: 12px;
+    margin-top: -1px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    border: none;
+    font-family: 'Open Sans', 'Abel', sans-serif;
+}
+
+.block_library button:hover {
+    color: #efefef;
+    background-color: #174521;
+}
+
+.block_library p {
+    font-size: 13px;
+    padding-top: 0px;
+    margin-bottom: 0;
+    padding-left: 10px;
+}
+
+.block_library a {
+    text-decoration: none;
+    color: #2a5d18;
+}
+
+.block_library a:hover {
+    text-decoration: none;
+    color: #000;
+}
+
+.block_library ul.resources {
+    margin: 5px 0 15px 0;
+}
+
+.block_library ul.resources li {
+    font-size: 13px;
+    color: #2a5d18;
+}
+
+.block_library ul.ask {
+    padding: 5px;
+    margin: 0;
+}
+
+.block_library .ask li a {
+    padding: 0px 6px 0 0;
+    text-transform: lowercase;
+    color: #fff;
+    border-right: 1px solid #fff;
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: normal;
+}
+
+.block_library .ask li a:hover {
+    color: #FBED32;
+}
+
+.block_library .ask li a.last {
+    border-right: none;
+}
+
+.block_library .ask li a.ask-main {
+    color: #FBED32;
+    font-size: 16px;
+    letter-spacing: 1px;
+    border-right: none;
+    margin-left: 3px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+}
+
+.block_library .ask li a.ask-main:hover {
+    color: #fff;
+    background-position: left 3px;
+}
+
+.block_library a.my-account {
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    color: #666;
+    font-size: 13px;
+    margin-top: 0;
+    background: url("/blocks/library/pix/account-icon.png") #efefef no-repeat 5px center;
+    padding: 5px 0;
+}
+
+.block_library a:hover.my-account {
+    color: #000;
+    background-color: #e2e2e2;
+}
+
+.library-links {
+    font-size: small;
+    padding-bottom: 5px;
+}
+.library-coursetitle {
+    font-size: 1.1em;
+    font-weight:bold;
+    color: rgb(0,87,0);
+}
+

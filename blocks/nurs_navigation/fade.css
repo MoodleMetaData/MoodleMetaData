@@ -1,0 +1,5 @@
+﻿img.faded {
+   opacity: 0.5;
+   filter: alpha(opacity=50);
+   zoom: 1;  /* needed to trigger "hasLayout" in IE if no width or height is set */
+}

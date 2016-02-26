@@ -1,0 +1,8 @@
+{
+  "moodle-group-selectsizecorrection": {
+    "requires": [
+      "base",
+      "node"
+    ]
+  }
+}

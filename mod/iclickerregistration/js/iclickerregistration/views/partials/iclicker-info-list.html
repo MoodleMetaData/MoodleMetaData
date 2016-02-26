@@ -1,0 +1,100 @@
+<div  id="mod-iclickerregistration-iclicker-info-list" class="col-xs-12">
+    <h1 class="col-xs-12">{{lang.enrolledusersiclickerinfo}}</h1>
+
+    <div class="col-xs-12">
+        <div class="input-group">
+            <span class="input-group-addon"
+                  id="mod-iclickerregistration-input-query-label">Search:</span>
+            <input type="text" class="form-control" ng-model="query"
+                   ng-change="queryChangeCallBack()"
+                   placeholder="{{lang.searchplaceholder}}"
+                   aria-describedby="mod-iclickerregistration-input-query-label">
+        </div>
+
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="hideUnregistered"
+                       ng-change="hideUnregisteredCallBack()"
+                       ng-true-value="true"
+                       ng-false-value="false">
+                {{lang.hideunregistered}}
+            </label>
+        </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" ng-model="filterConflicts"
+                       ng-change="filterConflictsCallBack()"
+                       ng-true-value="true"
+                       ng-false-value="false">
+                {{lang.filterconflitcs}}
+            </label>
+        </div>
+    </div>
+
+    <div  id="iclicker-info-list" class="col-xs-12">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    <a ng-click="sortCallBack('idnumber')">{{lang.idnumber}} &nbsp;</a>
+                    <span ng-show="orderBy == 'idnumber'" ng-click="ascChangeCallBack()">
+                        <a href="" class="glyphicon glyphicon-triangle-bottom" ng-show="!asc"></a>
+                        <a href="" class="glyphicon glyphicon-triangle-top" ng-show="asc"></a>
+                    </span>
+                </th>
+                <th>
+                    <a ng-click="sortCallBack('name')">{{lang.name}} &nbsp;</a>
+                    <span ng-show="orderBy == 'name'" ng-click="ascChangeCallBack()">
+                        <a href="" class="glyphicon glyphicon-triangle-bottom" ng-show="!asc"></a>
+                        <a href="" class="glyphicon glyphicon-triangle-top" ng-show="asc"></a>
+                    </span>
+                </th>
+                <th>
+                    <a ng-click="sortCallBack('iclicker_id')">{{lang.iclickerid}} &nbsp;</a>
+                    <span ng-show="orderBy == 'iclicker_id'" ng-click="ascChangeCallBack()">
+                        <a href="" class="glyphicon glyphicon-triangle-bottom" ng-show="!asc"></a>
+                        <a href="" class="glyphicon glyphicon-triangle-top" ng-show="asc"></a>
+                    </span>
+                </th>
+            </tr>
+            </thead>
+            <tr ng-repeat="iclicker in iclickers"
+                ng-class="iclicker.duplicate_count > 0? 'alert-danger' : '' ">
+                <td>{{iclicker.idnumber}}</td>
+                <td>{{iclicker.lastname}}, {{iclicker.firstname}}</td>
+                <td>
+                    <span>{{iclicker.iclicker_id? iclicker.iclicker_id : lang.unregistered }} &nbsp;</span>
+
+                    <span ng-show="adminMode">
+                        <a ng-hide="!iclicker.iclicker_id" href="" class="glyphicon glyphicon-pencil"
+                           ng-click="edit_iclicker_cb($index)"></a>
+                        <a ng-hide="!iclicker.iclicker_id" href="" class="glyphicon glyphicon-trash"
+                           ng-click="delete_iclicker_cb($index)"></a>
+
+                        <button ng-hide="iclicker.iclicker_id" href="" class="btn btn-default"
+                                ng-click="register_iclicker_cb($index)">
+                            {{lang.registrationbuttontext}}
+                        </button>
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <hr class="col-xs-12">
+
+    <pagination ng-model="currentPage" total-items="totalItems"
+                max-size="maxSize" items-per-page="itemsPerPage"
+                class="pagination" boundary-links="true"
+                rotate="false" num-pages="pageCount"
+                previous-text="{{lang.paginationprevious}}"
+                next-text="{{lang.paginationnext}}"
+                first-text="{{lang.paginationfirst}}"
+                last-text="{{lang.paginationlast}}"
+                ng-change="pageChangeCallBack()"
+                ng-show="pageCount > 1">
+    </pagination>
+    <br>
+
+    <div ng-show="duplicateCount > 0" class="alert alert-danger col-xs-12" ng-bind-html="iclickeridconflictlegendtext"></div>
+</div>

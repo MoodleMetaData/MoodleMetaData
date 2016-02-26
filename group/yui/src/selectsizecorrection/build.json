@@ -1,0 +1,10 @@
+{
+  "name": "moodle-group-selectsizecorrection",
+  "builds": {
+    "moodle-group-selectsizecorrection": {
+      "jsfiles": [
+        "selectsizecorrection.js"
+      ]
+    }
+  }
+}

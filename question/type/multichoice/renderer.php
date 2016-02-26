@@ -55,6 +55,11 @@ abstract class qtype_multichoice_renderer_base extends qtype_with_combined_feedb
     public function formulation_and_controls(question_attempt $qa,
             question_display_options $options) {
 
+        global $PAGE;
+
+        // Load the lang file strings so they are usable in the javascript function later.
+        $PAGE->requires->strings_for_js(array('crossout', 'undo'), 'qtype_multichoice');
+
         $question = $qa->get_question();
         $response = $question->get_response($qa);
 
@@ -97,7 +102,10 @@ abstract class qtype_multichoice_renderer_base extends qtype_with_combined_feedb
                         $question->make_html_inline($question->format_text(
                                 $ans->answer, $ans->answerformat,
                                 $qa, 'question', 'answer', $ansid)),
-                    array('for' => $inputattributes['id']));
+                    array('for' => $inputattributes['id'])) .
+                        html_writer::tag('a', get_string('crossout', 'qtype_multichoice'),
+                            array('title' => get_string('crossouttooltip', 'qtype_multichoice'),
+                                'class' => 'tooltip mcstrike', 'href' => '#'));
 
             // Param $options->suppresschoicefeedback is a hack specific to the
             // oumultiresponse question type. It would be good to refactor to
@@ -143,6 +151,8 @@ abstract class qtype_multichoice_renderer_base extends qtype_with_combined_feedb
                     $question->get_validation_error($qa->get_last_qt_data()),
                     array('class' => 'validationerror'));
         }
+
+        $this->page->requires->js_init_call('M.qtype_multichoice.init');
 
         return $result;
     }

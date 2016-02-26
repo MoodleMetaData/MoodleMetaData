@@ -110,6 +110,7 @@ class behat_hooks extends behat_base {
         // Now that we are MOODLE_INTERNAL.
         require_once(__DIR__ . '/../../behat/classes/behat_command.php');
         require_once(__DIR__ . '/../../behat/classes/behat_selectors.php');
+        require_once(__DIR__ . '/../../behat/classes/behat_context_helper.php');
         require_once(__DIR__ . '/../../behat/classes/util.php');
         require_once(__DIR__ . '/../../testing/classes/test_lock.php');
         require_once(__DIR__ . '/../../testing/classes/nasty_strings.php');
@@ -122,16 +123,21 @@ class behat_hooks extends behat_base {
             throw new Exception('Behat only can run if test mode is enabled. More info in ' . behat_command::DOCS_URL . '#Running_tests');
         }
 
+        // Reset all data, before checking for is_server_running.
+        // If not done, then it can return apache error, while running tests.
+        behat_util::reset_all_data();
+
         if (!behat_util::is_server_running()) {
             throw new Exception($CFG->behat_wwwroot .
-                ' is not available, ensure you started your PHP built-in server or your web server is correctly started and set up.' .
+                ' is not available, ensure you specified correct url and that the server is set up and started.' .
                 ' More info in ' . behat_command::DOCS_URL . '#Running_tests');
         }
 
         // Prevents using outdated data, upgrade script would start and tests would fail.
         if (!behat_util::is_test_data_updated()) {
             $commandpath = 'php admin/tool/behat/cli/init.php';
-            throw new Exception('Your behat test site is outdated, please run ' . $commandpath . ' from your moodle dirroot to drop and install the behat test site again.');
+            throw new Exception("Your behat test site is outdated, please run\n\n    " .
+                    $commandpath . "\n\nfrom your moodle dirroot to drop and install the behat test site again.");
         }
         // Avoid parallel tests execution, it continues when the previous lock is released.
         test_lock::acquire('behat');
@@ -184,21 +190,16 @@ class behat_hooks extends behat_base {
         // We need the Mink session to do it and we do it only before the first scenario.
         if (self::is_first_scenario()) {
             behat_selectors::register_moodle_selectors($session);
+            behat_context_helper::set_session($session);
         }
 
+        // Reset mink session between the scenarios.
+        $session->reset();
+
         // Reset $SESSION.
-        $_SESSION = array();
-        $SESSION = new stdClass();
-        $_SESSION['SESSION'] =& $SESSION;
+        \core\session\manager::init_empty_session();
 
-        behat_util::reset_database();
-        behat_util::reset_dataroot();
-
-        purge_all_caches();
-        accesslib_clear_all_caches(true);
-
-        // Reset the nasty strings list used during the last test.
-        nasty_strings::reset_used_strings();
+        behat_util::reset_all_data();
 
         // Assign valid data to admin user (some generator-related code needs a valid user).
         $user = $DB->get_record('user', array('username' => 'admin'));
@@ -230,7 +231,8 @@ class behat_hooks extends behat_base {
 
             self::$initprocessesfinished = true;
         }
-
+        // Run all test with medium (1024x768) screen size, to avoid responsive problems.
+        $this->resize_window('medium');
     }
 
     /**
@@ -383,9 +385,9 @@ class behat_hooks extends behat_base {
         $filename = $event->getStep()->getParent()->getTitle() . '_' . $event->getStep()->getText();
         $filename = preg_replace('/([^a-zA-Z0-9\_]+)/', '-', $filename);
 
-        // File name limited to 256 characters. Leaving 4 chars for the file
+        // File name limited to 255 characters. Leaving 4 chars for the file
         // extension as we allow .png for images and .html for DOM contents.
-        $filename = substr($filename, 0, 251) . '.' . $filetype;
+        $filename = substr($filename, 0, 250) . '.' . $filetype;
 
         return array($dir, $filename);
     }
@@ -405,7 +407,18 @@ class behat_hooks extends behat_base {
         for ($i = 0; $i < self::EXTENDED_TIMEOUT * 10; $i++) {
             $pending = '';
             try {
-                $jscode = 'return ' . self::PAGE_READY_JS . ' ? "" : M.util.pending_js.join(":");';
+                $jscode =
+                    'if (typeof M === "undefined") {
+                        if (document.readyState === "complete") {
+                            return "";
+                        } else {
+                            return "incomplete";
+                        }
+                    } else if (' . self::PAGE_READY_JS . ') {
+                        return "";
+                    } else {
+                        return M.util.pending_js.join(":");
+                    }';
                 $pending = $this->getSession()->evaluateScript($jscode);
             } catch (NoSuchWindow $nsw) {
                 // We catch an exception here, in case we just closed the window we were interacting with.
@@ -477,7 +490,11 @@ class behat_hooks extends behat_base {
             if ($errormsg = $this->getSession()->getPage()->find('xpath', $exceptionsxpath)) {
 
                 // Getting the debugging info and the backtrace.
-                $errorinfoboxes = $this->getSession()->getPage()->findAll('css', 'div.notifytiny');
+                $errorinfoboxes = $this->getSession()->getPage()->findAll('css', 'div.alert-error');
+                // If errorinfoboxes is empty, try find notifytiny (original) class.
+                if (empty($errorinfoboxes)) {
+                    $errorinfoboxes = $this->getSession()->getPage()->findAll('css', 'div.notifytiny');
+                }
                 $errorinfo = $this->get_debug_text($errorinfoboxes[0]->getHtml()) . "\n" .
                     $this->get_debug_text($errorinfoboxes[1]->getHtml());
 

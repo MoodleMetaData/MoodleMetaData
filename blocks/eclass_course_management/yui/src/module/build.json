@@ -1,0 +1,10 @@
+{
+  "name": "moodle-block_eclass_course_management-module",
+  "builds": {
+    "moodle-block_eclass_course_management-module": {
+      "jsfiles": [
+        "module.js"
+      ]
+    }
+  }
+}

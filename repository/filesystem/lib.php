@@ -17,7 +17,7 @@
 /**
  * This plugin is used to access files on server file system
  *
- * @since 2.0
+ * @since Moodle 2.0
  * @package    repository_filesystem
  * @copyright  2010 Dongsheng Cai {@link http://dongsheng.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -575,7 +575,7 @@ class repository_filesystem extends repository {
             $fullrelativefilepath = realpath($this->get_rootpath().$basepath.$relativepath);
 
             // Sanity check to make sure this path is inside this repository and the file exists.
-            if (strpos($fullrelativefilepath, $this->get_rootpath()) === 0 && file_exists($fullrelativefilepath)) {
+            if (strpos($fullrelativefilepath, realpath($this->get_rootpath())) === 0 && file_exists($fullrelativefilepath)) {
                 send_file($fullrelativefilepath, basename($relativepath), null, 0);
             }
         }

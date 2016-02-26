@@ -1,0 +1,43 @@
+// Calendar colour variables defined (from core's calendar.less).
+@calendarEventCourseColor: #ffd3bd; // Pale red.
+@calendarEventGlobalColor: #d6f8cd; // Pale green.
+@calendarEventGroupColor:  #fee7ae; // Pale yellow.
+@calendarEventUserColor:   #dce7ec; // Pale blue.
+
+// Colours for underway-events, which are lightened.
+@lightenPercentage: 4%;
+@calendarEventCourseColorLighten: lighten(@calendarEventCourseColor, @lightenPercentage);
+@calendarEventGlobalColorLighten: lighten(@calendarEventGlobalColor, @lightenPercentage);
+@calendarEventGroupColorLighten: lighten(@calendarEventGroupColor, @lightenPercentage);
+@calendarEventUserColorLighten: lighten(@calendarEventUserColor, @lightenPercentage);
+
+// Calendar event background for underway-events.
+.events-underway .calendar_event_course {
+  background-color: @calendarEventCourseColorLighten;
+}
+.events-underway .calendar_event_global {
+  background-color: @calendarEventGlobalColorLighten;
+}
+.events-underway .calendar_event_group {
+  background-color: @calendarEventGroupColorLighten
+}
+.events-underway .calendar_event_user {
+  background-color: @calendarEventUserColorLighten
+}
+
+.path-calendar {
+  .maincalendar {
+    .events-underway .calendar_event_course {
+      border-color: @calendarEventCourseColorLighten;
+    }
+    .events-underway .calendar_event_global {
+      border-color: @calendarEventGlobalColorLighten;
+    }
+    .events-underway .calendar_event_group {
+      border-color: @calendarEventGroupColorLighten;
+    }
+    .events-underway .calendar_event_user {
+      border-color: @calendarEventUserColorLighten;
+    }
+  }
+}

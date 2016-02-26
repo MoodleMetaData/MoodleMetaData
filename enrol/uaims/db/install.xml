@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="enrol/uaims/db" VERSION="20141027" COMMENT="XMLDB file for Moodle enrol/uaims"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="eclass_course_management" COMMENT="Table for management eClass courses.  Any added information needed for managing eClass sections on Moodle.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Id of the associated course"/>
+        <FIELD NAME="startdate" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Start date of the course"/>
+        <FIELD NAME="enddate" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="End date of the course"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Last time the data was modified."/>
+        <FIELD NAME="lastopened" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Last time the opened date was modified"/>
+        <FIELD NAME="lastclosed" TYPE="int" LENGTH="20" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Last date the course end date was modified"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="courseid" UNIQUE="true" FIELDS="courseid" COMMENT="Unique Course id"/>
+        <INDEX NAME="lastopenedstartdate" UNIQUE="false" FIELDS="lastopened, startdate"/>
+        <INDEX NAME="lastclosedenddate" UNIQUE="false" FIELDS="lastclosed, enddate"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

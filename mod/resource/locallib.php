@@ -18,8 +18,7 @@
 /**
  * Private resource module utility functions
  *
- * @package    mod
- * @subpackage resource
+ * @package    mod_resource
  * @copyright  2009 Petr Skoda  {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -64,7 +63,8 @@ function resource_redirect_if_migrated($oldid, $cmid) {
 function resource_display_embed($resource, $cm, $course, $file) {
     global $CFG, $PAGE, $OUTPUT;
 
-    $clicktoopen = resource_get_clicktoopen($file, $resource->revision);
+    $extra = 'target="_blank"';
+    $clicktoopen = resource_get_clicktoopen($file, $resource->revision, $extra);
 
     $context = context_module::instance($cm->id);
     $path = '/'.$context->id.'/mod_resource/content/'.$resource->revision.$file->get_filepath().$file->get_filename();

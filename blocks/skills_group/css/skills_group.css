@@ -1,0 +1,148 @@
+/*******************************************************************************
+* This fixes the "Add Contacts..." getting chopped off (First is no longer used)
+*******************************************************************************/
+#groupmembers{
+    width:100% !important;
+}
+
+/*******************************************************************************
+* Modified YUI Styles
+*******************************************************************************/
+.yui3-aclist{
+    width: 300px !important;
+    overflow: visible !important;
+}
+
+.members_bar .yui3-input-adjust{
+    padding: 7px 8px 3px 8px;
+    margin: 0px 5px 4px 0px;
+    border: 0 none;
+    outline: 0 none;
+    width: 80%;
+}
+
+.yui3-skin-sam .members_bar .yui3-multivalueinput-content{
+    background-color:white;
+    padding-left:2px;
+    border:1px solid #bdc7d8;
+    font:13px "Lucida Grande","Verdana";
+    width:75%;
+}
+
+.yui3-skin-sam .yui3-datatable-header{
+    background: url(ui-bg_highlight-hard_15_007c41_1x100.png) repeat-x scroll 50% 50% #007C41;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: none;
+    vertical-align: bottom;
+    white-space: nowrap;
+    font-size: 1em;
+}
+
+#groupspaginator .yui3-pagview-container button{
+    background-color: #E3EDCE;
+    border: 1px solid #D4E0BA;
+    margin: 3px !important;
+}
+
+#groups .yui3-datatable-cell, #viewgroup .yui3-datatable-cell{
+    background-color: #FFFFFF;
+    border-bottom: 1.0px solid #CBCBCB;
+    font-size: 0.9em;
+}
+
+.yui3-datatable-even, .yui3-datatable-odd {
+    cursor: pointer;
+}
+
+.yui3-skin-sam .yui3-datatable td.yui3-datatable-sel-highlighted,
+.yui3-skin-sam .yui3-datatable td.yui3-datatable-sorted.yui3-datatable-sel-highlighted ,
+.yui3-skin-sam .yui3-datatable tr.yui3-datatable-sel-highlighted td,
+.yui3-skin-sam .yui3-datatable tr.yui3-datatable-sel-highlighted td.yui3-datatable-sorted{
+    background-color: #f0db5c;
+}
+
+.yui3-skin-sam .yui3-datatable td.yui3-datatable-sel-selected,
+.yui3-skin-sam .yui3-datatable td.yui3-datatable-sorted.yui3-datatable-sel-selected ,
+.yui3-skin-sam .yui3-datatable tr.yui3-datatable-sel-selected td,
+.yui3-skin-sam .yui3-datatable tr.yui3-datatable-sel-selected td.yui3-datatable-sorted{
+    background-color: #FFE862 !important;
+}
+
+.yui3-pagview-link-page{
+    vertical-align: bottom;
+}
+
+/*******************************************************************************
+* View Group Styling
+*******************************************************************************/
+#viewgroup .yui3-datatable-table{
+    margin:5;
+    padding:5;
+    font-family:arial,sans-serif;
+    border-collapse:separate;
+    border-spacing:0;
+    border:1px solid #cbcbcb;
+}
+
+.tdcenter {
+    text-align: center;
+}
+
+#viewgroup .yui3-datatable-header{
+    padding: 8px !important;
+}
+
+/*******************************************************************************
+* Modified YUI Styles (User Alerts)
+*******************************************************************************/
+.error{
+    color: #BB0000;
+}
+
+.success{
+    color: #007700;
+}
+
+/*******************************************************************************
+* General styles
+*******************************************************************************/
+.clear {
+    clear: both;
+}
+
+/*******************************************************************************
+* Other styles
+*******************************************************************************/
+.locked_members_bar .label{
+    float: left;
+    background-color: transparent;
+    font-weight: bold;
+    color: #690000;
+    text-shadow: none;
+    width: 10%;
+}
+
+.locked_members_bar .name{
+    background-color: transparent;
+    color: #690000;
+    text-shadow: none;
+    margin: 0px 5px;
+}
+
+.members_bar {
+    background: transparent;
+    padding: 5px;
+    width: 95%;
+}
+
+.members_bar .label{
+    float: left;
+    background-color: transparent;
+    font-weight: bold;
+    color: #696969;
+    text-shadow: none;
+    width: 10%;
+    padding: 4px;
+}

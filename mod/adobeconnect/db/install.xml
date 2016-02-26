@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/adobeconnect/db" VERSION="2011041400" COMMENT="XMLDB file for Moodle mod/adobeconnect"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="adobeconnect" COMMENT="adobeconnect Moodle module table" NEXT="adobeconnect_meeting_groups">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="course"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Course adobeconnect activity belongs to" PREVIOUS="id" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="name field for moodle instances" PREVIOUS="course" NEXT="intro"/>
+        <FIELD NAME="intro" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false"  COMMENT="General introduction of the adobeconnect activity" PREVIOUS="name" NEXT="introformat"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, MARKDOWN...)" PREVIOUS="intro" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="User who created the meeting" PREVIOUS="introformat" NEXT="templatescoid"/>
+        <FIELD NAME="templatescoid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"  COMMENT="Meeting template sco-id" PREVIOUS="userid" NEXT="meeturl"/>
+        <FIELD NAME="meeturl" TYPE="char" LENGTH="60" NOTNULL="false" SEQUENCE="false" COMMENT="Meeting URL" PREVIOUS="templatescoid" NEXT="starttime"/>
+        <FIELD NAME="starttime" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Meeting start time" PREVIOUS="meeturl" NEXT="endtime"/>
+        <FIELD NAME="endtime" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Meeting start time" PREVIOUS="starttime" NEXT="meetingpublic"/>
+        <FIELD NAME="meetingpublic" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Meetings can be public or non-public" PREVIOUS="endtime" NEXT="timecreated"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false"  PREVIOUS="meetingpublic" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="adobeconnect_meeting_groups" COMMENT="Reference table used to link group meetings from Adobe server to a Moodle activity" PREVIOUS="adobeconnect" NEXT="adobeconnect_recordings">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="instanceid"/>
+        <FIELD NAME="instanceid" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="meetingscoid"/>
+        <FIELD NAME="meetingscoid" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Meeting sco-id" PREVIOUS="instanceid" NEXT="groupid"/>
+        <FIELD NAME="groupid" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Moodle group id" PREVIOUS="meetingscoid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="instanceid_idx" UNIQUE="false" FIELDS="instanceid" NEXT="groupid_idx"/>
+        <INDEX NAME="groupid_idx" UNIQUE="false" FIELDS="groupid" PREVIOUS="instanceid_idx"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="adobeconnect_recordings" COMMENT="Table used to track moodle visibilty of recordings" PREVIOUS="adobeconnect_meeting_groups" NEXT="adobeconnect_watched" >
+       <FIELDS>
+           <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" COMMENT="Row id" NEXT="recordingid"/>
+           <FIELD NAME="recordingid" TYPE="int" LENGTH="20" NOTNULL="true" UNSIGNED="true" SEQUENCE="false"  COMMENT="Recording sco-id" PREVIOUS="id" NEXT="hidden"/>
+           <FIELD NAME="hidden" TYPE="int" LENGTH="1" DEFAULT="0" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" COMMENT="If the recoding is hidden from students" PREVIOUS="recordingid"/>
+       </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="id_idx" UNIQUE="true" FIELDS="id" NEXT="recordingid_idx"/>
+            <INDEX NAME="recordingid_idx" UNIQUE="false" FIELDS="recordingid" PREVIOUS="id_idx" />
+        </INDEXES>
+    </TABLE>
+    <TABLE NAME="adobeconnect_watched" COMMENT="List of users who have viewed a recording" PREVIOUS="adobeconnect_recordings">
+        <FIELDS>
+            <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="userid"/>
+            <FIELD NAME="userid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="scoid"/>
+            <FIELD NAME="scoid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false" COMMENT="Recording scoid" PREVIOUS="userid" NEXT="instanceid"/>
+            <FIELD NAME="instanceid" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false" COMMENT="Connect instance" PREVIOUS="scoid"/>
+        </FIELDS>
+        <KEYS>
+            <KEY NAME="primary" TYPE="primary" FIELDS="id" NEXT="userid"/>
+            <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id" PREVIOUS="primary" NEXT="instanceid"/>
+            <KEY NAME="instanceid" TYPE="foreign" FIELDS="instanceid" REFTABLE="adobeconnect" REFFIELDS="id" PREVIOUS="userid"/>
+        </KEYS>
+        <INDEXES>
+            <INDEX NAME="scoid_idx" UNIQUE="false" FIELDS="scoid"/>
+        </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

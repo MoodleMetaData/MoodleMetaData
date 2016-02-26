@@ -300,7 +300,8 @@ class core_files_file_storage_testcase extends advanced_testcase {
         $this->assertEquals($contenthash, $file->get_contenthash());
 
         // Try break it.
-        $this->setExpectedException('file_exception');
+        $this->setExpectedException('file_exception',
+                'Can not create file "1/core/unittest/0/test/newtest.txt" (file exists, cannot rename)');
         // This shall throw exception.
         $originalfile->rename($newpath, $newname);
     }
@@ -326,7 +327,8 @@ class core_files_file_storage_testcase extends advanced_testcase {
         $repositorypluginname = 'user';
         // Override repository permission.
         $capability = 'repository/' . $repositorypluginname . ':view';
-        $allroles = $DB->get_records_menu('role', array(), 'id', 'archetype, id');
+        /** eClass modification CTL-868 Clean up core tests - use shortname instead of archetype as some roles don't have an archetype.*/
+        $allroles = $DB->get_records_menu('role', array(), 'id', 'shortname, id');
         assign_capability($capability, CAP_ALLOW, $allroles['guest'], $syscontext->id, true);
 
         $args = array();
@@ -1146,7 +1148,7 @@ class core_files_file_storage_testcase extends advanced_testcase {
         $this->assertInstanceOf('stored_file', $file1);
 
         // Creating a file validating unique constraint.
-        $this->setExpectedException('stored_file_creation_exception');
+        $this->setExpectedException('stored_file_creation_exception', 'Can not create file "1/core/phpunit/0/testfile.txt"');
         $fs->create_file_from_storedfile($filerecord, $file1->get_id());
     }
 
@@ -1426,7 +1428,7 @@ class core_files_file_storage_testcase extends advanced_testcase {
         $this->assertInstanceOf('stored_file', $file1);
 
         // Creating a file validating unique constraint.
-        $this->setExpectedException('stored_file_creation_exception');
+        $this->setExpectedException('stored_file_creation_exception', 'Can not create file "1/core/phpunit/0/testfile.txt"');
         $file2 = $fs->create_file_from_pathname($filerecord, $path);
     }
 

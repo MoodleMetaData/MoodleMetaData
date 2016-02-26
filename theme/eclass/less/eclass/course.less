@@ -1,0 +1,289 @@
+// Header link
+h1.course-header-link a {
+  color: @uH1;
+  &:hover, &:focus {
+    color: @uGreen;
+    text-decoration: none;
+  }
+}
+
+// Add activity button
+.section-modchooser {
+  margin: 5px 15px;
+}
+.section-modchooser-link {
+  display: inline-block;
+  padding: 6px;
+  margin-bottom: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: @uSubmitFont;
+  text-shadow: none;
+  text-transform: uppercase;
+  background-color: @uSubmit;
+  background-image: none;
+  border: 1px solid @uSubmitBorder;
+  .border-radius(4px);
+  .box-shadow(none);
+
+  &:hover, &:focus {
+    background-color: @uSubmitBorder;
+  }
+}
+.section-modchooser-link img.smallicon {
+  vertical-align: inherit;
+  padding: 0 5px;
+}
+.section-modchooser-link a {
+  color: @uSubmitFont;
+  text-transform: uppercase;
+  text-shadow: none;
+  &:hover, &:focus {
+    color: @uSubmitFont;
+    text-decoration: none;
+  }
+}
+
+.editing .section .activity:hover, .editing .section .activity.action-menu-shown {
+  background-color: none;
+}
+
+// Activity group toggle
+.course-content .content .actions .moodle-actionmenu ul.menubar .editing_groupsnone {
+  display: none;
+}
+.course-content .content .actions .moodle-actionmenu ul.menubar li[role^='presentation'] {
+  min-width: 24px;
+}
+
+// Topics format
+.course-content ul.topics {margin:0;}
+.course-content ul.topics li.section {list-style: none;margin:0 0 15px 0;padding:0;.card(0.1);padding-bottom: 15px;}
+.course-content ul.topics li#section-0.section {padding-top: 15px;}
+.course-content ul.topics li.section .content .summary {margin:5px 15px;min-height: 20px;}
+.course-content ul.topics li.section .right a {float:right;margin:0 4px;}
+.course-content ul.topics li.section .content {margin:0;}
+.course-content ul.topics li.section .left .section-handle img.icon { padding:0; vertical-align: baseline; }
+.course-content ul.topics li.section .left {
+  width: auto;
+  float: left;
+  text-align:center;
+  padding: 8px 5px 4px 5px;
+}
+.course-content ul.topics li.section .right {
+  width: auto;
+  float:right;
+  text-align:center;
+  padding: 8px 5px 4px 5px;
+}
+.course-content ul.topics li.section .right br {
+  display: none;
+}
+.course-content ul.topics li.section .right img.icon {
+  padding: 0;
+  min-height: 20px;
+}
+.course-content ul.topics li.section.current {background-color:@uCourseCurrent;}
+.course-content ul.topics li.section .section-title {
+  #gradient > .vertical(@uOffWhite1, @uOffWhite2);
+  border-bottom: 1px solid @uGreyBorder;
+  color: @uH3;
+  text-transform: none;
+  font-weight: lighter;
+  line-height: 1.2em;
+  padding: 10px 15px 4px 15px;
+  margin: 0;
+}
+#page-course-view-topics.format-topics #page-content #region-main .course-content .topics .content .sectionname {
+  padding-left:10px;
+}
+// Weeks format
+.course-content ul.weeks {margin:0;}
+.course-content ul li.section,
+.course-content ul.weeks li.section {list-style: none;margin:0 0 15px 0;padding:0;.card(0.1);padding-bottom: 15px;}
+.course-content ul.weeks li#section-0.section {padding-top: 15px;}
+.course-content ul.weeks li.section .content {margin:0;}
+.course-content ul.weeks li.section .content .summary {margin:5px 15px;min-height: 20px;}
+.course-content ul.weeks li.section .right a {float:right;margin:0 4px;}
+.course-content ul.weeks li.section .left {
+  width: auto;
+  float: left;
+  text-align:center;
+  padding: 8px 5px 4px 5px;
+}
+.course-content ul.weeks li.section .right {
+  width: auto;
+  float:right;
+  text-align:center;
+  padding: 8px 5px 4px 5px;
+}
+.course-content ul.weeks li.section .right br {
+  display: none;
+}
+.course-content ul.weeks li.section .right img.icon { padding: 0;}
+.course-content ul.weeks li.section .left .section-handle img.icon { padding:0; vertical-align: baseline; }
+.course-content ul.weeks li.section.current {background-color:@uCourseCurrent;}
+.course-content ul.weeks li.section .section-title {
+  #gradient > .vertical(@uOffWhite1, @uOffWhite2);
+  border-bottom: 1px solid @uGreyBorder;
+  color: @uH3;
+  text-transform: none;
+  font-weight: lighter;
+  line-height: 1.2em;
+  padding: 10px 15px 4px 15px;
+  margin: 0;
+}
+
+// Social format
+.course-content .forumpost.firstpost {padding: 12px;.card(0.1);padding-bottom: 15px;}
+#region-main .course-content .forumpost.firstpost .header {
+  background: none;
+}
+.course-content .forumpost.firstpost .header {
+  border-bottom: 1px solid @uGreyBorder;
+  padding-left: 0px;
+  padding-right: 0;
+  padding-top: 8px;
+  padding-bottom: 5px;
+}
+.course-content .forumpost.firstpost .picture img {
+  margin: 0;
+  padding: 0;
+  border: 2px solid @uGreen;
+  border-radius: 100px;
+  &:hover, &:focus {
+    border: 2px solid @uHoverGreen;
+  }
+}
+
+// Collapsed Topics format
+#toggle-all .content .toggle-arrow h4 a.on,
+#toggle-all .content .toggle-arrow h4 a.on:hover {
+  background-image: url([[pix:format_topcoll|arrow_down]]);
+}
+#toggle-all .content .toggle-arrow h4 a.off,
+#toggle-all .content .toggle-arrow h4 a.off:hover {
+  background-image: url([[pix:format_topcoll|arrow_right]]);
+}
+
+.course-content ul.ctopics li .content .sectionbody {
+  padding-bottom: 10px;
+}
+.course-content ul.ctopics li.section.main,
+.course-content ul.ctopics li.tcsection {
+  margin: 8px 1px 1px 1px;
+}
+
+body.jsenabled .course-content ul.ctopics li.section .content .toggle-arrow a.toggle_open {
+  background-image: url([[pix:format_topcoll|arrow_down]]);
+  background-position: 5px 14px;
+}
+body.jsenabled .course-content ul.ctopics li.section .content .toggle-arrow a.toggle_closed {
+  background-image: url([[pix:format_topcoll|arrow_right]]);
+  background-position: 5px 14px;
+}
+.course-content ul.ctopics li.section .right br {
+  display: block;
+}
+.course-content ul.ctopics li.section.main .left {
+  padding: 12px 0px 0px 0px;
+}
+.course-content ul.ctopics li.section .left {
+  float: left;
+}
+.course-content ul.topics li.section .left .section-handle img.icon {
+  padding-left: 5px;
+  padding-top: 2px;
+  vertical-align: middle;
+  float: left;
+}
+.course-content ul.ctopics li.section .content .toggle a h3,
+.course-content ul.ctopics li.section .content.sectionhidden h3 {
+  word-break: break-word;
+}
+.course-content ul.ctopics li.section .content .toggle {
+  display: block;
+  text-align: left;
+  padding: 0 0;
+  width: auto;
+  .border-radius(0);
+}
+.course-content ul.ctopics li.section .section-title {
+  padding: 4px 15px;
+  font-size: inherit;
+  line-height: 1.2em;
+  text-transform: none;
+  background: none;
+  border: none;
+}
+.course-content ul li.section.hidden {
+  background-color: transparent;
+  opacity: 1.0;
+  box-shadow: none;
+}
+
+.course-content ul li.section.hidden .menubar,
+.course-content ul li.section.hidden .section-modchooser {
+  opacity: 0.5;
+}
+.ctopics #toggle-all .content .sectionbody h4 a {
+  padding: 7px 7px 7px 25px;
+  text-align: left;
+  width: 35px;
+  text-decoration: none;
+}
+body.format-collblct.editing .section .activity .actions {
+  position: absolute;
+}
+.editing .course-content ul.ctopics li.section .right br,
+.course-content ul.ctopics li.section .right .tceditsection {
+  display: none;
+}
+.yui3-dd-proxy.course-content ul.ctopics li.section .right {
+  line-height: 0px;
+}
+.yui3-dd-proxy.course-content ul.ctopics li.section .left .section-handle {
+  float: left;
+}
+.yui3-dd-proxy.course-content ul.ctopics li.section .left {
+  float: left;
+  padding-top: 12px;
+  padding-left: 5px;
+}
+.yui3-dd-proxy li.section .side a {
+  display: block;
+}
+.yui3-dd-proxy li.section {
+  width: 100%;
+}
+.yui3-dd-proxy li.section .content {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+// One Topic format
+#region-main .course-content > div.single-section > ul.nav.nav-tabs {
+  border: 1px solid #ddd;
+  padding: 10px;
+  background-color: @grayLighter;
+}
+#region-main .course-content > div.single-section > ul.nav.nav-tabs > li {
+  margin: 1px;
+}
+#region-main .course-content > div.single-section > ul.nav.nav-tabs > li > a {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  line-height: 20px;
+  border: 1px solid transparent;
+  .border-radius(4px);
+  &:hover, &:focus {
+    text-decoration: none;
+    background-color: @white;
+    border-color: transparent;
+  }
+}
+#region-main .course-content > div.single-section > ul.nav.nav-tabs > li.active > a {
+  border: 1px solid @grayLight;
+}
+.course-content ul li.section.hidden .summary {
+  opacity: 1.0;
+}

@@ -199,7 +199,7 @@ class file_storage {
      * @param string $filename the file name.
      * @return string available file name.
      * @throws coding_exception if the file name is invalid.
-     * @since 2.5
+     * @since Moodle 2.5
      */
     public function get_unused_filename($contextid, $component, $filearea, $itemid, $filepath, $filename) {
         global $DB;
@@ -280,7 +280,7 @@ class file_storage {
      * @param int $itemid area item ID.
      * @param string $suggestedpath the suggested file path.
      * @return string available file path
-     * @since 2.5
+     * @since Moodle 2.5
      */
     public function get_unused_dirname($contextid, $component, $filearea, $itemid, $suggestedpath) {
         global $DB;
@@ -479,6 +479,11 @@ class file_storage {
         }
 
         $pathnamehash = $this->get_pathname_hash($contextid, $component, $filearea, $itemid, $filepath, $filename);
+        // eClass Modification
+        if (extension_loaded('newrelic')) {
+            newrelic_add_custom_parameter('pathnamehash', $pathnamehash);
+        }
+
         return $this->get_file_by_hash($pathnamehash);
     }
 
@@ -1721,6 +1726,8 @@ class file_storage {
      * @return array (contenthash, filesize, newfile)
      */
     public function add_string_to_pool($content) {
+        global $CFG;
+
         $contenthash = sha1($content);
         $filesize = strlen($content); // binary length
 
@@ -1755,7 +1762,13 @@ class file_storage {
         // Hopefully this works around most potential race conditions.
 
         $prev = ignore_user_abort(true);
-        $newsize = file_put_contents($hashfile.'.tmp', $content, LOCK_EX);
+
+        if (!empty($CFG->preventfilelocking)) {
+            $newsize = file_put_contents($hashfile.'.tmp', $content);
+        } else {
+            $newsize = file_put_contents($hashfile.'.tmp', $content, LOCK_EX);
+        }
+
         if ($newsize === false) {
             // Borked permissions most likely.
             ignore_user_abort($prev);

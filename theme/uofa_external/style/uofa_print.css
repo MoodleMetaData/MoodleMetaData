@@ -1,0 +1,76 @@
+/* 
+Print Style Sheet
+-------------------------------*/
+
+@media print { /* Begin print styles */
+
+body, #page {
+	background: #fff;
+	color: #000;
+	font-size: 12pt;
+	border: 0;
+	margin: 0;
+}
+
+#page-header, #navcontainer, .navbar, #dock, #page-footer,
+#region-pre, #region-post, .tabtree, .icon, .iconsmall {
+	display: none !important;
+}
+
+#page-content, #region-main-box, #region-post-box, #region-main-wrap, #region-main-pad, .side-pre-only #region-main-pad, .side-post-only #region-main-pad, #region-main, 
+#page-content #region-main-box .region-content {
+	width: 99%;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+#page-content {
+	position: relative;
+	left: 0;
+	right: 0;
+	float: none;
+} 
+#region-main-box, 
+.side-pre-only #region-main-box, 
+.side-post-only #region-main-box, 
+.content-only #region-main-box {
+	float: none;
+	left: 0;
+	width: 100%;
+}
+#region-post-box, 
+.side-pre-only #region-post-box, 
+.side-post-only #region-post-box, 
+.content-only #region-post-box {
+	float: none;
+	left: 0;
+	margin-left: 0;
+}
+#region-main-wrap, 
+.side-pre-only #region-main-wrap, 
+.side-post-only #region-main-wrap, 
+.content-only #region-main-wrap {
+	float: none;
+	right: 0;
+	width: 100%;
+}
+
+/* Font styles */
+h1, h2, h2#pageheading, h3, h4, h5, h6 {
+    font-family: Helvetica,Arial,sans-serif;
+    margin: 15px 0;
+    color: #000;
+}
+
+p, ul, ol, dl,input,textarea {
+	font-family: Helvetica,Arial,sans-serif;
+	line-height: 1.3em;
+}
+
+a:link, a:visited, a:hover {
+    color: #000; /* UA green */
+    text-decoration: underline;
+}
+	
+
+} /* End print styles */
