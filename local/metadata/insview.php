@@ -31,8 +31,8 @@ $PAGE->requires->js('/local/metadata/tabview.js');
 
 // Create forms
 $base_url = create_insview_url($courseId);
-$general_form = new general_form($base_url);
-$assessment_form = new assessment_form($base_url);
+$general_form = new general_form($base_url); // #
+$assessment_form = new assessment_form($base_url.'#tab=1'); // #tab=1
 
 $sessions = get_table_data_for_course('coursesession');
 $session_form = new session_form($base_url, array('sessions' => $sessions));
@@ -54,31 +54,9 @@ if ($general_form->is_cancelled()) {
 
 // Submitted the data
 if ($data = $general_form->get_data()) {
-    echo "General";
-    //print_object($data);
+    general_form::save_data($data);
 
-    $course_info = new stdClass();
-
-    //TODO: Fix the courseinfo tbl, id does not store course id properly. Need "courseid" in tbl.
-    $course_info->courseid = $courseId;
-    $course_info->coursename = $course->fullname;
-    $course_info->coursetopic = $data->course_topic;
-    $course_info->coursedescription = $data->course_description['text'];
-    $course_info->coursefaculty = $data->course_faculty;
-    $course_info->assessmentnumber = $data->course_assessment;
-    $course_info->sessionnumber = $data->course_session;
-
-
-    if($isExist = $DB->record_exists('courseinfo', array('courseid'=>$courseId)) ){
-        // Must have an entry for 'id' to map the tabhe table specified.
-        $update_courseinfo = $DB->update_record('courseinfo', $course_info, false);
-        echo 'Existing data is updated.';
-    }else{
-        $insert_courseinfo = $DB->insert_record('courseinfo', $course_info, false);
-        echo 'New data is added.';
-    }
-    // TODO: Then, redirect
-    // redirect($general_url);
+    redirect($general_url);
 
 } else if ($data = $assessment_form->get_data()) {
     // TODO: Save the submission data, use a function/class from different file
