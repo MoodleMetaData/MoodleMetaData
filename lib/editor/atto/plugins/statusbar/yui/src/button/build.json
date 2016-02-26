@@ -1,0 +1,11 @@
+{
+  "name": "moodle-atto_statusbar-button",
+  "builds": {
+    "moodle-atto_statusbar-button": {
+      "jsfiles": [
+        "statusbar-abstract.js",
+        "statusbar.js"
+      ]
+    }
+  }
+}

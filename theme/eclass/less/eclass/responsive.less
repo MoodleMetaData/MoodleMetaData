@@ -1,0 +1,571 @@
+// theme_eclass
+// Responsive
+@media (max-width: 1299px) {
+  .navbar-inner .container-fluid,
+  #page {
+    padding-right: 3%;
+    padding-left: 3%;
+  }
+}
+@media (max-width: 1200px) {
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  .navbar-inner .container-fluid,
+  #page {
+    padding-right: 1.5%;
+    padding-left: 1.5%;
+  }
+  .nav .nav-menu a span span {
+    display: none;
+  }
+  .nav .nav-icon {
+    padding-left: 20px;
+  }
+}
+@media (max-width: 999px) {
+  html {
+    height:100%;
+  }
+  body {
+    height: 100%;
+    padding: 0px;
+  }
+  #page {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+  }
+  #page-content {
+    position: relative;
+    top: 10px;
+    height: 100%;
+    width: 100%;
+    z-index: 150;
+    -webkit-transition: 0s ease-out;
+    transition: 0s ease-out;
+    -webkit-transform: translate(0px, 0px) translateZ(0px);
+  }
+  #page-footer {
+    display: none;
+  }
+  .active-indicator {
+    position: absolute;
+    top: 100%;
+    width: 150px;
+    height: 3px;
+    background-color: @mobileIconActive;
+    margin-top: -3px;
+  }
+  .view-selector>li {
+    width:150px;
+  }
+  .toggle {
+    padding: 8px 25px 5px 5px;
+  }
+  // Navbar
+  .uofa-logo {
+    display: none;
+  }
+  // Navbar
+  // Override the moodle un-fixed to refix the nav
+  .navbar-fixed-top {
+    margin: 0 auto;
+    position: fixed;
+  }
+  .nav-collapse .nav>li {
+    float: left;
+  }
+  .navbar-fixed-top .navbar-inner, .navbar-fixed-bottom .navbar-inner {
+    padding: 0px;
+  }
+  .nav-brand {
+    display: inline-block;
+    max-width: calc(~" 100% - - 520px ");
+    max-width: -moz-calc(~" 100% - - 520px ");
+    max-width: -webkit-calc(~" 100% - - 520px ");
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .navbar .brand {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    max-height: 30px;
+    padding: 15px 20px 10px;
+  }
+  // Nav
+  .nav-collapse {
+    .transition(height 0.3s);
+  }
+  .nav-collapse, .nav-collapse.collapse {
+    float: none;
+  }
+  .mobile-nav, .toggle-navigation, .toggle-content {
+    display: block;
+  }
+  .nav-collapse .nav>li>a:hover {
+    background: none;
+  }
+  .nav .nav-icon {
+    padding-left: 20px;
+  }
+  .mobile-nav-icon {
+    padding-left: 15px;
+    display: inline;
+  }
+  #block-region-side-pre {
+    position: absolute;
+    top: @bodyPadMobile;
+    left: (@fluidGridColumnWidth * -3) + (@fluidGridGutterWidth * (-3));
+    .fluid-span(3);
+    z-index: -1;
+    .transition(left 0.3s);
+  }
+  #region-main {
+    left: 0;
+    margin-left: 0;
+    position: absolute;
+    top: @bodyPadMobile;
+    padding-right: @fluidGridGutterWidth;
+    padding-left: @fluidGridGutterWidth;
+    .fluid-span(9);
+    .transition(left 0.3s);
+    z-index: 30;
+    overflow-x: hidden;
+    right: @fluidGridGutterWidth;
+    -webkit-transform: translateZ(0px);
+    -moz-transform: translateZ(0px);
+    -o-transform: translateZ(0px);
+    transform: translateZ(0px);
+  }
+  #region-main.column1,
+  #region-main.column2 {
+    left: 0;
+    .fluid-span(12);
+  }
+  #block-region-side-post {
+    position: absolute;
+    top: @bodyPadMobile;
+    right: @fluidGridGutterWidth;
+    margin-left: 0;
+    .transition(right 0.3s);
+  }
+  .span3.pull-right.heading-button {
+    margin-left: 0;
+    min-height: 0;
+    height: 0;
+  }
+  .heading-button .singlebutton {
+    display: block;
+  }
+  // Nav and settings
+  .block_tree .tree_item {
+    margin: 0;
+    line-height: 26px;
+    list-style: none;
+  }
+  .block_tree .tree_item span,
+  .block_tree .tree_item a {
+    padding: 4px 8px;
+    display: block;
+    .border-radius(4px);
+    &:hover, &:focus {
+      text-decoration: none;
+      background-color: @buttonHover;
+    }
+  }
+  .block_tree .tree_item a img.smallicon.navicon {
+    line-height: 32px;
+    vertical-align: middle;
+    height: 32px;
+  }
+  .block_settings  .block_tree .tree_item.branch,
+  .block_navigation .block_tree .tree_item.branch {
+    background-position: 0 7px;
+  }
+  #quiz-timer {
+    margin: 10px;
+    top: @bodyPadMobile;
+    right: 0;
+  }
+  .user-enroller-panel {
+    z-index:400;
+  }
+}
+@media (min-width: 768px) and (max-width: 999px) {
+  // Center
+  #toggle-center:checked ~ #block-region-side-pre {
+    left: -100%;
+  }
+
+  #toggle-center:checked ~ #region-main.column2 {
+    .fluid-span(12);
+  }
+  #toggle-center:checked ~ #region-main {
+    left: 0;
+  }
+  #toggle-center:checked ~ #block-region-side-post {
+    right: @fluidGridGutterWidth;
+  }
+  .empty-region-side-post #toggle-center:checked ~ #region-main {
+    .fluid-span(12);
+  }
+  // Left
+  #toggle-left:checked ~ #block-region-side-pre {
+    left: @fluidGridGutterWidth;
+  }
+  #toggle-left:checked ~ #region-main {
+    .fluid-span(9);
+    left: (@fluidGridColumnWidth * 3) + (@fluidGridGutterWidth * (3));
+  }
+  #toggle-left:checked ~ #block-region-side-post {
+    .fluid-span(3);
+    right: (@fluidGridColumnWidth * -3) + (@fluidGridGutterWidth * -3);
+  }
+}
+
+@media (max-width: 767px) {
+//  Core css mods
+  img {
+    height: auto;
+    max-width: 100%;
+  }
+  iframe {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  #page {
+    overflow: hidden;
+  }
+  #page-content {
+    top: @bodyPadMobile;
+    z-index: 300;
+  }
+  // Navbar
+  .scroll-top,
+  .uofa-logo {
+    display: none;
+  }
+  .navbar-inner .logininfo  {
+    display: none !important;
+  }
+  .nav-brand {
+    display: inline-block;
+    max-width: calc(~" 100% - - 180px ");
+    max-width: -moz-calc(~" 100% - - 180px ");
+    max-width: -webkit-calc(~" 100% - - 180px ");
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .navbar .brand {
+    padding: 15px 20px 10px;
+  }
+  .active-indicator {
+    position: absolute;
+    top: 100%;
+    width: 65px;
+    height: 3px;
+    background-color: @mobileIconActive;
+    margin-top: -3px;
+  }
+  .view-selector>li {
+    width: 65px;
+  }
+  .user-enroller-panel {
+    z-index: 400;
+    left: 10% !important;
+  }
+  // Quiz
+  #page-mod-quiz-view.has-region-side-pre.empty-region-side-pre.has-region-side-post.empty-region-side-post.jsenabled
+  #page.container-fluid #page-content.row-fluid #block-region-side-pre.pull-left {
+    display: block;
+  }
+
+  #page-mod-quiz-view.has-region-side-pre.empty-region-side-pre.has-region-side-post.empty-region-side-post.jsenabled
+  #page.container-fluid #page-content.row-fluid #region-profile.column3 {
+    display: none;
+  }
+
+  #page-mod-quiz-view.has-region-side-pre.empty-region-side-pre.has-region-side-post.empty-region-side-post.jsenabled
+  .navbar.navbar-fixed-top .mobile-nav .view-selector .toggle.toggle-profile {
+    display: none;
+  }
+
+  #quiz-timer {
+    margin: 10px;
+    transition: 300ms;
+    .box-shadow(none);
+  }
+  // Block layout
+  #block-region-side-pre,
+  #region-main,
+  #block-region-side-post,
+  #region-profile {
+    display: block;
+    position:absolute;
+    top: 0;
+    bottom:0;
+    padding: 10px 10px 0 10px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: calc(~" 100% - " - @bodyPadMobile);
+    height: -moz-calc(~" 100% - " - @bodyPadMobile);
+    height: -webkit-calc(~" 100% - " - @bodyPadMobile);
+    width: 100%;
+    -webkit-transform: translateZ(0px);
+    -moz-transform: translateZ(0px);
+    -o-transform: translateZ(0px);
+    transform: translateZ(0px);
+    z-index: 10;
+  }
+  #region-profile {
+    padding: 10px 0px 0px 0px;
+  }
+  // Single column
+  #region-main.column1 {
+    left:0;
+  }
+  #region-profile.column1 {
+    left: 100%;
+  }
+  // Double column
+  #block-region-side-pre.column2 {
+    left: 0;
+  }
+  #region-main.column2 {
+    left:100%;
+  }
+  #region-profile.column2 {
+    left: 200%;
+  }
+  // Three column
+  #block-region-side-pre.column3 {
+    left: 0;
+  }
+  #region-main.column3 {
+    left:100%;
+  }
+  #block-region-side-post.column3 {
+    left:200%;
+  }
+  #region-profile.column3 {
+    left: 300%;
+  }
+  .empty-region-side-post #block-region-side-post.column3 {
+    left: -400%;
+  }
+  .empty-region-side-post #region-profile.column3 {
+    left: 200%
+  }
+  #region-profile > .logininfo {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  // Sliding stuff
+  // Nav
+  .mobile-nav, .toggle {
+    display: block;
+  }
+  .toggle {
+    padding: 8px 25px 5px 20px;
+  }
+  .toggle span {
+    display: none;
+  }
+  .toggle i {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  // Table stuff
+
+  /* Force table to not be like tables anymore */
+  div[role='main'] table,
+  div[role='main'] thead,
+  div[role='main'] tbody,
+  div[role='main'] tfoot,
+  div[role='main'] th,
+  div[role='main'] td,
+  div[role='main'] tr {
+    display: block;
+  }
+
+  div[role='main'] table.mceLayout {
+    display: table
+  }
+  div[role='main'] .mceLayout tr {
+    display: table-row
+  }
+  div[role='main'] .mceLayout thead {
+    display: table-header-group
+  }
+  div[role='main'] .mceLayout tbody {
+    display: table-row-group
+  }
+  div[role='main'] .mceLayout tfoot {
+    display: table-footer-group
+  }
+  div[role='main'] .mceLayout td, div[role='main'] .mceLayout th {
+    display: table-cell
+  }
+  /* Hide table headers (but not display: none;, for accessibility) */
+  div[role='main'] thead {
+    border-top: 2px solid lighten(@grayLight, 25%);
+    background-color: @thead;
+  }
+  div[role='main'] thead tr th {
+    width: auto !important;
+    border-bottom: 1px solid lighten(@grayLight, 25%);
+  }
+
+  div[role='main'] tr {
+    border-bottom: 1px solid lighten(@grayLight, 25%);
+  }
+
+  div[role='main'] td {
+    /* Behave  like a "row" */
+    width: auto !important;
+    border: none;
+    border-bottom: 1px solid lighten(@grayLighter, 20%);
+    position: relative;
+  }
+  // Quiz
+  body[id^='page-mod-quiz-edit'] #region-main>div[role='main'] .questionbankwindow  {
+    width: auto;
+    margin: 0px;
+  }
+
+  #page-mod-quiz-edit div.quizcontents {
+    width: 100%;
+  }
+  #page-mod-quiz-edit div.quizwhenbankcollapsed {
+    width: 100%;
+  }
+  .tablet-edit {
+    display: none;
+  }
+}
+
+@media (min-width: 1000px) {
+  .container-fluid {
+    padding-right: 5%;
+    padding-left: 5%;
+  }
+  .uofa-logo {
+    padding-left: 15px;
+  }
+  .empty-region-side-post #region-main {
+    .fluid-span(9);
+  }
+  #quiz-timer {
+    margin: 10px;
+    position: fixed;
+    top: @body;
+    right: 0;
+    z-index: 100;
+  }
+  .tablet-edit {
+    display:  none;
+  }
+}
+@media (min-width: 1200px) {
+  .pull-right.heading-button,
+  .row-fluid .span3 {
+    width: @sideCol1200;
+  }
+  body:not(.two-column) .row-fluid .span6 {
+    width: calc(@centerCol31200 ~" - " - @sideCol1200*2);
+    width: -moz-calc(@centerCol31200 ~" - " - @sideCol1200*2);
+    width: -webkit-calc(@centerCol31200 ~" - " - @sideCol1200*2);
+  }
+  body:not(.two-column) .row-fluid .span9 {
+    width: calc(@centerCol21200 ~" - " - @sideCol1200*2);
+    width: -moz-calc(@centerCol21200 ~" - " - @sideCol1200*2);
+    width: -webkit-calc(@centerCol21200 ~" - " - @sideCol1200*2);
+  }
+  .two-column .row-fluid .span9 {
+    width: calc(@centerCol21200 ~" - " - @sideCol1200);
+    width: -moz-calc(@centerCol21200 ~" - " - @sideCol1200);
+    width: -webkit-calc(@centerCol21200 ~" - " - @sideCol1200);
+  }
+  .form-item .form-label,
+  .mform .fitem div.fitemtitle,
+  .userprofile dl.list dt,
+  .form-horizontal .control-label {
+    width: 100%;
+    text-align: left;
+  }
+  .form-item .form-setting,
+  .form-item .form-description,
+  .mform .fitem .felement,
+  #page-mod-forum-search .c1,
+  .mform .fdescription.required,
+  .userprofile dl.list dd,
+  .form-horizontal .controls {
+    margin-left: 0px;
+  }
+  .empty-region-side-post .form-item .form-setting,
+  .two-column .form-item .form-setting,
+  .empty-region-side-post .form-item .form-description,
+  .two-column .form-item .form-description,
+  .empty-region-side-post .mform .fitem .felement,
+  .two-column .mform .fitem .felement,
+  .empty-region-side-post #page-mod-forum-search .c1,
+  .two-column #page-mod-forum-search .c1,
+  .empty-region-side-post .mform .fdescription.required,
+  .two-column .mform .fdescription.required,
+  .empty-region-side-post .userprofile dl.list dd,
+  .two-column .userprofile dl.list dd,
+  .empty-region-side-post  .form-horizontal .controls
+  .two-column .form-horizontal .controls {
+    margin-left: 265px;
+  }
+  #page-mod-quiz-report .mform fieldset fieldset,
+  #page-mod-quiz-report .mform fieldset fieldset.felement.fgroup {
+    margin-left: 265px;
+  }
+  .two-column .form-item .form-label,
+  .empty-region-side-post  .form-item .form-label,
+  .two-column .mform .fitem div.fitemtitle,
+  .empty-region-side-post .mform .fitem div.fitemtitle,
+  .two-column .userprofile dl.list dt,
+  .empty-region-side-post .userprofile dl.list dt,
+  .two-column .form-horizontal .control-label
+  .empty-region-side-post .form-horizontal .control-label {
+    width: 245px;
+    text-align: right;
+  }
+  .editing.used-region-side-post .mform .fitem div.fitemtitle {
+    display: block;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    text-align: left;
+    width: 100%;
+  }
+  .editing.used-region-side-post  .mform .fitem .felement {
+    margin-left: 0;
+    width: 100%;
+    float: left;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+@media (min-width: 1300px) {
+  .navbar-inner .container-fluid,
+  #page {
+    padding-right: 6%;
+    padding-left: 6%;
+  }
+}
+@media (min-width: 1400px) {
+  .navbar-inner .container-fluid,
+  #page {
+    padding-right: 9%;
+    padding-left: 9%;
+  }
+}

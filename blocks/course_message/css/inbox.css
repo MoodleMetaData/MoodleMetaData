@@ -1,0 +1,376 @@
+/*******************************************************************************
+* This fixes the "Add Contacts..." getting chopped off (First is no longer used)
+*******************************************************************************/
+.search-field .default{
+    width:75% !important;
+}
+
+#contactfromcompose{
+    width:100% !important;
+}
+
+/*******************************************************************************
+* These styles are hard coded to fix the Moodle rich text editor
+*******************************************************************************/
+.mform .fitem .felement{
+    margin-left: 0;
+}
+
+/*******************************************************************************
+* These styles hide the moodle form element text
+*******************************************************************************/
+#rightContent .mform .fitem .fitemtitle {
+    float: none !important;
+    clear: both;
+}
+
+#rightContent .mform .fitem_ffilemanager .fitemtitle label {
+    color: #F2F5F3;     /* color matches background of filepicker area */
+}
+
+
+/*******************************************************************************
+* Modified YUI Styles
+*******************************************************************************/
+.block_course_message .yui3-aclist{
+	z-index: 1001;
+	overflow: visible;
+}
+
+.block_course_message{
+	overflow: visible !important;
+}
+
+#region-post {
+	/*overflow: visible !important;*/
+}
+
+.yui3-skin-sam #rightContent .yui3-datatable-header{
+    background: url(ui-bg_highlight-hard_15_007c41_1x100.png) repeat-x scroll 50% 50% #007C41;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+    text-shadow: none;
+    vertical-align: bottom;
+    white-space: nowrap;
+    font-size: 1em;
+}
+
+#rightContent #inboxpaginator button, #rightContent #sentpaginator button{
+    background-color: #E3EDCE;
+    border: 1px solid #D4E0BA;
+    margin-top: 3px;
+}
+
+#rightContent .yui3-datatable-cell{
+	background-color: #FFFFFF;
+	border-bottom: 1.0px solid #CBCBCB;
+	font-size: 0.9em;
+}
+
+.yui3-skin-sam .yui3-datatable td.yui3-datatable-sel-highlighted,
+.yui3-skin-sam .yui3-datatable td.yui3-datatable-sorted.yui3-datatable-sel-highlighted ,
+.yui3-skin-sam .yui3-datatable tr.yui3-datatable-sel-highlighted td,
+.yui3-skin-sam .yui3-datatable tr.yui3-datatable-sel-highlighted td.yui3-datatable-sorted{
+    background-color: #f0db5c;
+}
+
+.yui3-skin-sam .yui3-datatable td.yui3-datatable-sel-selected,
+.yui3-skin-sam .yui3-datatable td.yui3-datatable-sorted.yui3-datatable-sel-selected ,
+.yui3-skin-sam .yui3-datatable tr.yui3-datatable-sel-selected td,
+.yui3-skin-sam .yui3-datatable tr.yui3-datatable-sel-selected td.yui3-datatable-sorted{
+	background-color: transparent;
+}
+
+.compose_bar .yui3-input-adjust{
+    padding: 7px 8px 3px 8px;
+    margin: 0px 5px 4px 0px;
+    border: 0 none;
+    outline: 0 none;
+    width: 80%;
+}
+
+.yui3-skin-sam .compose_bar .yui3-multivalueinput-content{
+    background-color:white;
+    padding-left:2px;
+    border:1px solid #bdc7d8;
+    font:13px "Lucida Grande","Verdana";
+    width:75%;
+}
+
+.yui3-pagview-link-page{
+    vertical-align: bottom;
+}
+
+/*******************************************************************************
+* Modified YUI Styles (Alert Box)
+*******************************************************************************/
+#alerttext{
+    text-align: center;
+    color: #007041;
+    font-weight: bold;
+}
+
+.yui3-panel-content{
+    border: 2px solid #D4CCB0;
+}
+
+#alertpanel .yui3-widget-ft{
+    padding: 0px;
+    background-color: white;
+    text-align: center;
+}
+
+/*******************************************************************************
+* General styles
+*******************************************************************************/
+.setwidthmax{
+    width:100%;
+}
+
+.setwidth95{
+	width:95%;
+}
+
+.setwidth80{
+	width:80%;
+}
+
+.setwidth70{
+	width:70%;
+}
+.clear {
+	clear: both;
+}
+
+/*******************************************************************************
+* block_course_message styles
+*******************************************************************************/
+.unreadbar{
+	background: #FFFAB7 url('star.png') no-repeat 3px 5px; /* Light yellow */
+	border: 1px solid #F7CF04;
+	padding: 5px 5px 5px 25px;
+	margin-bottom: 5px;
+}
+
+.block_image {
+	float: right;
+	width: 21px;
+	height: 21px;
+}
+
+.block_input{
+	margin-bottom: 3px;
+}
+
+#message_block{
+	resize: none;
+}
+
+#messagefromblock{
+    height: 7em;
+}
+
+/*******************************************************************************
+* Inbox.html styles
+*******************************************************************************/
+#fullWindow
+{
+    width:1100px;
+    overflow:auto;
+}
+
+#leftContent{
+    width:125px;
+    height:100%;
+    float:left;
+}
+
+#rightContent{
+    padding-left:25px;
+    border-left: 2px solid #e0e0e0;		/* light grey */
+    float:left;
+    height:100%;
+    width:800px;
+    padding-right:10px;
+    padding-bottom:10px;
+}
+
+.cachehelp{
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+.unread{
+    /*background:#FFFAB7 url('star.png') no-repeat 99% 3px !important;*/
+	background:#FFFAB7 !important;  /* Unread messages yellow */
+    font-weight:bold !important;
+}
+
+.yui3-datatable-even, .yui3-datatable-odd {
+    cursor: pointer;
+}
+
+/* Compose Message */
+.compose_bar {
+	background: transparent;
+	padding: 5px;
+	width: 95%;
+}
+
+.compose_bar .label,
+.message_div_bar .label{
+	float: left;
+	background-color: transparent;
+	font-weight: bold;
+	color: #696969;
+	text-shadow: none;
+	width: 10%;
+	padding: 4px;
+}
+
+.message_div_bar .field{
+	padding: 4px;
+	float: left;
+}
+
+.compose_bar .field {
+	float: left;
+	width: 75%;
+}
+
+.compose_bar input.subject {
+	width: 95%;
+	padding: 5px;
+	border-color: #AAA;
+}
+
+.message {
+	margin-top: 5px;
+}
+
+.message textarea {
+	resize: vertical;
+	padding: 5px;
+}
+
+.inbox_div_left{
+	float:left;
+}
+
+#senddialog{
+    width: 110px;
+    height: 20px;
+    position: absolute;
+    top:40%;
+    left: 40%;
+    z-index: 4;
+    text-align: center;
+    border: 2px solid #d4ccb0;
+    background: #fafaf4 url(ui-bg_highlight-hard_100_fafaf4_1x100.png) 50% 50% repeat-x;
+    font-weight: bold;
+    color: #007C41;
+}
+
+/*******************************************************************************
+* Message container styles
+*******************************************************************************/
+.message_container{
+	margin-bottom:5px;
+    width:96%;
+    overflow:auto;
+}
+
+.userrecieved{
+    background-color: #F4FAE8;
+    border: 1px solid #BCDA7D;
+}
+
+.usersent{
+    background-color: #FAFAE9;
+    border: 1px solid #E7E391;
+}
+
+.message_div_bar .message_bar_from .label {
+	width: 12%;
+}
+
+.message_div_bar{
+    width:96%;
+    background-color: #F2F2F2;
+	border-bottom: 1px solid #CECECE;
+}
+
+.message_div_body{
+    clear:both;
+    padding:10px;
+}
+
+.message_bar_to{
+    width:95%;
+    float:left;
+    padding:4px 4px 0px;
+    overflow:hidden;
+    background-color: #F2F2F2;
+}
+
+.message_bar_from{
+    width:80%;
+    float:left;
+    padding:0px 4px 4px;
+    background-color: #F2F2F2;
+}
+
+.message_bar_time{
+    width:15%;
+    float:left;
+	padding:5px;
+    background-color: #F2F2F2;
+}
+
+.message_bar_subject{
+    width:95%;
+    float:left;
+    padding:5px;
+    overflow:hidden;
+    background-color: transparent;
+}
+
+.message_bar_subject .label{
+	font-weight: bold;
+	font-size: 18.0167px;
+	color: #999;
+	width: 12%;
+	background-color: transparent;
+}
+
+#attachments_in_message {
+	padding: 0 10px;
+}
+
+.message_div_buttons_bottom{
+    width:100%;
+}
+
+.message_div_buttons_bottom button {
+	float:left;
+}
+
+.divider{
+    width:30%;
+    height:auto;
+    display:inline-block;
+}
+
+.divider_large{
+    width:89%;
+    height:auto;
+    display:inline-block;
+}
+
+/*******************************************************************************
+* I think these are unused.
+*******************************************************************************/
+#maincontent{
+    font-family: Arial,Helvetica,sans-serif; font-size: 1em;
+}

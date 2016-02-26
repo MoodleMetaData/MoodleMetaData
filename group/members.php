@@ -162,7 +162,7 @@ if (!empty($groupinforow)) {
           </p>
           <?php $potentialmembersselector->display(); ?>
       </td>
-      <td>
+      <td id='selectedusergroupmemcell'>
         <p><?php echo($strusergroupmembership) ?></p>
         <div id="group-usersummary"></div>
       </td>

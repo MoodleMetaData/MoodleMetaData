@@ -1,0 +1,54 @@
+/**
+ * This is to out specify the theme.less
+ */
+body[id^='page-mod-'] #region-main>div[role='main'] > div#mod-tab-content {
+  @import "../node_modules/bootstrap/less/bootstrap";
+
+  margin-left: 1em;
+  margin-right: 1em;
+
+  .no-side-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
+  /* set reference point */
+  .tab-animation > .tab-content {
+    position: relative;
+  }
+
+  /* set animate effect */
+  .tab-animation > .tab-content > .tab-pane{
+    transition: 0.2s linear opacity;
+  }
+
+  /* overwrite display: none and remove from document flow */
+  .tab-animation > .tab-content > .tab-pane.active-remove {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    display: block;
+  }
+
+  /* opacity=0 when removing "active" class */
+  .tab-animation > .tab-content > .tab-pane.active-remove-active {
+    opacity: 0;
+  }
+
+  /* opacity=0 when adding "active" class */
+  .tab-animation > .tab-content > .tab-pane.active-add {
+    opacity: 0;
+  }
+
+  #mod-tab-side-menu li.mod-tab-side-menu-tab-button.active .glyphicon-edit {
+    cursor: pointer;
+  }
+
+  > div {
+    margin-top: 1em;
+  }
+
+  .nav-tabs>li>a {
+    border-radius: 10px 10px 0px 0px;
+  }
+}

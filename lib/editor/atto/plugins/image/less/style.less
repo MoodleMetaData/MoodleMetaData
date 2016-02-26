@@ -1,0 +1,582 @@
+/**
+ * style.less
+ *
+ * @copyright  2015 Joey Andres <jandres@ualberta.ca>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * Note: less files are not normally found in atto_image sub-plugin of atto, but
+ *       thanks to background-image and animation stuff, repetition kept occuring
+ *       in which a good-ol mixin from less/sass would nicely fix.
+ *
+ * Also, note that these are overridden in atto.less in theme/eclass/less folder.
+ */
+
+@image_overlay_z_index: 48;
+@resize_ghost_z_index: 49;
+@resize_handle_z_index: 50;
+@resize_overlay_z_index: 50;
+@resize-selection-opacity: 0.4;
+
+@button-width: 32px;
+@button-height: @button-width;
+@background-width: @button-width;
+@background-height: @background-width;
+@background-anim-duration: 0.25s;
+
+@resize-handle-color: #00FF00;
+
+/**
+ * Although atto_control class is crucial for proper operation of this plugin,
+ * I hate its styling.
+ *
+ * @see atto/yui/src/editor/js/editor/clean.js for why it is
+ * crucial and how ignoring its style in atto/style.css is not gonna affect this plugin's
+ * function.
+ */
+.atto_control {
+  /* Reset atto_control except for cursor. */
+  position: static;
+  right: auto;
+  bottom: auto;
+  display: inline;
+
+  &:hover {
+    display: inline;
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+
+  &:focus {
+    display: inline;
+  }
+}
+
+/**
+ * Due to atto_control being more specific in atto's style.css, we cannot simply
+ * override it from this perspective. To fix this, we must manually extend
+ * elements.
+ */
+.nullify-atto_control {
+  /* Reset atto_control except for cursor. */
+  position: static;
+  right: auto;
+  bottom: auto;
+  display: inline;
+
+  &:hover {
+    display: inline;
+    margin-bottom: 0;
+    margin-left: 0;
+  }
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+// Hide the selection color. (Some have suggested .noselect, but I have not seen results from it).
+.hide-selection {
+  // Code for Firefox
+  ::-moz-selection { background: rgba(255, 255, 255, 0.0); }
+
+  ::selection { background: rgba(255, 255, 255, 0.0);  }
+}
+
+.yui3-overlay {
+  overflow: visible; // Allows resize handles to be shown even when offsetted to sit outside for aesthetic reasons.
+}
+
+// Original styling prior to advance image editing features.
+.atto_image_preview {
+  width: 100%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.atto_image_preview_box {
+  max-height: 200px;
+  margin-bottom: 1em;
+  overflow: auto;
+}
+
+.editor_atto_content img {
+  cursor: pointer;
+}
+
+.atto_image_size {
+  display: inline-block;
+}
+.atto_image_size input[type=checkbox] {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+.atto_image_size input[type=text] {
+  width: 3em;
+}
+.atto_image_size label {
+  display: inline-block;
+}
+// End-of: Original styling prior to advance image editing features.
+
+.atto-image-resize-handle {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  z-index: @resize_handle_z_index;
+}
+
+.atto-image-resize-container {
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+
+  ::-moz-selection { /* Code for Firefox */
+    background: rgba(255, 255, 0, @resize-selection-opacity);
+  }
+
+  ::selection {
+    background: rgba(255, 255, 0, @resize-selection-opacity);
+  }
+
+  &::-moz-selection { /* Code for Firefox */
+    background: rgba(255, 255, 0, @resize-selection-opacity);
+  }
+
+  &::selection {
+    background: rgba(255, 255, 0, @resize-selection-opacity);
+  }
+
+  .atto-image-resize-overlay {
+    &:extend(.nullify-atto_control);
+    position: relative;
+    z-index: @resize_overlay_z_index;
+
+    /**
+     * Why the !important(s)?
+     *
+     * When resizing a node, it is cloned for preview and ghosting. The problem with this is that some styles
+     * are in "style" attribute which takes precedence over all stylesheets styles. Although it is generally
+     * bad practice to do !important, I think it is used beautifully in this case, since we can pin point what bare
+     * essential styles are needed for a ghost node.
+     */
+    .atto-image-ghost-node {
+      &:extend(.nullify-atto_control);
+      position: relative !important;
+
+      -moz-box-sizing: border-box !important;
+      -webkit-box-sizing: border-box !important;
+      -ms-box-sizing: border-box !important;
+      box-sizing: border-box !important;
+
+      opacity: 0.0 !important;  // Hide when not active.
+
+      // Fill parent div.
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .atto-image-ghost-node-active {
+      opacity: 0.4 !important;  // Show when active.
+    }
+  }
+
+  .yui3-resize-handles-wrapper {
+    &:extend(.nullify-atto_control);
+
+    // Disable selection to handles and its children. It looks ugly.
+    .hide-selection;
+    * { .hide-selection;  }
+
+    overflow: visible;
+    .yui3-resize-handle {
+      overflow: visible;
+
+      .yui3-resize-handle-inner > * {
+        overflow: visible;
+
+        // Hide svg and placed an img here if you want. Doge face for instance.
+        background: none;
+
+        // Nullify any position prior so they can be properly positioned if wanted.
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+
+        svg {
+          overflow: visible;
+        }
+      }
+    }
+  }
+}
+
+.atto-image-resize-ghost {
+  border: 2px solid #000000;
+  z-index: @resize_ghost_z_index;
+  opacity: 0.4;
+}
+
+.Mso-atto-image-resizable-node {
+  &:extend(.nullify-atto_control);
+  display: none;
+}
+
+/* Hide overlay markup while loading, if js is enabled */
+.yui3-js-enabled .yui3-overlay-loading {
+  position: absolute;
+}
+
+/**
+ * These look-n-feel of yui3-overlay-content specific for atto-image-overlay.
+ */
+.atto-image-overlay.yui3-overlay-content  {
+  background-color: #ECEFFB;
+  border: 1px solid #9EA8C6;
+  border-radius: 3px;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.25);
+  padding: 0.1em;
+
+  /* Reset atto_control's position. */
+  position: static;
+
+  /* Reset. */
+  -ms-word-break: normal;
+  word-break: normal;
+  word-wrap: normal;
+
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -ms-box-sizing: content-box;
+  box-sizing: content-box;
+
+  width: 100%;
+}
+
+/* By having a wrapper around an overlay with position relative, overlay should now scroll.
+   with the text-editor.*/
+.atto-image-overlay.atto-image-overlay-node-wrapper {
+  position: relative;
+  z-index: 48;
+}
+
+.atto-image-overlay.yui3-overlay-content.atto_control {
+  /* atto_control also touch these, so reset them. */
+  margin-left: 0;
+  margin-bottom: 0;
+}
+
+.background-size(@width, @height) {
+  width: @width;
+  height: @height;
+  -webkit-background-size: @width @height;
+  background-size: @width @height;
+  background-repeat: no-repeat;
+}
+
+.scale(@scale){
+  transform:         scale(@scale); /* CSS3 */
+  -moz-transform:    scale(@scale); /* Firefox */
+  -webkit-transform: scale(@scale); /* Webkit */
+  -o-transform:      scale(@scale); /* Opera */
+  -ms-transform:     scale(@scale); /* IE 9 */
+}
+
+/**
+ * @param @duration Time in s.
+ * @param @x Pan the background by @x unites (px, em, or whatever).
+ * @param @y Pan the background by @y unites (px, em, or whatever).
+ */
+.background-animation(@duration, @x: 0.0, @y: 0.0, @scale: 1.0) {
+  background-position: @x @y;  // Just a little nudge for happiness.
+  .scale(@scale);
+
+  -webkit-transition: background-position @duration linear;
+  -moz-transition: background-position @duration linear;
+  -o-transition: background-position @duration linear;
+  transition: background-position @duration linear;
+}
+
+.atto-image-overlay {
+  &:extend(.nullify-atto_control);
+}
+
+.atto-image-overlay-node-wrapper {
+  &:extend(.nullify-atto_control);
+  display: block;
+}
+
+.atto-image-overlay.yui3-overlay-content {
+  &:extend(.nullify-atto_control);
+
+  display: block;  // Ensure that the overlay maintains its boundaries.
+
+  * {
+    position: static;
+  }
+
+  .yui3-widget-hd {
+    background-color: #B6BFDA;
+    color: #30418C;
+    font-size: 120%;
+    font-weight: bold;
+    padding: 0.2em 0.5em 0.3em;
+    border-radius: 2px 2px 0 0;
+
+    /* Reset atto_control's position. */
+    position: static;
+  }
+
+  .yui3-widget-bd {
+    padding: 0.4em 0.6em 0.5em;
+  }
+
+  .yui3-widget-ft {
+    background-color:#DFE3F5;
+    padding: 0.4em 0.6em 0.5em;
+    border-radius: 0 0 2px 2px;
+  }
+
+  button {
+    margin-left: 2px;
+    margin-bottom: 2px;
+    border-radius: 1px;
+
+    .background-size(@background-width, @background-height);
+
+    display: block;
+    background-color: floralwhite;
+  }
+
+  button.atto-image-left {
+    background-image: url([[pix:atto_image|img-align-left]]);
+
+    &:hover {
+      color: #333;
+      text-decoration: none;
+      .background-animation(@background-anim-duration, -5px, 0px);
+    }
+  }
+
+  button.atto-image-right {
+    background-image: url([[pix:atto_image|img-align-right]]);
+
+    &:hover {
+      color: #333;
+      text-decoration: none;
+      .background-animation(@background-anim-duration, 5px, 0px);
+    }
+  }
+
+  button.atto-image-none {
+    background-image: url([[pix:atto_image|img-align-none]]);
+
+    &:hover {
+      color: #333;
+      text-decoration: none;
+      .background-animation(@background-anim-duration, 0px, -2px);
+    }
+  }
+
+  button.atto-image-text-top {
+    background-image: url([[pix:atto_image|img-text-top]]);
+
+    &:hover {
+      color: #333;
+      text-decoration: none;
+      .background-animation(@background-anim-duration, 0px, 5px);
+    }
+  }
+
+  button.atto-image-baseline {
+    background-image: url([[pix:atto_image|img-text-bottom]]);
+
+    &:hover {
+      color: #333;
+      text-decoration: none;
+      .background-animation(@background-anim-duration, 0px, -5px);
+    }
+  }
+
+  button.atto-image-text-bottom {
+    background-image: url([[pix:atto_image|img-text-bottom]]);
+
+    &:hover {
+      color: #333;
+      text-decoration: none;
+      .background-animation(@background-anim-duration, 0px, -5px);
+    }
+  }
+
+  button.atto-image-border {
+    background-image: url([[pix:atto_image|img-border]]);
+
+    &:hover {
+      color: #333;
+      text-decoration: none;
+      .background-animation(2s, 0px, 0px, 1.2);
+    }
+  }
+
+  button.atto-image-spacing {
+    background-image: url([[pix:atto_image|img-spacing]]);
+
+    &:hover {
+      color: #333;
+      text-decoration: none;
+      .background-animation(2s, 0px, 0px, 1.2);
+    }
+  }
+
+  button.atto-image-custom {
+    background-image: url([[pix:atto_image|img-custom]]);
+
+    &:hover {
+      color: #333;
+      text-decoration: none;
+      .background-animation(2s, 0px, 0px, 1.2);
+    }
+  }
+}
+
+// Horizontal align mode on overlay.
+.atto-image-overlay.yui3-overlay-content.horizontal-align{
+  &:extend(.nullify-atto_control);
+
+  width: auto;  // 100% occupies the whole parent's width.
+  display: inline-block;  // display: block also occupies the whole parent's width.
+
+  white-space: nowrap;  // Disable wrapping in horizontal mode. Aesthetic reasons.
+
+  button {
+    &:extend(.nullify-atto_control);
+    display: inline-block;
+  }
+}
+
+// atto-image-panel
+.atto-image-panel {
+  div.atto-image-input label{
+    display: inline-block;
+    margin-left: 1em;
+  }
+}
+
+.atto-image-border-panel,
+.atto-image-spacing-panel{
+  div.atto-image-input{
+    label {
+      display: inline-block;
+      width: 5em; // in atto-image-spacing, since the word "bottom": is almost 5 m's.
+    }
+
+    input {
+      display: inline-block;
+      width: 4em; // This way too generous. 9999px sufficient for a border is more than sufficient. Also cap it in input elem.
+      margin-right: 0.5em; // Distance to the "px" unit label.
+    }
+  }
+}
+
+.atto-image-border-panel {
+  .atto-image-illustration {
+    .background-size(24px, 24px);
+    display: inline-block;
+    margin-left: 1em;
+  }
+
+  .atto-image-border-top .atto-image-illustration{  background-image: url([[pix:atto_image|img-border-top]]);  }
+  .atto-image-border-right .atto-image-illustration{  background-image: url([[pix:atto_image|img-border-right]]);  }
+  .atto-image-border-bottom .atto-image-illustration{  background-image: url([[pix:atto_image|img-border-bottom]]);  }
+  .atto-image-border-left .atto-image-illustration{  background-image: url([[pix:atto_image|img-border-left]]);  }
+}
+
+.atto-image-spacing-panel {
+  .atto-image-illustration {
+    .background-size(24px, 24px);
+    display: inline-block;
+    margin-left: 1em;
+  }
+
+  .atto-image-spacing-top .atto-image-illustration{  background-image: url([[pix:atto_image|img-spacing-top]]);  }
+  .atto-image-spacing-right .atto-image-illustration{  background-image: url([[pix:atto_image|img-spacing-right]]);  }
+  .atto-image-spacing-bottom .atto-image-illustration{  background-image: url([[pix:atto_image|img-spacing-bottom]]);  }
+  .atto-image-spacing-left .atto-image-illustration{  background-image: url([[pix:atto_image|img-spacing-left]]);  }
+}
+
+.atto-image-custom-panel {
+  hr {
+    border-top: 1px solid #eee;
+    border-bottom: 2px solid #eee;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 128px;
+  }
+}
+
+.atto-image-contenteditable-container {
+  height: 128px;
+  overflow: auto;  // Scroll if necessary.
+  border: 1px solid grey;
+  padding:  0.2em;
+
+  // Nullify some pre tag rules.
+  pre {
+    display: block;
+    padding: 0px;
+    margin: 0px;
+    font-size: 13px;
+    line-height: 20px;
+    word-break: break-all;
+    white-space: pre;
+    white-space: pre-wrap;
+    background: none;
+    border: none;
+  }
+
+  .atto-image-contenteditable {
+    min-height: 128px;
+  }
+}
+
+/*
+@see yui/src/button/js/todo folder for related js. At the moment, I am not
+going forward with these just to minimize bugs. There are already crap load of changes.
+I'm going with a much simpler solution unless this feature is requested. Plus, my prototype
+didn't went well. I was running out of real estate, it was getting really cluttered (resize
+handles over interactive-margi-border is an ugly site).
+
+div.atto-image-interactive-margin-border {
+  background-color: purple;
+  opacity: 0.4;
+
+  left: initial;
+  top: initial;
+  right: auto;
+  bottom: auto;
+}*/
+
+
+// DEBUGGING STYLES SECTION.
+.atto-image-resize-handle-ref-point.atto_control {  // Append .atto_control for greater priority.
+  &:extend(.nullify-atto_control);
+}
+
+#overlay {
+  position: absolute;
+}
+
+.atto-image-resize-container {
+  position: relative;
+  margin: 0px;
+  padding: 0px;
+
+  border: 2px solid black;
+}

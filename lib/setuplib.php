@@ -328,6 +328,22 @@ class file_serving_exception extends moodle_exception {
 }
 
 /**
+ * @package    core
+ * @subpackage lib
+ * @copyright  2014 Trevor Jones
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class reenrolment_grade_recovery_exception extends moodle_exception {
+    /**
+     * Constructor
+     * @param string $debuginfo optional more detailed information
+     */
+    function __construct($debuginfo = NULL) {
+        parent::__construct('cannotrecovergrades', 'error', '', NULL, $debuginfo);
+    }
+}
+
+/**
  * Default exception handler, uncaught exceptions are equivalent to error() in 1.9 and earlier
  *
  * @param Exception $ex
@@ -629,10 +645,16 @@ function get_docs_url($path = null) {
         // that will ensure people end up at the latest version of the docs.
         $branch = '.';
     }
-    if (!empty($CFG->docroot)) {
-        return $CFG->docroot . '/' . $branch . '/' . current_language() . '/' . $path;
+    if (empty($CFG->doclang)) {
+        $lang = current_language();
     } else {
-        return 'http://docs.moodle.org/'. $branch . '/' . current_language() . '/' . $path;
+        $lang = $CFG->doclang;
+    }
+    $end = '/' . $branch . '/' . $lang . '/' . $path;
+    if (empty($CFG->docroot)) {
+        return 'http://docs.moodle.org'. $end;
+    } else {
+        return $CFG->docroot . $end ;
     }
 }
 
@@ -704,14 +726,8 @@ function ini_get_bool($ini_get_arg) {
 function setup_validate_php_configuration() {
    // this must be very fast - no slow checks here!!!
 
-   if (ini_get_bool('register_globals')) {
-       print_error('globalswarning', 'admin');
-   }
    if (ini_get_bool('session.auto_start')) {
        print_error('sessionautostartwarning', 'admin');
-   }
-   if (ini_get_bool('magic_quotes_runtime')) {
-       print_error('fatalmagicquotesruntime', 'admin');
    }
 }
 
@@ -816,6 +832,8 @@ function initialise_fullme() {
             throw new coding_exception('Must use https address in wwwroot when ssl proxy enabled!');
         }
         $rurl['scheme'] = 'https'; // make moodle believe it runs on https, squid or something else it doing it
+        $_SERVER['HTTPS'] = 'on'; // Override $_SERVER to help external libraries with their HTTPS detection.
+        $_SERVER['SERVER_PORT'] = 443; // Assume default ssl port for the proxy.
     }
 
     // hopefully this will stop all those "clever" admins trying to set up moodle
@@ -883,11 +901,19 @@ function setup_get_remote_url() {
         //IIS - needs a lot of tweaking to make it work
         $rurl['fullpath'] = $_SERVER['SCRIPT_NAME'];
 
-        // NOTE: ignore PATH_INFO because it is incorrectly encoded using 8bit filesystem legacy encoding in IIS
-        //       since 2.0 we rely on iis rewrite extenssion like Helicon ISAPI_rewrite
-        //       example rule: RewriteRule ^([^\?]+?\.php)(\/.+)$ $1\?file=$2 [QSA]
+        // NOTE: we should ignore PATH_INFO because it is incorrectly encoded using 8bit filesystem legacy encoding in IIS.
+        //       Since 2.0, we rely on IIS rewrite extensions like Helicon ISAPI_rewrite
+        //         example rule: RewriteRule ^([^\?]+?\.php)(\/.+)$ $1\?file=$2 [QSA]
+        //       OR
+        //       we rely on a proper IIS 6.0+ configuration: the 'FastCGIUtf8ServerVariables' registry key.
+        if (isset($_SERVER['PATH_INFO']) and $_SERVER['PATH_INFO'] !== '') {
+            // Check that PATH_INFO works == must not contain the script name.
+            if (strpos($_SERVER['PATH_INFO'], $_SERVER['SCRIPT_NAME']) === false) {
+                $rurl['fullpath'] .= clean_param(urldecode($_SERVER['PATH_INFO']), PARAM_PATH);
+            }
+        }
 
-        if ($_SERVER['QUERY_STRING'] != '') {
+        if (isset($_SERVER['QUERY_STRING']) and $_SERVER['QUERY_STRING'] !== '') {
             $rurl['fullpath'] .= '?'.$_SERVER['QUERY_STRING'];
         }
         $_SERVER['REQUEST_URI'] = $rurl['fullpath']; // extra IIS compatibility
@@ -993,11 +1019,6 @@ function workaround_max_input_vars() {
     foreach ($chunks as $chunk) {
         $values = array();
         parse_str($chunk, $values);
-
-        if (ini_get_bool('magic_quotes_gpc')) {
-            // Use the same logic as lib/setup.php to work around deprecated magic quotes.
-            $values = array_map('stripslashes_deep', $values);
-        }
 
         merge_query_params($_POST, $values);
         merge_query_params($_REQUEST, $values);
@@ -1266,7 +1287,7 @@ function disable_output_buffering() {
  */
 function redirect_if_major_upgrade_required() {
     global $CFG;
-    $lastmajordbchanges = 2013100400.02;
+    $lastmajordbchanges = 2014093001.00;
     if (empty($CFG->version) or (float)$CFG->version < $lastmajordbchanges or
             during_initial_install() or !empty($CFG->adminsetuppending)) {
         try {

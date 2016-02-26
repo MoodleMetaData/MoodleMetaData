@@ -1,0 +1,531 @@
+// Customize button
+.pull-right.heading-button {
+  .fluid-span(3);
+  margin: 0;
+}
+// ios pdf scrolling bug.
+// - Temporary fix for iOS PDF scrolling bug - Added by Jordan Schulz - 2 Sep 2011
+// - 2016, with ios8, this is still a relevant bug. @see https://discussions.apple.com/thread/6551491?tstart=0
+.resourcepdf {
+  overflow: auto;
+}
+.heading-button .singlebutton input[type="submit"] {
+  width: 100%;
+  display: inline-block;
+  padding: 10px;
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: @uSubmitFont;
+  text-shadow: none;
+  text-transform: uppercase;
+  background-color: @uSubmit;
+  background-image: none;
+  border: 1px solid @uSubmitBorder;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  .border-radius(4px);
+  .box-shadow(none);
+  &:hover, &:focus {
+    background-color: @uSubmitBorder;
+    outline: none;
+  }
+}
+.heading-button .singlebutton div {
+  width: 95%;
+}
+
+// Common
+#settingsnav hr {
+  border: none;
+}
+#region-main {
+  word-break: break-word;
+  word-wrap: break-word;
+}
+#region-main > h1 {
+  padding: 0 15px;
+}
+#region-profile {
+  display: none;
+}
+.pagelayout-report .no-overflow {
+  overflow: scroll;
+}
+.activityicon {
+  max-width: 24px;
+}
+// Course listing
+#region-main #site-news-forum,
+#region-main .box.generalbox.sitetopic {
+  .card(0.1);
+  padding: 10px;
+  margin-bottom:20px;
+}
+#frontpage-course-list {
+  .card(0.1);
+  padding-top: 0px;
+  padding-bottom: 15px;
+}
+#frontpage-course-list  h2 {
+  color: @uH2;
+  text-transform: none;
+  font-size: 2.2em;
+  font-weight: lighter;
+  line-height: 1.5em;
+  padding: 8px 15px 0px 15px;
+  border-bottom: 1px solid @uGreyBorder;
+}
+
+#frontpage-course-list h2 {
+  #gradient > .vertical(@uOffWhite1, @uOffWhite2);
+}
+
+#frontpage-course-list .coursebox {
+  border: none;
+  &:hover, &:focus {
+    background-color: none;
+  }
+}
+/*
+  TinyMCE
+*/
+.feditor span.mceEditor {
+  float: left;
+}
+/*
+ * Forms and settings pages
+*/
+#course-category-listings .detail-pair {
+  background: none;
+}
+#course-category-listings .course-detail .detail-pair .pair-key {
+  width:45%;
+}
+#page-course-index-category .coursebox {
+  padding: 5px;
+  margin: 15px 30px;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+#coursecat-management,
+#course-category-listings  {
+  background: none;
+}
+.category-listing,
+.course-listing,
+.course-detail {
+  .card(0.05);
+  margin: 5px;
+}
+// Messages and calander fixes addition
+body[id^='page-calendar-'] #region-main > div[role='main'] .maincalendar .header {
+  padding: 15px;
+}
+.path-calendar .maincalendar .calendar-controls .previous {
+  width:auto;
+  float:left;
+}
+.path-calendar .maincalendar .calendar-controls .current {
+  width: 100%;
+}
+.path-calendar .maincalendar .calendar-controls .next {
+  width: auto;
+  position: absolute;
+  right: 10px;
+}
+.block .minicalendar td.today {
+  border:2px #007c43 ridge;
+}
+.block .minicalendar .duration_user {
+  background-color: #E6EEF2;
+}
+.block .minicalendar .duration_group {
+  background-color: #FEF1CE;
+}
+.block .minicalendar .duration_course {
+  background-color: #FFE0D1;
+}
+.block .minicalendar .duration_global {
+  background-color: #E2FADC;
+}
+.maincalendar .duration_user .events-underway {
+  background-color: #E6EEF2;
+}
+.maincalendar .duration_group .events-underway {
+  background-color: #FEF1CE;
+}
+.maincalendar .duration_course .events-underway {
+  background-color: #FFE0D1;
+}
+.maincalendar .duration_global .events-underway {
+  background-color: #E2FADC;
+}
+.path-calendar .maincalendar .calendarmonth ul li {
+  word-break: break-word;
+  padding-left: 0;
+}
+
+body[id^='page-message-'] #region-main > div[role='main'] .box.message #message_participants .contact {
+   padding-left: 4px;
+   padding-right: 4px;
+}
+body[id^='page-message-'] #region-main > div[role='main'] .box.message #message_participants {
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+body[id^='page-message-'] #region-main > div[role='main'] .box.message {
+   display: inline-block;
+   padding: 15px;
+   width: 95%;
+}
+.message .contactselector .paging {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.message .messagearea .messagehistory .left {
+  padding: 10px;
+  margin-top: 5px;
+  background-color: @messageSent;
+}
+#region-main.span12.column1 {
+  margin-left: 0px;
+}
+// Main div
+body[id^='page-grade-'] #region-main > div[role='main'],
+body[id^='page-question-'] #region-main > div[role='main'],
+body[id^='page-backup-'] #region-main > div[role='main'],
+body[id^='page-filter-'] #region-main > div[role='main'],
+body[id^='page-group-'] #region-main > div[role='main'],
+body[id^='page-enrol-'] #region-main > div[role='main'],
+body[id^='page-report-'] #region-main > div[role='main'],
+body[id^='page-blog-'] #region-main > div[role='main'],
+body[id^='page-login-'] #region-main > div[role='main'],
+body[id^='page-user-'] #region-main > div[role='main'],
+body[id^='page-badges-'] #region-main > div[role='main'],
+body[id^='page-mod-'] #region-main > div[role='main'],
+body[id^='page-admin-'] #region-main > div[role='main'],
+body[id^='page-message-'] #region-main > div[role='main'],
+body[id^='page-calendar-'] #region-main > div[role='main'],
+body[id^='page-local-'] #region-main > div[role='main'],
+body[id^='page-course-'] #region-main > div[role='main'] div.userprofile,
+body[id^='page-course-'] #region-main > div[role='main'] {
+  .card(0.03);
+  margin: 5px;
+  min-height: 150px;
+}
+body[id^='page-course-management'] #region-main > div[role='main'],
+body[id^='page-course-view'] #region-main > div[role='main'] {
+  border: none;
+  background: none;
+  .border-radius(0px);
+  .box-shadow(none);
+  margin:0px;
+}
+body[id^='page-course-view'].pagelayout-report #page {
+  padding: 0;
+}
+
+// Form
+body[id^='page-admin-'] #region-main > div[role='main'] > form#adminsettings > div.settingsform > fieldset {
+  display: inline-block;
+  word-break: break-word;
+  word-wrap: break-word;
+}
+body[id^='page-admin-upgradesettings'] form#adminsettings > div > fieldset {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+body[id^='page-enrol'] #region-main > div[role='main'] > table,
+body[id^='page-admin-webservice-documentation'] #region-main > div[role='main'] > table {
+  margin-left: 25px !important;
+  margin-right: 25px !important;
+  padding-bottom: 25px;
+}
+// Block editing
+body[id^='page-course-view'] #region-main > div[role='main'] div.userlist,
+body[id='page-course-view'] #region-main > div[role='main'] > form,
+body[id='page-my-index'] #region-main > div[role='main'] > form {
+  .card(0.03);
+  margin: 5px;
+  padding: 25px;
+}
+body[id='page-course-view'] #region-main >  div[role='main'] h2,
+body[id='page-my-index'] #region-main >  div[role='main'] h2 {
+  border-bottom: 1px solid @uGreyBorder;
+}
+
+body[id^='page-grade-'] #region-main > div[role='main'] > form,
+body[id^='page-question-'] #region-main > div[role='main'] > form,
+body[id^='page-backup-'] #region-main > div[role='main'] > form,
+body[id^='page-filter-'] #region-main > div[role='main'] > form,
+body[id^='page-enrol-'] #region-main > div[role='main'] > form,
+body[id^='page-report-'] #region-main > div[role='main'] > form,
+body[id^='page-blog-'] #region-main > div[role='main'] > form,
+body[id^='page-group-'] #region-main > div[role='main'] > form,
+body[id^='page-message-'] #region-main > div[role='main'] > form,
+body[id^='page-badges-'] #region-main > div[role='main'] > form,
+body[id^='page-login-'] #region-main > div[role='main'] > form,
+body[id^='page-user-'] #region-main > div[role='main'] > form,
+body[id^='page-mod-'] #region-main > div[role='main'] > form,
+body[id^='page-admin-'] #region-main > div[role='main'] > form:not(#adminsettings),
+body[id^='page-admin-'] #region-main > div[role='main'] p.filtersettingnote,
+body[id^='page-admin-'] #region-main > div[role='main'] > form#adminsettings > div.settingsform > fieldset,
+body[id^='page-course-'] #region-main >  div[role='main'] > form {
+  padding: 25px;
+}
+body[id^='page-course-view-weeks'] #region-main>div[role='main']>form,
+body[id^='page-course-view-topics'] #region-main>div[role='main']>form,
+body[id^='page-course-view-collblct'] #region-main>div[role='main']>form,
+body[id^='page-course-view-onetopic'] #region-main>div[role='main']>form,
+body[id^='page-course-view-social'] #region-main>div[role='main']>form,
+body[id^='page-course-view-topcoll'] #region-main>div[role='main']>form,
+body[id^='page-course-management'] #region-main>div[role='main']>form {
+  padding: 0px;
+}
+// Main role div
+body[id^='page-grade-'] #region-main > div[role='main'] > div,
+body[id^='page-question-'] #region-main > div[role='main'] > div,
+body[id^='page-backup-'] #region-main > div[role='main'] > div,
+body[id^='page-filter-'] #region-main > div[role='main'] > div,
+body[id^='page-enrol-'] #region-main > div[role='main'] > div,
+body[id^='page-report-'] #region-main > div[role='main'] > div,
+body[id^='page-badges-'] #region-main > div[role='main'] > div,
+body[id^='page-mod-'] #region-main > div[role='main'] > div,
+body[id^='page-admin-'] #region-main > div[role='main'] > div,
+body[id^='page-course-reset'] #region-main > div[role='main'] > div,
+body[id^='page-user-'] #region-main > div[role='main'] > div,
+body[id^='page-course-'] #region-main > div[role='main'] > div.userprofile > div,
+body[id^='page-blog-external_blogs'] #region-main > div[role='main'] > div,
+body[id^='page-course-'] #region-main > div[role='main'] > div,
+.userprofilebox {
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+}
+body[id^='page-user-profile'] #region-main>div[role='main']>div.userprofile,
+body[id^='page-course-view'] #region-main>div[role='main']>div {
+  margin: 0;
+}
+body[id^='page-enrol-'] #region-main > div[role='main'] > table,
+body[id^='page-admin-report-'] #region-main > div[role='main'] > table {
+  width:auto;
+}
+body[id^='page-admin-report-questioninstances-index'] #region-main > div[role='main'] > div {
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+}
+body[id^='page-'] #region-main > div[role='main'] > ul.nav.nav-tabs {
+  padding: 15px 15px 0px 15px;
+}
+#page-enrol-users #filterform {
+  margin: 15px;
+}
+#page-admin-index #region-main > div[role='main'] > div.generalbox {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+// H2
+body[id^='page-backup-'] #region-main > div[role='main'] h2 {
+  #gradient > .vertical-three-colors(@white, @uOffWhite1, 70%, @uOffWhite2);
+  border-bottom: 1px solid @uGreyBorder;
+}
+body[id^='page-question-'] #region-main > div[role='main'] > h2,
+body[id^='page-backup-'] #region-main > div[role='main'] > h2,
+body[id^='page-grade-'] #region-main > div[role='main'] > h2,
+body[id^='page-filter-'] #region-main > div[role='main'] > h2,
+body[id^='page-group-'] #region-main > div[role='main'] > h2,
+body[id^='page-enrol-'] #region-main > div[role='main'] > h2,
+body[id^='page-report-'] #region-main > div[role='main'] > h2,
+body[id^='page-blog-'] #region-main > div[role='main'] > h2,
+body[id^='page-badges-'] #region-main > div[role='main'] > h2,
+body[id^='page-message-'] #region-main > div[role='main'] > h2,
+body[id^='page-user-'] #region-main > div[role='main'] > h2,
+body[id^='page-mod-'] #region-main > div[role='main'] > h2,
+body[id^='page-admin-'] #region-main > div[role='main'] > h2,
+body[id^='page-admin-setting'] #region-main > div[role='main'] > form > .settingsform > h2,
+body[id^='page-local-'] #region-main > div[role='main'] > h2,
+body[id^='page-user-'] #region-main > div[role='main'] div.userprofile h2,
+body[id^='page-course-'] #region-main > div[role='main'] div.userprofile h2,
+body[id^='page-course-'] #region-main > div[role='main'] > h2 {
+  #gradient > .vertical-three-colors(@white, @uOffWhite1, 70%, @uOffWhite2);
+  border-bottom: 1px solid @uGreyBorder;
+  padding: 0px 15px 2px 15px;
+}
+body[id^='page-course-view'] #region-main>div[role='main'] h2,
+body[id^='page-course-management'] #region-main>div[role='main'] h2 {
+  border: none;
+  background: none;
+  .border-radius(0px);
+  .box-shadow(none);
+  margin:10px 0px;
+}
+// H3
+body[id^='page-grade-'] #region-main > div[role='main'] > h3,
+body[id^='page-group-'] #region-main > div[role='main'] > h3,
+body[id^='page-badges-'] #region-main > div[role='main'] > h3,
+body[id^='page-mod-'] #region-main > div[role='main'] > h3,
+body[id^='page-admin-'] #region-main > div[role='main'] > h3,
+body[id^='page-course-'] #region-main > div[role='main'] > h3,
+body[id^='page-local-'] #region-main >  div[role='main'] > .box.generalbox.categorybox {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+//
+body[id^='page-'] #region-main > div[role='main'] > div.paging,
+body[id^='page-'] #region-main > div[role='main'] > div.urlselect {
+  margin: 10px;
+}
+// Tabs
+body[id^='page-group-'] #region-main > div[role='main'] .groupdisplay ul {
+  padding: 15px 15px 0 15px;
+}
+// Grader report
+body[id^="page-grade-report-grader"] .gradeparent .generaltable .gradevalue.hidden {
+  display: initial;
+  visibility: initial;
+}
+body[id^="page-grade-report-grader"] .gradeparent {
+  margin: 0 !important;
+}
+table#user-grades {
+  border-width:0px;
+}
+.path-grade-report-grader table#fixed_column {
+  padding-top: 0px
+}
+.path-grade-report-grader .right_scroller {
+   overflow-x: inherit;
+}
+.path-grade-report-grader .right_scroller > .generaltable {
+  display: block;
+  overflow-x: auto;
+}
+.path-grade-report-grader .grade_icons {
+  margin-bottom: 0;
+}
+
+.path-grade-edit-tree #page,
+.path-grade-report-grader #page {
+  max-width: 100%;
+  padding: 20px;
+  margin: 0px;
+}
+.path-grade-report-grader #region-main>div[role='main']>form {
+  padding: 0px !important;
+}
+.path-grade-report-grader table#fixed_column th {
+  border-right-color: inherit;
+}
+#page-grade-report-grader-index.path-grade-report-grader #page #page-content #region-main>div[role='main'],
+#page-grade-report-history-index.path-grade-report-history #page #page-content #region-main>div[role='main']{
+  display: inline-block;
+}
+#page-grade-report-history-index.path-grade-report-history #page #page-content #region-main .no-overflow,
+#page-grade-report-history-index.path-grade-report-history #page #page-content #region-main .no-overflow .gradereport_history {
+  overflow: visible;
+}
+table#user-grades th.category {
+  vertical-align: bottom;
+  border-width: 1px 1px 1px 0px;
+}
+.path-grade-report-grader .right_scroller .generaltable th img.sorticon {
+  margin-left: .3em;
+  margin-right: .3em;
+}
+.path-grade-report-grader .heading_name_row:first-child {
+  border-width: 1px 1px 1px 0px;
+}
+.path-grade-edit-tree #gradetreeform > div {
+  overflow: visible;
+}
+.path-grade-edit-tree #gradetreeform .generaltable {
+  overflow: visible;
+}
+// Lti page (war on images/gradients!)
+.yui-skin-sam .yui-navset .yui-nav .selected a,
+.yui-skin-sam .yui-navset .yui-nav .selected a:focus,
+.yui-skin-sam .yui-navset .yui-nav .selected a:hover {
+  background: #2647a0;
+}
+.yui-skin-sam .yui-navset .yui-nav a,
+.yui-skin-sam .yui-navset .yui-navset-top .yui-nav a {
+  background: #d8d8d8;
+}
+.yui-skin-sam .yui-navset .yui-nav a:hover,
+.yui-skin-sam .yui-navset .yui-nav a:focus {
+  background: #bfdaff;
+}
+/*
+ Specific Settings
+ */
+#fgroup_id_realname_grp .realname {
+  margin-bottom: 0px;
+}
+.backup-restore .activitytable {
+  min-width: 200px;
+}
+// User enrol page
+.userenrolment thead {
+  background-color: @thead;
+}
+.userenrolment tr {
+  border-bottom: 1px solid @grayLighter;
+}
+.userenrolment tbody td,
+.userenrolment thead th {
+  border-right: 2px solid @grayLighter;
+  border-left: 2px solid @grayLighter;
+  padding: 0px 5px;
+}
+.userenrolment tbody td:first-of-type,
+.userenrolment thead th:first-of-type {
+  border-left: none;
+}
+.userenrolment tbody td:last-of-type,
+.userenrolment thead th:last-of-type {
+  border-right: none;
+}
+.userenrolment .col_role .addrole {
+  background-color: @buttonBg;
+  border: 1px solid @buttonBorder;
+}
+// User listings
+.userlist table.controls tbody td {
+  display: inline-block;
+  padding-left: 1%;
+  padding-right: 1%;
+}
+.userlist table.controls tbody td.right {
+  float: right;
+}
+// Import/backup page
+.path-backup .mform .backup_selector div.felement {
+  padding-top: 5px;
+}
+
+// Responsive images
+.img-responsive {
+  width:100%
+}
+
+// Assign grader 
+#page-mod-assign-view.pagelayout-report #page, #page-grade-grading-form-rubric-edit #page {
+  padding-left: 20px;
+  padding-right: 20px;
+  max-width: 100%;
+  margin: 0;
+}
+
+// group select
+/* Override the default of select tag. Note, that the css default is overflow-x: hidden;*/
+#addmembersform select {
+  overflow-x: scroll !important;
+}

@@ -134,11 +134,21 @@ urn:mace:organization2:providerID, Example Organization 2, /Shibboleth.sso/WAYF/
     <td><?php print_string('changepasswordhelp', 'auth') ?></td>
 </tr>
 
-
+<tr valign="top">
+        <td align="right"><?php print_string("auth_shib_sync_cohorts", "auth_shibboleth") ?>:</td>
+        <td>
+            <input name="sync_cohorts" type="checkbox" <?php
+            if ( isset($config->sync_cohorts) and $config->sync_cohorts == 'on' ){
+            echo 'checked="checked"';
+            }
+            ?> />
+        </td>
+        <td><?php print_string("auth_shib_sync_cohorts_description", "auth_shibboleth") ?></td>
+</tr>
 
 <?php
 
-print_auth_lock_options($this->authtype, $user_fields, '<!-- empty help -->', true, false);
+print_auth_lock_options($this->authtype, $user_fields, '<!-- empty help -->', true, false, $this->get_custom_user_profile_fields());
 
 ?>
 </table>

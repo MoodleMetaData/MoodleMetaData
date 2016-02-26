@@ -1,0 +1,11 @@
+{
+    "name": "moodle-atto_morefontcolors-button",
+    "builds": {
+        "moodle-atto_morefontcolors-button": {
+            "jsfiles": [
+                "menu-ext.js",
+                "button.js"
+            ]
+        }
+    }
+}

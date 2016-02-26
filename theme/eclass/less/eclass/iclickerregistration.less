@@ -1,0 +1,77 @@
+#mod-iclickerregistration #mod-iclickerregistration-update-form .btn-group {
+  margin-top: 10px;
+}
+
+// Yellow button style.
+div.modal.mod-iclickerregistration-delete-confirmation-dialog .btn.btn-primary,
+#mod-iclickerregistration .btn.btn-primary,
+#mod-iclickerregistration #mod-iclickerregistration-iclicker-info .edit-btn {
+  color: @buttonAltText;
+  text-shadow: none;
+  background-color: @buttonAltBg;
+  background-image: none;
+  border-color: @buttonAltBorder;
+  .box-shadow(none);
+  &:hover, &:focus {
+    background-color: @buttonAltHover;
+    outline: none;
+  }
+}
+
+// Grey button style.
+div.modal.mod-iclickerregistration-delete-confirmation-dialog .btn.btn-default,
+#mod-iclickerregistration .btn.btn-default,
+#mod-iclickerregistration #mod-iclickerregistration-iclicker-info .unregister-btn {
+  color: @buttonText;
+  text-shadow: none;
+  background-color: @buttonBg;
+  background-image: none;
+  border-color: @buttonBorder;
+  .border-radius(4px);
+  .box-shadow(none);
+  &:hover, &:focus {
+    color: @buttonText;
+    background-color: @buttonHover;
+    outline: none;
+  }
+}
+
+div.modal.mod-iclickerregistration-delete-confirmation-dialog {
+  z-index: 4051 !important; // Just one more than the header.
+
+  .modal-header {
+    background-color: @uGreen;
+    color: @uOffWhite1;
+
+    border-bottom: 5px solid @uYellow;
+  }
+}
+
+#mod-iclickerregistration {
+  #mod-iclickerregistration-iclicker-info-list .table tr th a {
+    color: @uLinkGreen;
+  }
+
+  #mod-iclickerregistration-iclicker-info-list .pagination {
+    > li.active > a {
+      background-color: @uLinkGreen;
+      border-color: @uLinkGreen;
+      color: white;
+    }
+
+    li.disabled > a {
+      color: grey;
+    }
+
+    li > a {
+      color: @uLinkGreen;
+      &:hover {  color: @uHoverGreen;  }
+      &:focus {  color: @uFocusGreen;  }
+    }
+  }
+
+  .glyphicon,
+  #mod-iclickerregistration-iclicker-info-list .table tr th .glyphicon{
+    color: dimgrey;
+  }
+}

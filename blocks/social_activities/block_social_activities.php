@@ -1,4 +1,26 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Social activities block.
+ *
+ * @package    block_social_activities
+ * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 class block_social_activities extends block_list {
     function init(){
@@ -46,7 +68,7 @@ class block_social_activities extends block_list {
                     $content = $cm->get_formatted_content(array('overflowdiv' => true, 'noclean' => true));
                     $instancename = $cm->get_formatted_name();
 
-                    if (!($url = $cm->get_url())) {
+                    if (!($url = $cm->url)) {
                         $this->content->items[] = $content;
                         $this->content->icons[] = '';
                     } else {
@@ -108,7 +130,7 @@ class block_social_activities extends block_list {
                 } else {
                     $editbuttons = '';
                 }
-                if ($mod->visible || has_capability('moodle/course:viewhiddenactivities', $context)) {
+                if ($mod->visible || has_capability('moodle/course:viewhiddenactivities', $mod->context)) {
                     if ($ismoving) {
                         if ($mod->id == $USER->activitycopy) {
                             continue;
@@ -122,7 +144,7 @@ class block_social_activities extends block_list {
 
                     $linkcss = $mod->visible ? '' : ' class="dimmed" ';
 
-                    if (!($url = $mod->get_url())) {
+                    if (!($url = $mod->url)) {
                         $this->content->items[] = $content . $editbuttons;
                         $this->content->icons[] = '';
                     } else {
@@ -147,5 +169,3 @@ class block_social_activities extends block_list {
         return $this->content;
     }
 }
-
-

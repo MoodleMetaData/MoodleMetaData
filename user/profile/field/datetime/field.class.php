@@ -15,9 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Handles displaying and editing the datetime field.
+ * This file contains the datetime profile field class.
  *
  * @package profilefield_datetime
+ * @copyright 2010 Mark Nelson <markn@moodle.com>
+ * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ */
+
+/**
+ * Handles displaying and editing the datetime field.
+ *
  * @copyright 2010 Mark Nelson <markn@moodle.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
@@ -72,7 +79,7 @@ class profile_field_datetime extends profile_field_base {
         // If timestamp then explode it to check if year is within field limit.
         $isstring = strpos($datetime, '-');
         if (empty($isstring)) {
-            $datetime = date('Y-m-d-H-i-s', $datetime);
+            $datetime = userdate($datetime, '%Y-%m-%d-%H-%M-%S');
         }
 
         $datetime = explode('-', $datetime);

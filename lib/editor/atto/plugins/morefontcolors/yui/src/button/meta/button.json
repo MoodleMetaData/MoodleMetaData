@@ -1,0 +1,9 @@
+{
+    "moodle-atto_morefontcolors-button": {
+        "requires": [
+            "node",
+            "moodle-core-notification-dialogue",
+            "moodle-editor_atto-menu"
+        ]
+    }
+}

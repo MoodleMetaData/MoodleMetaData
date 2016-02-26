@@ -1,0 +1,113 @@
+.headerBlock{
+    margin-right:40px;
+    padding:5px 10px 5px 10px;
+    border-radius: 5px;
+}
+
+.headerLink{
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.headerLink:ACTIVE{
+    color: white;
+}
+
+
+.formRow{
+    margin-bottom: 10px;
+}
+
+.subForm{
+    padding-left:40px;
+}
+
+.rangeInput{
+    width: auto;
+}
+
+.rangeOut{
+    background-color:darkgreen;
+    width:30px;
+    height: 30px;
+    border-radius:2px;
+    text-align: center;
+    display: inline-block;
+}
+
+.inputLabel{
+    font-weight: normal;
+    width:100px;
+}
+
+.mainDiv{
+    background: #fff;
+    border: solid #666 1px;
+    padding: 10px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.values{
+    display: table-row;
+}
+
+.ass-cell1 {
+    min-width: 30%;
+    max-width: 30%;
+}
+.ass-cell2 {
+    min-width: 30%;
+    max-width: 30%;
+}
+.ass-cell3 td {
+    min-width: 10%;
+    max-width: 10%;
+}
+.ass-cell4 td {
+    min-width: 5%;
+    max-width: 5%;
+}
+
+.attDes {
+    display: none;
+}
+
+.etabs {
+    margin: 0;
+    padding: 0;
+}
+
+.singleTab {
+    border: solid 1px #999;
+}
+
+.tab {
+    zoom: 1;
+    margin-right:3px;
+    -moz-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    color: red;
+}
+
+.tab a {
+    font-size: 11px;
+    line-height: 2em;
+    outline: none;
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+.tab a:hover {
+    Color: #0000d9;
+}
+
+
+.tab a.active {
+    font-weight: bold;
+}
+
+.child {
+    display: none;
+}

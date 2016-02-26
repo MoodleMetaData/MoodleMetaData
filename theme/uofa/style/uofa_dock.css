@@ -1,0 +1,133 @@
+/*
+Docking Module
+---------------*/
+#dock {
+    width:30px;
+    position:fixed;
+    top:0px;
+    left:0%;
+    background: url([[pix:theme|core/bground]]) repeat-x;
+    height:100%;
+    z-index:11000;
+    }
+#dock.nothingdocked {
+    visibility: hidden;
+    display:none;
+}
+#dock .controls {
+    bottom: auto;
+    margin-top: 2px;
+    padding: 2px 0;
+    background-color: #ddd;
+    -webkit-border-radius: 0 3px 3px 0;
+    -moz-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
+}
+#dock .dockeditem.firstdockitem {
+    margin-top: 100px;
+    -webkit-border-radius: 0 3px 3px 0;
+    -moz-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
+}
+#dock .dockeditem {
+    padding: 2px 0;
+
+}
+#dock .dockedtitle {
+    padding-bottom: 3px;
+    cursor: pointer;
+    background-color: #007C41; /* UA green */
+    -webkit-border-radius: 0 3px 3px 0;
+    -moz-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
+}
+#dock .dockedtitle h2 {
+    margin: 0;
+    padding: 10px 3px;
+    color: #fff;
+    -webkit-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    -moz-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+}
+.dockedtitle.activeitem h2 {
+    color: #fff !important;
+}
+#dock .dockedtitle.activeitem {
+    background-color: #086838; 
+    width: 35px;
+    -webkit-border-radius: 0 3px 3px 0;
+    -moz-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
+}
+#dock .controls img {
+    cursor:pointer;
+    margin-left: 10px;
+}
+#dock .content .unlist li {
+	margin: 5px 0;
+}
+#dock .content .footer {
+	font-size: 0.9em;
+	margin-top: 10px;
+}
+/*
+Docked Item Panel
+-----------------------*/
+#dockeditempanel {
+    width: 180px;
+    position: relative;
+    z-index: 12000;
+    left: 100%;
+}
+#dockeditempanel.dockitempanel_hidden {
+    display:none;
+}
+#dockeditempanel .dockeditempanel_content {
+    background-color: #fff;
+    margin: 0 3px;
+    position: relative;
+    min-height: 100px;
+    border-color: #007C41; /* UA green */
+    border-style: solid;
+    border-width: 3px;
+    -webkit-border-radius: 3px;
+    -webkit-border-top-left-radius: 0;
+    -moz-border-radius: 3px;
+    -moz-border-radius-topleft: 0;
+    border-radius: 3px;
+    border-top-left-radius: 0;
+}
+#dockeditempanel .dockeditempanel_hd {
+    border-width: 0;
+    background-color: #007C41; /* UA green */
+    padding: 8px 2px;
+    border-bottom: 1px solid #284E36;
+}
+#dockeditempanel .dockeditempanel_bd .block_docked {
+    margin:10px;
+}
+#dockeditempanel .block_calendar_month.block_docked {
+    text-align: center;
+}
+#dockeditempanel .dockeditempanel_hd {
+    border-bottom:1px dotted #aaa;
+    text-align: right;
+}
+#dockeditempanel .dockeditempanel_hd h2 {
+    display:inline;
+    margin: 0;
+    padding-right: 1em;
+    color: #fff;
+    font-size: 1.2em;
+}
+#dockeditempanel .dockeditempanel_hd .commands {
+    display:inline;
+}
+#dockeditempanel .dockeditempanel_hd .commands img {
+    margin-right: 3px;
+    vertical-align: middle;
+}
+#dockeditempanel .dockeditempanel_bd {
+    overflow:auto;
+    width:auto; /* adds scroll to dock panel */
+}

@@ -43,12 +43,18 @@ function external_function_info($function, $strictness=MUST_EXIST) {
         }
     }
 
-    //first find and include the ext implementation class
-    $function->classpath = empty($function->classpath) ? core_component::get_component_directory($function->component).'/externallib.php' : $CFG->dirroot.'/'.$function->classpath;
-    if (!file_exists($function->classpath)) {
-        throw new coding_exception('Can not find file with external function implementation');
+    // First try class autoloading.
+    if (!class_exists($function->classname)) {
+        // Fallback to explicit include of externallib.php.
+        $function->classpath = empty($function->classpath) ? core_component::get_component_directory($function->component).'/externallib.php' : $CFG->dirroot.'/'.$function->classpath;
+        if (!file_exists($function->classpath)) {
+            throw new coding_exception('Cannot find file with external function implementation');
+        }
+        require_once($function->classpath);
+        if (!class_exists($function->classname)) {
+            throw new coding_exception('Cannot find external class');
+        }
     }
-    require_once($function->classpath);
 
     $function->parameters_method = $function->methodname.'_parameters';
     $function->returns_method    = $function->methodname.'_returns';
@@ -149,7 +155,7 @@ class external_api {
      */
     public static function set_timeout($seconds=360) {
         $seconds = ($seconds < 300) ? 300 : $seconds;
-        set_time_limit($seconds);
+        core_php_time_limit::raise($seconds);
     }
 
     /**
@@ -371,9 +377,9 @@ class external_api {
      */
     protected static function get_context_from_params($param) {
         $levels = context_helper::get_all_levels();
-        if (isset($param['contextid'])) {
+        if (!empty($param['contextid'])) {
             return context::instance_by_id($param['contextid'], IGNORE_MISSING);
-        } else if (isset($param['contextlevel']) && isset($param['instanceid'])) {
+        } else if (!empty($param['contextlevel']) && isset($param['instanceid'])) {
             $contextlevel = "context_".$param['contextlevel'];
             if (!array_search($contextlevel, $levels)) {
                 throw new invalid_parameter_exception('Invalid context level = '.$param['contextlevel']);
@@ -688,7 +694,7 @@ class external_format_value extends external_value {
  * @param array $format the format to validate
  * @return the validated format
  * @throws coding_exception
- * @since 2.3
+ * @since Moodle 2.3
  */
 function external_validate_format($format) {
     $allowedformats = array(FORMAT_HTML, FORMAT_MOODLE, FORMAT_PLAIN, FORMAT_MARKDOWN);

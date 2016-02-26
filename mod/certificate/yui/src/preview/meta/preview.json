@@ -1,0 +1,11 @@
+{
+  "moodle-mod_certificate-preview": {
+    "requires": [
+      "base",
+      "node",
+      "event",
+      "event-key",
+      "io"
+    ]
+  }
+}

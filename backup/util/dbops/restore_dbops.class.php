@@ -112,10 +112,10 @@ abstract class restore_dbops {
      *
      * @param string $restoreid Restore id
      * @param string $inforeffile File path
-     * @param core_backup_progress $progress Progress tracker
+     * @param \core\progress\base $progress Progress tracker
      */
     public static function load_inforef_to_tempids($restoreid, $inforeffile,
-            core_backup_progress $progress = null) {
+            \core\progress\base $progress = null) {
 
         if (!file_exists($inforeffile)) { // Shouldn't happen ever, but...
             throw new backup_helper_exception('missing_inforef_xml_file', $inforeffile);
@@ -123,7 +123,7 @@ abstract class restore_dbops {
 
         // Set up progress tracking (indeterminate).
         if (!$progress) {
-            $progress = new core_backup_null_progress();
+            $progress = new \core\progress\null();
         }
         $progress->start_progress('Loading inforef.xml file');
 
@@ -363,6 +363,7 @@ abstract class restore_dbops {
         // Gather various information about roles
         $coursectx = context_course::instance($courseid);
         $assignablerolesshortname = get_assignable_roles($coursectx, ROLENAME_SHORT, false, $userid);
+        $allroles = get_all_roles();
 
         // Note: under 1.9 we had one function restore_samerole() that performed one complete
         // matching of roles (all caps) and if match was found the mapping was availabe bypassing
@@ -377,6 +378,14 @@ abstract class restore_dbops {
         // Match by shortname
         if ($match = array_search($role->shortname, $assignablerolesshortname)) {
             return $match;
+        }
+
+        // If the role is not in the assignable roles but is a valid role we can't assign it
+        // and shouldn't attempt to assign it to a role with the same archetype.
+        foreach ($allroles as $key=>$allrole) {
+            if ($allrole->shortname === $role->shortname) {
+                return 0;
+            }
         }
 
         // Match by archetype
@@ -419,10 +428,10 @@ abstract class restore_dbops {
      *
      * @param string $restoreid Restore id
      * @param string $usersfile File path
-     * @param core_backup_progress $progress Progress tracker
+     * @param \core\progress\base $progress Progress tracker
      */
     public static function load_users_to_tempids($restoreid, $usersfile,
-            core_backup_progress $progress = null) {
+            \core\progress\base $progress = null) {
 
         if (!file_exists($usersfile)) { // Shouldn't happen ever, but...
             throw new backup_helper_exception('missing_users_xml_file', $usersfile);
@@ -430,7 +439,7 @@ abstract class restore_dbops {
 
         // Set up progress tracking (indeterminate).
         if (!$progress) {
-            $progress = new core_backup_null_progress();
+            $progress = new \core\progress\null();
         }
         $progress->start_progress('Loading users into temporary table');
 
@@ -861,13 +870,13 @@ abstract class restore_dbops {
      * @param int|null $olditemid
      * @param int|null $forcenewcontextid explicit value for the new contextid (skip mapping)
      * @param bool $skipparentitemidctxmatch
-     * @param core_backup_progress $progress Optional progress reporter
+     * @param \core\progress\base $progress Optional progress reporter
      * @return array of result object
      */
     public static function send_files_to_pool($basepath, $restoreid, $component, $filearea,
             $oldcontextid, $dfltuserid, $itemname = null, $olditemid = null,
             $forcenewcontextid = null, $skipparentitemidctxmatch = false,
-            core_backup_progress $progress = null) {
+            \core\progress\base $progress = null) {
         global $DB, $CFG;
 
         $backupinfo = backup_general_helper::get_backup_information(basename($basepath));
@@ -972,6 +981,7 @@ abstract class restore_dbops {
                 'timecreated' => $file->timecreated,
                 'timemodified'=> $file->timemodified,
                 'userid'      => $mappeduserid,
+                'source'      => $file->source,
                 'author'      => $file->author,
                 'license'     => $file->license,
                 'sortorder'   => $file->sortorder
@@ -1018,7 +1028,7 @@ abstract class restore_dbops {
                         // Even if a file has been deleted since the backup was made, the file metadata will remain in the
                         // files table, and the file will not be moved to the trashdir.
                         // Files are not cleared from the files table by cron until several days after deletion.
-                        if ($foundfiles = $DB->get_records('files', array('contenthash' => $file->contenthash))) {
+                        if ($foundfiles = $DB->get_records('files', array('contenthash' => $file->contenthash), '', '*', 0, 1)) {
                             // Only grab one of the foundfiles - the file content should be the same for all entries.
                             $foundfile = reset($foundfiles);
                             $fs->create_file_from_storedfile($file_record, $foundfile->id);
@@ -1084,10 +1094,10 @@ abstract class restore_dbops {
      * @param string $basepath Base path of unzipped backup
      * @param string $restoreid Restore ID
      * @param int $userid Default userid for files
-     * @param core_backup_progress $progress Object used for progress tracking
+     * @param \core\progress\base $progress Object used for progress tracking
      */
     public static function create_included_users($basepath, $restoreid, $userid,
-            core_backup_progress $progress) {
+            \core\progress\base $progress) {
         global $CFG, $DB;
         $progress->start_progress('Creating included users');
 
@@ -1214,7 +1224,10 @@ abstract class restore_dbops {
                         $usertag = (object)$usertag;
                         $tags[] = $usertag->rawname;
                     }
-                    tag_set('user', $newuserid, $tags);
+                    if (empty($newuserctxid)) {
+                        $newuserctxid = null; // Tag apis expect a null contextid not 0.
+                    }
+                    tag_set('user', $newuserid, $tags, 'core', $newuserctxid);
                 }
 
                 // Process preferences
@@ -1481,10 +1494,10 @@ abstract class restore_dbops {
      * @param int $courseid Course id
      * @param int $userid User id
      * @param bool $samesite True if restore is to same site
-     * @param core_backup_progress $progress Progress reporter
+     * @param \core\progress\base $progress Progress reporter
      */
     public static function precheck_included_users($restoreid, $courseid, $userid, $samesite,
-            core_backup_progress $progress) {
+            \core\progress\base $progress) {
         global $CFG, $DB;
 
         // To return any problem found
@@ -1570,10 +1583,10 @@ abstract class restore_dbops {
      * @param int $courseid Course id
      * @param int $userid User id
      * @param bool $samesite True if restore is to same site
-     * @param core_backup_progress $progress Optional progress tracker
+     * @param \core\progress\base $progress Optional progress tracker
      */
     public static function process_included_users($restoreid, $courseid, $userid, $samesite,
-            core_backup_progress $progress = null) {
+            \core\progress\base $progress = null) {
         global $DB;
 
         // Just let precheck_included_users() to do all the hard work

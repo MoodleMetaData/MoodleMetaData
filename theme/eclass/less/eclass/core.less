@@ -1,0 +1,309 @@
+// Core html styling
+@font-face {
+  font-family: 'Open Sans';
+  src: local('Open Sans Light'), local('OpenSans-Light'),
+    url([[font:theme|opensans-light.ttf]]) format('truetype'),
+    url([[font:theme|opensans-light.woff]]) format('woff'),
+    url([[font:theme|opensans-light.svg]]) format('svg');
+  font-style: normal;
+  font-weight: 300;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: local('Open Sans'), local('OpenSans'),
+    url([[font:theme|opensans-regular.ttf]]) format('truetype'),
+    url([[font:theme|opensans-regular.woff]]) format('woff'),
+    url([[font:theme|opensans-regular.svg]]) format('svg');
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'Open Sans';
+  src: local('Open Sans Bold'), local('OpenSans-Bold'),
+    url([[font:theme|opensans-bold.ttf]]) format('truetype'),
+    url([[font:theme|opensans-bold.woff]]) format('woff'),
+    url([[font:theme|opensans-bold.svg]]) format('svg');
+  font-style: normal;
+  font-weight: 700;
+}
+
+body {
+  padding-top: @bodyPad;
+  background-color: @bodybg;
+  font-family: 'Open Sans', Arial, sans-serif;
+  font-size: 15px;
+}
+
+a {
+  color: @uLinkGreen;
+  color: @uLinkGreen;
+  text-decoration: none;
+  text-shadow: none;
+  &:hover, &:focus {
+    color: @uHoverGreen;
+    text-decoration: underline;
+  }
+  &:visited {
+    color: @uVisitedGreen;
+  }
+}
+
+h1 { color:@uH1; font-weight:100; font-size: 2.2em; }
+h2 { color:@uH2; font-weight:200; font-size: 1.5em; }
+h3 { color:@uH3; font-weight:300; font-size: 1.17em; }
+h4 { color:@uH4; font-weight:400; font-size: 1em; }
+h5 { color:@uH5; font-weight:500; font-size: .83em; }
+h6 { color:@uH6; font-weight:600; font-size: .67em; }
+
+.container-fluid {
+  max-width: 1680px;
+  margin: 0 auto;
+}
+.loginbox label {
+  line-height: 30px;
+}
+// Input fields
+select {
+  height: 2em;
+  padding: 4px;
+  font-size: 14px;
+  line-height: 1.3em;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  word-wrap: initial;
+  white-space: nowrap;
+  background: @selectBg;
+  border: 1px solid @selectBorder;
+  max-width: 300px;
+  margin-top: 2px;
+  margin-bottom: 0px;
+  .border-radius(4px);
+  &:focus {
+    border-color: @focusBorder;
+    outline: none;
+    .box-shadow(0 0 8px @focusShadow);
+  }
+  &:hover {
+    outline: none;
+    background-color: @selectBorder;
+  }
+}
+select option {
+  background-color: @uOffWhite1;
+  &:hover {
+    background-color: @blueDark;
+  }
+}
+select[multiple], select[size] {
+  background: @uOffWhite1;
+}
+select+input[type="submit"] {
+  margin: 0 0 0 5px;
+}
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+  height: 20px;
+  padding: 4px 6px;
+}
+input[disabled],
+select[disabled],
+textarea[disabled],
+input[readonly],
+select[readonly],
+textarea[readonly] {
+  cursor: not-allowed;
+  background-color: @bodybg;
+  &:hover, &:focus {
+    background-color: @bodybg;
+  }
+}
+textarea:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="datetime"]:focus,
+input[type="datetime-local"]:focus,
+input[type="date"]:focus,
+input[type="date"]:focus,
+input[type="month"]:focus,
+input[type="time"]:focus,
+input[type="week"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="search"]:focus,
+input[type="tel"]:focus,
+input[type="color"]:focus,
+.uneditable-input:focus {
+  border-color: @focusBorder;
+  outline: none;
+  .box-shadow(0 0 8px @focusShadow);
+}
+input[id$="_clearbutton"]:hover,
+input[type="reset"]:hover,
+input[id$="_clearbutton"]:focus,
+input[type="reset"]:focus,
+input[id$="_clearbutton"]:active,
+input[type="reset"]:active,
+input[id$="_clearbutton"].active,
+input[type="reset"].active,
+input[id$="_clearbutton"].disabled,
+input[type="reset"].disabled,
+input[id$="_clearbutton"][disabled],
+input[type="reset"][disabled] {
+  color: @buttonTextDisabled;
+  background-color: @buttonBgDisabled;
+  &:hover, &:focus {
+    color: @buttonTextDisabled;
+    background-color: @buttonBgDisabled;
+  }
+}
+// The new button.
+#notice .singlebutton+.singlebutton input,
+button,
+input.form-submit,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+  color: @buttonText;
+  text-shadow: none;
+  background-color: @buttonBg;
+  background-image: none;
+  border-color: @buttonBorder;
+  .border-radius(4px);
+  .box-shadow(none);
+  &:hover, &:focus {
+    color: @buttonText;
+    background-color: @buttonHover;
+    outline: none;
+  }
+}
+
+button[disabled],
+input.form-submit[disabled],
+input[type="button"][disabled],
+input[type="submit"][disabled],
+input[type="reset"][disabled] {
+  color: @buttonText;
+  text-shadow: none;
+  background-image: none;
+  border-color: @buttonBorder;
+  background-color: @buttonBgDisabled;
+  &:hover, &:focus {
+    color: @buttonText;
+    background-color: @buttonBgDisabled;
+    outline: none;
+  }
+}
+input.form-submit,
+input#id_submitbutton,
+input#id_submitbutton2,
+.path-admin .buttons input[type="submit"],
+td.submit input {
+  color: @buttonAltText;
+  text-shadow: none;
+  background-color: @buttonAltBg;
+  background-image: none;
+  border-color: @buttonAltBorder;
+  .box-shadow(none);
+  &:hover, &:focus {
+    color: @buttonAltText;
+    background-color: @buttonAltHover;
+    outline: none;
+  }
+}
+table.flexible, .generaltable {
+  overflow-x: scroll;
+  display: block;
+}
+table {
+  word-break: normal;
+}
+table#form td.submit,
+.form-buttons,
+.path-admin .buttons,
+#fitem_id_submitbutton,
+.fp-content-center form+div,
+div.backup-section+form {
+  background: none;
+  border-top: 1px solid @uGreyBorder;
+}
+#fgroup_id_buttonar {
+  text-align: center;
+  background-color: @uOffWhite2;
+  border: 1px solid @uGreyBorder;
+}
+
+//
+// GROUP MANAGEMENT TABLE
+// --------------------------------------------------
+.groupmanagementtable {
+  // These 3 successive settings is one of the key for making the table
+  // not resize with the inner element, since the "layout engine" process down
+  // wards without looking back at parent.
+  width: 100%;
+  table-layout: fixed;
+  overflow: auto;
+}
+
+// Revert table layout to display:table from display:block.
+.groupmanagementtable.generaltable,
+.groupmanagementtable.flexible.generaltable {
+  display: table;
+}
+
+// Create a responsive padding. Don't worry of this getting too small,
+// at that point, the website have switch to a mobile mode.
+.groupmanagementtable td{
+  padding-right: 0%;
+  padding-left: 1%;
+}
+
+// All major columns occupy 90% of space.
+.groupmanagementtable #existingcell,
+.groupmanagementtable #potentialcell,
+.groupmanagementtable #selectedusergroupmemcell{
+  width: 30%;
+}
+
+.groupmanagementtable #buttonscell {
+  width: 10%;
+}
+
+.groupmanagementtable .select_wrapper {
+  background-color: @uOffWhite1;
+  width: 100%;
+
+  // This should display a scrollbar when necessary.
+  overflow: auto;
+
+  // Just like the select below, the parent also have a border-radius.
+  border-radius: 5px;
+
+  // We nullified the border in select element and move it up the wrapper.
+  border: 2px solid @uGreyBorder;
+
+  // This is just an estimate, thus in case the javascript doesn't work
+  // this website will still work on non-javascript browsers.
+  height: @selectLineCount*@baseLineHeight;
+}
+
+.select_wrapper select{
+  background-color: @uOffWhite1;
+  overflow: visible;
+  width: initial; // Replace with computed width.
+  border: initial; // Get rid of border (move it up to wrapper).
+  max-width: initial; // nullify 300px max-width
+}

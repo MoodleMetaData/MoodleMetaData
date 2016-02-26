@@ -44,7 +44,8 @@ class core_repositorylib_testcase extends advanced_testcase {
         $repositorypluginname = 'boxnet';
         // override repository permission
         $capability = 'repository/' . $repositorypluginname . ':view';
-        $allroles = $DB->get_records_menu('role', array(), 'id', 'archetype, id');
+        /** eClass modification CTL-868 Clean up core tests - use shortname instead of archetype as some roles don't have an archetype.*/
+        $allroles = $DB->get_records_menu('role', array(), 'id', 'shortname, id');
         assign_capability($capability, CAP_ALLOW, $allroles['guest'], $syscontext->id, true);
 
         $plugintype = new repository_type($repositorypluginname);

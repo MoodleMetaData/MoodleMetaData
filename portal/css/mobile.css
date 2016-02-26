@@ -1,0 +1,19 @@
+#wrapper, #global, #footer {
+    width: auto !important;
+}
+
+ul.nav, .col.subnav, .globalnav,
+.meat .col.right, .breadcrumb, #headerlink {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    .blog {
+        display: none;
+    }
+
+    #main .mobileNewsLink {
+        display: block;
+    }
+}

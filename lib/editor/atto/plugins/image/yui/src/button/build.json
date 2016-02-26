@@ -1,0 +1,14 @@
+{
+  "name": "moodle-atto_image-button",
+  "builds": {
+    "moodle-atto_image-button": {
+      "jsfiles": [
+        "utility.js",
+        "overlay.js",
+        "overlay-decorator.js",
+        "resizable.js",
+        "button.js"
+      ]
+    }
+  }
+}

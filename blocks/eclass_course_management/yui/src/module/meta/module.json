@@ -1,0 +1,13 @@
+{
+  "moodle-block_eclass_course_management-module": {
+    "requires": [
+      "base",
+      "node",
+      "event",
+      "event-key",
+      "io",
+      "moodle-core-notification-confirm",
+      "moodle-core-notification-alert"
+    ]
+  }
+}

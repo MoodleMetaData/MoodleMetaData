@@ -5,6 +5,7 @@
 require_once("../../config.php");
 require_once("lib.php");
 
+echo "HI there!";
 $id = required_param('id', PARAM_INT);                       // Course Module ID, or
 $usedynalink = optional_param('usedynalink', 0, PARAM_INT);  // category ID
 $confirm     = optional_param('confirm', 0, PARAM_INT);      // confirm the action
@@ -95,6 +96,7 @@ if ( $hook >0 ) {
 
     if ( $action == "edit" ) {
         if ( $confirm ) {
+            require_sesskey();
             $action = "";
             $cat = new stdClass();
             $cat->id = $hook;
@@ -102,7 +104,17 @@ if ( $hook >0 ) {
             $cat->usedynalink = $usedynalink;
 
             $DB->update_record("glossary_categories", $cat);
-            add_to_log($course->id, "glossary", "edit category", "editcategories.php?id=$cm->id", $hook,$cm->id);
+            $event = \mod_glossary\event\category_updated::create(array(
+                'context' => $context,
+                'objectid' => $hook
+            ));
+            $cat->glossaryid = $glossary->id;
+            $event->add_record_snapshot('glossary_categories', $cat);
+            $event->add_record_snapshot('glossary', $glossary);
+            $event->trigger();
+
+            // Reset caches.
+            \mod_glossary\local\concept_cache::reset_glossary($glossary);
 
         } else {
             echo $OUTPUT->header();
@@ -118,10 +130,20 @@ if ( $hook >0 ) {
 
     } elseif ( $action == "delete" ) {
         if ( $confirm ) {
+            require_sesskey();
             $DB->delete_records("glossary_entries_categories", array("categoryid"=>$hook));
             $DB->delete_records("glossary_categories", array("id"=>$hook));
 
-            add_to_log($course->id, "glossary", "delete category", "editcategories.php?id=$cm->id", $hook,$cm->id);
+            $event = \mod_glossary\event\category_deleted::create(array(
+                'context' => $context,
+                'objectid' => $hook
+            ));
+            $event->add_record_snapshot('glossary_categories', $category);
+            $event->add_record_snapshot('glossary', $glossary);
+            $event->trigger();
+
+            // Reset caches.
+            \mod_glossary\local\concept_cache::reset_glossary($glossary);
 
             redirect("editcategories.php?id=$cm->id", get_string("categorydeleted", "glossary"), 2);
         } else {
@@ -146,6 +168,7 @@ if ( $hook >0 ) {
                         <td align="$rightalignment" style="width:50%">
                         <form id="form" method="post" action="editcategories.php">
                         <div>
+                        <input type="hidden" name="sesskey"     value="<?php echo sesskey(); ?>" />
                         <input type="hidden" name="id"          value="<?php p($cm->id) ?>" />
                         <input type="hidden" name="action"      value="delete" />
                         <input type="hidden" name="confirm"     value="1" />
@@ -169,6 +192,7 @@ if ( $hook >0 ) {
 
 } elseif ( $action == "add" ) {
     if ( $confirm ) {
+        require_sesskey();
         $dupcategory = $DB->get_records_sql("SELECT * FROM {glossary_categories} WHERE ".$DB->sql_like('name','?', false)." AND glossaryid=?", array($name, $glossary->id));
         if ( $dupcategory ) {
             redirect("editcategories.php?id=$cm->id&amp;action=add&amp;name=$name", get_string("duplicatecategory", "glossary"), 2);
@@ -181,7 +205,16 @@ if ( $hook >0 ) {
             $cat->glossaryid = $glossary->id;
 
             $cat->id = $DB->insert_record("glossary_categories", $cat);
-            add_to_log($course->id, "glossary", "add category", "editcategories.php?id=$cm->id", $cat->id,$cm->id);
+            $event = \mod_glossary\event\category_created::create(array(
+                'context' => $context,
+                'objectid' => $cat->id
+            ));
+            $event->add_record_snapshot('glossary_categories', $cat);
+            $event->add_record_snapshot('glossary', $glossary);
+            $event->trigger();
+
+            // Reset caches.
+            \mod_glossary\local\concept_cache::reset_glossary($glossary);
         }
     } else {
         echo $OUTPUT->header();

@@ -1,0 +1,378 @@
+<?php
+/**
+ *  @author Trevor Jones
+ *  @module_name: pubcookie
+ *  @created: Mar 15, 2012
+ *  This file is part of The Pubcookie Moodle Auth Module.
+ *
+ *  The Pubcookie Moodle Auth Module is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The Pubcookie Moodle Auth Module is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with The Pubcookie Moodle Auth Module.  If not, see <http://www.gnu.org/licenses/>.
+*/
+// Set to defaults if undefined
+
+if (!isset($config->pubcookie_user_create)) {
+$config->pubcookie_user_create = '';
+}
+if (!isset($config->pubcookie_debug_mode)) {
+$config->pubcookie_debug_mode = '';
+}
+if (!isset($config->pubcookie_logout_url)) {
+$config->pubcookie_logout_url = '';
+}
+if (!isset($config->pubcookie_ldap_enable_lookup)) {
+$config->pubcookie_ldap_enable_lookup = '';
+}
+if (!isset($config->pubcookie_user_ldap_enable_lookup)) {
+$config->pubcookie_user_ldap_enable_lookup = '';
+}
+if (!isset($config->pubcookie_secondary_user_ldap_enable_lookup)) {
+$config->pubcookie_secondary_user_ldap_enable_lookup = '';
+}
+if (!isset($config->pubcookie_ldap_bind_user)) {
+$config->pubcookie_ldap_bind_user = '';
+}
+if (empty($config->pubcookie_ldap_bind_password)) {
+$config->pubcookie_ldap_bind_password = '';
+}
+else {
+$config->pubcookie_ldap_bind_password = 'currentpassword';
+}
+if (!isset($config->pubcookie_change_password_url)) {
+$config->pubcookie_change_password_url = '';
+}
+if (!isset($config->pubcookie_ldap_bind_url)) {
+$config->pubcookie_ldap_bind_url = '';
+}
+if (!isset($config->pubcookie_ldap_bind_rdn)) {
+$config->pubcookie_ldap_bind_rdn = '';
+}
+if (!isset($config->pubcookie_ldap_bind_cn)) {
+$config->pubcookie_ldap_bind_cn = '';
+}
+if (!isset($config->pubcookie_user_ldap_search_string)) {
+$config->pubcookie_user_ldap_search_string = '';
+}
+if (!isset($config->pubcookie_user_ldap_rdn)) {
+$config->pubcookie_user_ldap_rdn = '';
+}
+if (!isset($config->pubcookie_user_ldap_filter)) {
+$config->pubcookie_user_ldap_filter = '';
+}
+if (!isset($config->pubcookie_user_ldap_scope)) {
+$config->pubcookie_user_ldap_scope = '';
+}
+if (!isset($config->pubcookie_secondary_user_ldap_search_string)) {
+$config->pubcookie_secondary_user_ldap_search_string = '';
+}
+if (!isset($config->pubcookie_secondary_user_ldap_rdn)) {
+$config->pubcookie_secondary_user_ldap_rdn = '';
+}
+if (!isset($config->pubcookie_secondary_user_ldap_filter)) {
+$config->pubcookie_secondary_user_ldap_filter = '';
+}
+if (!isset($config->pubcookie_secondary_user_ldap_scope)) {
+$config->pubcookie_secondary_user_ldap_scope = '';
+}
+
+$yesno = array(get_string('no'), get_string('yes'));
+
+?>
+<table cellspacing="0" cellpadding="5" border="0">
+
+
+    <tr valign="top">
+        <td align="right">
+            <label for="menupubcookie_debug_mode"><?php print_string('auth_pubcookie_debug_mode_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <?php echo html_writer::select($yesno, 'pubcookie_debug_mode', $config->pubcookie_debug_mode, false); ?>
+            <?php if (isset($err['pubcookie_debug_mode'])) { echo $OUTPUT->error_text($err['pubcookie_debug_mode']); } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_debug_mode', 'auth_pubcookie'); ?>
+        </td>
+    </tr>
+
+    <tr valign="top" class="">
+        <td align="right">
+            <label for="pubcookie_logout_url"><?php print_string('auth_pubcookie_logout_url_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_logout_url" id="pubcookie_logout_url" type="text" size="30"
+                   value="<?php echo $config->pubcookie_logout_url ?>"/>
+            <?php if (isset($err['pubcookie_logout_url'])) { echo $OUTPUT->error_text($err['pubcookie_logout_url']); }
+            ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_logout_url', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr valign="top" class="">
+        <td align="right">
+            <label for="pubcookie_change_password_url"><?php print_string('auth_pubcookie_change_password_url_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_change_password_url" id="pubcookie_change_password_url" type="text" size="30"
+                   value="<?php echo $config->pubcookie_change_password_url ?>"/>
+            <?php if (isset($err['pubcookie_change_password_url'])) { echo $OUTPUT->
+            error_text($err['pubcookie_change_password_url']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_change_password_url', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr><td colspan="2"><h3><?php print_string('auth_pubcookie_ldap_bind_title', 'auth_pubcookie') ?></h3></td></tr>
+    <tr><td colspan="2"><?php print_string('auth_pubcookie_ldap_bind_details', 'auth_pubcookie') ?></td></tr>
+    <tr valign="top">
+        <td align="right">
+            <label for="menupubcookie_ldap_enable_lookup"><?php print_string('auth_pubcookie_ldap_enable_lookup_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <?php echo html_writer::select($yesno, 'pubcookie_ldap_enable_lookup', $config->pubcookie_ldap_enable_lookup, false); ?>
+            <?php if (isset($err['pubcookie_ldap_enable_lookup'])) { echo $OUTPUT->error_text($err['pubcookie_ldap_enable_lookup']); } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_ldap_enable_lookup', 'auth_pubcookie'); ?>
+        </td>
+    </tr>
+    <tr valign="top">
+        <td align="right">
+            <label for="menupubcookie_user_create"><?php print_string('auth_pubcookie_user_create_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <?php echo html_writer::select($yesno, 'pubcookie_user_create', $config->pubcookie_user_create, false); ?>
+            <?php if (isset($err['pubcookie_user_create'])) { echo $OUTPUT->error_text($err['pubcookie_user_create']); } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_user_create', 'auth_pubcookie'); ?>
+        </td>
+    </tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_ldap_bind_user"><?php print_string('auth_pubcookie_ldap_bind_user_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_ldap_bind_user" id="pubcookie_ldap_bind_user" type="text" size="30"
+                   value="<?php echo $config->pubcookie_ldap_bind_user ?>"/>
+            <?php if (isset($err['pubcookie_ldap_bind_user'])) { echo $OUTPUT->error_text($err['pubcookie_ldap_bind_user']); } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_ldap_bind_user', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_ldap_bind_password"><?php print_string('auth_pubcookie_ldap_bind_password_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_ldap_bind_password" id="pubcookie_ldap_bind_password" type="password" size="30"
+                   value="<?php echo $config->pubcookie_ldap_bind_password ?>"/>
+            <?php if (isset($err['pubcookie_ldap_bind_password'])) { echo $OUTPUT->error_text($err['pubcookie_ldap_bind_password']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_ldap_bind_password', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_ldap_bind_url"><?php print_string('auth_pubcookie_ldap_bind_url_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_ldap_bind_url" id="pubcookie_ldap_bind_url" type="text" size="30"
+                   value="<?php echo $config->pubcookie_ldap_bind_url ?>"/>
+            <?php if (isset($err['pubcookie_ldap_bind_url'])) { echo $OUTPUT->
+            error_text($err['pubcookie_ldap_bind_url']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_ldap_bind_url', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_ldap_bind_rdn"><?php print_string('auth_pubcookie_ldap_bind_rdn_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_ldap_bind_rdn" id="pubcookie_ldap_bind_rdn" type="text" size="30"
+                   value="<?php echo $config->pubcookie_ldap_bind_rdn ?>"/>
+            <?php if (isset($err['pubcookie_ldap_bind_rdn'])) { echo $OUTPUT->
+            error_text($err['pubcookie_ldap_bind_rdn']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_ldap_bind_rdn', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_ldap_bind_cn"><?php print_string('auth_pubcookie_ldap_bind_cn_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_ldap_bind_cn" id="pubcookie_ldap_bind_cn" type="text" size="30"
+                   value="<?php echo $config->pubcookie_ldap_bind_cn ?>"/>
+            <?php if (isset($err['pubcookie_ldap_bind_cn'])) { echo $OUTPUT->
+            error_text($err['pubcookie_ldap_bind_cn']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_ldap_bind_cn', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr><td colspan="2"><h3><?php print_string('auth_pubcookie_user_title', 'auth_pubcookie') ?></h3></td></tr>
+    <tr><td colspan="2"><?php print_string('auth_pubcookie_user_details', 'auth_pubcookie') ?></td></tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_user_ldap_search_string"><?php print_string('auth_pubcookie_user_ldap_search_string_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_user_ldap_search_string" id="pubcookie_user_ldap_search_string" type="text" size="30"
+                   value="<?php echo $config->pubcookie_user_ldap_search_string ?>"/>
+            <?php if (isset($err['pubcookie_user_ldap_search_string'])) { echo $OUTPUT->
+            error_text($err['pubcookie_user_ldap_search_string']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_user_ldap_search_string', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_user_ldap_rdn"><?php print_string('auth_pubcookie_user_ldap_rdn_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_user_ldap_rdn" id="pubcookie_user_ldap_rdn" type="text" size="30"
+                   value="<?php echo $config->pubcookie_user_ldap_rdn ?>"/>
+            <?php if (isset($err['pubcookie_user_ldap_rdn'])) { echo $OUTPUT->
+            error_text($err['pubcookie_user_ldap_rdn']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_user_ldap_rdn', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_user_ldap_filter"><?php print_string('auth_pubcookie_user_ldap_filter_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_user_ldap_filter" id="pubcookie_user_ldap_filter" type="text" size="30"
+                   value="<?php echo $config->pubcookie_user_ldap_filter ?>"/>
+            <?php if (isset($err['pubcookie_user_ldap_filter'])) { echo $OUTPUT->
+            error_text($err['pubcookie_user_ldap_filter']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_user_ldap_filter', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_user_ldap_scope"><?php print_string('auth_pubcookie_user_ldap_scope_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_user_ldap_scope" id="pubcookie_user_ldap_scope" type="text" size="30"
+                   value="<?php echo $config->pubcookie_user_ldap_scope ?>"/>
+            <?php if (isset($err['pubcookie_user_ldap_scope'])) { echo $OUTPUT->
+            error_text($err['pubcookie_user_ldap_scope']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_user_ldap_scope', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr><td colspan="2"><h3><?php print_string('auth_pubcookie_secondary_user_title', 'auth_pubcookie') ?></h3></td></tr>
+    <tr><td colspan="2"><?php print_string('auth_pubcookie_secondary_user_details', 'auth_pubcookie') ?></td></tr>
+    <tr valign="top">
+        <td align="right">
+            <label for="menupubcookie_secondary_user_ldap_enable_lookup"><?php print_string('auth_pubcookie_secondary_user_ldap_enable_lookup_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <?php echo html_writer::select($yesno, 'pubcookie_secondary_user_ldap_enable_lookup', $config->pubcookie_secondary_user_ldap_enable_lookup, false); ?>
+            <?php if (isset($err['pubcookie_secondary_user_ldap_enable_lookup'])) { echo $OUTPUT->error_text($err['pubcookie_secondary_user_ldap_enable_lookup']); } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_secondary_user_ldap_enable_lookup', 'auth_pubcookie'); ?>
+        </td>
+    </tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_secondary_user_ldap_search_string"><?php print_string('auth_pubcookie_secondary_user_ldap_search_string_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_secondary_user_ldap_search_string" id="pubcookie_secondary_user_ldap_search_string" type="text" size="30"
+                   value="<?php echo $config->pubcookie_secondary_user_ldap_search_string ?>"/>
+            <?php if (isset($err['pubcookie_secondary_user_ldap_search_string'])) { echo $OUTPUT->
+            error_text($err['pubcookie_secondary_user_ldap_search_string']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_secondary_user_ldap_search_string', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_secondary_user_ldap_rdn"><?php print_string('auth_pubcookie_secondary_user_ldap_rdn_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_secondary_user_ldap_rdn" id="pubcookie_secondary_user_ldap_rdn" type="text" size="30"
+                   value="<?php echo $config->pubcookie_secondary_user_ldap_rdn ?>"/>
+            <?php if (isset($err['pubcookie_secondary_user_ldap_rdn'])) { echo $OUTPUT->
+            error_text($err['pubcookie_secondary_user_ldap_rdn']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_secondary_user_ldap_rdn', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_secondary_user_ldap_filter"><?php print_string('auth_pubcookie_secondary_user_ldap_filter_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_secondary_user_ldap_filter" id="pubcookie_secondary_user_ldap_filter" type="text" size="30"
+                   value="<?php echo $config->pubcookie_secondary_user_ldap_filter ?>"/>
+            <?php if (isset($err['pubcookie_secondary_user_ldap_filter'])) { echo $OUTPUT->
+            error_text($err['pubcookie_secondary_user_ldap_filter']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_secondary_user_ldap_filter', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+    <tr valign="top" class="required">
+        <td align="right">
+            <label for="pubcookie_secondary_user_ldap_scope"><?php print_string('auth_pubcookie_secondary_user_ldap_scope_key', 'auth_pubcookie') ?></label>
+        </td>
+        <td>
+            <input name="pubcookie_secondary_user_ldap_scope" id="pubcookie_secondary_user_ldap_scope" type="text" size="30"
+                   value="<?php echo $config->pubcookie_secondary_user_ldap_scope ?>"/>
+            <?php if (isset($err['pubcookie_secondary_user_ldap_scope'])) { echo $OUTPUT->
+            error_text($err['pubcookie_secondary_user_ldap_scope']);
+            } ?>
+        </td>
+        <td>
+            <?php print_string('auth_pubcookie_secondary_user_ldap_scope', 'auth_pubcookie') ?>
+        </td>
+    </tr>
+
+
+    <?php
+
+$help = get_string('auth_fieldlock_expl', 'auth');
+
+print_auth_lock_options('pubcookie', $user_fields, $help, false, false);
+?>
+</table>

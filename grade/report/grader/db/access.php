@@ -35,7 +35,16 @@ $capabilities = array(
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
         )
-    )
+	),
+
+		'gradereport/grader:viewempid' => array(
+			'captype' => 'read',
+			'contextlevel' => CONTEXT_COURSE,
+			'archetypes' => array(
+				'editingteacher' => CAP_ALLOW,
+				'manager' => CAP_ALLOW
+				)
+			),
 );
 
 

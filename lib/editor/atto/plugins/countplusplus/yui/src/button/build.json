@@ -1,0 +1,12 @@
+{
+  "name": "moodle-atto_countplusplus-button",
+  "builds": {
+    "moodle-atto_countplusplus-button": {
+      "jsfiles": [
+        "utility.js",
+        "stat.js",
+        "button.js"
+      ]
+    }
+  }
+}

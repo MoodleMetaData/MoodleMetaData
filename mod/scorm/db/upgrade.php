@@ -18,7 +18,7 @@
  * Upgrade script for the scorm module.
  *
  * @package    mod_scorm
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -83,6 +83,7 @@ function xmldb_scorm_upgrade($oldversion) {
 
     // Remove old imsrepository type - convert any existing records to external type to help prevent major errors.
     if ($oldversion < 2013081301) {
+        require_once($CFG->dirroot . '/mod/scorm/lib.php');
         $scorms = $DB->get_recordset('scorm', array('scormtype' => 'imsrepository'));
         foreach ($scorms as $scorm) {
             $scorm->scormtype = SCORM_TYPE_EXTERNAL;
@@ -202,7 +203,30 @@ function xmldb_scorm_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2013110501, 'scorm');
     }
 
-    if ($oldversion < 2013110502) {
+    if ($oldversion < 2014031700) {
+        // Define field displayactivityname to be added to scorm.
+        $table = new xmldb_table('scorm');
+        $field = new xmldb_field(
+            'displayactivityname',
+            XMLDB_TYPE_INTEGER,
+            '4',
+            null,
+            XMLDB_NOTNULL,
+            null,
+            '1',
+            'completionscorerequired'
+        );
+
+        // Conditionally launch add field displayactivityname.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Scorm savepoint reached.
+        upgrade_mod_savepoint(true, 2014031700, 'scorm');
+    }
+
+    if ($oldversion < 2014040200) {
         // Fix invalid $scorm->launch records that launch an org sco instead of a real sco.
         $sql = "SELECT s.*, c.identifier
                  FROM {scorm} s
@@ -249,8 +273,30 @@ function xmldb_scorm_upgrade($oldversion) {
         }
         $scorms->close();
 
-        upgrade_mod_savepoint(true, 2013110502, 'scorm');
+        upgrade_mod_savepoint(true, 2014040200, 'scorm');
     }
+
+    // Moodle v2.7.0 release upgrade line.
+    // Put any upgrade step following this.
+
+    if ($oldversion < 2014072500) {
+
+        // Define field autocommit to be added to scorm.
+        $table = new xmldb_table('scorm');
+        $field = new xmldb_field('autocommit', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'displayactivityname');
+
+        // Conditionally launch add field autocommit.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Scorm savepoint reached.
+        upgrade_mod_savepoint(true, 2014072500, 'scorm');
+    }
+
+    // Moodle v2.8.0 release upgrade line.
+    // Put any upgrade step following this.
+
     return true;
 }
 

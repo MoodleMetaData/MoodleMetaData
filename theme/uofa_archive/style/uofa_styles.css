@@ -1,0 +1,1065 @@
+/*
+General Styles
+-----------------------*/
+body {
+    margin: 0;
+    padding: 0;
+    color: #4b4b4b;
+    line-height: 1.4;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: Helvetica,Arial,sans-serif;
+    margin: 10px 0;
+    color: #2d2d2d;
+}
+h1 {
+	font-size: 1.8em;
+	line-height: 1.2em;
+}
+h2, h2.main, h2#pageheading {
+	font-size: 1.6em;
+	line-height: 1.2em;
+}
+	h2.eventtitle {
+		font-size: 1em;
+	}
+	h2.headingblock {
+		border-bottom: 1px solid #ddd;
+		font-size: 1.4em;
+		font-weight: bold;
+	}
+h3 {
+	font-size: 1.4em;
+}
+	h3.main {
+		font-size: 1.5em;
+		text-transform: none;
+		letter-spacing: 0;
+	}
+	h3.name, .info h3.name, h3.weekdates, h3.sectionname, .block h3.main, .block h2.main {
+		font-size: 1.2em;
+		margin-top: 0px;
+		font-style: normal;
+	}
+	.block h3.main {
+		margin: 8px 0;
+	}
+	table h3.main  {
+		font-size: 1.1em;
+		margin: 5px 0;
+	}
+h4 {
+	font-size: 1.3em;
+}
+h5 {
+	font-size: 1.3em;
+	font-style: italic;
+}
+h6 {
+	font-size: 1.2em;
+}
+p, ul, ol, dl,input,textarea {
+	font-family: Helvetica,Arial,sans-serif;
+}
+/* List styles */
+.region-content ol li, .region-content ul ol li {
+	list-style-type: decimal;
+}
+	.region-content ol ol li {
+		list-style-type: upper-alpha;
+	}
+	.region-content ol ol ol li {
+		list-style-type: upper-roman;
+	}
+	.region-content ol ol ol ol li {
+		list-style-type: lower-alpha;
+	}
+	.region-content ol ol ol ol ol li {
+		list-style-type: lower-roman;
+	}
+.region-content ul li, .region-content ol ul li, .region-content ul ul ul ul li {
+		list-style-type: disc;
+	}
+	.region-content ul ul li {
+		list-style-type: circle;
+	}
+	.region-content ul ul ul li {
+		list-style-type: square;
+	}
+a:link {
+    color: #007C41; /* UA green */
+    text-decoration: none;
+}
+	#region-main .generalbox a {
+		text-decoration: underline;
+	}
+a:visited {
+	color: #284E36; /* Forest green */
+	text-decoration: none;
+}
+	#region-main .generalbox a:visited {
+		color: #6B3E08; /* Brown */
+	}
+a:hover, a:active {
+    color: #72a807; /* Lime */
+    text-decoration: underline;
+}
+a.dimmed, a.dimmed:link, a.dimmed:visited, a.dimmed_text, a.dimmed_text:link, a.dimmed_text:visited, .dimmed_text, .dimmed_text a, .dimmed_text a:link, .dimmed_text a:visited, .dimmed_category, .dimmed_category a, #region-main .generalbox a.dimmed:visited {
+    color: #aaa;
+    opacity: 1;
+}
+	a.dimmed img {
+		opacity: 0.6;
+	}
+hr {
+    border-bottom:1px dotted gray;
+    border-top:0px;
+}
+.info, .loginfo {
+	font-style: italic;
+}
+/*
+Page
+-----------------------*/
+#page {
+    font-size: 90%;
+    font-family: Helvetica,Arial,sans-serif;
+}
+#page-content {
+    border-bottom: 1px solid #ddd;
+}
+/*
+Header and Logo
+---------------------------*/
+#page-header {
+    height: 100px;
+    width: 100%;
+    color: #fff;
+    background-color: blue; /*#026D43; Banner green */
+    border-bottom: 3px solid #007e42; /* UA green */
+}
+#page-header-bg {
+    height: 100%;
+    width: 100%;
+    background: #fce269 url([[pix:theme|images/banner-archive]]) no-repeat; /* Banner yellow */
+    position: relative; 
+}
+#logo {
+    background: url([[pix:theme|images/banner-archive]]) no-repeat;
+    min-width: 950px;
+    height: 100px;
+    display: block;
+    margin: 0px 0px;
+    float: left;
+    position: relative;
+}
+.ualink {
+	display: block;
+	width: 200px;
+	height: 55px;
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}
+.eclasslink {
+	display: block;
+	width: 165px;
+	height: 55px;
+	position: absolute;
+	top: 20px;
+	left: 260px;
+}
+.headermenu {
+    right: 10px;
+    clear: right;
+    font-size:1em;
+    margin:0px;
+    text-align:right;
+    position: absolute;
+    top: 10px;
+}
+.headermenu a:link,
+.headermenu a:visited  {
+    color: #007e42; /* ua green */
+    text-decoration:none;
+}
+/*
+Page Footer
+-----------------------*/
+#page-footer {
+    background: #fff url([[pix:theme|core/h2grad]]) repeat-x left top;
+    height: auto;
+    clear: both;
+    float: left;
+    width: 98%;
+    margin: 0;
+    padding: 5px 1%;
+    color: #4b4b4b;
+    border-top: 1px solid #fff;
+    line-height: 2em;
+    font-size: 1em;
+}
+#page-footer a:link,
+#page-footer a:visited  {
+    color: #9B9B9B;
+    text-decoration:none;
+}
+#page-footer a:hover,
+#page-footer a:active {
+    color: #72a807; /* Lime */
+    text-decoration: underline;
+}
+#page-footer .footer-left {
+    float: left;
+    text-align: left;
+    color: #999;
+}
+	#page-footer .footer-left ul {
+		margin: 3px 25px;
+		line-height: 1.5em;
+	}
+	#page-footer .footer-left ul li {
+		list-style: none;
+	}
+#page-footer .footer-right {
+    float: right;
+    text-align: right;
+}
+/*
+Navbar & Breadcrumb
+-----------------------*/
+.navbar {
+    background: #efefef;
+    margin:0;
+    padding: 3px 10px;
+    color:#777;
+    border-bottom: 1px solid #cecece;
+}
+.breadcrumb {
+    float:left;
+    color: #616161;
+    display: inline-block;
+    height: auto;
+    padding-bottom: 5px;
+}
+.navbutton {
+    text-align:right;
+    float: right;
+    margin: 2px;
+}
+.navbutton .singlebutton input {
+    /* Customise "turn editing on/off button */
+}
+.breadcrumb ul {
+    margin-top: 7px;
+    margin-left: 10px;
+    text-indent: 0;
+    list-style: none;
+    vertical-align: middle;
+}
+.breadcrumb li,
+.navbutton div,
+.navbutton form {
+    display:inline;
+}
+.logininfo
+.breadcrumb {
+    font-size: 1.5em;
+}
+.breadcrumb a,
+.breadcrumb a:link,
+.breadcrumb a:visited {
+    color: #9b9b9b;
+    text-decoration: underline;
+}
+.breadcrumb a:hover,
+.breadcrumb a:active { 
+	text-decoration: none;
+}
+.jsenabled .course_category_tree .controls {
+    visibility:visible;
+    float: right;
+}
+.category_label {
+    padding-left: 20px;
+}
+/*
+Collapse All - Expand All
+-------------------------*/
+div.controls .expandall,
+div.controls .collapseall {
+    font-size: .8em;
+    color: #008db0;
+    margin: 2px;
+    padding: 0;
+    float: right;
+    clear: both;
+    text-transform: capitalize;
+    font-variant: small-caps;
+    border-bottom: 1px solid #008db0;
+}
+.redirectmessage,
+.continuebutton {
+    text-align: center;
+    font-size: 14pt;
+    color: #444;
+    padding-bottom: 10px;
+}
+/*
+General Box
+-----------------------*/
+.generalbox {
+    border: 0 none;
+    margin-top: 20px;
+}
+/*
+Tables 
+-----------------------*/
+table, .generalbox table.rolecap {
+	margin-top: 1em;
+}
+.path-admin table.rolecap {
+	margin-left: 0;
+}
+table th, table thead td,
+.generalbox table.rolecap th, /* Activity/resource permissions page */
+.generalbox table.rolecap tr.rolecapheading td {
+	text-align: left;
+	background-color: #fff;
+	border-bottom: 3px solid #ccc;
+}
+table tbody tr, table tbody th.name,
+.generalbox table.rolecap tbody tr.rolecap th,
+.generalbox table.rolecap tbody tr.rolecap td {
+	background-color: #efefef;
+    border-bottom: 1px solid #CCCCCC;
+}
+	table tbody tr.header,
+	.generalbox table.rolecap tbody tr.header {
+		background-color: #fff;
+	}
+table tbody td, .userenrolment td,
+.generalbox table.rolecap tbody td, 
+.generalbox table.rolecap tbody tr th {
+	padding: 5px;
+}
+#providers table th {
+	background-color: auto;
+	border-bottom: 1px solid #ccc;
+}
+/* Nullifying table styles for content */
+.navbutton table, .navbutton table tbody tr, .navbutton table tbody td,
+.course-content table, .course-content table th, .course-content table thead td,
+.course-content table tbody tr, .course.content table tbody th.name,
+.generalbox table, .generalbox table th, .generalbox table thead td,
+.generalbox table tbody tr, .generalbox table tbody th.name, 
+.block table, .block table tbody tr, .block table th, .block table thead td {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+	.course-content table, .course-content table th, .course-content table thead td,
+	.course-content table tbody tr, .course.content table tbody th.name,
+	.generalbox table, .generalbox table th, .generalbox table thead td,
+	.generalbox table tbody tr, .generalbox table tbody th.name, #addmembersform table.groupmanagementtable tr, .block table tbody tr {
+			background-color: inherit;
+		}
+table.generaltable {
+	margin: 10px 0;
+}
+table.generaltable tr.section {
+	background-color: #fff;
+}
+table.generaltable tbody tr {
+	background-color: #efefef;
+    border-bottom: 1px solid #CCCCCC;
+}
+	table.manageauthtable tbody tr:hover {
+		background-color: #FFFAB7; /* Light yellow */
+	}
+/*
+Font Size
+-----------------------*/
+table {
+    font-size: 1em;
+}
+	table td.label {
+		font-weight: bold;
+	}
+#region-main {
+	font-size: 1.1em;
+}
+.modified { /* Descripter text */
+	font-size: 0.9em;
+	font-style: italic;
+	color: #9B9B9B;
+}
+/*
+Button
+-----------------------*/
+/*use to include select, input,*/
+input[type="submit"], button, a.standardbutton {
+    background-color: #FAD348; /* Yellow */
+    color: #284E36; /* Forest green */
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 3px;
+    margin: 0 2px;
+}
+	.block input, select {
+		padding: 0;
+		margin: 0 2px;
+	}
+	.block .btn input {
+		padding: 3px;
+	}
+	a.standardbutton {
+		padding: 5px;
+		margin-right: 2px;
+	}
+#loginbtn, input, button, select { 
+	cursor: pointer;
+}
+input#username, input#password,
+input[type="text"], input[type="password"], textarea {
+    background-color: white;
+    border: 1px solid #ddd;
+    color: #4b4b4b;
+    width: auto;
+    padding: 3px;
+    cursor: default;
+}
+input[type="submit"], button, .standardbutton {
+	border: 1px solid #D4BA00;
+	font-weight: bold;
+	padding: 3px;
+	margin: 2px;
+}
+	input[type="submit"]:hover, button:hover, .standardbutton:hover {
+		background-color: #FFE591; /* Light yellow */
+	}
+	a.standardbutton:hover {
+		text-decoration: none;
+		color: #284E36; /* Forest green */
+	}
+.navbutton input[type="submit"] {
+	color: #fff;
+	background-color: #D78B1D; /* Orange */
+	border: 1px solid #CA7700; /* Dk orange */
+	-webkit-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    -moz-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+}
+	.navbutton input[type="submit"]:hover {
+		background-color: #E6A13D; /* Light Orange */
+	}
+.loginform label {
+	font-weight: bold;
+}
+input[type="checkbox"], input[type="radio"] {
+	margin-right: 5px;
+}
+input[type="image"] {
+	border-radius: 0;
+	padding: 0;
+}
+label {
+	margin-right: 5px;
+}
+/* 
+Resources 
+------------------------*/
+.resourcepdf {
+	overflow: auto; /* Make pdfs scrollable on iPad/iPhones */
+}
+/*
+My Categories (CTL Context Admin)
+------------------------*/
+.mycategories ul.categorylist {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+	.mycategories ul.categorylist ul {
+		margin: 0;
+	}
+.mycategories ul.categorylist li.category {
+	padding: 0 0 15px 22px;
+	background: url([[pix:theme|images/icon_course]]) no-repeat left 2px;
+	font-weight: bold;
+	font-size: 1.2em;
+}
+.mycategories ul.categorylist li.category.closed {
+	background: url([[pix:theme|images/icon_course_closed]]) no-repeat left 2px;
+}
+	.mycategories ul.categorylist li.category ul li {
+		list-style-type: none;
+		font-weight: normal;
+		font-size: 0.85em;
+		padding: 5px 0 0 22px;
+	}
+	.mycategories ul.categorylist li.category ul li ul li {
+		font-size: 1em;
+	}
+
+/*
+Coursebox Info & Summary
+------------------------*/
+.coursebox {
+	width: 99%;
+	padding: 5px;
+	padding-bottom: 10px;
+	border-bottom: 1px dotted #BFBFBF;
+}
+.coursebox h3
+.coursebox .info,
+.coursebox .summary {
+    text-align: left;
+    width: 100%;
+    height: auto;
+}
+.coursebox .info {
+    float: left;
+    width: auto;
+}
+.coursebox .summary {
+    float: right;
+}
+.coursebox .summary p { 
+	margin: 0 0 0 2em;
+	font-style: italic;
+}
+.coursebox .info h3.name {
+    padding: 0;
+    margin: 5px 0 0;
+}
+/* 
+Course Overview 
+-----------------------------*/
+.block_course_overview .content {
+	margin: 0;
+}
+	.block_course_overview .content h2.title {
+		font-size: 1em;
+		margin-bottom: 0;
+	}
+	.block_course_overview .content h2.title a {
+		margin-left: -10px;
+		padding-left: 25px;
+		background: url([[pix:theme|images/icon_course]]) no-repeat left -2px;
+	}
+	.block_course_overview img.iconlarge {
+		height: 16px;
+		width: 16px;
+		margin-left: 10px;
+	}
+/* 
+eClass Course Overview 
+-----------------------------*/
+.block_eclass_course_overview .coursebox {
+	padding: 1px 1px 1px 22px;
+	margin: 5px 0;
+	width: auto;
+}
+.block_eclass_course_overview h3.main {
+	font-size: 1em;
+}
+	.block_eclass_course_overview h3.main a {
+		margin-left: -22px;
+		padding-left: 22px;
+		background: url([[pix:theme|images/icon_course]]) no-repeat left -2px;
+	}
+	.block_eclass_course_overview h3.main a.dimmed {
+		margin-left: -22px;
+		padding-left: 22px;
+		background: url([[pix:theme|images/icon_course_closed]]) no-repeat left -2px;
+	}
+	.path-my .block_eclass_course_overview .coursebox .overview {
+		font-size: 0.9em;
+		margin-bottom: 5px;
+	}
+	.path-my .block_eclass_course_overview .coursebox .overview .name {
+		margin-left: 0;
+	}
+	.path-my .block_eclass_course_overview .coursebox .overview .info,
+	.path-my .block_eclass_course_overview .coursebox .overview .details {
+		margin-left: 20px;
+		font-style: italic;
+	}
+/* Tabs */
+.block_eclass_course_overview #eclass_tabs.yui-navset ul.yui-nav li.yui3-tab-selected a { /* Selected */
+	background: #88C217; /* lime green */
+	border: 1px solid #6BA000; /* dark lime green */
+	border-bottom: 0;
+	font-size: 1em;
+	font-weight: bold;
+	-webkit-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+	-moz-text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+	text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+	-webkit-border-radius: 3px 3px 0 0;
+	-moz-border-radius:3px 3px 0 0;
+	border-radius:3px 3px 0 0;
+	color: #FFF;
+}
+	.block_eclass_course_overview #eclass_tabs.yui-navset ul.yui-nav li.yui3-tab-selected a:hover {
+		background: #88C217; /* lime green */
+		color: #FFF;
+	}
+	.block_eclass_course_overview .yui-navset ul.yui-nav li.selected {
+		margin-bottom: 0;
+	}
+.block_eclass_course_overview #eclass_tabs.yui-navset ul.yui-nav li a { /* Unselected */
+	font-size: 1em;
+	border: 1px solid #BCBCBC;
+	border-bottom: 0;
+	color: #4B4B4B;
+	background: url("http://yui.yahooapis.com/2.9.0/build/assets/skins/sam/sprite.png") repeat-x scroll 0 0 #FFF;
+	-webkit-border-radius: 3px 3px 0 0;
+	-moz-border-radius: 3px 3px 0 0;
+	border-radius: 3px 3px 0 0;
+} 
+	.block_eclass_course_overview #eclass_tabs.yui-navset ul.yui-nav li a:hover {
+		color: #72A807;
+	}
+.block_eclass_course_overview #eclass_tabs.yui-navset ul.yui-nav, 
+.block_eclass_course_overview #eclass_tabs.yui-navset .yui-navset-top ul.yui-nav {
+	border-color: #6BA000; /* dark lime green */
+}
+.block_eclass_course_overview #eclass_tabs.yui-navset .yui-content {
+	border: none;
+	padding-top: 1em;
+}
+.block_eclass_course_overview #eclass_tabs.yui-navset .yui-content {
+	background: none;
+}
+.block_eclass_course_overview table td div.eclass_active_highlight {
+	background: #FFFAB7; /* Highlight in light yellow */
+	border-width: 0 0 1px 0;
+	border-bottom: 1px dotted #BFBFBF;
+}
+.block_eclass_course_overview #eclass_course_overview_legend {
+	border: none;
+	background: #FFFAB7; /* Highlight in light yellow */
+	display: inline-block;
+	float: right;
+	padding: 5px;
+}
+/*
+Course Section Topic & Weekly
+-----------------------------*/
+.course-content ul.topics li.section,
+.course-content ul.weeks li.section {
+    border: 1px solid #DDDDDD;
+    list-style: none outside none;
+    margin: 5px 0 0;
+    padding: 25px 0;
+}
+	.course-content ul.topics li.section .left, 
+	.course-content ul.topics li.section .right,
+	.course-content ul.weeks li.section .right,
+	.editing .course-content ul.weeks li.section .left {
+		width: 30px;
+		font-weight: bold;
+		padding: 0;
+	}
+	.course-content ul.topics li.section .hidden,
+	.editing .course-content ul.weeks li.section .left div {
+		display: none;
+	}
+	.course-content ul.weeks li.section .left {
+		width: 20px;
+		font-weight: bold;
+	}
+	.course-content ul.topics li.section .content,
+	.course-content ul.weeks li.section .content {
+		margin: 0 30px;
+		color: #4b4b4b;
+	}
+	.course-content ul.topics li.hidden,
+	.course-content ul.weeks li.hidden { /* Hidden sections */
+		background-color: #efefef;
+		border: 1px dashed #ddd;
+	}
+		.course-content ul li.hidden .content, 
+		.course-content ul li.hidden .content h1,
+		.course-content ul li.hidden .content h2,
+		.course-content ul li.hidden .content h3,
+		.course-content ul li.hidden .content h4,
+		.course-content ul li.hidden .content h5,
+		.course-content ul li.hidden .content h6,
+		.course-content ul li.hidden .content a,
+		.course-content ul li.hidden .content p {
+			color: #aaa;
+		}
+	.course-content ul li.section .content ul.section {
+		margin: 0 0 10px 0;
+	}
+	.course-content ul li.section .content ul li.activity {
+		margin: 2px 0;
+	}
+	.course-content .label p {
+		margin: 5px 0;
+	}
+.course-content ul li.section .side img {
+	margin: 2px 0;
+}
+.course-content .current {
+	background-color: #FFFAB7; /* Light Yellow */
+	border: 1px solid #D4BA00; 
+}
+	.course-content ul li.current.hidden {
+		background-color: #fffdec;  /* Pale yellow */
+	}
+.path-course-view .headingblock {
+    display: none; /* hides topic items title or weekly itens title */
+    margin-bottom: 9px;
+}
+.path-course-view .completionprogress {
+	display: none;
+}
+.path-course-view li.activity span.autocompletion, 
+.path-course-view li.activity form.togglecompletion { /* Put completion checkboxes on left */
+	left: -25px;
+	padding: 0;
+	width: 16px;
+}
+.path-course-view .section .summary {
+	line-height: 1.4em;
+}
+.sitetopic .section .activity .contentafterlink, .course-content .section .activity .contentafterlink {
+	margin-top: 0;
+}
+.course-content .section .label .activityinstance { /* Label padding */ 
+	padding-right: 0;
+}
+/*
+Course Section Collapsable Topic & Weeks
+-----------------------------*/
+
+/* Toggle open/close all */
+.course-content ul.ctopics li#toggle-all {
+	border: none;
+	background-color: #efefef;
+}
+	/* Fixing toggle all icon directions */
+	#toggle-all .content .toggle-arrow h4 a.on,
+	#toggle-all .content .toggle-arrow h4 a.on:hover {
+		background-image: url("/theme/image.php?theme=uofa&component=theme&image=images%2Farrowdown");
+	}
+	#toggle-all .content .toggle-point h4 a.on,
+	#toggle-all .content .toggle-point h4 a.on:hover {
+		background-image: url("/theme/image.php?theme=uofa&component=format_topcoll&image=point_down")
+	}
+	#toggle-all .content .toggle-power h4 a.on,
+	#toggle-all .content .toggle-power h4 a.on:hover {
+		background-image: url("/theme/image.php?theme=uofa&component=format_topcoll&image=toggle_plus")
+	}
+	body.jsenabled .course-content ul.ctopics li.section .content .toggle-arrow a.toggle_open {
+		background-image: url("/theme/image.php?theme=uofa&component=theme&image=images%2Farrowdown");
+		background-position: 5px 11px;
+	}
+	body.jsenabled .course-content ul.ctopics li.section .content .toggle-point a.toggle_open {
+		background-image: url("/theme/image.php?theme=uofa&component=format_topcoll&image=point_down")
+	}
+	body.jsenabled .course-content ul.ctopics li.section .content .toggle-power a.toggle_open {
+		background-image: url("/theme/image.php?theme=uofa&component=format_topcoll&image=toggle_plus")
+	}
+	#toggle-all .content .toggle-arrow h4 a.off,
+	#toggle-all .content .toggle-arrow h4 a.off:hover {
+		background-image: url("/theme/image.php?theme=uofa&component=theme&image=images%2Farrowright");
+	}
+	#toggle-all .content .toggle-point h4 a.off,
+	#toggle-all .content .toggle-point h4 a.off:hover {
+		background-image: url("/theme/image.php?theme=uofa&component=format_topcoll&image=point_right")
+	}
+	#toggle-all .content .toggle-power h4 a.off,
+	#toggle-all .content .toggle-power h4 a.off:hover {
+		background-image: url("/theme/image.php?theme=uofa&component=format_topcoll&image=toggle_minus")
+	}
+	body.jsenabled .course-content ul.ctopics li.section .content .toggle-arrow a.toggle_closed {
+		background-image: url("/theme/image.php?theme=uofa&component=theme&image=images%2Farrowright");
+		background-position: 5px 11px;
+	}
+	body.jsenabled .course-content ul.ctopics li.section .content .toggle-point a.toggle_closed {
+		background-image: url("/theme/image.php?theme=uofa&component=format_topcoll&image=point_right")
+	}
+	body.jsenabled .course-content ul.ctopics li.section .content .toggle-power a.toggle_closed {
+		background-image: url("/theme/image.php?theme=uofa&component=format_topcoll&image=toggle_minus")
+	}
+	/* Reverse power icons */
+	body.jsenabled .course-content ul.ctopics li.section .content .toggle-power a.toggle_open {
+		background-image: url("/theme/image.php?theme=uofa&component=format_topcoll&image=toggle_minus")
+	}
+	body.jsenabled .course-content ul.ctopics li.section .content .toggle-power a.toggle_closed {
+		background-image: url("/theme/image.php?theme=uofa&component=format_topcoll&image=toggle_plus")
+	}
+/* Collapsible admin settings icon set */
+body#page-admin-setting-formatsettingtopcoll select#id_s_format_topcoll_defaulttoggleiconset option[value="arrow"], 
+body.format-topcoll select#id_toggleiconset option[value="arrow"] {
+	background-image: url("/theme/image.php?theme=uofa&component=theme&image=images%2Farrowright");
+}
+.course-content ul.ctopics li#section-0 {
+	border: 1px solid #ddd;
+}
+.course-content ul.ctopics li.section .content .toggle a h3 { /* Section title color */
+	color: inherit;
+}
+.course-content ul.ctopics li.section .right .tceditsection { /* Edit icon */
+	float: none;
+	text-align: center;
+	width: auto;
+	height: auto;
+	margin: 5px 0;
+}
+.course-content ul.ctopics li.section .toggledsection .summary { /* Section summary */
+	margin-top: 10px;
+}
+
+/*
+Login (Front Page)
+-----------------------*/
+.block_login
+{
+    margin: 0;
+    padding: 0;
+}
+.block_login .footer
+{
+    text-align: right;
+    clear: both
+}
+.block_login .loginform .c1 {
+    margin: 0.3em 15px;
+    text-align: left;
+}
+/* Profile 
+----------------------------*/
+.userprofilebox .descriptionbox table.list {
+	margin-top: -1em;
+}
+/* 
+Icons 
+----------------------------*/
+img.iconhelp, img.smallicon {
+	margin-left: 2px;
+}
+img.icon {
+	margin-right: 2px;
+}
+h2 img.icon {
+	margin-right: 5px;
+}
+/* 
+File Manager 
+----------------------------*/
+.filemanager-container ul li {
+	list-style-type: none;
+}
+/*
+Admin 
+----------------------------*/
+#adminsettings .form-item .form-label {
+	width: 25%;
+}
+#adminsettings .form-item .form-setting, 
+#adminsettings .form-item .form-description {
+	margin-left: 26%;
+}
+#adminsettings .form-shortname {
+	font-style: italic;
+	color: #999;
+}
+#adminsettings .error legend, .error {
+	color: red;
+}
+.mform fieldset {
+	border: 1px solid #bfbfbf;
+	padding: 10px;
+}
+.yui-skin-sam .yui-dialog .ft span.default button:hover {
+	color: #000;
+}
+.user-enroller-panel .uep-search input.uep-search-btn {
+	width: auto;
+}
+/* 
+Theme Selector
+----------------------------*/
+#page-admin-theme-index .generalbox {
+    border: none;
+}
+.theme_screenshot {
+    float: left;
+    width: 300px;
+}
+.theme_screenshot img {
+    width: 275px;
+}
+.theme_screenshot h2 {
+    font-size: 2em;
+}
+.theme_screenshot h3 {
+    font-size: 0.9em;
+    margin: 1em 0 0;
+}
+.theme_screenshot p {
+    font-size: 0.9em;
+    margin: 0 0 1em;
+}
+.theme_description {
+    margin-left: 300px;
+}
+.theme_description h2 {
+    padding-top: 0.5em;
+}
+/*
+Tabs
+-----------------------*/
+.tabtree ul {
+    text-align:center;
+}
+.tabtree .tabrow0 {
+    width:100%;
+    margin:1em 0px;
+}
+.tabtree .tabrow0 li {
+    margin-right:-4px;
+}
+.tabtree .tabrow0 li.here {
+    font-weight: bold;
+}
+.tabtree .tabrow0 li.here a {
+    position:relative;
+    z-index:0;
+}
+.tabtree .tabrow0 li a {
+    background-image:url([[pix:theme|tab/left]]);
+    padding-left:14px;
+    padding-top:10px;
+    background-repeat:no-repeat;
+    padding-bottom:3px;
+    margin-bottom:-1px;
+}
+.tabtree .tabrow0 li.selected a:hover {
+	background-image:url([[pix:theme|tab/left]]);
+}
+.tabtree .tabrow0 li a:hover {
+    background-image:url([[pix:theme|tab/left_hover]]);
+}
+.tabtree .tabrow0 li a span {
+    background-image:url([[pix:theme|tab/right]]);
+    background-repeat:no-repeat;
+    background-position:100% 0%;
+    padding-right:14px;
+    padding-top:10px;
+    padding-bottom:3px;
+}
+.tabtree .tabrow0 li.selected a:hover span {
+	background-image:url([[pix:theme|tab/right]]);
+}
+.tabtree .tabrow0 li a:hover span {
+    background-image:url([[pix:theme|tab/right_hover]]);
+}
+.tabtree .tabrow0 ul,
+.tabtree .tabrow0 div {
+    font-weight: normal;
+    background-image:url([[pix:theme|tab/tabrow1]]);
+    background-position:0% 50%;
+    border-top: 1px solid #A6A6A6;
+    padding: 5px 0 3px 0;
+    margin: 0;
+}
+.tabtree .tabrow0 li.here .empty {
+    display: block;
+    height: 1px;
+    overflow: hidden;
+    padding: 0px;
+    position: absolute;
+    width: 100%;
+    bottom: -4px;
+}
+.tabtree .tabrow1 li a,
+.tabtree .tabrow1 li a:hover,
+.tabtree .tabrow1 li a span,
+.tabtree .tabrow1 li a:hover span {
+    background-image: none !important;
+    text-decoration: none;
+}
+.tabtree a.nolink,
+.tabtree .here ul a.nolink,
+.tabtree a.nolink:hover,
+.tabtree .here ul a.nolink:hover {
+    color: #888;
+    text-decoration: none;
+}
+.tabtree .here a.nolink,
+.tabtree .here ul .here a.nolink,
+.tabtree .here a.nolink:hover,
+.tabtree .here ul .here a.nolink:hover {
+    color: black;text-decoration: none;
+}
+/*
+tab styles for ie6 & ie7
+-----------------------*/
+.ie7 .tabtree .tabrow0 li {
+    margin-left: 0;
+}
+.ie7 .tabtree .tabrow0 li.first {
+    margin-right: -4px;
+}
+.ie7 .tabtree .tabrow0 li.onerow {
+    margin-right: 0;
+}
+.ie7 .tabtree .tabrow0 a {
+    display: inline-block;
+    padding: 8px 0 0.35em 13px;
+    line-height: 1.5em;
+}
+.ie7 .tabtree .tabrow0 a span {
+    padding: 10px 1em 10px 0;
+}
+.ie7 .tabtree .tabrow0 div {
+    top: 2.6em;padding: 0.2em 0;
+}
+.ie7 .tabtree .tabrow0 div.empty {
+    margin-right: 0;
+}
+.ie7.mod-quiz div.tabtree a span img.iconsmall {
+    margin: 0;
+    vertical-align: baseline;
+    position: relative;
+    top: 2px;
+}
+.ie6 .tabtree {
+    height: 100%;
+}
+.ie6 .tabtree .tabrow0 {
+    padding-top: 10px;
+}
+.ie6 .tabtree .tabrow0 li {
+    margin-left: 0;
+}
+.ie6 .tabtree .tabrow0 li.first {
+    margin-left: -4px;
+    margin-right: -4px;
+}
+.ie6 .tabtree .tabrow0 li.last a {
+    margin-right: 0;
+}
+.ie6 .tabtree .tabrow0 li.onerow {
+    margin-right: 0;
+}
+.ie6 .tabtree .tabrow0 a {
+    padding: 0 0 0 13px;
+}
+.ie6 .tabtree .tabrow0 a span {
+    padding: 12px 1em 4px 0;
+}
+.ie6 .tabtree .tabrow0 div {
+    top: 3.5em;
+    padding: 0.2em 0;
+}
+.yui-skin-sam .yui-panel-container {
+    z-index: 999999/*!important*/;
+}

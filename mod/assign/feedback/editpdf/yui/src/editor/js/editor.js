@@ -23,8 +23,8 @@
  * EDITOR
  * This is an in browser PDF editor.
  *
- * @namespace M.assignfeedback_editpdf.editor
- * @class Editor
+ * @namespace M.assignfeedback_editpdf
+ * @class editor
  * @constructor
  * @extends Y.Base
  */
@@ -33,9 +33,9 @@ EDITOR = function() {
 };
 EDITOR.prototype = {
 
-    // Instance variables.
     /**
      * The dialogue used for all action menu displays.
+     *
      * @property type
      * @type M.core.dialogue
      * @protected
@@ -44,23 +44,26 @@ EDITOR.prototype = {
 
     /**
      * The number of pages in the pdf.
-     * @property type
-     * @type int
+     *
+     * @property pagecount
+     * @type Number
      * @protected
      */
     pagecount : 0,
 
     /**
      * The active page in the editor.
-     * @property type
-     * @type int
+     *
+     * @property currentpage
+     * @type Number
      * @protected
      */
     currentpage : 0,
 
     /**
      * A list of page objects. Each page has a list of comments and annotations.
-     * @property type
+     *
+     * @property pages
      * @type array
      * @protected
      */
@@ -68,15 +71,17 @@ EDITOR.prototype = {
 
     /**
      * The yui node for the loading icon.
-     * @property type
-     * @type Y.Node
+     *
+     * @property loadingicon
+     * @type Node
      * @protected
      */
     loadingicon : null,
 
     /**
      * Image object of the current page image.
-     * @property type
+     *
+     * @property pageimage
      * @type Image
      * @protected
      */
@@ -84,14 +89,16 @@ EDITOR.prototype = {
 
     /**
      * YUI Graphic class for drawing shapes.
-     * @property type
-     * @type Y.Graphic
+     *
+     * @property graphic
+     * @type Graphic
      * @protected
      */
     graphic : null,
 
     /**
      * Info about the current edit operation.
+     *
      * @property currentedit
      * @type M.assignfeedback_editpdf.edit
      * @protected
@@ -100,14 +107,16 @@ EDITOR.prototype = {
 
     /**
      * Current drawable.
+     *
      * @property currentdrawable
-     * @type M.assignfeedback_editpdf.drawable (or false)
+     * @type M.assignfeedback_editpdf.drawable|false
      * @protected
      */
     currentdrawable : false,
 
     /**
      * Current drawables.
+     *
      * @property drawables
      * @type array(M.assignfeedback_editpdf.drawable)
      * @protected
@@ -196,7 +205,9 @@ EDITOR.prototype = {
 
             this.currentedit.start = false;
             this.currentedit.end = false;
-            this.quicklist = new M.assignfeedback_editpdf.quickcommentlist(this);
+            if (!this.get('readonly')) {
+                this.quicklist = new M.assignfeedback_editpdf.quickcommentlist(this);
+            }
         }
     },
 
@@ -280,7 +291,7 @@ EDITOR.prototype = {
      * @method link_handler
      */
     link_handler : function(e) {
-        var drawingcanvas;
+        var drawingcanvas, drawingregion, resize = true;
         e.preventDefault();
 
         if (!this.dialogue) {
@@ -302,6 +313,9 @@ EDITOR.prototype = {
             drawingcanvas = Y.one(SELECTOR.DRAWINGCANVAS);
             this.graphic = new Y.Graphic({render : SELECTOR.DRAWINGCANVAS});
 
+            drawingregion = Y.one(SELECTOR.DRAWINGREGION);
+            drawingregion.on('scroll', this.move_canvas, this);
+
             if (!this.get('readonly')) {
                 drawingcanvas.on('gesturemovestart', this.edit_start, null, this);
                 drawingcanvas.on('gesturemove', this.edit_move, null, this);
@@ -311,9 +325,18 @@ EDITOR.prototype = {
             }
 
             this.load_all_pages();
+            drawingcanvas.on('windowresize', this.resize, this);
+
+            resize = false;
         }
         this.dialogue.centerDialogue();
         this.dialogue.show();
+
+        // Redraw when the dialogue is moved, to ensure the absolute elements are all positioned correctly.
+        this.dialogue.dd.on('drag:end', this.redraw, this);
+        if (resize) {
+            this.resize(); // When re-opening the dialog call redraw, to make sure the size + layout is correct.
+        }
     },
 
     /**
@@ -335,7 +358,8 @@ EDITOR.prototype = {
                 action : 'loadallpages',
                 userid : this.get('userid'),
                 attemptnumber : this.get('attemptnumber'),
-                assignmentid : this.get('assignmentid')
+                assignmentid : this.get('assignmentid'),
+                readonly : this.get('readonly') ? 1 : 0
             },
             on: {
                 success: function(tid, response) {
@@ -453,7 +477,9 @@ EDITOR.prototype = {
         }
 
         // Update the ui.
-        this.quicklist.load();
+        if (this.quicklist) {
+            this.quicklist.load();
+        }
         this.setup_navigation();
         this.setup_toolbar();
         this.change_page();
@@ -666,6 +692,7 @@ EDITOR.prototype = {
      * @method edit_start
      */
     edit_start : function(e) {
+        e.preventDefault();
         var canvas = Y.one(SELECTOR.DRAWINGCANVAS),
             offset = canvas.getXY(),
             scrolltop = canvas.get('docScrollY'),
@@ -735,6 +762,7 @@ EDITOR.prototype = {
      * @method edit_move
      */
     edit_move : function(e) {
+        e.preventDefault();
         var bounds = this.get_canvas_bounds(),
             canvas = Y.one(SELECTOR.DRAWINGCANVAS),
             clientpoint = new M.assignfeedback_editpdf.point(e.clientX + canvas.get('docScrollX'),
@@ -813,6 +841,30 @@ EDITOR.prototype = {
         this.currentedit.start = false;
         this.currentedit.end = false;
         this.currentedit.path = [];
+    },
+
+    /**
+     * Resize the dialogue window when the browser is resized.
+     * @public
+     * @method resize
+     */
+    resize : function() {
+        var drawingregion, drawregionheight;
+
+        if (!this.dialogue.get('visible')) {
+            return;
+        }
+        this.dialogue.centerDialogue();
+
+        // Make sure the dialogue box is not bigger than the max height of the viewport.
+        drawregionheight = Y.one('body').get('winHeight') - 120; // Space for toolbar + titlebar.
+        if (drawregionheight < 100) {
+            drawregionheight = 100;
+        }
+        drawingregion = Y.one(SELECTOR.DRAWINGREGION);
+        drawingregion.setStyle('maxHeight', drawregionheight +'px');
+        this.redraw();
+        return true;
     },
 
     /**
@@ -912,6 +964,9 @@ EDITOR.prototype = {
             page;
 
         page = this.pages[this.currentpage];
+        if (page === undefined) {
+            return; // Can happen if a redraw is triggered by an event, before the page has been selected.
+        }
         while (this.drawables.length > 0) {
             this.drawables.pop().erase();
         }
@@ -952,11 +1007,13 @@ EDITOR.prototype = {
         page = this.pages[this.currentpage];
         this.loadingicon.hide();
         drawingcanvas.setStyle('backgroundImage', 'url("' + page.url + '")');
+        drawingcanvas.setStyle('width', page.width + 'px');
+        drawingcanvas.setStyle('height', page.height + 'px');
 
         // Update page select.
         Y.one(SELECTOR.PAGESELECT).set('value', this.currentpage);
 
-        this.redraw();
+        this.resize(); // Internally will call 'redraw', after checking the dialogue size.
     },
 
     /**
@@ -1024,9 +1081,24 @@ EDITOR.prototype = {
             this.currentpage = this.pages.length - 1;
         }
         this.change_page();
+    },
+
+    /**
+     * Update any absolutely positioned nodes, within each drawable, when the drawing canvas is scrolled
+     * @protected
+     * @method move_canvas
+     */
+    move_canvas: function() {
+        var drawingregion, x, y, i;
+
+        drawingregion = Y.one(SELECTOR.DRAWINGREGION);
+        x = parseInt(drawingregion.get('scrollLeft'), 10);
+        y = parseInt(drawingregion.get('scrollTop'), 10);
+
+        for (i = 0; i < this.drawables.length; i++) {
+            this.drawables[i].scroll_update(x, y);
+        }
     }
-
-
 
 };
 
@@ -1080,24 +1152,12 @@ Y.extend(EDITOR, Y.Base, EDITOR.prototype, {
     }
 });
 
-/**
- * Assignfeedback edit pdf namespace.
- * @static
- * @class assignfeedback_editpdf
- */
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
-
-/**
- * Editor namespace
- * @namespace M.assignfeedback_editpdf.editor
- * @class editor
- * @static
- */
 M.assignfeedback_editpdf.editor = M.assignfeedback_editpdf.editor || {};
 
 /**
  * Init function - will create a new instance every time.
- * @method init
+ * @method editor.init
  * @static
  * @param {Object} params
  */

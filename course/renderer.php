@@ -69,9 +69,13 @@ class core_course_renderer extends plugin_renderer_base {
      */
     protected function add_modchoosertoggle() {
         global $CFG;
-        static $modchoosertoggleadded = false;
-        // Add the module chooser toggle to the course page
-        if ($modchoosertoggleadded || $this->page->state > moodle_page::STATE_PRINTING_HEADER ||
+
+        // Only needs to be done once per page.
+        if (!$this->page->requires->should_create_one_time_item_now('core_course_modchoosertoggle')) {
+            return;
+        }
+
+        if ($this->page->state > moodle_page::STATE_PRINTING_HEADER ||
                 $this->page->course->id == SITEID ||
                 !$this->page->user_is_editing() ||
                 !($context = context_course::instance($this->page->course->id)) ||
@@ -79,11 +83,11 @@ class core_course_renderer extends plugin_renderer_base {
                 !course_ajax_enabled($this->page->course) ||
                 !($coursenode = $this->page->settingsnav->find('courseadmin', navigation_node::TYPE_COURSE)) ||
                 !($turneditingnode = $coursenode->get('turneditingonoff'))) {
-            // too late or we are on site page or we could not find the adjacent nodes in course settings menu
-            // or we are not allowed to edit
+            // Too late, or we are on site page, or we could not find the
+            // adjacent nodes in course settings menu, or we are not allowed to edit.
             return;
         }
-        $modchoosertoggleadded = true;
+
         if ($this->page->url->compare(new moodle_url('/course/view.php'), URL_MATCH_BASE)) {
             // We are on the course page, retain the current page params e.g. section.
             $modchoosertoggleurl = clone($this->page->url);
@@ -168,11 +172,9 @@ class core_course_renderer extends plugin_renderer_base {
      * @return string The composed HTML for the module
      */
     public function course_modchooser($modules, $course) {
-        static $isdisplayed = false;
-        if ($isdisplayed) {
+        if (!$this->page->requires->should_create_one_time_item_now('core_course_modchooser')) {
             return '';
         }
-        $isdisplayed = true;
 
         // Add the module chooser
         $this->page->requires->yui_module('moodle-course-modchooser',
@@ -194,8 +196,6 @@ class core_course_renderer extends plugin_renderer_base {
         $formcontent .= html_writer::start_tag('div', array('id' => 'typeformdiv'));
         $formcontent .= html_writer::tag('input', '', array('type' => 'hidden', 'id' => 'course',
                 'name' => 'course', 'value' => $course->id));
-        $formcontent .= html_writer::tag('input', '',
-                array('type' => 'hidden', 'class' => 'jump', 'name' => 'jump', 'value' => ''));
         $formcontent .= html_writer::tag('input', '', array('type' => 'hidden', 'name' => 'sesskey',
                 'value' => sesskey()));
         $formcontent .= html_writer::end_tag('div');
@@ -667,7 +667,7 @@ class core_course_renderer extends plugin_renderer_base {
                 // off the JS.
                 $extraclass = '';
                 if (!empty($CFG->enableavailability) &&
-                        condition_info::completion_value_used_as_condition($course, $mod)) {
+                        core_availability\info::completion_value_used($course, $mod->id)) {
                     $extraclass = ' preventjs';
                 }
                 $output .= html_writer::start_tag('form', array('method' => 'post',
@@ -713,11 +713,8 @@ class core_course_renderer extends plugin_renderer_base {
         global $CFG;
         $conditionalhidden = false;
         if (!empty($CFG->enableavailability)) {
-            $conditionalhidden = $mod->availablefrom > time() ||
-                ($mod->availableuntil && $mod->availableuntil < time()) ||
-                count($mod->conditionsgrade) > 0 ||
-                count($mod->conditionscompletion) > 0 ||
-                count($mod->conditionsfield);
+            $info = new \core_availability\info_module($mod);
+            $conditionalhidden = !$info->is_available_for_all();
         }
         return $conditionalhidden;
     }
@@ -738,12 +735,11 @@ class core_course_renderer extends plugin_renderer_base {
     public function course_section_cm_name(cm_info $mod, $displayoptions = array()) {
         global $CFG;
         $output = '';
-        if (!$mod->uservisible &&
-                (empty($mod->showavailability) || empty($mod->availableinfo))) {
+        if (!$mod->uservisible && empty($mod->availableinfo)) {
             // nothing to be displayed to the user
             return $output;
         }
-        $url = $mod->get_url();
+        $url = $mod->url;
         if (!$url) {
             return $output;
         }
@@ -774,8 +770,7 @@ class core_course_renderer extends plugin_renderer_base {
         if ($mod->uservisible) {
             $conditionalhidden = $this->is_cm_conditionally_hidden($mod);
             $accessiblebutdim = (!$mod->visible || $conditionalhidden) &&
-                has_capability('moodle/course:viewhiddenactivities',
-                        context_course::instance($mod->course));
+                has_capability('moodle/course:viewhiddenactivities', $mod->context);
             if ($accessiblebutdim) {
                 $linkclasses .= ' dimmed';
                 $textclasses .= ' dimmed_text';
@@ -793,14 +788,9 @@ class core_course_renderer extends plugin_renderer_base {
 
         // Get on-click attribute value if specified and decode the onclick - it
         // has already been encoded for display (puke).
-        $onclick = htmlspecialchars_decode($mod->get_on_click(), ENT_QUOTES);
+        $onclick = htmlspecialchars_decode($mod->onclick, ENT_QUOTES);
 
-        $groupinglabel = '';
-        if (!empty($mod->groupingid) && has_capability('moodle/course:managegroups', context_course::instance($mod->course))) {
-            $groupings = groups_get_all_groupings($mod->course);
-            $groupinglabel = html_writer::tag('span', '('.format_string($groupings[$mod->groupingid]->name).')',
-                    array('class' => 'groupinglabel '.$textclasses));
-        }
+        $groupinglabel = $mod->get_grouping_label($textclasses);
 
         // Display link itself.
         $activitylink = html_writer::empty_tag('img', array('src' => $mod->get_icon_url(),
@@ -827,8 +817,7 @@ class core_course_renderer extends plugin_renderer_base {
      */
     public function course_section_cm_text(cm_info $mod, $displayoptions = array()) {
         $output = '';
-        if (!$mod->uservisible &&
-                (empty($mod->showavailability) || empty($mod->availableinfo))) {
+        if (!$mod->uservisible && empty($mod->availableinfo)) {
             // nothing to be displayed to the user
             return $output;
         }
@@ -838,8 +827,7 @@ class core_course_renderer extends plugin_renderer_base {
         if ($mod->uservisible) {
             $conditionalhidden = $this->is_cm_conditionally_hidden($mod);
             $accessiblebutdim = (!$mod->visible || $conditionalhidden) &&
-                has_capability('moodle/course:viewhiddenactivities',
-                        context_course::instance($mod->course));
+                has_capability('moodle/course:viewhiddenactivities', $mod->context);
             if ($accessiblebutdim) {
                 $textclasses .= ' dimmed_text';
                 if ($conditionalhidden) {
@@ -851,15 +839,17 @@ class core_course_renderer extends plugin_renderer_base {
         } else {
             $textclasses .= ' dimmed_text';
         }
-        if ($mod->get_url()) {
+        if ($mod->url) {
             if ($content) {
                 // If specified, display extra content after link.
                 $output = html_writer::tag('div', $content, array('class' =>
                         trim('contentafterlink ' . $textclasses)));
             }
         } else {
+            $groupinglabel = $mod->get_grouping_label($textclasses);
+
             // No link, so display only content.
-            $output = html_writer::tag('div', $accesstext . $content,
+            $output = html_writer::tag('div', $accesstext . $content . $groupinglabel,
                     array('class' => 'contentwithoutlink ' . $textclasses));
         }
         return $output;
@@ -878,8 +868,10 @@ class core_course_renderer extends plugin_renderer_base {
         if (!$mod->uservisible) {
             // this is a student who is not allowed to see the module but might be allowed
             // to see availability info (i.e. "Available from ...")
-            if (!empty($mod->showavailability) && !empty($mod->availableinfo)) {
-                $output = html_writer::tag('div', $mod->availableinfo, array('class' => 'availabilityinfo'));
+            if (!empty($mod->availableinfo)) {
+                $formattedinfo = \core_availability\info::format_info(
+                        $mod->availableinfo, $mod->get_course());
+                $output = html_writer::tag('div', $formattedinfo, array('class' => 'availabilityinfo'));
             }
             return $output;
         }
@@ -894,13 +886,12 @@ class core_course_renderer extends plugin_renderer_base {
                 if (!$mod->visible) {
                     $hidinfoclass = 'hide';
                 }
-                $ci = new condition_info($mod);
+                $ci = new \core_availability\info_module($mod);
                 $fullinfo = $ci->get_full_information();
-                if($fullinfo) {
-                    return '<div class="availabilityinfo '.$hidinfoclass.'">'.get_string($mod->showavailability
-                        ? 'userrestriction_visible'
-                        : 'userrestriction_hidden','condition',
-                        $fullinfo).'</div>';
+                if ($fullinfo) {
+                    $formattedinfo = \core_availability\info::format_info(
+                            $fullinfo, $mod->get_course());
+                    return html_writer::div($formattedinfo, 'availabilityinfo ' . $hidinfoclass);
                 }
             }
         }
@@ -923,7 +914,7 @@ class core_course_renderer extends plugin_renderer_base {
     public function course_section_cm_list_item($course, &$completioninfo, cm_info $mod, $sectionreturn, $displayoptions = array()) {
         $output = '';
         if ($modulehtml = $this->course_section_cm($course, $completioninfo, $mod, $sectionreturn, $displayoptions)) {
-            $modclasses = 'activity ' . $mod->modname . ' modtype_' . $mod->modname . ' ' . $mod->get_extra_classes();
+            $modclasses = 'activity ' . $mod->modname . ' modtype_' . $mod->modname . ' ' . $mod->extraclasses;
             $output .= html_writer::tag('li', $modulehtml, array('class' => $modclasses, 'id' => 'module-' . $mod->id));
         }
         return $output;
@@ -937,7 +928,6 @@ class core_course_renderer extends plugin_renderer_base {
      *
      * This function calls:
      * {@link core_course_renderer::course_section_cm_name()}
-     * {@link cm_info::get_after_link()}
      * {@link core_course_renderer::course_section_cm_text()}
      * {@link core_course_renderer::course_section_cm_availability()}
      * {@link core_course_renderer::course_section_cm_completion()}
@@ -957,15 +947,10 @@ class core_course_renderer extends plugin_renderer_base {
         // if:
         // 1) The activity is not visible to users
         // and
-        // 2a) The 'showavailability' option is not set (if that is set,
-        //     we need to display the activity so we can show
-        //     availability info)
-        // or
-        // 2b) The 'availableinfo' is empty, i.e. the activity was
+        // 2) The 'availableinfo' is empty, i.e. the activity was
         //     hidden in a way that leaves no info, such as using the
         //     eye icon.
-        if (!$mod->uservisible &&
-            (empty($mod->showavailability) || empty($mod->availableinfo))) {
+        if (!$mod->uservisible && empty($mod->availableinfo)) {
             return $output;
         }
 
@@ -1005,7 +990,7 @@ class core_course_renderer extends plugin_renderer_base {
             }
 
             // Module can put text after the link (e.g. forum unread)
-            $output .= $mod->get_after_link();
+            $output .= $mod->afterlink;
 
             // Closing the tag which contains everything but edit icons. Content part of the module should not be part of this.
             $output .= html_writer::end_tag('div'); // .activityinstance
@@ -1018,7 +1003,7 @@ class core_course_renderer extends plugin_renderer_base {
         // it should work similarly (at least in terms of ordering) to an
         // activity.
         $contentpart = $this->course_section_cm_text($mod, $displayoptions);
-        $url = $mod->get_url();
+        $url = $mod->url;
         if (empty($url)) {
             $output .= $contentpart;
         }
@@ -1027,7 +1012,7 @@ class core_course_renderer extends plugin_renderer_base {
         if ($this->page->user_is_editing()) {
             $editactions = course_get_cm_edit_actions($mod, $mod->indent, $sectionreturn);
             $modicons .= ' '. $this->course_section_cm_edit_actions($editactions, $mod, $displayoptions);
-            $modicons .= $mod->get_after_edit_icons();
+            $modicons .= $mod->afterediticons;
         }
 
         $modicons .= $this->course_section_cm_completion($course, $completioninfo, $mod, $displayoptions);
@@ -1108,8 +1093,9 @@ class core_course_renderer extends plugin_renderer_base {
             foreach ($moduleshtml as $modnumber => $modulehtml) {
                 if ($ismoving) {
                     $movingurl = new moodle_url('/course/mod.php', array('moveto' => $modnumber, 'sesskey' => sesskey()));
-                    $sectionoutput .= html_writer::tag('li', html_writer::link($movingurl, $this->output->render($movingpix)),
-                            array('class' => 'movehere', 'title' => $strmovefull));
+                    $sectionoutput .= html_writer::tag('li',
+                            html_writer::link($movingurl, $this->output->render($movingpix), array('title' => $strmovefull)),
+                            array('class' => 'movehere'));
                 }
 
                 $sectionoutput .= $modulehtml;
@@ -1117,8 +1103,9 @@ class core_course_renderer extends plugin_renderer_base {
 
             if ($ismoving) {
                 $movingurl = new moodle_url('/course/mod.php', array('movetosection' => $section->id, 'sesskey' => sesskey()));
-                $sectionoutput .= html_writer::tag('li', html_writer::link($movingurl, $this->output->render($movingpix)),
-                        array('class' => 'movehere', 'title' => $strmovefull));
+                $sectionoutput .= html_writer::tag('li',
+                        html_writer::link($movingurl, $this->output->render($movingpix), array('title' => $strmovefull)),
+                        array('class' => 'movehere'));
             }
         }
 
@@ -1504,14 +1491,13 @@ class core_course_renderer extends plugin_renderer_base {
      * Make sure that javascript file for AJAX expanding of courses and categories content is included
      */
     protected function coursecat_include_js() {
-        global $CFG;
-        static $jsloaded = false;
-        if (!$jsloaded) {
-            // We must only load this module once.
-            $this->page->requires->yui_module('moodle-course-categoryexpander',
-                    'Y.Moodle.course.categoryexpander.init');
-            $jsloaded = true;
+        if (!$this->page->requires->should_create_one_time_item_now('core_course_categoryexpanderjsinit')) {
+            return;
         }
+
+        // We must only load this module once.
+        $this->page->requires->yui_module('moodle-course-categoryexpander',
+                'Y.Moodle.course.categoryexpander.init');
     }
 
     /**
@@ -1685,13 +1671,12 @@ class core_course_renderer extends plugin_renderer_base {
         $site = get_site();
         $output = '';
 
-        $this->page->set_button($this->course_search_form('', 'navbar'));
+        if (can_edit_in_category($category)) {
+            // Add 'Manage' button if user has permissions to edit this category.
+            $managebutton = $this->single_button(new moodle_url('/course/management.php'), get_string('managecourses'), 'get');
+            $this->page->set_button($managebutton);
+        }
         if (!$coursecat->id) {
-            if (can_edit_in_category()) {
-                // add 'Manage' button instead of course search form
-                $managebutton = $this->single_button(new moodle_url('/course/management.php'), get_string('managecourses'), 'get');
-                $this->page->set_button($managebutton);
-            }
             if (coursecat::count_all() == 1) {
                 // There exists only one category in the system, do not display link to it
                 $coursecat = coursecat::get_default();
@@ -1755,14 +1740,11 @@ class core_course_renderer extends plugin_renderer_base {
             $catdisplayoptions['viewmoreurl'] = new moodle_url($baseurl, array('browse' => 'categories', 'page' => 1));
         }
         $chelper->set_courses_display_options($coursedisplayoptions)->set_categories_display_options($catdisplayoptions);
+        // Add course search form.
+        $output .= $this->course_search_form();
 
-        // Display course category tree
+        // Display course category tree.
         $output .= $this->coursecat_tree($chelper, $coursecat);
-
-        // Add course search form (if we are inside category it was already added to the navbar)
-        if (!$coursecat->id) {
-            $output .= $this->course_search_form();
-        }
 
         // Add action buttons
         $output .= $this->container_start('buttons');

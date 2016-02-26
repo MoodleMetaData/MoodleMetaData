@@ -1,0 +1,13 @@
+{
+  "name": "moodle-mod_certificate-preview",
+  "builds": {
+    "moodle-mod_certificate-preview": {
+      "jsfiles": [
+        "utility.js",
+        "iframe-wrapper.js",
+        "form-wrapper.js",
+        "preview.js"
+      ]
+    }
+  }
+}
