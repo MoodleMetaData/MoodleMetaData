@@ -26,6 +26,7 @@ $string['course_instructor'] = 'Course instructor: ';
 $string['course_type'] = 'Course type: ';
 $string['course_topic'] = 'Course topic(s): ';
 $string['course_objective'] = 'Course learning objective(s): ';
+$string['course_faculty'] = 'Course faculty: ';
 $string['assessment_counter'] = 'Number of assessment: ';
 $string['session_counter'] = 'Number of session: ';
 

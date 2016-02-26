@@ -69,7 +69,7 @@ if ($data = $general_form->get_data()) {
     $course_info->sessionnumber = $data->course_session;
 
 
-    if($isExist = $DB->record_exists('courseinfo', array('id'=>$courseId)) ){
+    if($isExist = $DB->record_exists('courseinfo', array('courseid'=>$courseId)) ){
         // Must have an entry for 'id' to map the tabhe table specified.
         $update_courseinfo = $DB->update_record('courseinfo', $course_info, false);
         echo 'Existing data is updated.';

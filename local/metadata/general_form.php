@@ -27,8 +27,12 @@ class general_form extends moodleform {
 
 		// Form elements
 
-                // Add textfield for faculty.
-        //        $mform->addElement(');
+                // Enter faculty name.
+                $course_faculty = $mform->addElement('text', 'course_faculty', get_string('course_faculty', 'local_metadata'), $attributes);
+                //$mform->addRule('course_faculty', get_string('required'), 'required', null, 'client');
+                if($courseinfo){
+                    $mform->setDefault('course_faculty', $courseinfo->coursefaculty);
+                }             
 
                 // Add editor for create or modify course description.              
                 // Get default course description from DB.
