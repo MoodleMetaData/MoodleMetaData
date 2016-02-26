@@ -144,7 +144,8 @@ class general_form extends moodleform {
                 $course_info->courseid = $course->id;
                 $course_info->coursename = $course->fullname;
                 $course_info->coursetopic = $data->course_topic;
-                $course_info->coursedescription = $data->course_description['text'];
+                //$course_info->coursedescription = $data->course_description['text'];
+                $course_info->coursedescription = $data->course_description;
                 $course_info->coursefaculty = $data->course_faculty;
                 $course_info->assessmentnumber = $data->course_assessment;
                 $course_info->sessionnumber = $data->course_session;
