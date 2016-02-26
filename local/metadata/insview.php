@@ -16,6 +16,7 @@ $context = context_course::instance($courseId);
 require_once($CFG->dirroot.'/local/metadata/general_form.php');
 require_once($CFG->dirroot.'/local/metadata/assessment_form.php');
 require_once($CFG->dirroot.'/local/metadata/session_form.php');
+require_once($CFG->dirroot.'/local/metadata/learningobjective_form.php');
 
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
 
@@ -33,6 +34,7 @@ $PAGE->requires->js('/local/metadata/tabview.js');
 $base_url = create_insview_url($courseId);
 $general_form = new general_form($base_url);
 $assessment_form = new assessment_form($base_url);
+$learningobjective_form = new learningobjective_form($base_url);
 
 $sessions = get_table_data_for_course('coursesession');
 $session_form = new session_form($base_url, array('sessions' => $sessions));
@@ -40,6 +42,7 @@ $session_form = new session_form($base_url, array('sessions' => $sessions));
 $general_url = create_insview_url($courseId);
 $assessment_url = create_insview_url($courseId, 1);
 $session_url = create_insview_url($courseId, 2);
+$learningobjective_url = create_insview_url($courseId, 3);
 
 
 // Case where they cancelled the form. Just redirect to it, to reset values
@@ -49,7 +52,10 @@ if ($general_form->is_cancelled()) {
     redirect($assessment_url);
 } else if ($session_form->is_cancelled()) {
     redirect($session_url);
+} else if ($learningobjective_form->is_cancelled()) {
+    redirect($learningobjective_url);
 }
+
 
 
 // Submitted the data
@@ -73,6 +79,13 @@ if ($data = $general_form->get_data()) {
     session_form::save_data($data);
     
     redirect($session_url);
+} else if ($data = $learningobjective_form->get_data()) {
+    // TODO: Save the submission data, use a function/class from different file
+    echo "learningobjective";
+    print_object($data);
+
+    // TODO: Then, redirect
+    //redirect($learningobjective_url);
 }
 
 
@@ -87,6 +100,7 @@ echo $OUTPUT->header();
             <li><a href="#general_tab">General</a></li>
             <li><a href="#assessment_tab">Assessment</a></li>
             <li><a href="#session_tab">Session</a></li>
+            <li><a href="#learningobjective_tab">learningobjective</a></li>
         </ul>
         <div>
             <div id="general_tab">
@@ -101,6 +115,10 @@ echo $OUTPUT->header();
                 <!-- content TAB THREE -->
                 <?php $session_form->display(); ?>
             </div>
+            <div id="learningobjective_tab">
+                <!-- content TAB THREE -->
+                <?php $learningobjective_form->display(); ?>
+            </div>            
         </div>
     </div>
 </html>

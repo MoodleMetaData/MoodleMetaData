@@ -31,3 +31,6 @@ $string['learning_objective_selection_description']= 'Select the Learning Object
 $string['assessment_type'] = 'Type of Assessment: ';
 $string['grade_weight'] = 'Weight: ';
 $string['objective_description'] = 'Description: ';
+
+//learning objective elements
+$string['lobjective_name'] = 'content of the objective: ';
