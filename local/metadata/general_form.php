@@ -26,7 +26,10 @@ class general_form extends moodleform {
                 $mform->setDefault('course_instructor', $courseInstructor);
 
 		// Form elements
-		
+
+                // Add textfield for faculty.
+        //        $mform->addElement(');
+
                 // Add editor for create or modify course description.              
                 // Get default course description from DB.
                 // If description does not exist in the extra table, display the default description.
