@@ -35,4 +35,8 @@ $string['objective_description'] = 'Description: ';
 //learning objective elements
 $string['lobjective_name'] = 'content of the objective: ';
 $string['add_objective'] = 'Add new learning objective';
+$string['mainobjective_name'] = 'main learning objective';
+$string['subobjective_name'] = 'sub learning objective';
+
+
 

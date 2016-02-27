@@ -42,6 +42,10 @@ class learningobjective_form extends moodleform {
             $key += 1;
         }
 
+	$PAGE->requires->js('/mod/data/data.js');
+
+	addsubobjective();
+
 
         $this->add_action_buttons();
     }
