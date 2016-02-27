@@ -14,12 +14,14 @@ class learningobjective_form extends moodleform {
 
         //$context = context_course::instance($csid);
         // Assumes it has the data added
-
-        $lobjectives = get_table_data_for_course('courselbjectives');
+        $lobjectives = get_table_data_for_course('courseobjectives');
 
         $repeatarray = array();
         $repeatarray[] = $mform->createElement('text', 'objectivename', get_string('lobjective_name', 'local_metadata'));
         $repeatarray[] = $mform->createElement('hidden', 'objectiveid', 0);
+	$repeatarray[] = $mform->createElement('text', 'subobj_amt', get_string('subobjective_amt', 'local_metadata'));
+	$mform->setType('subobj_amt',PARAM_INT);
+	$repeatarray[] = $mform->createElement('button', 'subobjbtn', get_string('subobjective', 'local_metadata'));
 
         // Add some separation between different courses
         $repeatarray[] = $mform->createElement('html', '<hr>');
@@ -28,7 +30,7 @@ class learningobjective_form extends moodleform {
         $repeateloptions['objectiveid']['default'] = -1;
 
         $this->repeat_elements($repeatarray, count($lobjectives),
-            $repeateloptions, 'option_repeats', 'option_add_fields', 1, get_string('add_lobjective', 'local_metadata'), true);
+            $repeateloptions, 'option_repeats', 'option_add_fields', 1, get_string('add_objective', 'local_metadata'), true);
 
 
         $key = 0;

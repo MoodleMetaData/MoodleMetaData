@@ -85,7 +85,7 @@ if ($data = $general_form->get_data()) {
     print_object($data);
 
     // TODO: Then, redirect
-    //redirect($learningobjective_url);
+    redirect($learningobjective_url);
 }
 
 
