@@ -52,18 +52,19 @@ class session_form extends moodleform {
         $repeatarray[] = $mform->createElement('date_selector', 'sessiondate', get_string('session_date', 'local_metadata'));
 
 
-        //TODO: Load learning objectives from the table
-            // Eample in mod/glossary/edit_form.php, line 37
-        // Where it is [$id]=>value
-        $learningObjectives = array(1=>'SQL', 2=>'HTML', 3=>'Javascript');
-        $learningObjectivesEl = $mform->createElement('select', 'learning_objectives', get_string('learning_objectives', 'local_metadata'), $learningObjectives);
+        
+        $learningObjectives = get_course_learning_objectives();
+        $learningObjectivesList = array();
+        foreach ($learningObjectives as $learningObjective) {
+            $learningObjectivesList[$learningObjective->id] = $learningObjective->objectivename;
+        }
+        $learningObjectivesEl = $mform->createElement('select', 'learning_objectives', get_string('learning_objectives', 'local_metadata'), $learningObjectivesList);
         $learningObjectivesEl->setMultiple(true);
         $repeatarray[] = $learningObjectivesEl;
 
 
 
-
-        $assessments = $DB->get_records('courseassessment');
+        $assessments = get_table_data_for_course('courseassessment');
         $assessmentsList = array();
         foreach ($assessments as $assessment) {
             $assessmentsList[$assessment->id] = $assessment->assessmentname;
@@ -76,14 +77,21 @@ class session_form extends moodleform {
 
 
 
-
         $repeatarray[] = $mform->createElement('hidden', 'coursesession_id', 0);
+        $repeatarray[] = $mform->createElement('hidden', 'was_deleted', false);
 
-        // Add some separation between different courses
-        $repeatarray[] = $mform->createElement('html', '<hr>');
-
+        $repeatarray[] = $mform->createElement('submit', 'deleteSession', get_string('deletesession', 'local_metadata'));
+        $mform->registerNoSubmitButton('deleteSession');
+        
+        
         $repeateloptions = array();
-        $repeateloptions['coursesession_id']['default'] = null;
+        
+        $repeateloptions['coursesession_id']['type'] = PARAM_INT;
+        $repeateloptions['coursesession_id']['default'] = -1;
+        
+        $repeateloptions['was_deleted']['type'] = PARAM_RAW;
+        
+        $repeateloptions['sessiontopic']['type'] = PARAM_RAW;
 
         $this->repeat_elements($repeatarray, $numSessions,
             $repeateloptions, 'sessions_list', 'sessions_list_add_element', 1, get_string('add_session', 'local_metadata'), true);
@@ -97,22 +105,75 @@ class session_form extends moodleform {
     function setup_data_for_repeat($sessions) {
         $mform = $this->_form;
         $key = 0;
+        
 
         foreach ($sessions as $session)
         {
             $index = '['.$key.']';
+            $mform->setDefault('coursesession_id'.$index, $session->id);
+            
             $mform->setDefault('sessiontopic'.$index, $session->sessiontopic);
             $mform->setDefault('sessiondescription'.$index, $session->sessiondescription);
             $mform->setDefault('sessiondate'.$index, $session->sessiondate);
-            $mform->setDefault('coursesession_id'.$index, $session->id);
 
+            $mform->setDefault('sessiondate'.$index, $session->sessiondate);
 
             // Handled specially, because the default must be an int, which needs to be translated from string in database
             $types = session_form::get_session_types();
             $mform->setDefault('sessiontype'.$index, array_search($session->sessiontype, $types));
 
+            
+            global $DB;
+            // Load the learning objectives
+            // Template for this was found in \mod\glossary\edit.php
+            if ($learningObjectivesArr = $DB->get_records_menu("sessionobjectives", array('sessionid'=>$session->id), '', 'id, objectiveid')) {
+                $mform->setDefault('learning_objectives'.$index, array_values($learningObjectivesArr));
+            }
+            
+            // Load the assessments
+            // Template for this was found in \mod\glossary\edit.php
+            if ($assessmentsArr = $DB->get_records_menu("session_related_assessment", array('sessionid'=>$session->id), '', 'id, assessmentid')) {
+                $mform->setDefault('assessments'.$index, array_values($assessmentsArr));
+            }
 
             $key += 1;
+        }
+    }
+    
+    /**
+     * Each module which defines definition_after_data() must call this method using parent::definition_after_data();
+     */
+    function definition_after_data() {
+        parent::definition_after_data();
+        global $CFG, $COURSE;
+        $mform =& $this->_form;
+        
+        $numRepeated = $mform->getElementValue('sessions_list');
+        
+        // Go through each session, and delete elements for ones that should be deleted
+        for ($key = 0; $key < $numRepeated; ++$key) {
+            $index = '['.$key.']';
+            $deleted = $mform->getSubmitValue('deleteSession'.$index);
+            
+            
+            if ($deleted or $mform->getElementValue('was_deleted'.$index) == true) {
+                // Are to delete graphical elements
+                $mform->removeElement('sessiontopic'.$index);
+                $mform->removeElement('sessiondescription'.$index);
+
+                $mform->removeElement('sessiontype'.$index);
+
+                $mform->removeElement('sessiondate'.$index);
+                
+                $mform->removeElement('learning_objectives'.$index);
+
+
+                $mform->removeElement('assessments'.$index);
+
+                $mform->removeElement('deleteSession'.$index);
+                
+                $mform->getElement('was_deleted'.$index)->setValue(true);
+            }
         }
     }
 
@@ -144,7 +205,7 @@ class session_form extends moodleform {
      * Will save the given data.
      */
     public static function save_data($data) {
-        $allChangedAttributes = array('sessiontopic', 'sessiondescription', 'sessiontype', 'sessiondate');
+        $allChangedAttributes = array('sessiontopic', 'sessiondescription', 'sessiontype', 'sessiondate', 'learning_objectives', 'assessments');
         $types = session_form::get_session_types();
         $convertedAttributes = array('sessiontype' => function($value) use ($types) { return $types[$value]; });
         
@@ -152,10 +213,46 @@ class session_form extends moodleform {
 
         $tuples = $session_recurring_parser->getTuplesFromData($data);
         
-        // TODO: Will need to specially handle saving the learning objectives and related assessments. Will also need to remove from tuples
-        // TODO: May also need to filter out tuples that are removed, and delete them somehow
-
-        $session_recurring_parser->saveTuples($tuples);
+        global $DB;
+        
+        foreach ($tuples as $tupleKey => $tuple) {
+            // Clean out the sessionobjectives and 
+            $DB->delete_records('sessionobjectives', array('sessionid'=>$tuple['id']));
+            $DB->delete_records('session_related_assessment', array('sessionid'=>$tuple['id']));
+            
+            if ($tuple['was_deleted'] == true) {
+                $session_recurring_parser->deleteTupleFromDB($tuple);
+                
+                unset($tuples[$tupleKey]);
+                continue;
+            }
+            
+            // Save the learning_objective
+            // Template for this was found in \mod\glossary\edit.php
+            if (array_key_exists('learning_objectives', $tuple) and is_array($tuple['learning_objectives'])) {
+                foreach ($tuple['learning_objectives'] as $objectiveId) {
+                    $newLink = new stdClass();
+                    $newLink->sessionid = $tuple['id'];
+                    $newLink->objectiveid = $objectiveId;
+                    $DB->insert_record('sessionobjectives', $newLink, false);
+                }
+            }
+            
+            // Save the assessments
+            // Template for this was found in \mod\glossary\edit.php
+            
+            if (array_key_exists('assessments', $tuple) and is_array($tuple['assessments'])) {
+                foreach ($tuple['assessments'] as $assessmentId) {
+                    $newLink = new stdClass();
+                    $newLink->sessionid = $tuple['id'];
+                    $newLink->assessmentid = $assessmentId;
+                    $DB->insert_record('session_related_assessment', $newLink, false);
+                }
+            }
+            
+        }
+        
+        $session_recurring_parser->saveTuplesToDB($tuples);
     }
 
 }

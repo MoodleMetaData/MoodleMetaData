@@ -25,6 +25,10 @@ $string['session_description'] = 'Description:';
 $string['session_type'] = 'Type:';
 $string['session_date'] = 'Date:';
 
+$string['learning_objectives'] = 'Learning Objectives';
+$string['related_assessments'] = 'Related Assessments';
+$string['deletesession'] = 'Delete Session';
+
 
 $string['assessment_description'] = 'Description of the Assessment: ';
 $string['learning_objective_selection_description']= 'Select the Learning Objective(s): ';
