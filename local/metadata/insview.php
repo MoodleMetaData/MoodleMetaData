@@ -28,6 +28,7 @@ $heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->
 $PAGE->set_heading($heading);
 $PAGE->set_url($CFG->wwwroot.'/local/metadata/insview.php');
 $PAGE->requires->js('/local/metadata/tabview.js');
+$PAGE->requires->js('/local/metadata/util.js');
 
 // Create forms
 $base_url = create_insview_url($courseId);

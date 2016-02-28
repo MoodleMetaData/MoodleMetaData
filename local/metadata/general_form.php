@@ -43,7 +43,7 @@ class general_form extends moodleform {
                 // If description does not exist in the extra table, display the default description.
                 $default_description = $course->summary;
                 //$course_description_editor = $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'));
-                $mform->addElement('textarea', 'course_description', get_string("course_description", "local_metadata"), 'wrap="virtual" rows="20" cols="50"');
+                $mform->addElement('textarea', 'course_description', get_string("course_description", "local_metadata"), 'wrap="virtual" rows="5" cols="70"');
 
                 if($courseinfo){
                     $current_description = $courseinfo->coursedescription;
@@ -56,6 +56,13 @@ class general_form extends moodleform {
 
                 $mform->addRule('course_description', get_string('required'), 'required', null, 'client');
                 $mform->setType('course_description', PARAM_RAW);      
+                
+                // Upload course type
+                //$mform->addElement('filepicker', 'upload_course_type', get_string('upload_course_type', 'local_metadata'), null,array('maxbytes' => $maxbytes, 'accepted_types' => '.csv'));
+                //$course_type_content = $mform->get_file_content('upload_course_type');
+                $mform->addElement('file', 'upload_ctype_file', get_string('upload_ctype_file', 'local_metadata'));
+                //$mform->addElement('button', 'upload_ctype', get_string("upload_ctype", "local_metadata"));
+                $mform->addElement('html', '<button type="button" id="upload_ctype">Upload</button>');
 
 		// Add selection list for course type		
 		// TODO: ADD COURSE TYPE IN DB.
