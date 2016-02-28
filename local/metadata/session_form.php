@@ -77,14 +77,21 @@ class session_form extends moodleform {
 
 
 
-
         $repeatarray[] = $mform->createElement('hidden', 'coursesession_id', 0);
+        $repeatarray[] = $mform->createElement('hidden', 'was_deleted', false);
 
-        // Add some separation between different courses
-        $repeatarray[] = $mform->createElement('html', '<hr>');
-
+        $repeatarray[] = $mform->createElement('submit', 'deleteSession', get_string('deletesession', 'local_metadata'));
+        $mform->registerNoSubmitButton('deleteSession');
+        
+        
         $repeateloptions = array();
-        $repeateloptions['coursesession_id']['default'] = null;
+        
+        $repeateloptions['coursesession_id']['type'] = PARAM_INT;
+        $repeateloptions['coursesession_id']['default'] = -1;
+        
+        $repeateloptions['was_deleted']['type'] = PARAM_RAW;
+        
+        $repeateloptions['sessiontopic']['type'] = PARAM_RAW;
 
         $this->repeat_elements($repeatarray, $numSessions,
             $repeateloptions, 'sessions_list', 'sessions_list_add_element', 1, get_string('add_session', 'local_metadata'), true);
@@ -98,6 +105,7 @@ class session_form extends moodleform {
     function setup_data_for_repeat($sessions) {
         $mform = $this->_form;
         $key = 0;
+        
 
         foreach ($sessions as $session)
         {
@@ -129,6 +137,43 @@ class session_form extends moodleform {
             }
 
             $key += 1;
+        }
+    }
+    
+    /**
+     * Each module which defines definition_after_data() must call this method using parent::definition_after_data();
+     */
+    function definition_after_data() {
+        parent::definition_after_data();
+        global $CFG, $COURSE;
+        $mform =& $this->_form;
+        
+        $numRepeated = $mform->getElementValue('sessions_list');
+        
+        // Go through each session, and delete elements for ones that should be deleted
+        for ($key = 0; $key < $numRepeated; ++$key) {
+            $index = '['.$key.']';
+            $deleted = $mform->getSubmitValue('deleteSession'.$index);
+            
+            
+            if ($deleted or $mform->getElementValue('was_deleted'.$index) == true) {
+                // Are to delete graphical elements
+                $mform->removeElement('sessiontopic'.$index);
+                $mform->removeElement('sessiondescription'.$index);
+
+                $mform->removeElement('sessiontype'.$index);
+
+                $mform->removeElement('sessiondate'.$index);
+                
+                $mform->removeElement('learning_objectives'.$index);
+
+
+                $mform->removeElement('assessments'.$index);
+
+                $mform->removeElement('deleteSession'.$index);
+                
+                $mform->getElement('was_deleted'.$index)->setValue(true);
+            }
         }
     }
 
@@ -174,6 +219,13 @@ class session_form extends moodleform {
             // Clean out the sessionobjectives and 
             $DB->delete_records('sessionobjectives', array('sessionid'=>$tuple['id']));
             $DB->delete_records('session_related_assessment', array('sessionid'=>$tuple['id']));
+            
+            if ($tuple['was_deleted'] == true) {
+                $session_recurring_parser->deleteTupleFromDB($tuple);
+                
+                unset($tuples[$tupleKey]);
+                continue;
+            }
             
             // Save the learning_objective
             // Template for this was found in \mod\glossary\edit.php
