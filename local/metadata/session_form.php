@@ -205,7 +205,7 @@ class session_form extends moodleform {
      * Will save the given data.
      */
     public static function save_data($data) {
-        $allChangedAttributes = array('sessiontopic', 'sessiondescription', 'sessiontype', 'sessiondate', 'learning_objectives', 'assessments');
+        $allChangedAttributes = array('sessiontopic', 'sessiondescription', 'sessiontype', 'sessiondate', 'learning_objectives', 'assessments', 'was_deleted');
         $types = session_form::get_session_types();
         $convertedAttributes = array('sessiontype' => function($value) use ($types) { return $types[$value]; });
         
