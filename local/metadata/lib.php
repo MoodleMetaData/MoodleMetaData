@@ -48,7 +48,7 @@ function get_course_learning_objectives() {
         $wantedIds[] = $courseobjective->objectiveid;
     }
     
-    return $DB->get_records_list('learningobjectives', 'id', $wantedIds, '', 'id,objectivename');
+    return $DB->get_records_list('learningobjectives', 'id', $wantedIds);
 }
 
 function get_table_data_for_course($table) {
