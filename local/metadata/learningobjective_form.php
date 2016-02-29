@@ -21,41 +21,42 @@ class learningobjective_form extends moodleform {
 	$mform->registerNoSubmitButton('load_existed');
 	$mform->registerNoSubmitButton('delete_obj');
 	$mainobjarray=array();
-        $mainobjarray[] =& $mform->createElement('text', 'mainobjname', get_string('lobjective_name','local_metadata'));
- 	$mainobjarray[] =& $mform->createElement('submit', 'load_existed', get_string('load'));
-	$mainobjarray[] =& $mform->createElement('button', 'add_subobj', get_string('add'),'onclick="addsubobjfunction()"');
-	$mainobjarray[] =& $mform->createElement('submit', 'change_obj_name', get_string('save'));
-	$mainobjarray[] =& $mform->createElement('submit', 'delete_obj', get_string('delete'));
+        $mainobjarray[] =& $mform->createElement('text', 'mainobjname', get_string('mainobjtext','local_metadata'));
+ 	$mainobjarray[] =& $mform->createElement('submit', 'load_existed', get_string('objload','local_metadata'));
+	$mainobjarray[] =& $mform->createElement('button', 'add_subobj', get_string('objadd','local_metadata'),'onclick="addsubobjfunction()"');
+	$mainobjarray[] =& $mform->createElement('submit', 'change_obj_name', get_string('objsave','local_metadata'));
+	$mainobjarray[] =& $mform->createElement('submit', 'delete_obj', get_string('objdelete','local_metadata'));
 
 
-
+	//set up the loading elements
         $subobjeditgroup = array();
         $mform->registerNoSubmitButton('edit_subobj');
-	$subobjeditgroup[] =& $mform->createElement('submit', 'edit_subobj', get_string('edit'));
+	$subobjeditgroup[] =& $mform->createElement('submit', 'edit_subobj', get_string('objedit',,'local_metadata'));
 
-
-	$mform->addGroup($mainobjarray, 'mainobj', get_string('lobjective_name','local_metadata'), array(' '), false);      
+	//add basic element to the page
+	$mform->addGroup($mainobjarray, 'mainobj', get_string('mainobjective_name','local_metadata'), array(' '), false);      
         $mform->addElement('html', '<div id="mainobjdiv">');
  	
-
+	//if click load => load all the sub objective from database
         if(isset($_POST['load_existed'])){
                 $currentname = $_POST['mainobjname'];
 		$subobjlist = learningobjective_form::get_existing_subobj($currentname);
-		$subobjeditgroup[] =& $mform->createElement('select', 'subobjlist', get_string('subojective_name', 'local_metadata'), $subobjlist);
+		$subobjeditgroup[] =& $mform->createElement('select', 'subobjlist', get_string('subobj_name', 'local_metadata'), $subobjlist);
 		$mform->addGroup($subobjeditgroup, 'subobjedit', get_string('subobj_list','local_metadata'), array(' '), false);
         	$mform->addElement('html', '<hr>');
         }
+	//change the name of the current learning objective
 	if(isset($_POST['change_obj_name'])){
 		$currentname = $_POST['mainobjname'];
 		learningobjective_form::save_name_changed();
 		echo '<script type="text/javascript">', 'alert("new objective name: ('.$currentname.') saved");' , '</script>';
 	 }
-
+	//if click edit button => load the page with the chosen sub ohjective name 
         if(isset($_POST['edit_subobj'])){            
 		$selected = $_POST['subobjlist'];
 		$_POST['mainobjname'] = $selected;
         }  
-
+	//delete the current objective based on the input objective name
         if(isset($_POST['delete_obj'])){
 		learningobjective_form::delete_learning_objective($_POST['mainobjname']);
                 $empty = '';
@@ -101,18 +102,15 @@ function addsubobjfunction() {
         parent::definition_after_data();
         $mform =& $this->_form;        
 //	$objnum= 0;
-//        if(isset($_POST['add_subobj'])){
-
+//      if(isset($_POST['add_subobj'])){
 //		$mform->registerNoSubmitButton('addsubobj'.$objnum);
 // 	      	$mainobjarray=array();
 //        	$mainobjarray[] =& $mform->createElement('text', 'objectivename', get_string('lobjective_name','local_metadata'));
 //        	$mainobjarray[] =& $mform->createElement('submit', 'addsubobj'.$objnum, get_string('add'));
-//        	$mform->addGroup($mainobjarray, 'mainobj', get_string('lobjective_name','local_metadata'), array(' '), false);
-	
+//        	$mform->addGroup($mainobjarray, 'mainobj', get_string('lobjective_name','local_metadata'), array(' '), false);	
 //		$mform->addElement('html', '<br><br><hr>');
-          	$objunm +=1;
-//       }
-
+//          	$objunm +=1;
+//      }
     }
     
     public static function get_existing_subobj($parentobjname){

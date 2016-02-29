@@ -33,10 +33,17 @@ $string['grade_weight'] = 'Weight: ';
 $string['objective_description'] = 'Description: ';
 
 //learning objective elements
-$string['lobjective_name'] = 'content of the objective: ';
-$string['add_objective'] = 'Add new learning objective';
-$string['mainobjective_name'] = 'main learning objective';
-$string['subobjective_name'] = 'sub learning objective';
+$string['mainobjtext'] = 'main objective name';
+$string['objload'] = 'load';
+$string['objadd'] = 'add';
+$string['objsave'] = 'change';
+$string['objdelete'] = 'delete';
+$string['objedit'] = 'edit';
+$string['mainobjective_name'] = 'objective name:';
+$string['subobj_name'] = 'sub objective name:';
+$string['subobj_list'] = 'sub objective list:';
+
+
 
 
 
