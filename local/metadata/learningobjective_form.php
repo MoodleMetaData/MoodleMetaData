@@ -1,54 +1,135 @@
 <?php
+global $PAGE, $CFG, $DB;
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
-
 require_once 'lib.php';
 
 class learningobjective_form extends moodleform {
+
     function definition() {
         global $CFG, $USER; //Declare our globals for use
         $mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
-
+	$objnum=0;
         // Form elements
-
         //$context = context_course::instance($csid);
-        // Assumes it has the data added
+        //Assumes it has the data added
         $lobjectives = get_table_data_for_course('courseobjectives');
 
-        $repeatarray = array();
-        $repeatarray[] = $mform->createElement('text', 'objectivename', get_string('lobjective_name', 'local_metadata'));
-        $repeatarray[] = $mform->createElement('hidden', 'objectiveid', 0);
-	$repeatarray[] = $mform->createElement('text', 'subobj_amt', get_string('subobjective_amt', 'local_metadata'));
-	$mform->setType('subobj_amt',PARAM_INT);
-	$repeatarray[] = $mform->createElement('button', 'subobjbtn', get_string('subobjective', 'local_metadata'));
-
-        // Add some separation between different courses
-        $repeatarray[] = $mform->createElement('html', '<hr>');
-
-        $repeateloptions = array();
-        $repeateloptions['objectiveid']['default'] = -1;
-
-        $this->repeat_elements($repeatarray, count($lobjectives),
-            $repeateloptions, 'option_repeats', 'option_add_fields', 1, get_string('add_objective', 'local_metadata'), true);
+	//set up the main learning objective and relative buttons
+	$mform->registerNoSubmitButton('change_obj_name');
+	$mform->registerNoSubmitButton('load_existed');
+	$mform->registerNoSubmitButton('delete_obj');
+	$mainobjarray=array();
+        $mainobjarray[] =& $mform->createElement('text', 'mainobjname', get_string('lobjective_name','local_metadata'));
+ 	$mainobjarray[] =& $mform->createElement('submit', 'load_existed', get_string('load'));
+	$mainobjarray[] =& $mform->createElement('button', 'add_subobj', get_string('add'),'onclick="addsubobjfunction()"');
+	$mainobjarray[] =& $mform->createElement('submit', 'change_obj_name', get_string('save'));
+	$mainobjarray[] =& $mform->createElement('submit', 'delete_obj', get_string('delete'));
 
 
-        $key = 0;
-        foreach ($lobjectives as $lobjective)
-        {
-            $index = '['.$key.']';
-            $mform->setDefault('objectivename'.$index, $lobjective->objectivename);
-            $mform->setDefault('sessionid'.$index, $lobjective->sessionid);
-            $key += 1;
+
+        $subobjeditgroup = array();
+        $mform->registerNoSubmitButton('edit_subobj');
+	$subobjeditgroup[] =& $mform->createElement('submit', 'edit_subobj', get_string('edit'));
+
+
+	$mform->addGroup($mainobjarray, 'mainobj', get_string('lobjective_name','local_metadata'), array(' '), false);      
+        $mform->addElement('html', '<div id="mainobjdiv">');
+ 	
+
+        if(isset($_POST['load_existed'])){
+                $currentname = $_POST['mainobjname'];
+		$subobjlist = learningobjective_form::get_existing_subobj($currentname);
+		$subobjeditgroup[] =& $mform->createElement('select', 'subobjlist', get_string('subojective_name', 'local_metadata'), $subobjlist);
+		$mform->addGroup($subobjeditgroup, 'subobjedit', get_string('subobj_list','local_metadata'), array(' '), false);
+        	$mform->addElement('html', '<hr>');
+        }
+	if(isset($_POST['change_obj_name'])){
+		$currentname = $_POST['mainobjname'];
+		learningobjective_form::save_name_changed();
+		echo '<script type="text/javascript">', 'alert("new objective name: ('.$currentname.') saved");' , '</script>';
+	 }
+
+        if(isset($_POST['edit_subobj'])){            
+		$selected = $_POST['subobjlist'];
+		$_POST['mainobjname'] = $selected;
+        }  
+
+        if(isset($_POST['delete_obj'])){
+		learningobjective_form::delete_learning_objective($_POST['mainobjname']);
+                $empty = '';
+                $_POST['mainobjname'] = $empty;
         }
 
-	$PAGE->requires->js('/mod/data/data.js');
 
-	addsubobjective();
+?>
+<script type="text/javascript">
+var subnum = 0;
+function addsubobjfunction() {
+    var subobjelement = document.createElement("input");
+ 
+    //Assign different attributes to the element.
+    subobjelement.setAttribute("type", "text");
+    subobjelement.setAttribute("name", "subobj");
+    subobjelement.setAttribute("value", "subobj"+subnum);
+    subobjelement.setAttribute("id", "subobj"+subnum);
+
+    var mainobjsubdiv = document.getElementById("mainobjdiv");
+    var text = document.createTextNode('sub objective to be added: ');
+    var newptag = document.createElement("p");
+    newptag.setAttribute("id","subobjptag"+subnum);
+    newptag.appendChild(subobjelement);    
+    subobjelement.parentNode.insertBefore(text, subobjelement);
+
+
+    //Append the element in page (in span).
+    mainobjsubdiv.appendChild(newptag);
+    mainobjsubdiv.appendChild(document.createElement('hr'));
+    subnum += 1;
+};
+
+</script>
+<?php
 
 
         $this->add_action_buttons();
     }
+
+
+    function definition_after_data() {
+        parent::definition_after_data();
+        $mform =& $this->_form;        
+//	$objnum= 0;
+//        if(isset($_POST['add_subobj'])){
+
+//		$mform->registerNoSubmitButton('addsubobj'.$objnum);
+// 	      	$mainobjarray=array();
+//        	$mainobjarray[] =& $mform->createElement('text', 'objectivename', get_string('lobjective_name','local_metadata'));
+//        	$mainobjarray[] =& $mform->createElement('submit', 'addsubobj'.$objnum, get_string('add'));
+//        	$mform->addGroup($mainobjarray, 'mainobj', get_string('lobjective_name','local_metadata'), array(' '), false);
+	
+//		$mform->addElement('html', '<br><br><hr>');
+          	$objunm +=1;
+//       }
+
+    }
+    
+    public static function get_existing_subobj($parentobjname){
+    	$subobjlist = array();
+	$subobjlist = array('programming','algorithm','framework',$parentobjname);
+        return $subobjlist;
+    }
+
+    public static function save_name_changed(){
+    	   
+    }
+
+
+    public static function delete_learning_objective($deleteobjname){
+    	   echo '<script type="text/javascript">', 'alert("objective: ('.$deleteobjname.') deleted!");' , '</script>';
+    }
+
 
     //If you need to validate your form information, you can override  the parent's validation method and write your own.	
     function validation($data, $files) {
