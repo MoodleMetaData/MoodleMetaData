@@ -28,7 +28,8 @@ $heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->
 $PAGE->set_heading($heading);
 $PAGE->set_url($CFG->wwwroot.'/local/metadata/insview.php');
 $PAGE->requires->js('/local/metadata/tabview.js');
-$PAGE->requires->js('/local/metadata/util.js');
+$PAGE->requires->js('/local/metadata/util.php');
+
 
 // Create forms
 $base_url = create_insview_url($courseId);
@@ -52,11 +53,9 @@ if ($general_form->is_cancelled()) {
     redirect($session_url);
 }
 
-
 // Submitted the data
 if ($data = $general_form->get_data()) {
     general_form::save_data($data);
-
     redirect($general_url);
 
 } else if ($data = $assessment_form->get_data()) {

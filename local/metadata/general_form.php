@@ -56,43 +56,17 @@ class general_form extends moodleform {
 
                 $mform->addRule('course_description', get_string('required'), 'required', null, 'client');
                 $mform->setType('course_description', PARAM_RAW);      
-                
-                // Upload course type
-                //$mform->addElement('filepicker', 'upload_course_type', get_string('upload_course_type', 'local_metadata'), null,array('maxbytes' => $maxbytes, 'accepted_types' => '.csv'));
-                //$course_type_content = $mform->get_file_content('upload_course_type');
-                $mform->addElement('file', 'upload_ctype_file', get_string('upload_ctype_file', 'local_metadata'));
-                //$mform->addElement('button', 'upload_ctype', get_string("upload_ctype", "local_metadata"));
-                $mform->addElement('html', '<button type="button" id="upload_ctype">Upload</button>');
-
-		// Add selection list for course type		
-		// TODO: ADD COURSE TYPE IN DB.
-		$course_types = array();
-		$course_types[] = 'type 1';
-		$course_types[] = 'type 2';
-		// -------------------------------------
-		$course_type_selection = $mform->addElement('select', 'course_type', get_string('course_type', 'local_metadata'), $course_types, '');
-		$mform->addRule('course_type', get_string('required'), 'required', null, 'client');
+            
+                $mform->addElement('html', '<input type="file" id="ctopic_file" onchange="test()">');
 
 		// Add multi-selection list for course topics
 		// TODO: UPLOAD FILE TO MANIPULATE THE LIST
 		$course_topics = array();
-		$course_topics[] = 'topic 1';
-		$course_topics[] = 'topic 2';
 		// -------------------------------------
 		$course_topic_selection = $mform->addElement('select', 'course_topic', get_string('course_topic', 'local_metadata'), $course_topics, '');
 		$course_topic_selection->setMultiple(true);
 		$mform->addRule('course_topic', get_string('required'), 'required', null, 'client');
-		
-		// Add multi-selection list for course learning objectives
-		// TODO: MERGE WITH XIAORAN
-		$course_objectives = array();
-		$course_objectives[] = 'objective 1';
-		$course_objectives[] = 'objective 2';
-		// -------------------------------------
-		$course_objective_selection = $mform->addElement('select', 'course_objective', get_string('course_objective', 'local_metadata'), $course_objectives, '');
-		$course_objective_selection->setMultiple(true);
-		$mform->addRule('course_objective', get_string('required'), 'required', null, 'client');
-		
+			
                 // Add number of assessment
                 // TODO: MANIPULATE ASSESSMENT FIELD AS SPECIFIED
                 $course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'), $attributes);
@@ -119,7 +93,7 @@ class general_form extends moodleform {
                 $course_gradAtts[] = 'attribute 1';
                 $course_gradAtts[] = 'attribute 2';
                 // -------------------------------------
-                $course_gradAtts_selection = $mform->addElement('select', 'course_gradAtt', get_string('course_gradAtt', 'local_metadata'), $course_objectives, '');
+                $course_gradAtts_selection = $mform->addElement('select', 'course_gradAtt', get_string('course_gradAtt', 'local_metadata'), $course_gradAtts, '');
                 $course_gradAtts_selection->setMultiple(true);
                 //$mform->addRule('course_gradAtt', get_string('required'), 'required', null, 'client');
 
@@ -146,7 +120,7 @@ class general_form extends moodleform {
         public static function save_data($data) {
                 global $CFG, $DB, $USER; //Declare our globals for use
                 global $course;
-
+                
                 $course_info = new stdClass();
                 $course_info->courseid = $course->id;
                 $course_info->coursename = $course->fullname;
@@ -172,4 +146,3 @@ class general_form extends moodleform {
 }
 
 ?>
-
