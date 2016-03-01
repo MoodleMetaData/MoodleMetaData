@@ -42,7 +42,7 @@ $string['objedit'] = 'edit';
 $string['mainobjective_name'] = 'objective name:';
 $string['subobj_name'] = 'sub objective name:';
 $string['subobj_list'] = 'sub objective list:';
-
+$string['obj_name_loaded']= 'loaded objective name: ';
 
 
 

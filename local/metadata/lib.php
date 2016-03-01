@@ -14,7 +14,6 @@ function local_metadata_extends_settings_navigation($settingsnav, $context) {
  
     if ($settingnode = $settingsnav->find('courseadmin', navigation_node::TYPE_COURSE)) {
         $url = new moodle_url('/local/metadata/insview.php', array('id' => $PAGE->course->id));
-
         // TODO: Should change the name to something more descriptive
         $foonode = navigation_node::create(
             get_string('ins_pluginname', 'local_metadata'),
@@ -24,32 +23,36 @@ function local_metadata_extends_settings_navigation($settingsnav, $context) {
             'metadata',
             new pix_icon('i/report', '')
         );
-
         if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
             $foonode->make_active();
         }
         $settingnode->add_node($foonode);
     }
-
 }
-
 function get_course_id() {
     return required_param('id', PARAM_INT);
 }
-
+function get_course_learning_objectives() {
+    global $DB;
+    $courseId = get_course_id();
+    $courseobjectives = $DB->get_records('courseobjectives', array('courseid'=>$courseId), '', 'objectiveid');
+    
+    $wantedIds = array();
+    foreach ($courseobjectives as $courseobjective) {
+        $wantedIds[] = $courseobjective->objectiveid;
+    }
+    
+    return $DB->get_records_list('learningobjectives', 'id', $wantedIds, '', 'id,objectivename');
+}
 function get_table_data_for_course($table) {
     global $DB;
-
     $courseId = get_course_id();
     return $DB->get_records($table, array('courseid'=>$courseId));
 }
-
-
 function create_insview_url($courseId, $anchor=null) {
     if ($anchor) {
         return new moodle_url('/local/metadata/insview.php', array('id' => $courseId), 'tab='.$anchor);
     }
     return new moodle_url('/local/metadata/insview.php', array('id' => $courseId), $anchor);
 }
-
 ?>
