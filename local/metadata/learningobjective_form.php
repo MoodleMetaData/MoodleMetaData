@@ -14,9 +14,9 @@ class learningobjective_form extends moodleform {
         //Assumes it has the data added
 	$currentcourseid = get_course_id();
 	if($passedid = $_GET['subid']){
-            echo '<script type="text/javascript">', 'alert("'.$passedid.'");' , '</script>';
+  //          echo '<script type="text/javascript">', 'alert("'.$passedid.'");' , '</script>';
 	}else{ 
-	   //echo '<script type="text/javascript">', 'alert("'.$_GET['subid'].'");' , '</script>';
+//	   echo '<script type="text/javascript">', 'alert("'.$_GET['subid'].'");' , '</script>';
 	//   $currentcourseid = get_course_id();
 	   $mform->addElement('html', '<p>current course id: '.$currentcourseid.'</p>');
 	}
@@ -127,8 +127,8 @@ function addsubobjfunction() {
             $loadedobjgrp = array();
             $mform->registerNoSubmitButton('delete_sub');
 
-            $mform->addElement('html','<a href="?subid='.$selectedmain.'">edit</a>');
-
+            $mform->addElement('html','<a href="#learningobjective_tab?subid='.$selectedmain.'">edit</a>');
+// $mform->addElement('html','<a href="#learningobjective_tab">edit</a>');
             $loadedobjgrp[] =& $mform->createElement('submit', 'delet_sub', get_string('objdelete','local_metadata'));
             $loadedobjgrp[] =& $mform->createElement('static', 'mainobjele', get_string('loaded_objname', 'local_metadata'),$mainobjele);
             $mform->addGroup($loadedobjgrp, 'loadedobjgrp', get_string('subobjective_name','local_metadata'), array(' '), false);
@@ -141,7 +141,12 @@ function addsubobjfunction() {
  	       $ifexisted = $DB->count_records_sql('SELECT count(*) FROM {learningobjectives} WHERE objectivename = ?', 
                        array($newobjname));
 	       if ($ifexisted>0) {
-	       	   echo '<script type="text/javascript">', 'alert("objective alreay existed!");' , '</script>';
+	       	       $ifassoexisted = $DB->count_records_sql('SELECT count(*) FROM {learningobjectives} lo,{courseobjectives} co WHERE lo.objectivename = ?AND lo.id = co.objectiveid',array($newobjname));
+		       if($ifassoexisted>0){
+				echo '<script type="text/javascript">', 'alert("objective alreay existed!");' , '</script>';
+			}else{
+				echo '<script type="text/javascript">', 'alert("'.$ifassoexisted.'");' , '</script>';
+			}
        	       }else{
 //	       	   echo '<script type="text/javascript">', 'alert("objective not existed!");' , '</script>';
 		   
