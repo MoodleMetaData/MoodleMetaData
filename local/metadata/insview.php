@@ -1,5 +1,5 @@
 <?php
-global $PAGE, $CFG, $DB;
+global $PAGE, $CFG, $DB, $USER;
 require_once('../../config.php');
 require_once 'lib.php';
 
@@ -17,9 +17,9 @@ require_once($CFG->dirroot.'/local/metadata/general_form.php');
 require_once($CFG->dirroot.'/local/metadata/assessment_form.php');
 require_once($CFG->dirroot.'/local/metadata/session_form.php');
 
+// Define global variable for DB result
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
-
-
+    
 // Set up page information
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
@@ -28,11 +28,13 @@ $heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->
 $PAGE->set_heading($heading);
 $PAGE->set_url($CFG->wwwroot.'/local/metadata/insview.php');
 $PAGE->requires->js('/local/metadata/tabview.js');
+$PAGE->requires->js('/local/metadata/util.php');
+
 
 // Create forms
 $base_url = create_insview_url($courseId);
-$general_form = new general_form($base_url);
-$assessment_form = new assessment_form($base_url);
+$general_form = new general_form($base_url); // #
+$assessment_form = new assessment_form($base_url.'#tab=1'); // #tab=1
 
 $sessions = get_table_data_for_course('coursesession');
 $session_form = new session_form($base_url, array('sessions' => $sessions));
@@ -51,15 +53,10 @@ if ($general_form->is_cancelled()) {
     redirect($session_url);
 }
 
-
 // Submitted the data
 if ($data = $general_form->get_data()) {
-    // TODO: Save the submission data, use a function/class from different file
-    echo "General";
-    print_object($data);
-
-    // TODO: Then, redirect
-    // redirect($general_url);
+    general_form::save_data($data);
+    redirect($general_url);
 
 } else if ($data = $assessment_form->get_data()) {
     // TODO: Save the submission data, use a function/class from different file
