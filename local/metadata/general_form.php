@@ -16,9 +16,9 @@ class general_form extends moodleform {
                 // initialize the form.
                 $mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 
-                $courseId = get_course_id();
-		$mform->addElement('static', 'course_id', get_string('course_id', 'local_metadata'));
-                $mform->setDefault('course_id', $courseId);
+                $courseCode = $course->shortname;
+                $mform->addElement('static', 'course_code', get_string('course_code', 'local_metadata'));
+                $mform->setDefault('course_code', $courseCode);
             
                 $courseName = $course->fullname;
                 $mform->addElement('static', 'course_name', get_string('course_name', 'local_metadata'));
@@ -28,7 +28,7 @@ class general_form extends moodleform {
                 $mform->addElement('static', 'course_instructor', get_string('course_instructor', 'local_metadata'));
                 $mform->setDefault('course_instructor', $courseInstructor);
 
-		// Form elements
+		// Form elements                
 
                 // Enter faculty name.
                 $course_faculty = $mform->addElement('text', 'course_faculty', get_string('course_faculty', 'local_metadata'), $attributes);
@@ -37,6 +37,22 @@ class general_form extends moodleform {
                     $mform->setDefault('course_faculty', $courseinfo->coursefaculty);
                 }             
 
+                // Add drop down menu for program types
+                // TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
+                $program_types = array();
+                // -------------------------------------
+                $program_type_selection = $mform->addElement('select', 'program_type', get_string('program_type', 'local_metadata'), $program_types, '');
+                $mform->addRule('program_type', get_string('required'), 'required', null, 'client');
+
+
+                // Add drop down menu for course categories
+                // TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
+                $course_categories = array();
+                // -------------------------------------
+                $course_category_selection = $mform->addElement('select', 'course_category', get_string('course_category', 'local_metadata'), $course_categories, '');
+                $mform->addRule('course_category', get_string('required'), 'required', null, 'client');
+
+
                 // TODO: EDITOR HAS AUTOSAVE AND AUTORESTORE DATA, WHICH WILL REMOVE THE FETCHED DATA FROM DB
                 // Add editor for create or modify course description.              
                 // Get default course description from DB.
@@ -44,7 +60,6 @@ class general_form extends moodleform {
                 $default_description = $course->summary;
                 //$course_description_editor = $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'));
                 $mform->addElement('textarea', 'course_description', get_string("course_description", "local_metadata"), 'wrap="virtual" rows="5" cols="70"');
-
                 if($courseinfo){
                     $current_description = $courseinfo->coursedescription;
                     $mform->setDefault('course_description', $current_description);
@@ -53,20 +68,54 @@ class general_form extends moodleform {
                     $mform->setDefault('course_description', $default_description);
                     //$course_description_editor->setValue(array('text' => $default_description) );
                 }
-
                 $mform->addRule('course_description', get_string('required'), 'required', null, 'client');
                 $mform->setType('course_description', PARAM_RAW);      
-            
-                $mform->addElement('html', '<input type="file" id="ctopic_file" onchange="test()">');
 
-		// Add multi-selection list for course topics
-		// TODO: UPLOAD FILE TO MANIPULATE THE LIST
-		$course_topics = array();
-		// -------------------------------------
-		$course_topic_selection = $mform->addElement('select', 'course_topic', get_string('course_topic', 'local_metadata'), $course_topics, '');
-		$course_topic_selection->setMultiple(true);
-		$mform->addRule('course_topic', get_string('required'), 'required', null, 'client');
-			
+                // Add course objective
+                //-------------------------------------------------------------------------------
+                $mform->addElement('header', 'obj_knowledge_header', get_string('obj_knowledge_header', 'local_metadata'));
+                $knowledge_desc = $mform->addElement('text', 'knowledge_desc', get_string('knowledge_desc', 'local_metadata'), '');
+                $knowledge_array = array();
+                $knowledge_array[] = $mform->createElement('text', 'knowledge_option', get_string('knowledge_label', 'local_metadata'));
+                $knowledge_array[] = $mform->createElement('hidden', 'knowledge_id', 0);
+                         
+                if ($this->_instance){
+                    $repeatno = $DB->count_records('knowledge_options', array('knowledge_id'=>$this->_instance));
+                    $repeatno += 1;
+                } else {
+                    $repeatno = 1;
+                }
+                                 
+                $knowledge_options = array();       
+                $mform->setType('knowledge_option', PARAM_CLEANHTML);
+                $mform->setType('knowledge_id', PARAM_INT);
+                $this->repeat_elements($knowledge_array, $repeatno, $knowledge_options, 'option_repeats', 'option_add_fields', 1, null, true);
+
+                $mform->closeHeaderBefore('obj_skill_header');
+
+                //-------------------------------------------------------------------------------
+                $mform->addElement('header', 'obj_skill_header', get_string('obj_skill_header', 'local_metadata'));
+                $skill_desc = $mform->addElement('text', 'skill_desc', get_string('skill_desc', 'local_metadata'), '');
+                $skill_array = array();
+                $skill_array[] = $mform->createElement('text', 'skill_option', get_string('skill_label', 'local_metadata'));
+                $skill_array[] = $mform->createElement('hidden', 'skill_id', 0);
+                                                            
+                if ($this->_instance){
+                                                                                        $repeatno = $DB->count_records('skill_options', array('skill_id'=>$this->_instance));
+                                                                                                            $repeatno += 1;
+                                                                                                        } else {
+                                                                                                                                $repeatno = 1;
+                                                                                                                                                }
+                                                                                                 
+                                                                                $skill_options = array();       
+                                                                                $mform->setType('skill_option', PARAM_CLEANHTML);
+                                                                                                $mform->setType('skill_id', PARAM_INT);
+                                                                                                $this->repeat_elements($skill_array, $repeatno, $skill_options, 'option_repeats', 'option_add_fields', 1, null, true);
+
+                                                                                                                $mform->closeHeaderBefore('course_assessment');
+
+
+
                 // Add number of assessment
                 // TODO: MANIPULATE ASSESSMENT FIELD AS SPECIFIED
                 $course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'), $attributes);

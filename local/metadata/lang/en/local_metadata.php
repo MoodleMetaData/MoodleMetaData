@@ -19,13 +19,14 @@ $string['err_rangelength']='You must enter between {$a->format[0]} and {$a->form
 $string['err_required']='You must supply a value here.';
 
 // General form elements
-$string['course_id'] = 'Course id: ';
+$string['course_code'] = 'Course id: ';
 $string['course_name'] = 'Course name: ';
 $string['course_description'] = 'Course description: ';
 $string['course_instructor'] = 'Course instructor: ';
 $string['upload_ctype_file'] = 'Upload course type file: ';
 $string['upload_ctype'] = 'Upload';
-$string['course_type'] = 'Course type: ';
+$string['program_type'] = 'Program type: ';
+$string['course_category'] = 'Course category: ';
 $string['course_topic'] = 'Course topic(s): ';
 $string['course_objective'] = 'Course learning objective(s): ';
 $string['course_faculty'] = 'Course faculty: ';
