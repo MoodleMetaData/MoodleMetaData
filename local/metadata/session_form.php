@@ -51,6 +51,8 @@ class session_form extends moodleform {
         $repeatarray[] = $mform->createElement('textarea', 'sessiondescription', get_string('session_description', 'local_metadata'));
 
         $repeatarray[] = $mform->createElement('select', 'sessiontype', get_string('session_type', 'local_metadata'), session_form::get_session_types());
+        
+        $repeatarray[] = $mform->createElement('select', 'sessionlength', get_string('session_length', 'local_metadata'), session_form::get_session_lengths());
 
         $repeatarray[] = $mform->createElement('date_selector', 'sessiondate', get_string('session_date', 'local_metadata'));
 
@@ -126,6 +128,10 @@ class session_form extends moodleform {
             // Handled specially, because the default must be an int, which needs to be translated from string in database
             $types = session_form::get_session_types();
             $mform->setDefault('sessiontype'.$index, array_search($session->sessiontype, $types));
+            
+            // Handled specially, because the default must be an int, which needs to be translated from string in database
+            $lengths = session_form::get_session_lengths();
+            $mform->setDefault('sessionlength'.$index, array_search($session->sessionlength, $lengths));
 
             $this->setup_data_from_database_for_session($mform, $index, $session);
 
@@ -176,6 +182,7 @@ class session_form extends moodleform {
                 $mform->removeElement('sessiondescription'.$index);
 
                 $mform->removeElement('sessiontype'.$index);
+                $mform->removeElement('sessionlength'.$index);
 
                 $mform->removeElement('sessiondate'.$index);
                 
@@ -214,6 +221,19 @@ class session_form extends moodleform {
 
         return $types;
     }
+    
+    /**
+     * Will return all of the length options
+     *   May eventually load them from the configuration for the plugin
+     *
+     * @return array containing string of all types
+     */
+    public static function get_session_lengths() {
+        // TODO: Will probably need to change this
+        $types = array('50 minutes', '80 minutes', '110 minutes', '140 minutes', '170 minutes');
+
+        return $types;
+    }
 
     /**
      * Will save the given data, that should be from calling the get_data function. Data will be all of the sessions in the course
@@ -227,10 +247,17 @@ class session_form extends moodleform {
         global $DB;
         
         // Set up the recurring element parser
-        $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessiontype', 'sessiondate', 'learning_objectives', 'assessments', 'was_deleted');
+        $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessiontype', 'sessionlength', 'sessiondate', 'learning_objectives', 'assessments', 'was_deleted');
+        
         $types = session_form::get_session_types();
-        $convertedAttributes = array('sessiontype' => function($value) use ($types) { return $types[$value]; });
+        $lengths = session_form::get_session_lengths();
+        $convertedAttributes = array('sessiontype' => function($value) use ($types) { return $types[$value]; },
+                                     'sessionlength' => function($value) use ($lengths) { return $lengths[$value]; }
+                                     );
+
         $session_recurring_parser = new recurring_element_parser('coursesession', 'sessions_list', $allChangedAttributes, $convertedAttributes);
+        
+        
 
         // Get the tuples (one for each session) from the parser
         $tuples = $session_recurring_parser->getTuplesFromData($data);

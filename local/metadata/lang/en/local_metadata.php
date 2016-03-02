@@ -41,6 +41,7 @@ $string['add_session'] = 'Add new session';
 $string['session_title'] = 'Title:';
 $string['session_description'] = 'Description:';
 $string['session_type'] = 'Type:';
+$string['session_length'] = 'Length:';
 $string['session_date'] = 'Date:';
 
 $string['learning_objectives'] = 'Learning Objectives';
