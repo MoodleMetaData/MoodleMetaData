@@ -49,6 +49,9 @@ class session_form extends moodleform {
         $repeatarray = array();
         $repeatarray[] = $mform->createElement('text', 'sessiontitle', get_string('session_title', 'local_metadata'));
         $repeatarray[] = $mform->createElement('textarea', 'sessiondescription', get_string('session_description', 'local_metadata'));
+        
+        $repeatarray[] = $mform->createElement('text', 'sessionguestteacher', get_string('session_guest_teacher', 'local_metadata'));
+        
 
         $repeatarray[] = $mform->createElement('select', 'sessiontype', get_string('session_type', 'local_metadata'), session_form::get_session_types());
         
@@ -92,13 +95,17 @@ class session_form extends moodleform {
         $repeateloptions = array();
         
         // Moodle complains if some elements aren't given a type
-        $repeateloptions['sessiontitle']['type'] = PARAM_RAW;
+        $repeateloptions['sessiontitle']['type'] = PARAM_TEXT;
+        $repeateloptions['sessionguestteacher']['type'] = PARAM_TEXT;
         $repeateloptions['coursesession_id']['type'] = PARAM_INT;
         $repeateloptions['was_deleted']['type'] = PARAM_RAW;
 
         // Add the repeating elements to the form
         $this->repeat_elements($repeatarray, $numSessions,
             $repeateloptions, 'sessions_list', 'sessions_list_add_element', 1, get_string('add_session', 'local_metadata'), true);
+        
+        
+        
     }
 
 
@@ -116,10 +123,16 @@ class session_form extends moodleform {
         {
             $index = '['.$key.']';
             
+            // Add the help button for sessionguestteacher
+            $mform->addHelpButton('sessionguestteacher'.$index, 'session_guest_teacher', 'local_metadata');
+            
             // Easiest way to set the initial data is to set the default for each session in sessions
             $mform->setDefault('coursesession_id'.$index, $session->id);
             
             $mform->setDefault('sessiontitle'.$index, $session->sessiontitle);
+            
+            $mform->setDefault('sessionguestteacher'.$index, $session->sessionguestteacher);
+            
             $mform->setDefault('sessiondescription'.$index, $session->sessiondescription);
             $mform->setDefault('sessiondate'.$index, $session->sessiondate);
 
@@ -180,6 +193,7 @@ class session_form extends moodleform {
                     // Will not save to the database until the user presses submit
                 $mform->removeElement('sessiontitle'.$index);
                 $mform->removeElement('sessiondescription'.$index);
+                $mform->removeElement('sessionguestteacher'.$index);
 
                 $mform->removeElement('sessiontype'.$index);
                 $mform->removeElement('sessionlength'.$index);
@@ -247,7 +261,7 @@ class session_form extends moodleform {
         global $DB;
         
         // Set up the recurring element parser
-        $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessiontype', 'sessionlength', 'sessiondate', 'learning_objectives', 'assessments', 'was_deleted');
+        $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessionguestteacher', 'sessiontype', 'sessionlength', 'sessiondate', 'learning_objectives', 'assessments', 'was_deleted');
         
         $types = session_form::get_session_types();
         $lengths = session_form::get_session_lengths();
