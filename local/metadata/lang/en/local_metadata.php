@@ -46,7 +46,9 @@ $string['session_type'] = 'Type';
 $string['session_length'] = 'Length';
 $string['session_date'] = 'Date';
 
-$string['learning_objectives'] = 'Learning Objectives';
+$string['learning_objective_Attitudes'] = 'Learning Objective - Attitudes';
+$string['learning_objective_Knowledge'] = 'Learning Objective - Knowledge';
+$string['learning_objective_Skills'] = 'Learning Objectives - Skills';
 $string['related_assessments'] = 'Related Assessments';
 $string['deletesession'] = 'Delete Session';
 

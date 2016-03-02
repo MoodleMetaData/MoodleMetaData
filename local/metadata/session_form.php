@@ -61,14 +61,21 @@ class session_form extends moodleform {
 
 
         // Set up the select for learning objectives
+            // Will separate them based on type
+            // Then, everytime need to deal with them, will also deal with them separated by type
         $learningObjectives = get_course_learning_objectives();
         $learningObjectivesList = array();
         foreach ($learningObjectives as $learningObjective) {
-            $learningObjectivesList[$learningObjective->id] = $learningObjective->objectivename;
+            $learningObjectivesList[$learningObjective->objectivetype][$learningObjective->id] = $learningObjective->objectivename;
         }
-        $learningObjectivesEl = $mform->createElement('select', 'learning_objectives', get_string('learning_objectives', 'local_metadata'), $learningObjectivesList);
-        $learningObjectivesEl->setMultiple(true);
-        $repeatarray[] = $learningObjectivesEl;
+        
+        $learningObjectiveTypes = get_learning_objective_types();
+        foreach ($learningObjectiveTypes as $learningObjectiveType) {
+            $learningObjectivesEl = $mform->createElement('select', 'learning_objective_'.$learningObjectiveType, get_string('learning_objective_'.$learningObjectiveType, 'local_metadata'), $learningObjectivesList[$learningObjectiveType]);
+            $learningObjectivesEl->setMultiple(true);
+            $repeatarray[] = $learningObjectivesEl;
+        }
+        
 
 
         // Set up the select for assessments
@@ -158,7 +165,11 @@ class session_form extends moodleform {
         // Load the learning objectives for the session
         // Template for this was found in \mod\glossary\edit.php
         if ($learningObjectivesArr = $DB->get_records_menu("sessionobjectives", array('sessionid'=>$session->id), '', 'id, objectiveid')) {
-            $mform->setDefault('learning_objectives'.$index, array_values($learningObjectivesArr));
+            $learningObjectiveTypes = get_learning_objective_types();
+            foreach ($learningObjectiveTypes as $learningObjectiveType) {
+                $mform->setDefault('learning_objective_'.$learningObjectiveType.$index, array_values($learningObjectivesArr));
+            }
+            
         }
 
         // Load the assessments for the session
@@ -200,8 +211,11 @@ class session_form extends moodleform {
 
                 $mform->removeElement('sessiondate'.$index);
                 
-                $mform->removeElement('learning_objectives'.$index);
-
+                
+                $learningObjectiveTypes = get_learning_objective_types();
+                foreach ($learningObjectiveTypes as $learningObjectiveType) {
+                    $mform->removeElement('learning_objective_'.$learningObjectiveType.$index);
+                }
 
                 $mform->removeElement('assessments'.$index);
 
@@ -261,7 +275,12 @@ class session_form extends moodleform {
         global $DB;
         
         // Set up the recurring element parser
-        $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessionguestteacher', 'sessiontype', 'sessionlength', 'sessiondate', 'learning_objectives', 'assessments', 'was_deleted');
+        $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessionguestteacher', 'sessiontype', 'sessionlength', 'sessiondate', 'assessments', 'was_deleted');
+        
+        $learningObjectiveTypes = get_learning_objective_types();
+        foreach ($learningObjectiveTypes as $learningObjectiveType) {
+            $allChangedAttributes[] = 'learning_objective_'.$learningObjectiveType;
+        }
         
         $types = session_form::get_session_types();
         $lengths = session_form::get_session_lengths();
@@ -294,18 +313,20 @@ class session_form extends moodleform {
             
             // Save the learning_objective
             // Template for this was found in \mod\glossary\edit.php
-            if (array_key_exists('learning_objectives', $tuple) and is_array($tuple['learning_objectives'])) {
-                foreach ($tuple['learning_objectives'] as $objectiveId) {
-                    $newLink = new stdClass();
-                    $newLink->sessionid = $tuple['id'];
-                    $newLink->objectiveid = $objectiveId;
-                    $DB->insert_record('sessionobjectives', $newLink, false);
+            $learningObjectiveTypes = session_form::get_learning_objectives();
+            foreach ($learningObjectiveTypes as $learningObjectiveType) {
+                if (array_key_exists($key, $tuple) and is_array($tuple[$key])) {
+                    foreach ($tuple[$key] as $objectiveId) {
+                        $newLink = new stdClass();
+                        $newLink->sessionid = $tuple['id'];
+                        $newLink->objectiveid = $objectiveId;
+                        $DB->insert_record('sessionobjectives', $newLink, false);
+                    }
                 }
             }
             
             // Save the assessments
             // Template for this was found in \mod\glossary\edit.php
-            
             if (array_key_exists('assessments', $tuple) and is_array($tuple['assessments'])) {
                 foreach ($tuple['assessments'] as $assessmentId) {
                     $newLink = new stdClass();
