@@ -47,7 +47,7 @@ class session_form extends moodleform {
         $mform = $this->_form;
 
         $repeatarray = array();
-        $repeatarray[] = $mform->createElement('text', 'sessiontopic', get_string('session_topic', 'local_metadata'));
+        $repeatarray[] = $mform->createElement('text', 'sessiontitle', get_string('session_title', 'local_metadata'));
         $repeatarray[] = $mform->createElement('textarea', 'sessiondescription', get_string('session_description', 'local_metadata'));
 
         $repeatarray[] = $mform->createElement('select', 'sessiontype', get_string('session_type', 'local_metadata'), session_form::get_session_types());
@@ -117,7 +117,7 @@ class session_form extends moodleform {
             // Easiest way to set the initial data is to set the default for each session in sessions
             $mform->setDefault('coursesession_id'.$index, $session->id);
             
-            $mform->setDefault('sessiontopic'.$index, $session->sessiontopic);
+            $mform->setDefault('sessiontitle'.$index, $session->sessiontitle);
             $mform->setDefault('sessiondescription'.$index, $session->sessiondescription);
             $mform->setDefault('sessiondate'.$index, $session->sessiondate);
 
