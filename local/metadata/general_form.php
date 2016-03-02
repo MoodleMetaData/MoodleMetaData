@@ -16,6 +16,12 @@ class general_form extends moodleform {
                 // initialize the form.
                 $mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 
+				/***************************
+				 * GENERAL
+				 ***************************/
+				$mform->addElement('header', 'course_general_header', get_string('course_general_header', 'local_metadata'));
+				
+				// Course shortname
                 $courseCode = $course->shortname;
                 $mform->addElement('static', 'course_code', get_string('course_code', 'local_metadata'));
                 $mform->setDefault('course_code', $courseCode);
@@ -23,14 +29,40 @@ class general_form extends moodleform {
                 $courseName = $course->fullname;
                 $mform->addElement('static', 'course_name', get_string('course_name', 'local_metadata'));
                 $mform->setDefault('course_name', $courseName);
-
-                // COURSE CONTACT
-                $mform->addElement('header', 'course_contact_header', get_string('course_contact_header', 'local_metadata'));
-
-                // Instructor
+				
+				// Instructor
                 $courseInstructor = $USER->firstname.' '.$USER->lastname;
                 $mform->addElement('static', 'course_instructor', get_string('course_instructor', 'local_metadata'));
                 $mform->setDefault('course_instructor', $courseInstructor);
+				
+				// Faculty
+                $course_faculty = $mform->addElement('text', 'course_faculty', get_string('course_faculty', 'local_metadata'), '');
+                //$mform->addRule('course_faculty', get_string('required'), 'required', null, 'client');
+                if($courseinfo = $DB->get_record('courseinfo', array('courseid'=>$courseId))){
+                    $mform->setDefault('course_faculty', $courseinfo->coursefaculty);
+                }   
+				
+				// Program types
+                // TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
+                $program_types = array();
+                // -------------------------------------
+                $program_type_selection = $mform->addElement('select', 'program_type', get_string('program_type', 'local_metadata'), $program_types, '');
+                $mform->addRule('program_type', get_string('required'), 'required', null, 'client');
+
+
+                // Courses category
+                // TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
+                $course_categories = array();
+                // -------------------------------------
+                $course_category_selection = $mform->addElement('select', 'course_category', get_string('course_category', 'local_metadata'), $course_categories, '');
+                $mform->addRule('course_category', get_string('required'), 'required', null, 'client');
+				
+				$mform->closeHeaderBefore('course_contact_header');  
+
+				/***************************
+				 * CONTACT 
+				 ***************************/
+                $mform->addElement('header', 'course_contact_header', get_string('course_contact_header', 'local_metadata'));
 
                 // Email
                 $course_email = $mform->addElement('text', 'course_email', get_string('course_email', 'local_metadata'), '');
@@ -44,37 +76,19 @@ class general_form extends moodleform {
                 // Office hours
                 $course_officeh = $mform->addElement('text', 'course_officeh', get_string('course_officeh', 'local_metadata'), '');
 
-
-                $mform->closeHeaderBefore('course_faculty');              
-
-
-                // Enter faculty name.
-                $course_faculty = $mform->addElement('text', 'course_faculty', get_string('course_faculty', 'local_metadata'), $attributes);
-                //$mform->addRule('course_faculty', get_string('required'), 'required', null, 'client');
-                if($courseinfo = $DB->get_record('courseinfo', array('courseid'=>$courseId))){
-                    $mform->setDefault('course_faculty', $courseinfo->coursefaculty);
-                }             
-
-                // Add drop down menu for program types
-                // TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
-                $program_types = array();
-                // -------------------------------------
-                $program_type_selection = $mform->addElement('select', 'program_type', get_string('program_type', 'local_metadata'), $program_types, '');
-                $mform->addRule('program_type', get_string('required'), 'required', null, 'client');
+                $mform->closeHeaderBefore('course_desc_header');
 
 
-                // Add drop down menu for course categories
-                // TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
-                $course_categories = array();
-                // -------------------------------------
-                $course_category_selection = $mform->addElement('select', 'course_category', get_string('course_category', 'local_metadata'), $course_categories, '');
-                $mform->addRule('course_category', get_string('required'), 'required', null, 'client');
-
-
+				/***************************
+				 * DESCRIPTION
+				 ***************************/
+				$mform->addElement('header', 'course_desc_header', get_string('course_desc_header', 'local_metadata'));
                 // TODO: EDITOR HAS AUTOSAVE AND AUTORESTORE DATA, WHICH WILL REMOVE THE FETCHED DATA FROM DB
                 // Add editor for create or modify course description.              
                 // Get default course description from DB.
                 // If description does not exist in the extra table, display the default description.
+				
+				// Course summary
                 $default_description = $course->summary;
                 //$course_description_editor = $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'));
                 $mform->addElement('textarea', 'course_description', get_string("course_description", "local_metadata"), 'wrap="virtual" rows="5" cols="70"');
@@ -89,10 +103,39 @@ class general_form extends moodleform {
                 $mform->addRule('course_description', get_string('required'), 'required', null, 'client');
                 $mform->setType('course_description', PARAM_RAW);      
 
-                // Add course objective
-                // TODO: repeating element issue
-                //-------------------------------------------------------------------------------
+				$mform->closeHeaderBefore('course_format_header');
+				
+				/***************************
+				 * COURSE FORMAT
+				 ***************************/
+				$mform->addElement('header', 'course_format_header', get_string('course_format_header', 'local_metadata'));
+				// Assessment
+                // TODO: MANIPULATE ASSESSMENT FIELD AS SPECIFIED
+                $course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'), $attributes);
+                $mform->addRule('course_assessment', get_string('required'), 'required', null, 'client');
+                $mform->addRule('course_assessment', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
+
+                if($courseinfo){
+                    $mform->setDefault('course_assessment', $courseinfo->assessmentnumber);
+                }
+				
+                // Session
+                // TODO: MANIPULATE SESSION FIELD AS SPEFICIED
+                $course_assessment = $mform->addElement('text', 'course_session', get_string('session_counter', 'local_metadata'), $attributes);
+                $mform->addRule('course_session', get_string('required'), 'required', null, 'client');
+                $mform->addRule('course_session', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
+
+                if($courseinfo){
+                    $mform->setDefault('course_session', $courseinfo->sessionnumber);
+                }
+				
+				$mform->closeHeaderBefore('obj_knowledge_header');
+				
+                /***************************
+				 * COURSE OBJECTIVES
+				 ***************************/
                 $mform->addElement('header', 'obj_knowledge_header', get_string('obj_knowledge_header', 'local_metadata'));
+				
                 $knowledge_desc = $mform->addElement('static', 'knowledge_desc', '', get_string('knowledge_desc', 'local_metadata'));
                 $knowledge_array = array();
                 $knowledge_array[] = $mform->createElement('text', 'knowledge_option', get_string('knowledge_label', 'local_metadata'));
@@ -152,28 +195,13 @@ class general_form extends moodleform {
                 $mform->setType('attitude_id', PARAM_INT);
                 $this->repeat_elements($attitude_array, $repeata, $attitude_options, 'option_repeats3', 'option_add_fields_attitude', 1, get_string('add_attitute','local_metadata'), true);
 
-                $mform->closeHeaderBefore('course_assessment');
+                $mform->closeHeaderBefore('course_gradatt_header');
 
-                // Add number of assessment
-                // TODO: MANIPULATE ASSESSMENT FIELD AS SPECIFIED
-                $course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'), $attributes);
-                $mform->addRule('course_assessment', get_string('required'), 'required', null, 'client');
-                $mform->addRule('course_assessment', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
-                if($courseinfo){
-                    $mform->setDefault('course_assessment', $courseinfo->assessmentnumber);
-                }
-
-                // Add number of session
-                // TODO: MANIPULATE SESSION FIELD AS SPEFICIED
-                $course_assessment = $mform->addElement('text', 'course_session', get_string('session_counter', 'local_metadata'), $attributes);
-                $mform->addRule('course_session', get_string('required'), 'required', null, 'client');
-                $mform->addRule('course_session', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
-
-                if($courseinfo){
-                    $mform->setDefault('course_session', $courseinfo->sessionnumber);
-                }
-
+                /***************************
+				 * GRADUATE ATTRIBUTES
+				 ***************************/
+                $mform->addElement('header', 'course_gradatt_header', get_string('course_gradatt_header', 'local_metadata'));
                 // Add multi selection list for graduate attributes.
                 // TODO: MANIPULATE THE LIST FROM DB
                 $course_gradAtts = array();
