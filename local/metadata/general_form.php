@@ -28,7 +28,7 @@ class general_form extends moodleform {
                 $mform->addElement('static', 'course_instructor', get_string('course_instructor', 'local_metadata'));
                 $mform->setDefault('course_instructor', $courseInstructor);
 
-		// Form elements                
+				// Form elements                
 
                 // Enter faculty name.
                 $course_faculty = $mform->addElement('text', 'course_faculty', get_string('course_faculty', 'local_metadata'), $attributes);
@@ -80,16 +80,16 @@ class general_form extends moodleform {
                 $knowledge_array[] = $mform->createElement('hidden', 'knowledge_id', 0);
                          
                 if ($this->_instance){
-                    $repeatno = $DB->count_records('knowledge_options', array('knowledge_id'=>$this->_instance));
-                    $repeatno += 1;
+                    $repeatk = $DB->count_records('knowledge_options', array('knowledge_id'=>$this->_instance));
+                    $repeatk += 1;
                 } else {
-                    $repeatno = 1;
+                    $repeatk = 1;
                 }
                                  
                 $knowledge_options = array();       
                 $mform->setType('knowledge_option', PARAM_CLEANHTML);
                 $mform->setType('knowledge_id', PARAM_INT);
-                $this->repeat_elements($knowledge_array, $repeatno, $knowledge_options, 'option_repeats', 'option_add_fields', 1, null, true);
+                $this->repeat_elements($knowledge_array, $repeatk, $knowledge_options, 'option_repeats', 'option_add_fields', 1, null, true);
 
                 $mform->closeHeaderBefore('obj_skill_header');
 
@@ -101,20 +101,39 @@ class general_form extends moodleform {
                 $skill_array[] = $mform->createElement('hidden', 'skill_id', 0);
                                                             
                 if ($this->_instance){
-                                                                                        $repeatno = $DB->count_records('skill_options', array('skill_id'=>$this->_instance));
-                                                                                                            $repeatno += 1;
-                                                                                                        } else {
-                                                                                                                                $repeatno = 1;
-                                                                                                                                                }
+					$repeats = $DB->count_records('skill_options', array('skill_id'=>$this->_instance));
+                    $repeats += 1;
+                } else {
+                    $repeats = 1;
+                }
                                                                                                  
-                                                                                $skill_options = array();       
-                                                                                $mform->setType('skill_option', PARAM_CLEANHTML);
-                                                                                                $mform->setType('skill_id', PARAM_INT);
-                                                                                                $this->repeat_elements($skill_array, $repeatno, $skill_options, 'option_repeats', 'option_add_fields', 1, null, true);
+                $skill_options = array();       
+                $mform->setType('skill_option', PARAM_CLEANHTML);
+                $mform->setType('skill_id', PARAM_INT);
+                $this->repeat_elements($skill_array, $repeats, $skill_options, 'option_repeats', 'option_add_fields', 1, null, true);
 
-                                                                                                                $mform->closeHeaderBefore('course_assessment');
+                $mform->closeHeaderBefore('obj_attitude_header');
 
+                //-------------------------------------------------------------------------------
+                $mform->addElement('header', 'obj_attitude_header', get_string('obj_attitude_headerr', 'local_metadata'));
+                $attitude_desc = $mform->addElement('text', 'attitude_desc', get_string('attitude_desc', 'local_metadata'), '');
+                $attitude_array = array();
+                $attitude_array[] = $mform->createElement('text', 'attitude_option', get_string('attitude_label', 'local_metadata'));
+                $attitude_array[] = $mform->createElement('hidden', 'attitude_id', 0);
+                                                            
+                if ($this->_instance){
+					$repeata = $DB->count_records('attitude_options', array('attitude_id'=>$this->_instance));
+                    $repeata += 1;
+                } else {
+                    $repeata = 1;
+                }
+                                                                                                 
+                $attitude_options = array();       
+                $mform->setType('attitude_option', PARAM_CLEANHTML);
+                $mform->setType('attitude_id', PARAM_INT);
+                $this->repeat_elements($attitude_array, $repeata, $attitude_options, 'option_repeats', 'option_add_fields', 1, null, true);
 
+                $mform->closeHeaderBefore('course_assessment');
 
                 // Add number of assessment
                 // TODO: MANIPULATE ASSESSMENT FIELD AS SPECIFIED

@@ -27,12 +27,20 @@ $string['upload_ctype_file'] = 'Upload course type file: ';
 $string['upload_ctype'] = 'Upload';
 $string['program_type'] = 'Program type: ';
 $string['course_category'] = 'Course category: ';
-$string['course_topic'] = 'Course topic(s): ';
 $string['course_objective'] = 'Course learning objective(s): ';
 $string['course_faculty'] = 'Course faculty: ';
 $string['course_gradAtt'] = 'Graduate attributes: ';
 $string['assessment_counter'] = 'Number of assessment: ';
 $string['session_counter'] = 'Number of session: ';
+$string['obj_knowledge_header'] = 'Knowledge(s)';
+$string['obj_skill_header'] = 'Skill(s)';
+$string['obj_attitude_header'] = 'Attitude(s)';
+$string['knowledge_desc'] = 'Students who successfully complete the course will be able to:';
+$string['skill_desc'] = 'Students who successfully complete the course will be able to:';
+$string['attitude_desc'] = 'Students who successfully complete this course will:';
+$string['knowledge_label'] = 'Knowledge :';
+$string['skill_label'] = 'Skill :';
+$string['attitude_label'] = 'Attitude :';
 
 $string['course_data'] = 'Course data';
 
