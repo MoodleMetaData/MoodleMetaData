@@ -22,22 +22,28 @@ $string['err_required']='You must supply a value here.';
 $string['course_code'] = 'Course short name: ';
 $string['course_name'] = 'Course full name: ';
 $string['course_description'] = 'Course summary: ';
-$string['course_instructor'] = 'Course instructor: ';
+$string['course_instructor'] = 'Instructor: ';
 $string['upload_ctype_file'] = 'Upload course type file: ';
 $string['upload_ctype'] = 'Upload';
 $string['program_type'] = 'Program type: ';
 $string['course_category'] = 'Course category: ';
 $string['course_objective'] = 'Course learning objective(s): ';
 $string['course_faculty'] = 'Faculty: ';
-$string['course_gradAtt'] = 'Graduate attributes: ';
+$string['course_gradAtt'] = 'Attribute {no}: ';
 $string['assessment_counter'] = 'Number of assessment: ';
 $string['session_counter'] = 'Number of session: ';
+
 $string['knowledge_desc'] = 'Students who successfully complete the course will be able to:';
 $string['skill_desc'] = 'Students who successfully complete the course will be able to:';
 $string['attitude_desc'] = 'Students who successfully complete this course will:';
 $string['knowledge_label'] = 'Knowledge {no}:';
 $string['skill_label'] = 'Skill {no}:';
 $string['attitude_label'] = 'Attitude {no}:';
+$string['add_knowledge'] = 'Add';
+$string['add_skill'] = 'Add';
+$string['add_attitude'] = 'Add';
+$string['add_gradAtt'] = 'Add';
+
 $string['course_email'] = 'E-mail: ';
 $string['course_phone'] = 'Phone: ';
 $string['course_office'] = 'Office: ';
@@ -50,8 +56,11 @@ $string['course_general_header'] = 'General';
 $string['course_contact_header'] = 'Contact information';
 $string['course_desc_header'] = 'Description';
 $string['course_format_header'] = 'Course format';
+$string['course_gradatt_header'] = 'Graduate Attribute';
 
-
+$string['obj_knowledge_header_help'] = 'TODO';
+$string['obj_skill_header_help'] = 'TODO';
+$string['obj_attitude_header_help'] = 'TODO';
 
 
 $string['course_data'] = 'Course data';
