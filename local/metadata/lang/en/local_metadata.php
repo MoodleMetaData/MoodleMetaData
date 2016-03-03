@@ -38,12 +38,17 @@ $string['course_data'] = 'Course data';
 $string['instructor_heading'] = 'Metadata for %s: %s';
 
 $string['add_session'] = 'Add new session';
-$string['session_topic'] = 'Topic:';
-$string['session_description'] = 'Description:';
-$string['session_type'] = 'Type:';
-$string['session_date'] = 'Date:';
+$string['session_title'] = 'Title';
+$string['session_description'] = 'Description';
+$string['session_guest_teacher'] = 'Guest Lecturer';
+$string['session_guest_teacher_help'] = 'If there is a different lecuturer, write out their full name. Otherwise, leave blank';
+$string['session_type'] = 'Type';
+$string['session_length'] = 'Length';
+$string['session_date'] = 'Date';
 
-$string['learning_objectives'] = 'Learning Objectives';
+$string['learning_objective_Attitudes'] = 'Learning Objective - Attitudes';
+$string['learning_objective_Knowledge'] = 'Learning Objective - Knowledge';
+$string['learning_objective_Skills'] = 'Learning Objectives - Skills';
 $string['related_assessments'] = 'Related Assessments';
 $string['deletesession'] = 'Delete Session';
 

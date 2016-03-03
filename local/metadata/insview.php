@@ -78,6 +78,7 @@ if ($data = $general_form->get_data()) {
 echo $OUTPUT->header();
 ?>
 
+<link rel="stylesheet" type="text/css" href="styles.css">
 <html>
     <div id="metadata" class="yui3-skin-sam">
         <ul>
