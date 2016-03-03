@@ -37,11 +37,35 @@ function get_course_id() {
     return required_param('id', PARAM_INT);
 }
 
+function get_course_learning_objectives() {
+    global $DB;
+
+    $courseId = get_course_id();
+    $courseobjectives = $DB->get_records('courseobjectives', array('courseid'=>$courseId), '', 'objectiveid');
+    
+    $wantedIds = array();
+    foreach ($courseobjectives as $courseobjective) {
+        $wantedIds[] = $courseobjective->objectiveid;
+    }
+    
+    return $DB->get_records_list('learningobjectives', 'id', $wantedIds);
+}
+
 function get_table_data_for_course($table) {
     global $DB;
 
     $courseId = get_course_id();
     return $DB->get_records($table, array('courseid'=>$courseId));
+}
+
+/**
+ * Will return the types of learning objectives
+ *   May eventually load them from information for the program
+ *
+ * @return array containing string of all types
+ */
+function get_learning_objective_types() {
+    return array('Attitudes', 'Knowledge', 'Skills');
 }
 
 
