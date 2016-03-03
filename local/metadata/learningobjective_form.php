@@ -5,22 +5,29 @@ require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 require_once 'lib.php';
 
+
 class learningobjective_form extends moodleform {
 
     function definition() {
-        global $CFG, $USER; //Declare our globals for use
+        global $CFG, $USER, $PAGE; //Declare our globals for use
         $mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
         // Form elements
         //Assumes it has the data added
+
+	$editid = optional_param('editid', 0, PARAM_INT);
+
+	
 	$currentcourseid = get_course_id();
-	if($passedid = $_GET['subid']){
-  //          echo '<script type="text/javascript">', 'alert("'.$passedid.'");' , '</script>';
+	if($editid >0){
+           $mform->addElement('html', '<p>current objective id: '.$editid.'</p>');
+           echo '<script type="text/javascript">', 'alert("'.$editid.'");' , '</script>';
 	}else{ 
-//	   echo '<script type="text/javascript">', 'alert("'.$_GET['subid'].'");' , '</script>';
-	//   $currentcourseid = get_course_id();
+//	   echo '<script type="text/javascript">', 'alert("'.$editid.'");' , '</script>';
 	   $mform->addElement('html', '<p>current course id: '.$currentcourseid.'</p>');
 	}
-	
+
+        $mform->addElement('html', '<p>current objective id: '.$editid.'</p>');
+
         $mainobjList = learningobjective_form::load_main_page($currentcourseid);
 
 	//if click load => load all the sub objective from database
@@ -92,13 +99,12 @@ function addsubobjfunction() {
         //set up the main learning objective and relative buttons
         $mform->registerNoSubmitButton('change_obj_name');
         $mform->registerNoSubmitButton('load_existed');
-        $mform->registerNoSubmitButton('delete_obj');
         $mainobjarray=array();
 	$mainobjarray[] =& $mform->createElement('text', 'mainobjname', get_string('mainobjtext','local_metadata'));
         $mainobjarray[] =& $mform->createElement('submit', 'load_existed', get_string('objload','local_metadata'));
         $mainobjarray[] =& $mform->createElement('button', 'add_subobj', get_string('objadd','local_metadata'),'onclick="addsubobjfunction()"');
         $mainobjarray[] =& $mform->createElement('submit', 'change_obj_name', get_string('objsave','local_metadata'));
-        $mainobjarray[] =& $mform->createElement('submit', 'delete_obj', get_string('objdelete','local_metadata'));
+       	$mform->addGroup($mainobjarray, 'mainobjarray', get_string('subobjective_name','local_metadata'), array(' '), false);
 
 */
     }
@@ -107,6 +113,7 @@ function addsubobjfunction() {
     function load_main_page($courseid){  
         global $DB;
         $mform =& $this->_form;
+	$mycourseid = get_course_id();
         $mainlearningObjectives = get_course_learning_objectives();
         $mainobjList = array();
         foreach ($mainlearningObjectives as $mainlearningObjective) {
@@ -124,14 +131,12 @@ function addsubobjfunction() {
 
 
         foreach ($mainobjList as $objid=>$mainobjele) {
-            $loadedobjgrp = array();
-            $mform->registerNoSubmitButton('delete_sub');
+		$url='';
+		$url = new moodle_url('/local/metadata/insview.php', array('id'=>$mycourseid));
+//	      echo '<script type="text/javascript">', 'alert("url:'.$url.'");' , '</script>';
 
-            $mform->addElement('html','<a href="#learningobjective_tab?subid='.$selectedmain.'">edit</a>');
-// $mform->addElement('html','<a href="#learningobjective_tab">edit</a>');
-            $loadedobjgrp[] =& $mform->createElement('submit', 'delet_sub', get_string('objdelete','local_metadata'));
-            $loadedobjgrp[] =& $mform->createElement('static', 'mainobjele', get_string('loaded_objname', 'local_metadata'),$mainobjele);
-            $mform->addGroup($loadedobjgrp, 'loadedobjgrp', get_string('subobjective_name','local_metadata'), array(' '), false);
+	    $mform->addElement('html','<div>   '.$mainobjele.'  <a href="'.$url.'?editid='.$objid.'#tab=3">edit</a>
+	    <a href="#?deleteid='.$objid.'">delete</a></div>');
         }
 
 
@@ -170,7 +175,17 @@ function addsubobjfunction() {
   	return $mainobjList;
   }
 
+  function recursively_delete_records($deleteId){
+  	   /*
+	   $childnum = $DB->count_records_sql('SELECT count(*) FROM {learningobjectives} WHERE parentid = ?',
+	   if($childnum > 0){
+	        //learningobjective_form::recursively_delete_records($
+	   }else{
+		//return;
+	   }
+*/
 
+  }
     
     public static function get_existing_subobj($parentobjname){
     	$subobjlist = array();
