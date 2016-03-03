@@ -66,4 +66,11 @@ function create_insview_url($courseId, $anchor=null) {
     return new moodle_url('/local/metadata/insview.php', array('id' => $courseId), $anchor);
 }
 
+function create_mange_url($courseId, $anchor=null) {
+	if ($anchor) {
+		return new moodle_url('/local/metadata/manage_psla_form.php', array('id' => $courseId), 'tab='.$anchor);
+	}
+	return new moodle_url('/local/metadata/manage_psla_form.php', array('id' => $courseId), $anchor);
+}
+
 ?>

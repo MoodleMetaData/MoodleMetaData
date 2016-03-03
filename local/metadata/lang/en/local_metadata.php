@@ -53,3 +53,9 @@ $string['learning_objective_selection_description']= 'Select the Learning Object
 $string['assessment_type'] = 'Type of Assessment: ';
 $string['grade_weight'] = 'Weight: ';
 $string['objective_description'] = 'Description: ';
+
+// Metadata manager strings
+$string['manage_psla'] = 'Program Specific Learning Objectives: ';
+$string['new_psla'] = 'New Learning Objective';
+$string['create_psla'] = 'Add';
+$string['delete_psla'] = 'Delete';
