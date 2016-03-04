@@ -70,7 +70,7 @@ class assessment_form extends moodleform {
 		
 		//Skills Header
 		$mform -> addElement('header','skills_header', get_string('skills_header', 'local_metadata'));
-			$skills_onjectives = array(); //Make the array
+			$skills_onjectives = array(); //Make the arra
 				$skills_onjectives[] = $mform -> createElement('text', 'skills_text', get_string('knowledge_text', 'local_metadata'));
 		
 			//repeat the elements
