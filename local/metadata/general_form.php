@@ -183,12 +183,10 @@ class general_form extends moodleform {
                 $knowledge_desc = $mform->addElement('static', 'knowledge_desc', '', get_string('knowledge_desc', 'local_metadata'));
                 $knowledge_array = array();
 
-                /*
                 foreach($knowledge_list as $k){
-                    echo $k;
-                    $knowledge_array[] = $mform->createElement('text', 'knowledge_option', get_string('knowledge_label', 'local_metadata'), '');
+                    $mform->addElement('text', 'knowledge_option', get_string('knowledge_label', 'local_metadata'), '"value="'.$k.'"');
                 }
-                 */
+              
                 $knowledge_array[] = $mform->createElement('text', 'knowledge_option', get_string('knowledge_label', 'local_metadata'));
 
                 $knowledge_array[] = $mform->createElement('hidden', 'knowledge_id', -1);
@@ -215,9 +213,14 @@ class general_form extends moodleform {
 
                 $skill_desc = $mform->addElement('static', 'skill_desc', '', get_string('skill_desc', 'local_metadata'));
                 $skill_array = array();
+
+                foreach($skill_list as $s){
+                    $mform->addElement('text', 'skill_option', get_string('knowledge_label', 'local_metadata'), '"value="'.$s.'"');
+                }
+
                 $skill_array[] = $mform->createElement('text', 'skill_option', get_string('skill_label', 'local_metadata'));
                 $skill_array[] = $mform->createElement('hidden', 'skill_id', 0);
-                                                            
+               
                 if ($this->_instance){
 		    $repeats = $DB->count_records('skill_options', array('skill_id'=>$this->_instance));
                     $repeats += 1;
@@ -238,6 +241,12 @@ class general_form extends moodleform {
 
                 $attitude_desc = $mform->addElement('static', 'attitude_desc', '',  get_string('attitude_desc', 'local_metadata'));
                 $attitude_array = array();
+
+                foreach($attitude_list as $a){
+                    $mform->addElement('text', 'attitude_option', get_string('knowledge_label', 'local_metadata'), '"value="'.$a.'"');
+                }
+
+
                 $attitude_array[] = $mform->createElement('text', 'attitude_option', get_string('attitude_label', 'local_metadata'));
                 $attitude_array[] = $mform->createElement('hidden', 'attitude_id', 0);
                                                             
