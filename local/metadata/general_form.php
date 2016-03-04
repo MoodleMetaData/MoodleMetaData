@@ -157,22 +157,51 @@ class general_form extends moodleform {
                 /***************************
 		* COURSE OBJECTIVES
 		***************************/
+                
+                // fetch from DB if already exist
+                
+                $learning_objectives = get_course_learning_objectives();
+                $learningobj_list = array();
+                $knowledge_list = array();
+                $skill_list = array();
+                $attitude_list = array();
+
+                foreach($learning_objectives as $obj){
+                    if(strcmp($obj->objectivetype, 'Knowledge')){
+                        $knowledge_list[$obj->id] = $obj->objectivename;
+                    } else if (strcmp($obj->objectivetype, 'Skills')){
+                        $skill_list[$obj->id] = $obj->objectivename;
+                    } else {
+                        $attitude_list[$obj->id] = $obj->objectivename;
+                    }
+                } 
+
                 // Knowledge
                 $mform->addElement('header', 'obj_knowledge_header', get_string('obj_knowledge_header', 'local_metadata'));
                 $mform->addHelpButton('obj_knowledge_header', 'obj_knowledge_header', '');
 
                 $knowledge_desc = $mform->addElement('static', 'knowledge_desc', '', get_string('knowledge_desc', 'local_metadata'));
                 $knowledge_array = array();
+
+                /*
+                foreach($knowledge_list as $k){
+                    echo $k;
+                    $knowledge_array[] = $mform->createElement('text', 'knowledge_option', get_string('knowledge_label', 'local_metadata'), '');
+                }
+                 */
                 $knowledge_array[] = $mform->createElement('text', 'knowledge_option', get_string('knowledge_label', 'local_metadata'));
-                $knowledge_array[] = $mform->createElement('hidden', 'knowledge_id', 0);
-                        
+
+                $knowledge_array[] = $mform->createElement('hidden', 'knowledge_id', -1);
+                              
+                      
                 if ($this->_instance){
                     $repeatk = $DB->count_records('knowledge_options', array('knowledge_id'=>$this->_instance));
                     $repeatk += 1;
                 } else {
-                    $repeatk = 1;
+                    $repeatk = 0;
                 }
-                                
+                
+
                 $knowledge_options = array();       
                 $mform->setType('knowledge_option', PARAM_CLEANHTML);
                 $mform->setType('knowledge_id', PARAM_INT);
@@ -193,7 +222,7 @@ class general_form extends moodleform {
 		    $repeats = $DB->count_records('skill_options', array('skill_id'=>$this->_instance));
                     $repeats += 1;
                 } else {
-                    $repeats = 1;
+                    $repeats = 0;
                 }
                                                                                                  
                 $skill_options = array();       
@@ -216,7 +245,7 @@ class general_form extends moodleform {
 		    $repeata = $DB->count_records('attitude_options', array('attitude_id'=>$this->_instance));
                     $repeata += 1;
                 } else {
-                    $repeata = 1;
+                    $repeata = 0;
                 }
                                                                                                  
                 $attitude_options = array();       
@@ -283,7 +312,6 @@ class general_form extends moodleform {
                 $course_info->coursename = $course->fullname;
                 $course_info->coursetopic = $data->course_topic;
                 $course_info->coursedescription = $data->course_description['text'];
-                //$course_info->coursedescription = $data->course_description;
                 $course_info->coursefaculty = $data->course_faculty;
                 //$course_info->coursedescription = $data->course_description;
                 $course_info->coursefaculty = $data->course_faculty;
@@ -298,32 +326,93 @@ class general_form extends moodleform {
                 $instructor_info->phonenumber = $data->course_phone;
                 $instructor_info->userid = $USER->id;
 
+                // learningobjectives
+                // objectivename = user input
+                // type = knowledge, skill, attitude
+                //
+                // courseobjectives
+                // objectiveid = learningobjectives->id
+                // courseid = courseinfo->id
+
                 if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
                 // Must have an entry for 'id' to map the table specified.
                     $course_info->id = $existCourseInfo->id;
                     $update_courseinfo = $DB->update_record('courseinfo', $course_info, false);
                     echo 'Existing course information is updated.<br />';
 
-                    if($existInstructorInfo = $DB->get_record('courseinstructors', 
-                        array('courseid'=>$existCourseInfo->id))){
+                    // Handle instructor/contact information
+                    if($existInstructorInfo = $DB->get_record('courseinstructors', array('courseid'=>$existCourseInfo->id))){
                             
                         $instructor_info->id = $existInstructorInfo->id;
                         $update_instructorinfo = $DB->update_record('courseinstructors', $instructor_info, false);
                         echo 'Existing instructor information is updated.<br />';
                     }else{
                         $insert_instructorinfo = $DB->insert_record('courseinstructors', $instructor_info, false);
+                        echo 'New instructor information is added.<br />';
                     }
+
+                    // Handle course objectives
                 }else{
                     $insert_courseinfo = $DB->insert_record('courseinfo', $course_info, true, false);
 
+                    // Handle instructor/contact information
                     // courseinfo->id => courseinstructor->courseid
                     $instructor_info->courseid = $insert_courseinfo;
-                    
                     $insert_instructorinfo = $DB->insert_record('courseinstructors', $instructor_info, false);
                     echo 'New course and instructor information are added.<br />';
-                }
-        }
 
+                    // Handle course objectives
+                    // TODO: dynamic course objectives type
+                    // knowledge
+                    foreach($data->knowledge_option as $knowledge_temp){
+                        if($knowledge_temp != NULL){
+                            $knowledge_info = new stdClass();
+                            $knowledge_info->objectivename = $knowledge_temp;
+                            $knowledge_info->objectivetype = 'Knowledge';
+                            $insert_learningobj = $DB->insert_record('learningobjectives', $knowledge_info, true, false);
+
+                            $kcobj = new stdClass();
+                            $kcobj->objectiveid = $insert_learningobj;
+                            $kcobj->courseid = $course->id;
+                            $insert_courseobj = $DB->insert_record('courseobjectives', $kcobj, true, false);
+                        }
+                    }
+
+                    // skill
+                    foreach($data->skill_option as $skill_temp){
+                        if($skill_temp != NULL){
+                            $skill_array[] = $knowledge_temp;
+                            $skill_info = new stdClass();
+                            $skill_info->objectivename = $skill_temp;
+                            $skill_info->objectivetype = 'Skills';
+                            $insert_learningobj = $DB->insert_record('learningobjectives', $skill_info, true, false);
+
+                            $scobj = new stdClass();
+                            $scobj->objectiveid = $insert_learningobj;
+                            $scobj->courseid = $course->id;
+                            $insert_courseobj = $DB->insert_record('courseobjectives', $scobj, true, false);
+                        }
+                    }
+
+                    // attitude
+                    foreach($data->attitude_option as $attitude_temp){
+                        if($attitude_temp != NULL){ 
+                            $attitude_array[] = $attitude_temp;
+                            $attitude_info = new stdClass();      
+                            $attitude_info->objectivename = $knowledge_temp;
+                            $attitude_info->objectivetype = 'Attitudes';
+                            $insert_learningobj = $DB->insert_record('learningobjectives', $attitude_info, true, false);
+
+                            $acobj = new stdClass();
+                            $acobj->objectiveid = $insert_learningobj;
+                            $acobj->courseid = $course->id;
+                            $insert_courseobj = $DB->insert_record('courseobjectives', $acobj, true, false);
+                        }  
+                    }
+
+                }
+
+        }
 
 }
 
