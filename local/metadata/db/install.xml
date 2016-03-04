@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <XMLDB PATH="local/metadata/db" VERSION="20160304" COMMENT="XMLDB file for Moodle local/metadata"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-<<<<<<< HEAD
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
   <TABLES>
     <TABLE NAME="courseinfo" COMMENT="course general information">
