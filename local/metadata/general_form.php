@@ -42,7 +42,8 @@ class general_form extends moodleform {
                     $mform->setDefault('course_faculty', $courseinfo->coursefaculty);
                 }   
                 $mform->addRule('course_faculty', get_string('required'), 'required', null, 'client');
-                    
+                $mform->setType('course_faculty', PARAM_TEXT);
+
 		// Program types
                 // TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
                 $program_types = array();
@@ -77,12 +78,14 @@ class general_form extends moodleform {
                     $mform->setDefault('course_email', $contactinfo->email);
                 }
                 $mform->addRule('course_email', get_string('required'), 'required', null, 'client');
+                $mform->setType('course_email', PARAM_TEXT);
 
                 // Phone
                 $course_phone = $mform->addElement('text', 'course_phone', get_string('course_phone', 'local_metadata'), '');
                 if($contactinfo){
                     $mform->setDefault('course_phone', $contactinfo->phonenumber);
                 }
+                $mform->setType('course_phone', PARAM_TEXT);
 
                 // Office
                 $course_office = $mform->addElement('text', 'course_office', get_string('course_office', 'local_metadata'), '');
@@ -90,12 +93,15 @@ class general_form extends moodleform {
                     $mform->setDefault('course_office', $contactinfo->officelocation);
                 }
                 $mform->addRule('course_office', get_string('required'), 'required', null, 'client');  
+                $mform->setType('course_office', PARAM_TEXT);
 
                 // Office hours
                 $course_officeh = $mform->addElement('text', 'course_officeh', get_string('course_officeh', 'local_metadata'), '');
                 if($contactinfo){
                     $mform->setDefault('course_officeh', $contactinfo->officehours);
                 }
+                $mform->setType('course_officeh', PARAM_TEXT);
+
                 $mform->addRule('course_officeh', get_string('required'), 'required', null, 'client');
 
                 $mform->closeHeaderBefore('course_desc_header');
@@ -143,7 +149,8 @@ class general_form extends moodleform {
                 if($courseinfo){
                     $mform->setDefault('course_assessment', $courseinfo->assessmentnumber);
                 }
-				
+                $mform->setType('course_assessment', PARAM_INT);
+
                 // Session
                 // TODO: MANIPULATE SESSION FIELD AS SPEFICIED
                 $course_assessment = $mform->addElement('text', 'course_session', get_string('session_counter', 'local_metadata'), '');
@@ -153,6 +160,7 @@ class general_form extends moodleform {
                 if($courseinfo){
                     $mform->setDefault('course_session', $courseinfo->sessionnumber);
                 }
+                $mform->setType('course_session', PARAM_INT);
 				
 		$mform->closeHeaderBefore('obj_knowledge_header');
 
@@ -162,13 +170,9 @@ class general_form extends moodleform {
 		* COURSE OBJECTIVES
 		***************************/
                 
-                $test = $this->_customdata['test'];
-                echo $test;
-
                 // fetch from DB if already exist
                 // TODO: FETCH COURSE OBJECTIVE DOES NOT WORK!
                 $learning_objectives = get_course_learning_objectives();
-                $learningobj_list = array();
                 $knowledge_list = array();
                 $skill_list = array();
                 $attitude_list = array();
@@ -185,7 +189,7 @@ class general_form extends moodleform {
 
                 // Knowledge
                 $mform->addElement('header', 'obj_knowledge_header', get_string('obj_knowledge_header', 'local_metadata'));
-                $mform->addHelpButton('obj_knowledge_header', 'obj_knowledge_header', '');
+                $mform->addHelpButton('obj_knowledge_header', 'obj_knowledge_header', 'local_metadata');
 
                 $knowledge_desc = $mform->addElement('static', 'knowledge_desc', '', get_string('knowledge_desc', 'local_metadata'));
                 $knowledge_array = array();
@@ -194,7 +198,7 @@ class general_form extends moodleform {
                 $knowledge_array[] = $mform->createElement('hidden', 'knowledge_id', -1);
                       
                 $knowledge_options = array();       
-                $mform->setType('knowledge_option', PARAM_CLEANHTML);
+                $mform->setType('knowledge_option', PARAM_TEXT);
                 $mform->setType('knowledge_id', PARAM_INT);
                 $this->repeat_elements($knowledge_array, count($knowledge_list), $knowledge_options, 'option_repeats1', 'option_add_fields_knowledge', 1, get_string('add_knowledge', 'local_metadata'), true);
 
@@ -210,7 +214,7 @@ class general_form extends moodleform {
 
                 // Skill
                 $mform->addElement('header', 'obj_skill_header', get_string('obj_skill_header', 'local_metadata'));
-                $mform->addHelpButton('obj_skill_header', 'obj_skill_header', '');
+                $mform->addHelpButton('obj_skill_header', 'obj_skill_header', 'local_metadata');
 
                 $skill_desc = $mform->addElement('static', 'skill_desc', '', get_string('skill_desc', 'local_metadata'));
                 $skill_array = array();
@@ -219,7 +223,7 @@ class general_form extends moodleform {
                 $skill_array[] = $mform->createElement('hidden', 'skill_id', 0);
                
                 $skill_options = array();       
-                $mform->setType('skill_option', PARAM_CLEANHTML);
+                $mform->setType('skill_option', PARAM_TEXT);
                 $mform->setType('skill_id', PARAM_INT);
                 $this->repeat_elements($skill_array, count($skill_list), $skill_options, 'option_repeats2', 'option_add_fields_skill', 1, get_string('add_skill', 'local_metadata'), true);
 
@@ -235,7 +239,7 @@ class general_form extends moodleform {
 
                 //Attitude
                 $mform->addElement('header', 'obj_attitude_header', get_string('obj_attitude_header', 'local_metadata'));
-                $mform->addHelpButton('obj_attitude_header', 'obj_attitude_header', '');
+                $mform->addHelpButton('obj_attitude_header', 'obj_attitude_header', 'local_metadata');
 
                 $attitude_desc = $mform->addElement('static', 'attitude_desc', '',  get_string('attitude_desc', 'local_metadata'));
                 $attitude_array = array();
@@ -244,7 +248,7 @@ class general_form extends moodleform {
                 $attitude_array[] = $mform->createElement('hidden', 'attitude_id', 0);
                                                             
                 $attitude_options = array();       
-                $mform->setType('attitude_option', PARAM_CLEANHTML);
+                $mform->setType('attitude_option', PARAM_TEXT);
                 $mform->setType('attitude_id', PARAM_INT);
                 $this->repeat_elements($attitude_array, count($attitude_list), $attitude_options, 'option_repeats3', 'option_add_fields_attitude', 1, get_string('add_attitude','local_metadata'), true);
 
