@@ -22,14 +22,22 @@
         </TABLE>
         <TABLE NAME="courseassessment" COMMENT="assessment info">
             <FIELDS>
-                <FIELD NAME="assessmentname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-                <FIELD NAME="assessmentweight" TYPE="int" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="assessment's grade in %"/>
-                <FIELD NAME="assessmentduedate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="assessmenttitle" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="assessmentprof"  TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+				<FIELD NAME="isexam" TYPE="int" NOTNULL="false" LENGTH="1" DEFAULT="0" SEQUENCE="false" COMMENT="1 if assessment is an exam"/>
+				<FIELD NAME="duration" TYPE="int" NOTNULL="false" LENGTH="4" DEFAULT="0" SEQUENCE="false" COMMENT="duration if it is an exam"/>
+				<FIELD NAME="assessmentweight" TYPE="int" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="assessment's grade in %"/>
+                <FIELD NAME="gradingdescription" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+				<FIELD NAME="assessmentduedate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
                 <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
                 <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
                 <FIELD NAME="type" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-            </FIELDS>
+				<FIELD NAME="knowledgeobjs" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+				<FIELD NAME="skillsobjs" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+				<FIELD NAME="attitudesobjs" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+				
+			</FIELDS>
             <KEYS>
                 <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="courseinfo" REFFIELDS="id"/>
                 <KEY NAME="id" TYPE="primary" FIELDS="id"/>
