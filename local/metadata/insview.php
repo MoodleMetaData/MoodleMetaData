@@ -66,7 +66,8 @@ if ($data = $general_form->get_data()) {
     // TODO: Then, redirect
     // redirect($assessment_url);
 
-} else if ($data = $session_form->get_data()) {
+} else if ($session_form->ensure_was_submitted() && $data = $session_form->get_data()) {
+    // ensure_was_submitted is a hack to work around moodles bad handling of noSubmitButton
     session_form::save_data($data);
     
     redirect($session_url);
