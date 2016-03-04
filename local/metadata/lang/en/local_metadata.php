@@ -65,5 +65,6 @@ $string['grading_header'] = 'Grading';
 $string['assessment_grading_desc'] = 'Description: ';
 $string['assessment_prof_default'] = 'First, Last';
 $string['assessment_due'] = 'Date: ';
-
+$string['assessment_duration'] = 'Duration: ';
+$string['assessment_due'] = 'Due Date: ';
 

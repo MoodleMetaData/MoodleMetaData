@@ -47,26 +47,42 @@ class assessment_form extends moodleform {
 		$assessment_test_array[2] = 'Working with git';
 		//REPLACE WITH DB CALLS
 		
+		//Knowledge Header
 		$mform -> addElement('header', 'knowledge_header', get_string('knowledge_header', 'local_metadata'));
-			$mform -> addElement('text', 'knowledge_text', get_string('knowledge_text', 'local_metadata'));
+			$knowledge_objectives = array(); // make the array
+				$knowledge_objectives[] = $mform -> createElement('text', 'knowledge_text', get_string('knowledge_text', 'local_metadata'));
+				
+			//repeat the elements
+			$this -> repeat_elements($knowledge_objectives, 1,[], 'knowlege_repeats', 'knowledge_add_fields', 1, null, true);
 		
+		//Skills Header
 		$mform -> addElement('header','skills_header', get_string('skills_header', 'local_metadata'));
-			$mform -> addElement('text', 'skills_text', get_string('knowledge_text', 'local_metadata'));
+			$skills_onjectives = array(); //Make the array
+				$skills_onjectives[] = $mform -> createElement('text', 'skills_text', get_string('knowledge_text', 'local_metadata'));
 		
+			//repeat the elements
+			$this -> repeat_elements($skills_onjectives, 1, [], 'skills_repeats', 'skills_add_fields', 1, null, true);
+		
+		//Attitudes Header
 		$mform -> addElement('header','attitudes_header', get_string('attitudes_header', 'local_metadata'));
-			$mform -> addElement('text', 'attitudes_text', get_string('knowledge_text', 'local_metadata'));
+			$attitudes = array();
+				$attitudes[] = $mform -> createElement('text', 'attitudes_text', get_string('knowledge_text', 'local_metadata'));
 
-		//$assessment_LearningObjectives = $mform -> addElement('select', 'assessments', get_string('learning_objective_selection_description', 'local_metadata'), $assessment_test_array, '');
-		//$mform -> addRule('assessments', get_string('required'), 'required', null, client'); 
-		
+			//repeat the elements
+			$this -> repeat_elements($attitudes, 1, [], 'attitudes_repeats', 'attitudes_add_fields', 1, null, true);
+			
+			
+			
+			
+			
+	
+		//Grading Header
 		$mform -> addElement('header', 'grading_header', get_string('grading_header', 'local_metadata'));
 		
 		
-
-		
 		$textattribs = array('size'=>'20');
 		$assessment_gradingDesc = $mform -> addElement('textarea', 'gradingDesc', get_string('assessment_grading_desc', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
-		$assessment_weight = $mform-> addElement('text','grade_weight',get_string('grade_weight','local_metadata'),$attributes);
+		$assessment_weight = $mform-> addElement('text','grade_weight',get_string('grade_weight','local_metadata'));
 		
 		
 		$this->add_action_buttons();
