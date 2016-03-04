@@ -41,7 +41,8 @@ class general_form extends moodleform {
                 if($courseinfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
                     $mform->setDefault('course_faculty', $courseinfo->coursefaculty);
                 }   
-				
+                $mform->addRule('course_faculty', get_string('required'), 'required', null, 'client');
+                    
 		// Program types
                 // TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
                 $program_types = array();
@@ -75,6 +76,7 @@ class general_form extends moodleform {
                 if($contactinfo = $DB->get_record('courseinstructors', array('courseid'=>$courseinfo->id, 'userid'=>$USER->id))){
                     $mform->setDefault('course_email', $contactinfo->email);
                 }
+                $mform->addRule('course_email', get_string('required'), 'required', null, 'client');
 
                 // Phone
                 $course_phone = $mform->addElement('text', 'course_phone', get_string('course_phone', 'local_metadata'), '');
@@ -86,13 +88,15 @@ class general_form extends moodleform {
                 $course_office = $mform->addElement('text', 'course_office', get_string('course_office', 'local_metadata'), '');
                 if($contactinfo){
                     $mform->setDefault('course_office', $contactinfo->officelocation);
-                }  
+                }
+                $mform->addRule('course_office', get_string('required'), 'required', null, 'client');  
 
                 // Office hours
                 $course_officeh = $mform->addElement('text', 'course_officeh', get_string('course_officeh', 'local_metadata'), '');
                 if($contactinfo){
                     $mform->setDefault('course_officeh', $contactinfo->officehours);
-                }  
+                }
+                $mform->addRule('course_officeh', get_string('required'), 'required', null, 'client');
 
                 $mform->closeHeaderBefore('course_desc_header');
 
@@ -128,7 +132,7 @@ class general_form extends moodleform {
                 
 		/***************************
 		* COURSE FORMAT
-		 ***************************/
+		 ***************************/;
 		$mform->addElement('header', 'course_format_header', get_string('course_format_header', 'local_metadata'));
 		// Assessment
                 // TODO: MANIPULATE ASSESSMENT FIELD AS SPECIFIED
@@ -159,7 +163,7 @@ class general_form extends moodleform {
 		***************************/
                 
                 // fetch from DB if already exist
-                
+                // TODO: FETCH COURSE OBJECTIVE DOES NOT WORK!
                 $learning_objectives = get_course_learning_objectives();
                 $learningobj_list = array();
                 $knowledge_list = array();
@@ -168,12 +172,13 @@ class general_form extends moodleform {
 
                 foreach($learning_objectives as $obj){
                     if(strcmp($obj->objectivetype, 'Knowledge')){
-                        $knowledge_list[$obj->id] = $obj->objectivename;
+                        $knowledge_list[] = $obj->objectivename;
                     } else if (strcmp($obj->objectivetype, 'Skills')){
-                        $skill_list[$obj->id] = $obj->objectivename;
+                        $skill_list[] = $obj->objectivename;
                     } else {
-                        $attitude_list[$obj->id] = $obj->objectivename;
-                    }
+                        $attitude_list[] = $obj->objectivename;
+                   }
+
                 } 
 
                 // Knowledge
@@ -184,7 +189,9 @@ class general_form extends moodleform {
                 $knowledge_array = array();
 
                 foreach($knowledge_list as $k){
-                    $mform->addElement('text', 'knowledge_option', get_string('knowledge_label', 'local_metadata'), '"value="'.$k.'"');
+                    if($k != NULL){
+                        $mform->addElement('text', 'knowledge_option', get_string('knowledge_label', 'local_metadata'), '"value="'.$k.'"');
+                    }    
                 }
               
                 $knowledge_array[] = $mform->createElement('text', 'knowledge_option', get_string('knowledge_label', 'local_metadata'));
@@ -215,7 +222,9 @@ class general_form extends moodleform {
                 $skill_array = array();
 
                 foreach($skill_list as $s){
-                    $mform->addElement('text', 'skill_option', get_string('knowledge_label', 'local_metadata'), '"value="'.$s.'"');
+                    if($s != NULL){
+                        $mform->addElement('text', 'skill_option', get_string('skill_label', 'local_metadata'), '"value="'.$s.'"');
+                    }    
                 }
 
                 $skill_array[] = $mform->createElement('text', 'skill_option', get_string('skill_label', 'local_metadata'));
@@ -243,7 +252,9 @@ class general_form extends moodleform {
                 $attitude_array = array();
 
                 foreach($attitude_list as $a){
-                    $mform->addElement('text', 'attitude_option', get_string('knowledge_label', 'local_metadata'), '"value="'.$a.'"');
+                    if($a != NULL){
+                        $mform->addElement('text', 'attitude_option', get_string('attitude_label', 'local_metadata'), '"value="'.$a.'"');
+                    }
                 }
 
 
@@ -294,7 +305,7 @@ class general_form extends moodleform {
 
 
 		// Add form buttons
-		$this->add_action_buttons();
+		$this->add_action_buttons(true, "Save general  information");
 	}
 	
 	//If you need to validate your form information, you can override  the parent's validation method and write your own.	

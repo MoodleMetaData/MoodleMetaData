@@ -13,21 +13,19 @@ class knowledge_form extends moodleform {
 		// Multiselect for program topics
 		// Get all from DB
 		$program_topics = array();
-		$program_topics = $DB->get_records('learningobjectives', array ('objectivetype' => 'knowledge'), $sort='', $fields='objectivename', $limitfrom='', $limitnum='');
+		$program_topics = $DB->get_records('learningobjectives', array ('objectivetype' => 'knowledge'));
 		//$mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
 		
 		$psla_default = array();
-		$i = 0;
 		foreach ($program_topics as $value) {
-			$psla_default[$i] = $value->objectivename;
-			$i++;
+			$psla_default[$value->id] = $value->objectivename;
 		}
 		
 		$course_topic_selection = $mform->addElement('select', 'manage_knowledge', get_string('manage_knowledge', 'local_metadata'), $psla_default, '');
 		$course_topic_selection->setMultiple(true);
 		
 		// Delete Button
-		$mform->addElement('button', 'delete_knowledge', get_string('delete_knowledge', 'local_metadata'));
+		$mform->addElement('submit', 'delete_knowledge', get_string('delete_knowledge', 'local_metadata'));
 		
 		// Text box to add new program specific learning objectives
 		$mform->addElement('text', 'new_knowledge', get_string('new_knowledge', 'local_metadata'), '');
@@ -42,9 +40,23 @@ class knowledge_form extends moodleform {
 		$errors = parent::validation($data, $files);
 		global $DB, $CFG, $USER; //Declare them if you need them
 		
+		// Validate that on creating a new objective it is not empty or already in the database
+		if (!empty($data[create_knowledge])) {
+			if(empty($data[new_knowledge])) {
+				$errors['new_knowledge'] = get_string('mcreate_required', 'local_metadata');
+			} else {
+				$check = $DB->get_records('learningobjectives', array ('objectivename' => $data[new_knowledge],
+						'objectivetype' => 'knowledge'));
+				if (count($check) != 0) {
+					$errors['new_knowledge'] = get_string('psla_exists', 'local_metadata');
+				}
+			}
+		}
+		
 		return $errors;
 	}
 	
+	// Saves data from form to the database. Passed in is the data
 	public static function save_data($data) {
 		global $CFG, $DB, $USER;
 		$new_la = new stdClass();
@@ -54,14 +66,14 @@ class knowledge_form extends moodleform {
 		$insert_newla = $DB->insert_record('learningobjectives', $new_la, false);
 	}
 	
+	// Deletes all selected already existing elements from the database
 	public static function delete_data($data) {
 		global $CFG, $DB, $USER;
 
-		$old_la = new stdClass();
-		$old_la->objectivename = $data->manage_knowledge;
-		$old_la->objectivetype = 'knowledge';
-		
-		$delete_oldla = $DB->remove_records('learningobjectives', $old_la);
+		foreach ($data->manage_knowledge as $value) {
+			$delete_oldla = $DB->delete_records('learningobjectives', array('id'=>$value));
+		}
+
 	}
 }
 
