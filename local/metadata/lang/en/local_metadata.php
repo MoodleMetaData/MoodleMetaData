@@ -73,3 +73,28 @@ $string['assessment_due'] = 'Date: ';
 $string['assessment_duration'] = 'Duration: ';
 $string['assessment_due'] = 'Due Date: ';
 
+// Metadata manager strings
+$string['manage_knowledge'] = 'Knowledge Attributes: ';
+$string['new_knowledge'] = 'New Learning Objective';
+$string['create_knowledge'] = 'Add';
+$string['delete_knowledge'] = 'Delete';
+
+$string['manage_skills'] = 'Skills Attributes: ';
+$string['new_skills'] = 'New Learning Objective';
+$string['create_skills'] = 'Add';
+$string['delete_skills'] = 'Delete';
+
+$string['manage_attitudes'] = 'Attitudes Attributes: ';
+$string['new_attitudes'] = 'New Learning Objective';
+$string['create_attitudes'] = 'Add';
+$string['delete_attitudes'] = 'Delete';
+
+$string['policy_editor'] = 'Faculty Policy: ';
+$string['submit_policy'] = 'Submit';
+
+$string['university_editor'] = 'University Policy: ';
+
+// Metadata manager errors
+$string['mcreate_required'] = 'You must enter something.';
+$string['psla_exists'] = 'That learning objective already exists.';
+

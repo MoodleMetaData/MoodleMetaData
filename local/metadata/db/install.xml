@@ -91,6 +91,7 @@
             <FIELDS>
                 <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
                 <FIELD NAME="objectivename" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+                <FIELD NAME="objectivetype" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
             </FIELDS>
             <KEYS>
                 <KEY NAME="id" TYPE="primary" FIELDS="id"/>
