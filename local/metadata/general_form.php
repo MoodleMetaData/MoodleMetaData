@@ -31,7 +31,8 @@ class general_form extends moodleform {
 		// Form elements
 
                 // Enter faculty name.
-                $course_faculty = $mform->addElement('text', 'course_faculty', get_string('course_faculty', 'local_metadata'), $attributes);
+                $course_faculty = $mform->addElement('text', 'course_faculty', get_string('course_faculty', 'local_metadata'));
+				$mform->setType('course_faculty', PARAM_TEXT);
                 //$mform->addRule('course_faculty', get_string('required'), 'required', null, 'client');
                 if($courseinfo = $DB->get_record('courseinfo', array('courseid'=>$courseId))){
                     $mform->setDefault('course_faculty', $courseinfo->coursefaculty);
@@ -44,7 +45,7 @@ class general_form extends moodleform {
                 $default_description = $course->summary;
                 //$course_description_editor = $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'));
                 $mform->addElement('textarea', 'course_description', get_string("course_description", "local_metadata"), 'wrap="virtual" rows="5" cols="70"');
-
+				
                 if($courseinfo){
                     $current_description = $courseinfo->coursedescription;
                     $mform->setDefault('course_description', $current_description);
@@ -55,7 +56,7 @@ class general_form extends moodleform {
                 }
 
                 $mform->addRule('course_description', get_string('required'), 'required', null, 'client');
-                $mform->setType('course_description', PARAM_RAW);      
+                $mform->setType('course_description', PARAM_TEXT);      
             
                 $mform->addElement('html', '<input type="file" id="ctopic_file" onchange="test()">');
 
@@ -69,7 +70,8 @@ class general_form extends moodleform {
 			
                 // Add number of assessment
                 // TODO: MANIPULATE ASSESSMENT FIELD AS SPECIFIED
-                $course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'), $attributes);
+                $course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'));
+				$mform->setType('course_assessment', PARAM_TEXT);
                 $mform->addRule('course_assessment', get_string('required'), 'required', null, 'client');
                 $mform->addRule('course_assessment', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
@@ -79,10 +81,10 @@ class general_form extends moodleform {
 
                 // Add number of session
                 // TODO: MANIPULATE SESSION FIELD AS SPEFICIED
-                $course_assessment = $mform->addElement('text', 'course_session', get_string('session_counter', 'local_metadata'), $attributes);
+                $course_assessment = $mform->addElement('text', 'course_session', get_string('session_counter', 'local_metadata'));
                 $mform->addRule('course_session', get_string('required'), 'required', null, 'client');
                 $mform->addRule('course_session', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
-
+				$mform->setType('course_session', PARAM_TEXT);
                 if($courseinfo){
                     $mform->setDefault('course_session', $courseinfo->sessionnumber);
                 }

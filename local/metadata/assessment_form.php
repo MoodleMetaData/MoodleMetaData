@@ -12,7 +12,6 @@ class assessment_form extends moodleform {
                 $courseId = get_course_id();
 
 		// Form elements
-		
 		$mform -> addElement('header', 'general_header', get_string('general_header', 'local_metadata'));
 		$assessment_title = $mform -> addElement('text', 'assessment_title', get_string('assessment_title', 'local_metadata'));
 		
@@ -27,6 +26,10 @@ class assessment_form extends moodleform {
 		$assessment_description_text = $mform->addElement('textarea', 'assessment_description', get_string('assessment_description', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
 		$mform->addRule('assessment_description', get_string('required'),'required', null, 'client');
 		$mform->setType('assessment_description',PARAM_RAW);
+		$mform->setType('assessment_title', PARAM_TEXT);
+		$mform->setType('assessment_prof', PARAM_TEXT);
+		$mform->setType('selectyesno', PARAM_TEXT);
+		$mform->setType('duration', PARAM_INT);
 		
 		// For Testing Purposes, Probably should be replaced with db calls
 		$assessment_type_array = array();
@@ -50,6 +53,9 @@ class assessment_form extends moodleform {
 		$assessment_test_array[2] = 'Working with git';
 		//REPLACE WITH DB CALLS
 		$repeatOptions = array();
+		$repeatOptions['knowledge_text']['type'] = PARAM_TEXT;
+		$repeatOptions['skills_text']['type'] = PARAM_TEXT;
+		$repeatOptions['attitudes_text']['type'] = PARAM_TEXT;
 		
 		
 
@@ -60,7 +66,7 @@ class assessment_form extends moodleform {
 				$knowledge_objectives[] = $mform -> createElement('text', 'knowledge_text', get_string('knowledge_text', 'local_metadata'));
 				
 			//repeat the elements
-			$this -> repeat_elements($knowledge_objectives, 1,[], 'knowlege_repeats', 'knowledge_add_fields', 1, null, true);
+			$this -> repeat_elements($knowledge_objectives, 1,$repeatOptions, 'knowlege_repeats', 'knowledge_add_fields', 1, null, true);
 		
 		//Skills Header
 		$mform -> addElement('header','skills_header', get_string('skills_header', 'local_metadata'));
@@ -68,7 +74,7 @@ class assessment_form extends moodleform {
 				$skills_onjectives[] = $mform -> createElement('text', 'skills_text', get_string('knowledge_text', 'local_metadata'));
 		
 			//repeat the elements
-			$this -> repeat_elements($skills_onjectives, 1, [], 'skills_repeats', 'skills_add_fields', 1, null, true);
+			$this -> repeat_elements($skills_onjectives, 1, $repeatOptions, 'skills_repeats', 'skills_add_fields', 1, null, true);
 		
 		//Attitudes Header
 		$mform -> addElement('header','attitudes_header', get_string('attitudes_header', 'local_metadata'));
@@ -76,7 +82,7 @@ class assessment_form extends moodleform {
 				$attitudes[] = $mform -> createElement('text', 'attitudes_text', get_string('knowledge_text', 'local_metadata'));
 
 			//repeat the elements
-			$this -> repeat_elements($attitudes, 1, [], 'attitudes_repeats', 'attitudes_add_fields', 1, null, true);
+			$this -> repeat_elements($attitudes, 1, $repeatOptions, 'attitudes_repeats', 'attitudes_add_fields', 1, null, true);
 			
 			
 			
@@ -89,7 +95,7 @@ class assessment_form extends moodleform {
 		$assessment_gradingDesc = $mform -> addElement('textarea', 'gradingDesc', get_string('assessment_grading_desc', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
 		
 		$assessment_weight = $mform-> addElement('text','grade_weight',get_string('grade_weight','local_metadata'));
-		
+		$mform->setType('grade_weight', PARAM_TEXT);
 		
 		$this->add_action_buttons();
 	}
