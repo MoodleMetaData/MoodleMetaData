@@ -17,6 +17,7 @@ require_once($CFG->dirroot.'/local/metadata/general_form.php');
 require_once($CFG->dirroot.'/local/metadata/assessment_form.php');
 require_once($CFG->dirroot.'/local/metadata/session_form.php');
 
+
 // Define global variable for DB result
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
     
@@ -56,6 +57,7 @@ if ($general_form->is_cancelled()) {
 // Submitted the data
 if ($data = $general_form->get_data()) {
     general_form::save_data($data);
+    //print_object($data);
     redirect($general_url);
 
 } else if ($data = $assessment_form->get_data()) {
@@ -66,8 +68,7 @@ if ($data = $general_form->get_data()) {
     // TODO: Then, redirect
     // redirect($assessment_url);
 
-} else if ($session_form->ensure_was_submitted() && $data = $session_form->get_data()) {
-    // ensure_was_submitted is a hack to work around moodles bad handling of noSubmitButton
+} else if ($data = $session_form->get_data()) {
     session_form::save_data($data);
     
     redirect($session_url);
@@ -79,7 +80,6 @@ if ($data = $general_form->get_data()) {
 echo $OUTPUT->header();
 ?>
 
-<link rel="stylesheet" type="text/css" href="styles.css">
 <html>
     <div id="metadata" class="yui3-skin-sam">
         <ul>
