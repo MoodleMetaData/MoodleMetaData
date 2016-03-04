@@ -56,9 +56,9 @@ if ($general_form->is_cancelled()) {
 
 // Submitted the data
 if ($data = $general_form->get_data()) {
-    //general_form::save_data($data);
+    general_form::save_data($data);
     print_object($data);
-    redirect($general_url);
+    //redirect($general_url);
 
 } else if ($data = $assessment_form->get_data()) {
     // TODO: Save the submission data, use a function/class from different file

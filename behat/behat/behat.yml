@@ -6,7 +6,7 @@ default:
     class: behat_init_context
   extensions:
     Behat\MinkExtension\Extension:
-      base_url: 'http://127.0.0.1'
+      base_url: 'http://162.246.157.158/test'
       goutte: null
       selenium2: null
     Moodle\BehatExtension\Extension:
@@ -180,6 +180,7 @@ default:
         behat_permissions: /var/www/html/yunita/MoodleMetaData/lib/tests/behat/behat_permissions.php
         behat_transformations: /var/www/html/yunita/MoodleMetaData/lib/tests/behat/behat_transformations.php
         behat_general: /var/www/html/yunita/MoodleMetaData/lib/tests/behat/behat_general.php
+        behat_deprecated: /var/www/html/yunita/MoodleMetaData/lib/tests/behat/behat_deprecated.php
         behat_hooks: /var/www/html/yunita/MoodleMetaData/lib/tests/behat/behat_hooks.php
         behat_navigation: /var/www/html/yunita/MoodleMetaData/lib/tests/behat/behat_navigation.php
         behat_portal_page: /var/www/html/yunita/MoodleMetaData/portal/tests/behat/behat_portal_page.php

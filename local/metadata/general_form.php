@@ -38,7 +38,7 @@ class general_form extends moodleform {
 		// Faculty
                 $course_faculty = $mform->addElement('text', 'course_faculty', get_string('course_faculty', 'local_metadata'), '');
                 //$mform->addRule('course_faculty', get_string('required'), 'required', null, 'client');
-                if($courseinfo = $DB->get_record('courseinfo', array('courseid'=>$courseId))){
+                if($courseinfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
                     $mform->setDefault('course_faculty', $courseinfo->coursefaculty);
                 }   
 				
@@ -72,15 +72,27 @@ class general_form extends moodleform {
 
                 // Email
                 $course_email = $mform->addElement('text', 'course_email', get_string('course_email', 'local_metadata'), '');
-                
+                if($contactinfo = $DB->get_record('courseinstructors', array('courseid'=>$courseinfo->id, 'userid'=>$USER->id))){
+                    $mform->setDefault('course_email', $contactinfo->email);
+                }
+
                 // Phone
                 $course_phone = $mform->addElement('text', 'course_phone', get_string('course_phone', 'local_metadata'), '');
+                if($contactinfo){
+                    $mform->setDefault('course_phone', $contactinfo->phonenumber);
+                }
 
                 // Office
                 $course_office = $mform->addElement('text', 'course_office', get_string('course_office', 'local_metadata'), '');
+                if($contactinfo){
+                    $mform->setDefault('course_office', $contactinfo->officelocation);
+                }  
 
                 // Office hours
                 $course_officeh = $mform->addElement('text', 'course_officeh', get_string('course_officeh', 'local_metadata'), '');
+                if($contactinfo){
+                    $mform->setDefault('course_officeh', $contactinfo->officehours);
+                }  
 
                 $mform->closeHeaderBefore('course_desc_header');
 
@@ -270,20 +282,45 @@ class general_form extends moodleform {
                 $course_info->courseid = $course->id;
                 $course_info->coursename = $course->fullname;
                 $course_info->coursetopic = $data->course_topic;
-                //$course_info->coursedescription = $data->course_description['text'];
-                $course_info->coursedescription = $data->course_description;
+                $course_info->coursedescription = $data->course_description['text'];
+                //$course_info->coursedescription = $data->course_description;
+                $course_info->coursefaculty = $data->course_faculty;
+                //$course_info->coursedescription = $data->course_description;
                 $course_info->coursefaculty = $data->course_faculty;
                 $course_info->assessmentnumber = $data->course_assessment;
                 $course_info->sessionnumber = $data->course_session;
 
-                if($existRecord = $DB->get_record('courseinfo', array('courseid'=>$course->id)) ){
+                $instructor_info = new stdClass();
+                $instructor_info->name = $USER->firstname.' '.$USER->lastname;
+                $instructor_info->officelocation = $data->course_office;
+                $instructor_info->officehours = $data->course_officeh;
+                $instructor_info->email = $data->course_email;
+                $instructor_info->phonenumber = $data->course_phone;
+                $instructor_info->userid = $USER->id;
+
+                if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
                 // Must have an entry for 'id' to map the table specified.
-                    $course_info->id = $existRecord->id;
+                    $course_info->id = $existCourseInfo->id;
                     $update_courseinfo = $DB->update_record('courseinfo', $course_info, false);
-                    echo 'Existing data is updated.';
+                    echo 'Existing course information is updated.<br />';
+
+                    if($existInstructorInfo = $DB->get_record('courseinstructors', 
+                        array('courseid'=>$existCourseInfo->id))){
+                            
+                        $instructor_info->id = $existInstructorInfo->id;
+                        $update_instructorinfo = $DB->update_record('courseinstructors', $instructor_info, false);
+                        echo 'Existing instructor information is updated.<br />';
+                    }else{
+                        $insert_instructorinfo = $DB->insert_record('courseinstructors', $instructor_info, false);
+                    }
                 }else{
-                    $insert_courseinfo = $DB->insert_record('courseinfo', $course_info, false);
-                    echo 'New data is added.';
+                    $insert_courseinfo = $DB->insert_record('courseinfo', $course_info, true, false);
+
+                    // courseinfo->id => courseinstructor->courseid
+                    $instructor_info->courseid = $insert_courseinfo;
+                    
+                    $insert_instructorinfo = $DB->insert_record('courseinstructors', $instructor_info, false);
+                    echo 'New course and instructor information are added.<br />';
                 }
         }
 

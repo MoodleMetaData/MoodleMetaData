@@ -1,0 +1,1 @@
+$CFG->behat_wwwroot, $CFG->behat_prefix and $CFG->behat_dataroot are currently used as $CFG->wwwroot, $CFG->prefix and $CFG->dataroot
