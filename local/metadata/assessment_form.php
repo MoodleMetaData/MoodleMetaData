@@ -13,6 +13,7 @@ class assessment_form extends moodleform {
 
 		// Form elements
 		//$mform->addElement('text', 'email', get_string('email'));
+		$mform -> addElement('header', 'general_header', get_string('general_header', 'local_metadata'));
 		$assessment_title = $mform -> addElement('text', 'assessment_title', get_string('assessment_title', 'local_metadata'));
 		$assessment_prof = $mform -> addElement('text', 'assessment_prof', get_string('assessment_prof', 'local_metadata'));
 		$mform->setDefault('assessment_prof', get_string('assessment_prof_default', 'local_metadata'));
