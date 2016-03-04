@@ -83,6 +83,12 @@ class recurring_element_parser {
         return $sessions;
     }
 
+    /*
+     * If the given tuple is in the database, it will be removed. Otherwise, will not do any action
+     *
+     * @param object $tuple tuple that is to be removed from database.
+     *
+     */
     function deleteTupleFromDB($tuple) {
         if ($this->isInDatabase($tuple)) {
             global $DB;
@@ -91,6 +97,12 @@ class recurring_element_parser {
         }
     }
 
+    /*
+     * Save all of the given tuples to the database
+     *
+     * @param array $tuples array of tuples to be updated in the database, or inserted into it.
+     *
+     */
     function saveTuplesToDB($tuples) {
         global $DB;
         
@@ -111,6 +123,13 @@ class recurring_element_parser {
         }
     }
     
+    /*
+     * Checks to see if the tuple is in the database. According to the assumptions listed in the class, expects a value to not
+     *  be in the database if the value 'id' is null or equal to -1
+     *
+     * @param object $tuple tuple to check and see if it is in the database
+     *
+     */
     private function isInDatabase($tuple) {
         return !is_null($tuple['id']) && $tuple['id'] != -1;
     }

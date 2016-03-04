@@ -58,6 +58,16 @@ function get_table_data_for_course($table) {
     return $DB->get_records($table, array('courseid'=>$courseId));
 }
 
+/**
+ * Will return the types of learning objectives
+ *   May eventually load them from information for the program
+ *
+ * @return array containing string of all types
+ */
+function get_learning_objective_types() {
+    return array('Attitudes', 'Knowledge', 'Skills');
+}
+
 
 function create_insview_url($courseId, $anchor=null) {
     if ($anchor) {

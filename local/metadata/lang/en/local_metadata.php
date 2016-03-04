@@ -38,43 +38,38 @@ $string['course_data'] = 'Course data';
 $string['instructor_heading'] = 'Metadata for %s: %s';
 
 $string['add_session'] = 'Add new session';
-$string['session_topic'] = 'Topic:';
-$string['session_description'] = 'Description:';
-$string['session_type'] = 'Type:';
-$string['session_date'] = 'Date:';
+$string['session_title'] = 'Title';
+$string['session_description'] = 'Description';
+$string['session_guest_teacher'] = 'Guest Lecturer';
+$string['session_guest_teacher_help'] = 'If there is a different lecuturer, write out their full name. Otherwise, leave blank';
+$string['session_type'] = 'Type';
+$string['session_length'] = 'Length';
+$string['session_date'] = 'Date';
 
-$string['learning_objectives'] = 'Learning Objectives';
+$string['learning_objective_Attitudes'] = 'Learning Objective - Attitudes';
+$string['learning_objective_Knowledge'] = 'Learning Objective - Knowledge';
+$string['learning_objective_Skills'] = 'Learning Objectives - Skills';
 $string['related_assessments'] = 'Related Assessments';
 $string['deletesession'] = 'Delete Session';
 
 
-$string['assessment_description'] = 'Description of the Assessment: ';
-$string['learning_objective_selection_description']= 'Select the Learning Objective(s): ';
+$string['assessment_description'] = 'Description: ';
+$string['learning_objective_selection_description']= 'Learning Objective(s): ';
 $string['assessment_type'] = 'Type of Assessment: ';
 $string['grade_weight'] = 'Weight: ';
 $string['objective_description'] = 'Description: ';
 
-// Metadata manager strings
-$string['manage_knowledge'] = 'Knowledge Attributes: ';
-$string['new_knowledge'] = 'New Learning Objective';
-$string['create_knowledge'] = 'Add';
-$string['delete_knowledge'] = 'Delete';
+$string['assessment_title'] = 'Title: ';
+$string['assessment_prof'] = 'Lecturer: ';
+$string['assessment_isexam'] = 'Exam? ';
+$string['knowledge_header'] = 'Knowledge';
+$string['knowledge_text'] = 'At the end of the course the student will be able to: ';
+$string['skills_header'] = 'Skills';
+$string['attitudes_header'] ='Attitudes';
+$string['grading_header'] = 'Grading';
+$string['assessment_grading_desc'] = 'Description: ';
+$string['assessment_prof_default'] = 'First, Last';
+$string['assessment_due'] = 'Date: ';
+$string['assessment_duration'] = 'Duration: ';
+$string['assessment_due'] = 'Due Date: ';
 
-$string['manage_skills'] = 'Skills Attributes: ';
-$string['new_skills'] = 'New Learning Objective';
-$string['create_skills'] = 'Add';
-$string['delete_skills'] = 'Delete';
-
-$string['manage_attitudes'] = 'Attitudes Attributes: ';
-$string['new_attitudes'] = 'New Learning Objective';
-$string['create_attitudes'] = 'Add';
-$string['delete_attitudes'] = 'Delete';
-
-$string['policy_editor'] = 'Faculty Policy: ';
-$string['submit_policy'] = 'Submit';
-
-$string['university_editor'] = 'University Policy: ';
-
-// Metadata manager errors
-$string['mcreate_required'] = 'You must enter something.';
-$string['psla_exists'] = 'That learning objective already exists.';
