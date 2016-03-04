@@ -34,7 +34,8 @@ class session_form extends moodleform {
 
         $this->setup_data_for_repeat($sessions);
 
-        $this->add_action_buttons();
+        // TODO: No arguments once we break up the tabs properly
+        $this->add_action_buttons(true, "Save changes session");
     }
 
     /**
@@ -71,7 +72,12 @@ class session_form extends moodleform {
         
         $learningObjectiveTypes = get_learning_objective_types();
         foreach ($learningObjectiveTypes as $learningObjectiveType) {
-            $learningObjectivesEl = $mform->createElement('select', 'learning_objective_'.$learningObjectiveType, get_string('learning_objective_'.$learningObjectiveType, 'local_metadata'), $learningObjectivesList[$learningObjectiveType]);
+            $options = array();
+            if (array_key_exists($learningObjectiveType, $learningObjectivesList)) {
+                $options = $learningObjectivesList[$learningObjectiveType];
+            }
+            
+            $learningObjectivesEl = $mform->createElement('select', 'learning_objective_'.$learningObjectiveType, get_string('learning_objective_'.$learningObjectiveType, 'local_metadata'), $options);
             $learningObjectivesEl->setMultiple(true);
             $repeatarray[] = $learningObjectivesEl;
         }
@@ -96,7 +102,7 @@ class session_form extends moodleform {
         // Two elements required for deleting
         $repeatarray[] = $mform->createElement('hidden', 'was_deleted', false);
         $repeatarray[] = $mform->createElement('submit', 'deleteSession', get_string('deletesession', 'local_metadata'));
-        $mform->registerNoSubmitButton('deleteSession');
+        //$mform->registerNoSubmitButton('deleteSession');
         
         
         $repeateloptions = array();
@@ -115,6 +121,16 @@ class session_form extends moodleform {
         
     }
 
+    /**
+     *  This function MUST be called, and return true, before get_data is called on this form.
+     *    The need for this function is because of how noSubmitButton is handled terribly in moodle
+     *    and using it will cause a warning, that causes the tests to fail.
+     *
+     *  @return true iff the actual submit button was pressed
+     */
+    public function ensure_was_submitted() {
+        return $this->_form->getSubmitValue('submitbutton') !== null;
+    }
 
     /**
      *  Will set up the data for each of the elements in the repeat_elements
@@ -313,8 +329,9 @@ class session_form extends moodleform {
             
             // Save the learning_objective
             // Template for this was found in \mod\glossary\edit.php
-            $learningObjectiveTypes = session_form::get_learning_objectives();
+            $learningObjectiveTypes = get_learning_objective_types();
             foreach ($learningObjectiveTypes as $learningObjectiveType) {
+                $key = 'learning_objective_'.$learningObjectiveType;
                 if (array_key_exists($key, $tuple) and is_array($tuple[$key])) {
                     foreach ($tuple[$key] as $objectiveId) {
                         $newLink = new stdClass();
