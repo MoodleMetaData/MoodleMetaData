@@ -1,8 +1,8 @@
 @local_metadata
 Feature: Session tab
-  Need to be able to add sessions to the list
-  And, this coveres X
-  Note, need to add tests for linking of learning objectives and assessments
+	In order to use the session tab
+	As an instructor
+	I need to be able to enter information about an session
   
   Background:
     Given the following "courses" exist:
