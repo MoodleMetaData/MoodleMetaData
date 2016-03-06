@@ -179,11 +179,20 @@ class general_form extends moodleform {
 
                 foreach($learning_objectives as $obj){
                     if($obj->objectivetype === 'Knowledge'){
-                        $knowledge_list[$obj->id] = $obj->objectivename;
+                        $k_obj = new stdClass();
+                        $k_obj->id = $obj->id;
+                        $k_obj->name = $obj->objectivename;
+                        $knowledge_list[] = $k_obj;
                     }else if($obj->objectivetype === 'Skills'){
-                        $skill_list[$obj->id] = $obj->objectivename;
+                        $s_obj = new stdClass();
+                        $s_obj->id = $obj->id;
+                        $s_obj->name = $obj->objectivename;
+                        $skill_list[] = $s_obj;
                     }else{
-                        $attitude_list[$obj->id] = $obj->objectivename;
+                        $a_obj = new stdClass();
+                        $a_obj->id = $obj->id;
+                        $a_obj->name = $obj->objectivename;
+                        $attitude_list[] = $a_obj;
                     }
                 } 
 
@@ -196,7 +205,7 @@ class general_form extends moodleform {
 
                 $knowledge_array[] = $mform->createElement('text', 'knowledge_option', get_string('knowledge_label', 'local_metadata'));
                 $knowledge_array[] = $mform->createElement('hidden', 'knowledge_id', -1);
-                      
+
                 $knowledge_options = array();       
                 $mform->setType('knowledge_option', PARAM_TEXT);
                 $mform->setType('knowledge_id', PARAM_INT);
@@ -206,11 +215,17 @@ class general_form extends moodleform {
                 foreach ($knowledge_list as $knowledge_item) {
                     //echo $knowledge_item;
                     $index = '['.$key.']';
-                    $mform->setDefault('knowledge_option'.$index, $knowledge_item);
+                    $mform->setDefault('knowledge_option'.$index, $knowledge_item->name);
+                    $mform->setDefault('knowledge_id'.$index, $knowledge_item->id);
                     $key += 1;
                 }
 
                 $mform->closeHeaderBefore('obj_skill_header');
+
+                // If knowlegde list is not empty, open the header
+                if(count($knowledge_list) > 0){
+                    $mform->setExpanded('obj_knowledge_header');
+                }
 
                 // Skill
                 $mform->addElement('header', 'obj_skill_header', get_string('obj_skill_header', 'local_metadata'));
@@ -220,7 +235,7 @@ class general_form extends moodleform {
                 $skill_array = array();
 
                 $skill_array[] = $mform->createElement('text', 'skill_option', get_string('skill_label', 'local_metadata'));
-                $skill_array[] = $mform->createElement('hidden', 'skill_id', 0);
+                $skill_array[] = $mform->createElement('hidden', 'skill_id', -1);
                
                 $skill_options = array();       
                 $mform->setType('skill_option', PARAM_TEXT);
@@ -230,12 +245,19 @@ class general_form extends moodleform {
                 $key = 0;
                 foreach ($skill_list as $skill_item) {
                     $index = '['.$key.']';
-                    $mform->setDefault('skill_option'.$index, $skill_item);
+                    $mform->setDefault('skill_option'.$index, $skill_item->name);
+                    $mform->setDefault('skill_id'.$index, $skill_item->id);
                     $key += 1;
                 }
 
 
                 $mform->closeHeaderBefore('obj_attitude_header');
+
+                // If skill list is not empty, open the header
+                if(count($skill_list) > 0){
+                    $mform->setExpanded('obj_skill_header');
+                }
+
 
                 //Attitude
                 $mform->addElement('header', 'obj_attitude_header', get_string('obj_attitude_header', 'local_metadata'));
@@ -255,12 +277,17 @@ class general_form extends moodleform {
                 $key = 0;
                 foreach ($attitude_list as $attitude_item) {
                     $index = '['.$key.']';
-                    $mform->setDefault('attitude_option'.$index, $attitude_item);
+                    $mform->setDefault('attitude_option'.$index, $attitude_item->name);
+                    $mform->setDefault('attitude_id'.$index, $attitude_item->id);
                     $key += 1;
                 }
 
                 $mform->closeHeaderBefore('course_gradatt_header');
 
+                // If attitude list is not empty, open the header
+                if(count($attitude_list) > 0){
+                    $mform->setExpanded('obj_attitude_header');
+                }
 
                 /***************************
 		* GRADUATE ATTRIBUTES
@@ -358,6 +385,38 @@ class general_form extends moodleform {
                     }
 
                     // Handle course objectives
+
+                    $k_name = $data->knowledge_option;
+                    $k_id = $data->knowledge_id;
+                    for($i = 0; $i < count($k_id); $i++){
+                        // if name is empty and id is exist -> delete record
+                        if($k_name[$i] === ''){
+                            if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$k_id[$i]))){
+                                $delete_courseObj = $DB->delete_records('courseobjectives', array('objectiveid'=>$k_id[$i]));
+                                $delete_learnObj = $DB->delete_records('learningobjectives', array('id'=>$k_id[$i]));
+                            }
+                        }else{
+                        // if name is not empty and id is exist -> update, otherwise -> insert
+                            if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$k_id[$i]))){
+                                $k = new stdClass();
+                                $k->id = $k_id[$i];
+                                $k->objectivename = $k_name[$i];
+                                $update_courseObj = $DB->update_record('learningobjectives', $k, false);
+                            }else{
+                                // TODO: CHECK THIS!
+                                $knowledge_info = new stdClass();
+                                $knowledge_info->objectivename = $k_name[$i];
+                                $knowledge_info->objectivetype = 'Knowledge';
+                                $insert_learningobj = $DB->insert_record('learningobjectives', $knowledge_info, true, false);
+
+                                $kcobj = new stdClass();
+                                $kcobj->objectiveid = $insert_learningobj;
+                                $kcobj->courseid = $course->id;
+                                $insert_courseobj = $DB->insert_record('courseobjectives', $kcobj, true, false);
+                            }
+                        }
+                    }
+        
                 }else{
                     $insert_courseinfo = $DB->insert_record('courseinfo', $course_info, true, false);
 
@@ -387,7 +446,6 @@ class general_form extends moodleform {
                     // skill
                     foreach($data->skill_option as $skill_temp){
                         if($skill_temp != NULL){
-                            $skill_array[] = $knowledge_temp;
                             $skill_info = new stdClass();
                             $skill_info->objectivename = $skill_temp;
                             $skill_info->objectivetype = 'Skills';
@@ -403,9 +461,8 @@ class general_form extends moodleform {
                     // attitude
                     foreach($data->attitude_option as $attitude_temp){
                         if($attitude_temp != NULL){ 
-                            $attitude_array[] = $attitude_temp;
                             $attitude_info = new stdClass();      
-                            $attitude_info->objectivename = $knowledge_temp;
+                            $attitude_info->objectivename = $attitude_temp;
                             $attitude_info->objectivetype = 'Attitudes';
                             $insert_learningobj = $DB->insert_record('learningobjectives', $attitude_info, true, false);
 
