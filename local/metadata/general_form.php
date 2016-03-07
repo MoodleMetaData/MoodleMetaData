@@ -9,75 +9,67 @@ require_once 'lib.php';
  * The form to display the tab for general information.
  */
 class general_form extends moodleform {
+	
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
-                global $course;           
+		global $course;           
 
-                // initialize the form.
-                $mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
-			
-				$courseinfo = $DB->get_record('courseinfo', array('courseid'=>$course->id));
-				
-				// setup form elements
-				$this->setup_general($mform, $courseinfo);
-				$this->setup_contact($mform, $courseinfo);
-				$this->setup_description($mform, $courseinfo);
-				$this->setup_format($mform, $courseinfo);
+		// initialize the form.
+		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
+	
+		$courseinfo = $DB->get_record('courseinfo', array('courseid'=>$course->id));
 		
-          
+		// setup form elements
+		$this->setup_general($mform, $courseinfo);
+		$this->setup_contact($mform, $courseinfo);
+		$this->setup_description($mform, $courseinfo);
+		$this->setup_format($mform, $courseinfo);
 
-                /***************************
-				 * COURSE OBJECTIVES
-				 ***************************/
-                
-                // fetch from DB if already exist
-                // TODO: FETCH COURSE OBJECTIVE DOES NOT WORK!
-                $learning_objectives = get_course_learning_objectives();
-                $knowledge_list = array();
-                $skill_list = array();
-                $attitude_list = array();
+		// setup course objectives
+		$learning_objectives = get_course_learning_objectives();
+		$knowledge_list = array();
+		$skill_list = array();
+		$attitude_list = array();
 
-                foreach($learning_objectives as $obj){
-                    if($obj->objectivetype === 'Knowledge'){
-						$knowledge_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
-                    }else if($obj->objectivetype === 'Skills'){
-                        $skill_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
-                    }else{
-                        $attitude_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
-                    }
-                } 
-				
-				$this->setup_course_obj($mform, 'knowledge', $knowledge_list, 'skill');
-				$this->setup_course_obj($mform, 'skill', $skill_list, 'attitude');
-				$this->setup_course_obj($mform, 'attitude', $attitude_list, 'gradatt');
-			
+		foreach($learning_objectives as $obj){
+			if($obj->objectivetype === 'Knowledge'){
+				$knowledge_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
+			}else if($obj->objectivetype === 'Skills'){
+				$skill_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
+			}else{
+				$attitude_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
+			}
+		} 
+		
+		$this->setup_course_obj($mform, 'knowledge', $knowledge_list, 'skill');
+		$this->setup_course_obj($mform, 'skill', $skill_list, 'attitude');
+		$this->setup_course_obj($mform, 'attitude', $attitude_list, 'gradatt');
+	
 
-                /***************************
-				 * GRADUATE ATTRIBUTES
-				 ***************************/
-                $mform->addElement('header', 'course_gradatt_header', get_string('course_gradatt_header', 'local_metadata'));
+		// setup graduate attributes
+		$mform->addElement('header', 'course_gradatt_header', get_string('course_gradatt_header', 'local_metadata'));
 
-                $gradAtt_array = array();
+		$gradAtt_array = array();
 
-                // TODO: MANIPULATE THE LIST FROM DB
-                $course_gradAtts = array();
-                $course_gradAtts[] = 'attribute 1';
-                $course_gradAtts[] = 'attribute 2';
+		// TODO: MANIPULATE THE LIST FROM DB
+		$course_gradAtts = array();
+		$course_gradAtts[] = 'attribute 1';
+		$course_gradAtts[] = 'attribute 2';
 
-                $gradAtt_array[] = $mform->createElement('select', 'gradAtt_option', get_string('course_gradAtt', 'local_metadata'), $course_gradAtts, '');
-                $gradAtt_array[] = $mform->createElement('hidden', 'gradAtt_id', 0);
+		$gradAtt_array[] = $mform->createElement('select', 'gradAtt_option', get_string('course_gradAtt', 'local_metadata'), $course_gradAtts, '');
+		$gradAtt_array[] = $mform->createElement('hidden', 'gradAtt_id', 0);
 
-                if ($this->_instance){
-                    $repeatg = $DB->count_records('gradAtt_options', array('gradAtt_id'=>$this->_instance));
-                    $repeatg += 1;
-                } else {
-                    $repeatg = 1;
-                }
+		if ($this->_instance){
+			$repeatg = $DB->count_records('gradAtt_options', array('gradAtt_id'=>$this->_instance));
+			$repeatg += 1;
+		} else {
+			$repeatg = 1;
+		}
 
-                $gradAtt_options = array();
-                $mform->setType('gradAtt_option', PARAM_CLEANHTML);
-                $mform->setType('gradAtt_id', PARAM_INT);
-                $this->repeat_elements($gradAtt_array, $repeatg, $gradAtt_options, 'option_repeats4', 'option_add_fields_gradAtt', 1, get_string('add_gradAtt', 'local_metadata'), true);
+		$gradAtt_options = array();
+		$mform->setType('gradAtt_option', PARAM_CLEANHTML);
+		$mform->setType('gradAtt_id', PARAM_INT);
+		$this->repeat_elements($gradAtt_array, $repeatg, $gradAtt_options, 'option_repeats4', 'option_add_fields_gradAtt', 1, get_string('add_gradAtt', 'local_metadata'), true);
 
 
 		// Add form buttons
@@ -265,6 +257,9 @@ class general_form extends moodleform {
 		return $obj;
 	} 
 	
+	/**
+	 * Add form elements for course objective.
+	 */
 	private function setup_course_obj($mform, $type, $list, $nextheader){
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $course;
@@ -309,21 +304,6 @@ class general_form extends moodleform {
 		//}
 		return $errors;
     }
-
-	
-	function insert_objective($name, $type){
-		global $CFG, $DB, $USER; //Declare our globals for use
-		global $course;
-		
-		$_info = new stdClass();
-		$_info->objectivename = $name;
-		$_info->objectivetype = $type;
-		$insert_learningobj = $DB->insert_record('learningobjectives', $_info, true, false);
-		$kcobj = new stdClass();
-		$kcobj->objectiveid = $insert_learningobj;
-		$kcobj->courseid = $course->id;
-		$insert_courseobj = $DB->insert_record('courseobjectives', $kcobj, true, false);
-	}
 	
 	/**
 	 * Will save the given data.
@@ -336,7 +316,6 @@ class general_form extends moodleform {
 		$course_info = new stdClass();
 		$course_info->courseid = $course->id;
 		$course_info->coursename = $course->fullname;
-		$course_info->coursetopic = $data->course_topic;
 		$course_info->coursedescription = $data->course_description['text'];
 		$course_info->coursefaculty = $data->course_faculty;
 		//$course_info->coursedescription = $data->course_description;
@@ -408,60 +387,60 @@ class general_form extends moodleform {
 				}
 			}
 			
-			$k_name = $data->skill_option;
-			$k_id = $data->skill_id;
-			for($i = 0; $i < count($k_id); $i++){
+			$s_name = $data->skill_option;
+			$s_id = $data->skill_id;
+			for($i = 0; $i < count($s_id); $i++){
 				// if name is empty and id is exist -> delete record
-				if($k_name[$i] === ''){
-					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$k_id[$i]))){
-						$delete_courseObj = $DB->delete_records('courseobjectives', array('objectiveid'=>$k_id[$i]));
-						$delete_learnObj = $DB->delete_records('learningobjectives', array('id'=>$k_id[$i]));
+				if($s_name[$i] === ''){
+					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$s_id[$i]))){
+						$delete_courseObj = $DB->delete_records('courseobjectives', array('objectiveid'=>$s_id[$i]));
+						$delete_learnObj = $DB->delete_records('learningobjectives', array('id'=>$s_id[$i]));
 					}
 				}else{
 				// if name is not empty and id is exist -> update, otherwise -> insert
-					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$k_id[$i]))){
-						$k = new stdClass();
-						$k->id = $k_id[$i];
-						$k->objectivename = $k_name[$i];
-						$update_courseObj = $DB->update_record('learningobjectives', $k, false);
+					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$s_id[$i]))){
+						$s = new stdClass();
+						$s->id = $s_id[$i];
+						$s->objectivename = $s_name[$i];
+						$update_courseObj = $DB->update_record('learningobjectives', $s, false);
 					}else{
-						$knowledge_info = new stdClass();
-						$knowledge_info->objectivename = $k_name[$i];
-						$knowledge_info->objectivetype = 'Knowledge';
-						$insert_learningobj = $DB->insert_record('learningobjectives', $knowledge_info, true, false);
-						$kcobj = new stdClass();
-						$kcobj->objectiveid = $insert_learningobj;
-						$kcobj->courseid = $course->id;
-						$insert_courseobj = $DB->insert_record('courseobjectives', $kcobj, true, false);
+						$skill_info = new stdClass();
+						$skill_info->objectivename = $s_name[$i];
+						$skill_info->objectivetype = 'Skills';
+						$insert_learningobj = $DB->insert_record('learningobjectives', $skill_info, true, false);
+						$scobj = new stdClass();
+						$scobj->objectiveid = $insert_learningobj;
+						$scobj->courseid = $course->id;
+						$insert_courseobj = $DB->insert_record('courseobjectives', $scobj, true, false);
 					}
 				}
 			}
 			
-			$k_name = $data->attitude_option;
-			$k_id = $data->attitude_id;
-			for($i = 0; $i < count($k_id); $i++){
+			$a_name = $data->attitude_option;
+			$a_id = $data->attitude_id;
+			for($i = 0; $i < count($a_id); $i++){
 				// if name is empty and id is exist -> delete record
-				if($k_name[$i] === ''){
-					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$k_id[$i]))){
-						$delete_courseObj = $DB->delete_records('courseobjectives', array('objectiveid'=>$k_id[$i]));
-						$delete_learnObj = $DB->delete_records('learningobjectives', array('id'=>$k_id[$i]));
+				if($a_name[$i] === ''){
+					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$a_id[$i]))){
+						$delete_courseObj = $DB->delete_records('courseobjectives', array('objectiveid'=>$a_id[$i]));
+						$delete_learnObj = $DB->delete_records('learningobjectives', array('id'=>$a_id[$i]));
 					}
 				}else{
 				// if name is not empty and id is exist -> update, otherwise -> insert
-					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$k_id[$i]))){
-						$k = new stdClass();
-						$k->id = $k_id[$i];
-						$k->objectivename = $k_name[$i];
-						$update_courseObj = $DB->update_record('learningobjectives', $k, false);
+					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$a_id[$i]))){
+						$a = new stdClass();
+						$a->id = $a_id[$i];
+						$a->objectivename = $a_name[$i];
+						$update_courseObj = $DB->update_record('learningobjectives', $a, false);
 					}else{
-						$knowledge_info = new stdClass();
-						$knowledge_info->objectivename = $k_name[$i];
-						$knowledge_info->objectivetype = 'Knowledge';
-						$insert_learningobj = $DB->insert_record('learningobjectives', $knowledge_info, true, false);
-						$kcobj = new stdClass();
-						$kcobj->objectiveid = $insert_learningobj;
-						$kcobj->courseid = $course->id;
-						$insert_courseobj = $DB->insert_record('courseobjectives', $kcobj, true, false);
+						$attitude_info = new stdClass();
+						$attitude_info->objectivename = $a_name[$i];
+						$attitude_info->objectivetype = 'Attitudes';
+						$insert_learningobj = $DB->insert_record('learningobjectives', $attitude_info, true, false);
+						$acobj = new stdClass();
+						$acobj->objectiveid = $insert_learningobj;
+						$acobj->courseid = $course->id;
+						$insert_courseobj = $DB->insert_record('courseobjectives', $acobj, true, false);
 					}
 				}
 			}
