@@ -49,6 +49,7 @@ if ($data = $session_form->get_data()) {
 echo $OUTPUT->header();
 ?>
 
+<link rel="stylesheet" type="text/css" href="session_element_style.css">
 <html>
 	<div class="nav_header">
 		<ul>
