@@ -12,7 +12,7 @@ $courseId = get_course_id();
 $context = context_course::instance($courseId);
 //require_capability('local/metadata:ins_view', $context);
 
-require_once($CFG->dirroot.'/local/metadata/assessment_form.php');
+require_once($CFG->dirroot.'/local/metadata/syllabus_form.php');
 
 // Define global variable for DB result
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
@@ -23,34 +23,30 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->shortname, $course->fullname);
 $PAGE->set_heading($heading);
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_assessment.php');
+$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_general.php');
 $PAGE->requires->css('/local/metadata/insview_style.css');
 
 // Create url
-$base_url = create_insview_url('assessment', $courseId);
+$base_url = create_insview_url('syllabus', $courseId);
 $general_url = create_insview_url('general',$courseId);
 $assessment_url = create_insview_url('assessment', $courseId);
 $session_url = create_insview_url('session', $courseId);
 $syllabus_url = create_insview_url('syllabus',$courseId);
 
 // Create forms
-$assessment_form = new assessment_form($base_url);
+$syllabus_form = new syllabus_form($base_url);
 
 // Case where they cancelled the form. Just redirect to it, to reset values
-if ($assessment_form->is_cancelled()) {
-    redirect($assessment_url);
-} 
+if ($syllabus_form->is_cancelled()) {
+    redirect($syllabus_url);
+}
 
 // Submitted the data
-if ($data = $assessment_form->get_data()) {
-    // TODO: Save the submission data, use a function/class from different file
-    echo "Assessment";
-    print_object($data);
-
-    // TODO: Then, redirect
-    // redirect($assessment_url);
-
-} 
+if ($data = $syllabus_form->get_data()) {
+    //syllabus_form::save_data($data);
+    //print_object($data);
+    //redirect($syllabus_url);
+}
 
 echo $OUTPUT->header();
 ?>
@@ -59,15 +55,16 @@ echo $OUTPUT->header();
 	<div class="nav_header">
 		<ul>
 		<li><a href=" <?php echo $general_url; ?> ">General</a></li>
-		<li class="onclick_nav"><a href=" <?php echo $assessment_url; ?> ">Assessment</a></li>
+		<li><a href=" <?php echo $assessment_url; ?> ">Assessment</a></li>
 		<li><a href=" <?php echo $session_url; ?> ">Session</a></li>
-		<li><a href=" <?php echo $syllabus_url; ?> ">Syllabus</a></li>
+		<li class="onclick_nav"><a href=" <?php echo $syllabus_url; ?> ">Syllabus</a></li>
 		</ul>
 	</div>
 	
 	<div class="form_container">
-		<?php $assessment_form->display(); ?>
+		<?php $syllabus_form->display(); ?>
 	</div>
 </html>
 
 <?php echo $OUTPUT->footer(); ?>
+
