@@ -13,7 +13,7 @@ function local_metadata_extends_settings_navigation($settingsnav, $context) {
     //}
  
     if ($settingnode = $settingsnav->find('courseadmin', navigation_node::TYPE_COURSE)) {
-        $url = new moodle_url('/local/metadata/insview.php', array('id' => $PAGE->course->id));
+        $url = new moodle_url('/local/metadata/insview_general.php', array('id' => $PAGE->course->id));
 
         // TODO: Should change the name to something more descriptive
         $foonode = navigation_node::create(
@@ -69,11 +69,8 @@ function get_learning_objective_types() {
 }
 
 
-function create_insview_url($courseId, $anchor=null) {
-    if ($anchor) {
-        return new moodle_url('/local/metadata/insview.php', array('id' => $courseId), 'tab='.$anchor);
-    }
-    return new moodle_url('/local/metadata/insview.php', array('id' => $courseId), $anchor);
+function create_insview_url($form, $courseId) {
+    return new moodle_url('/local/metadata/insview_'.$form.'.php', array('id' => $courseId));
 }
 
 function create_mange_url($courseId, $anchor=null) {

@@ -17,11 +17,13 @@ class general_form extends moodleform {
 		// initialize the form.
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 	
+		// retrieve data from course info and instructor table
 		$courseinfo = $DB->get_record('courseinfo', array('courseid'=>$course->id));
+		$contactinfo = $DB->get_record('courseinstructors', array('courseid'=>$courseinfo->id, 'userid'=>$USER->id));
 		
 		// setup form elements
 		$this->setup_general($mform, $courseinfo);
-		$this->setup_contact($mform, $courseinfo);
+		$this->setup_contact($mform, $courseinfo, $contactinfo);
 		$this->setup_description($mform, $courseinfo);
 		$this->setup_format($mform, $courseinfo);
 
@@ -134,14 +136,14 @@ class general_form extends moodleform {
 	/**
 	 * Add form elements for course contact information.
 	 */
-	private function setup_contact($mform, $courseinfo){
+	private function setup_contact($mform, $courseinfo, $contactinfo){
 		global $CFG, $DB, $USER; //Declare our globals for use
         global $course;  
 		$mform->addElement('header', 'course_contact_header', get_string('course_contact_header', 'local_metadata'));
 
 		// Email
 		$course_email = $mform->addElement('text', 'course_email', get_string('course_email', 'local_metadata'), '');
-		if($contactinfo = $DB->get_record('courseinstructors', array('courseid'=>$courseinfo->id, 'userid'=>$USER->id))){
+		if($contactinfo){
 			$mform->setDefault('course_email', $contactinfo->email);
 		}
 		$mform->addRule('course_email', get_string('required'), 'required', null, 'client');
@@ -358,91 +360,97 @@ class general_form extends moodleform {
 
 			// Handle course objectives
 
-			$k_name = $data->knowledge_option;
-			$k_id = $data->knowledge_id;
-			for($i = 0; $i < count($k_id); $i++){
-				// if name is empty and id is exist -> delete record
-				if($k_name[$i] === ''){
-					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$k_id[$i]))){
-						$delete_courseObj = $DB->delete_records('courseobjectives', array('objectiveid'=>$k_id[$i]));
-						$delete_learnObj = $DB->delete_records('learningobjectives', array('id'=>$k_id[$i]));
-					}
-				}else{
-				// if name is not empty and id is exist -> update, otherwise -> insert
-					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$k_id[$i]))){
-						$k = new stdClass();
-						$k->id = $k_id[$i];
-						$k->objectivename = $k_name[$i];
-						$update_courseObj = $DB->update_record('learningobjectives', $k, false);
+			if(isset($data->knowledge_option) != NULL){
+				$k_name = $data->knowledge_option;
+				$k_id = $data->knowledge_id;
+				for($i = 0; $i < count($k_id); $i++){
+					// if name is empty and id is exist -> delete record
+					if($k_name[$i] === ''){
+						if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$k_id[$i]))){
+							$delete_courseObj = $DB->delete_records('courseobjectives', array('objectiveid'=>$k_id[$i]));
+							$delete_learnObj = $DB->delete_records('learningobjectives', array('id'=>$k_id[$i]));
+						}
 					}else{
-						$knowledge_info = new stdClass();
-						$knowledge_info->objectivename = $k_name[$i];
-						$knowledge_info->objectivetype = 'Knowledge';
-						$insert_learningobj = $DB->insert_record('learningobjectives', $knowledge_info, true, false);
-						$kcobj = new stdClass();
-						$kcobj->objectiveid = $insert_learningobj;
-						$kcobj->courseid = $course->id;
-						$insert_courseobj = $DB->insert_record('courseobjectives', $kcobj, true, false);
+					// if name is not empty and id is exist -> update, otherwise -> insert
+						if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$k_id[$i]))){
+							$k = new stdClass();
+							$k->id = $k_id[$i];
+							$k->objectivename = $k_name[$i];
+							$update_courseObj = $DB->update_record('learningobjectives', $k, false);
+						}else{
+							$knowledge_info = new stdClass();
+							$knowledge_info->objectivename = $k_name[$i];
+							$knowledge_info->objectivetype = 'Knowledge';
+							$insert_learningobj = $DB->insert_record('learningobjectives', $knowledge_info, true, false);
+							$kcobj = new stdClass();
+							$kcobj->objectiveid = $insert_learningobj;
+							$kcobj->courseid = $course->id;
+							$insert_courseobj = $DB->insert_record('courseobjectives', $kcobj, true, false);
+						}
 					}
 				}
 			}
 			
-			$s_name = $data->skill_option;
-			$s_id = $data->skill_id;
-			for($i = 0; $i < count($s_id); $i++){
-				// if name is empty and id is exist -> delete record
-				if($s_name[$i] === ''){
-					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$s_id[$i]))){
-						$delete_courseObj = $DB->delete_records('courseobjectives', array('objectiveid'=>$s_id[$i]));
-						$delete_learnObj = $DB->delete_records('learningobjectives', array('id'=>$s_id[$i]));
-					}
-				}else{
-				// if name is not empty and id is exist -> update, otherwise -> insert
-					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$s_id[$i]))){
-						$s = new stdClass();
-						$s->id = $s_id[$i];
-						$s->objectivename = $s_name[$i];
-						$update_courseObj = $DB->update_record('learningobjectives', $s, false);
+			if(isset($data->skill_option) != NULL){
+				$s_name = $data->skill_option;
+				$s_id = $data->skill_id;
+				for($i = 0; $i < count($s_id); $i++){
+					// if name is empty and id is exist -> delete record
+					if($s_name[$i] === ''){
+						if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$s_id[$i]))){
+							$delete_courseObj = $DB->delete_records('courseobjectives', array('objectiveid'=>$s_id[$i]));
+							$delete_learnObj = $DB->delete_records('learningobjectives', array('id'=>$s_id[$i]));
+						}
 					}else{
-						$skill_info = new stdClass();
-						$skill_info->objectivename = $s_name[$i];
-						$skill_info->objectivetype = 'Skills';
-						$insert_learningobj = $DB->insert_record('learningobjectives', $skill_info, true, false);
-						$scobj = new stdClass();
-						$scobj->objectiveid = $insert_learningobj;
-						$scobj->courseid = $course->id;
-						$insert_courseobj = $DB->insert_record('courseobjectives', $scobj, true, false);
+					// if name is not empty and id is exist -> update, otherwise -> insert
+						if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$s_id[$i]))){
+							$s = new stdClass();
+							$s->id = $s_id[$i];
+							$s->objectivename = $s_name[$i];
+							$update_courseObj = $DB->update_record('learningobjectives', $s, false);
+						}else{
+							$skill_info = new stdClass();
+							$skill_info->objectivename = $s_name[$i];
+							$skill_info->objectivetype = 'Skills';
+							$insert_learningobj = $DB->insert_record('learningobjectives', $skill_info, true, false);
+							$scobj = new stdClass();
+							$scobj->objectiveid = $insert_learningobj;
+							$scobj->courseid = $course->id;
+							$insert_courseobj = $DB->insert_record('courseobjectives', $scobj, true, false);
+						}
 					}
 				}
 			}
 			
-			$a_name = $data->attitude_option;
-			$a_id = $data->attitude_id;
-			for($i = 0; $i < count($a_id); $i++){
-				// if name is empty and id is exist -> delete record
-				if($a_name[$i] === ''){
-					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$a_id[$i]))){
-						$delete_courseObj = $DB->delete_records('courseobjectives', array('objectiveid'=>$a_id[$i]));
-						$delete_learnObj = $DB->delete_records('learningobjectives', array('id'=>$a_id[$i]));
-					}
-				}else{
-				// if name is not empty and id is exist -> update, otherwise -> insert
-					if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$a_id[$i]))){
-						$a = new stdClass();
-						$a->id = $a_id[$i];
-						$a->objectivename = $a_name[$i];
-						$update_courseObj = $DB->update_record('learningobjectives', $a, false);
+			if(isset($data->attitude_option) != NULL){
+				$a_name = $data->attitude_option;
+				$a_id = $data->attitude_id;
+				for($i = 0; $i < count($a_id); $i++){
+					// if name is empty and id is exist -> delete record
+					if($a_name[$i] === ''){
+						if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$a_id[$i]))){
+							$delete_courseObj = $DB->delete_records('courseobjectives', array('objectiveid'=>$a_id[$i]));
+							$delete_learnObj = $DB->delete_records('learningobjectives', array('id'=>$a_id[$i]));
+						}
 					}else{
-						$attitude_info = new stdClass();
-						$attitude_info->objectivename = $a_name[$i];
-						$attitude_info->objectivetype = 'Attitudes';
-						$insert_learningobj = $DB->insert_record('learningobjectives', $attitude_info, true, false);
-						$acobj = new stdClass();
-						$acobj->objectiveid = $insert_learningobj;
-						$acobj->courseid = $course->id;
-						$insert_courseobj = $DB->insert_record('courseobjectives', $acobj, true, false);
+					// if name is not empty and id is exist -> update, otherwise -> insert
+						if($learnObjExist = $DB->record_exists('learningobjectives', array('id'=>$a_id[$i]))){
+							$a = new stdClass();
+							$a->id = $a_id[$i];
+							$a->objectivename = $a_name[$i];
+							$update_courseObj = $DB->update_record('learningobjectives', $a, false);
+						}else{
+							$attitude_info = new stdClass();
+							$attitude_info->objectivename = $a_name[$i];
+							$attitude_info->objectivetype = 'Attitudes';
+							$insert_learningobj = $DB->insert_record('learningobjectives', $attitude_info, true, false);
+							$acobj = new stdClass();
+							$acobj->objectiveid = $insert_learningobj;
+							$acobj->courseid = $course->id;
+							$insert_courseobj = $DB->insert_record('courseobjectives', $acobj, true, false);
+						}
 					}
-				}
+				}	
 			}
 
 		}else{
