@@ -31,6 +31,13 @@ class general_form extends moodleform {
 		$this->setup_description($mform, $courseinfo);
 		$this->setup_format($mform, $courseinfo);
 
+		
+		$mform->addElement('header', 'course_obj_header', get_string('course_obj_header', 'local_metadata'));
+		$mform->addElement('static', 'course_obj_warning', '', get_string('course_obj_warning', 'local_metadata'));
+		$mform->addElement('filepicker', 'temp_course_obj', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
+		$mform->addElement('submit', 'upload_course_obj', get_string('upload_course_obj', 'local_metadata'));
+		
+		
 		// setup course objectives
 		$learning_objectives = get_course_learning_objectives();
 		$knowledge_list = array();
@@ -46,7 +53,7 @@ class general_form extends moodleform {
 				$attitude_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
 			}
 		} 
-		
+				
 		$this->setup_course_obj($mform, 'knowledge', $knowledge_list, 'skill');
 		$this->setup_course_obj($mform, 'skill', $skill_list, 'attitude');
 		$this->setup_course_obj($mform, 'attitude', $attitude_list, 'gradatt');
@@ -310,10 +317,7 @@ class general_form extends moodleform {
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
 		global $DB, $CFG, $USER; //Declare them if you need them
-
-		//if ($data['data_name'] Some condition here)  {
-		//	$errors['element_to_display_error'] = get_string('error', 'local_demo_plug-in');
-		//}
+		
 		return $errors;
     }
 	
@@ -368,7 +372,7 @@ class general_form extends moodleform {
 
 			// Handle course objectives
 
-			if(isset($data->knowledge_option) != NULL){
+			if(!empty($data->knowledge_option)){
 				$k_name = $data->knowledge_option;
 				$k_id = $data->knowledge_id;
 				for($i = 0; $i < count($k_id); $i++){
@@ -399,7 +403,7 @@ class general_form extends moodleform {
 				}
 			}
 			
-			if(isset($data->skill_option) != NULL){
+			if(!empty($data->skill_option)){
 				$s_name = $data->skill_option;
 				$s_id = $data->skill_id;
 				for($i = 0; $i < count($s_id); $i++){
@@ -430,7 +434,7 @@ class general_form extends moodleform {
 				}
 			}
 			
-			if(isset($data->attitude_option) != NULL){
+			if(!empty($data->attitude_option)){
 				$a_name = $data->attitude_option;
 				$a_id = $data->attitude_id;
 				for($i = 0; $i < count($a_id); $i++){
@@ -472,7 +476,7 @@ class general_form extends moodleform {
 			// Handle course objectives
 			// TODO: dynamic course objectives type
 			// knowledge
-			if(isset($data->knowledge_option) != NULL){
+			if(!empty($data->knowledge_option)){
 				foreach($data->knowledge_option as $knowledge_temp){
 					if($knowledge_temp != NULL){
 						$knowledge_info = new stdClass();
@@ -489,7 +493,7 @@ class general_form extends moodleform {
 			}
 
 			// skill
-			if(isset($data->skill_option) != NULL){
+			if(!empty($data->skill_option)){
 				foreach($data->skill_option as $skill_temp){
 					if($skill_temp != NULL){
 						$skill_info = new stdClass();
@@ -506,7 +510,7 @@ class general_form extends moodleform {
 			}
 
 			// attitude
-			if(isset($data->attitude_option) != NULL){
+			if(!empty($data->attitude_option)){
 				foreach($data->attitude_option as $attitude_temp){
 					if($attitude_temp != NULL){ 
 						$attitude_info = new stdClass();      
