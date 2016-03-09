@@ -43,7 +43,7 @@ $string['add_knowledge'] = 'Add';
 $string['add_skill'] = 'Add';
 $string['add_attitude'] = 'Add';
 $string['add_gradAtt'] = 'Add';
-$string['course_obj_warning'] = 'Upload course objectives to populate';
+
 $string['upload_course_obj'] = "Upload";
 
 $string['course_email'] = 'E-mail: ';
@@ -61,11 +61,14 @@ $string['course_format_header'] = 'Course format';
 $string['course_gradatt_header'] = 'Graduate Attribute';
 $string['course_obj_header'] = 'Upload course objectives';
 
-$string['obj_knowledge_header_help'] = 'Leave the space blank to delete the input.';
-$string['obj_skill_header_help'] = 'Leave the space blank to delete the input.';
-$string['obj_attitude_header_help'] = 'Leave the space blank to delete the input.';
-
-
+$string['obj_knowledge_header_help'] = 'Leave the space blank to delete the entry.';
+$string['obj_skill_header_help'] = 'Leave the space blank to delete the entry.';
+$string['obj_attitude_header_help'] = 'Leave the space blank to delete the entry.';
+$string['course_obj_header_help'] = 'To upload course objectives, only .csv file is permitted.
+									The format is: [column1],[column2]
+									, where [column1] is the course objective description
+									and [column2] is the course objective type = {K, S, A}.
+									Enter the new line to create a new entry.';
 
 $string['course_data'] = 'Course data';
 

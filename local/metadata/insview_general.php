@@ -36,25 +36,16 @@ $syllabus_url = create_insview_url('syllabus',$courseId);
 // Create forms
 $general_form = new general_form($base_url);
 
-
-
 // Case where they cancelled the form. Just redirect to it, to reset values
 if ($general_form->is_cancelled()) {
     redirect($general_url);
 }
-
+	
 // Submitted the data
 if ($data = $general_form->get_data()) {
-    general_form::save_data($data);
+    $general_form->save_data($data);
     //print_object($data);
-	
-	if(!empty($data->upload_course_obj)){
-		//echo 'Uploaded';
-		$course_obj_content = $general_form->get_file_content('temp_course_obj');
-		echo $course_obj_content;
-	}
-
-    //redirect($general_url);
+	redirect($general_url);
 }
 
 echo $OUTPUT->header();
