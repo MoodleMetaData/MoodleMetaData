@@ -20,6 +20,7 @@ require_once 'recurring_element_parser.php';
  *
  */
 class session_form extends moodleform {
+    const NUM_PER_PAGE = 10;
 
     /**
      * Will set up the form elements
@@ -29,13 +30,20 @@ class session_form extends moodleform {
         global $CFG, $USER;
 
         $sessions = $this->_customdata['sessions'];
+        
+        $page_num = optional_param('page', 0, PARAM_INT);
+        $subset_included = array_slice($sessions, $page_num * self::NUM_PER_PAGE, self::NUM_PER_PAGE);
+        $count = min(count($subset_included), self::NUM_PER_PAGE);
+        
+        $this->add_session_repeat_template($count);
+        
 
-        $this->add_session_repeat_template(count($sessions));
+        $this->setup_data_for_repeat($subset_included);
+        
+        $this->add_page_buttons($page_num, count($sessions));
+        
 
-        $this->setup_data_for_repeat($sessions);
-
-        // TODO: No arguments once we break up the tabs properly
-        $this->add_action_buttons(true, "Save changes session");
+        $this->add_action_buttons();
     }
 
     /**
@@ -129,7 +137,9 @@ class session_form extends moodleform {
      *  @return true iff the actual submit button was pressed
      */
     public function ensure_was_submitted() {
-        return $this->_form->getSubmitValue('submitbutton') !== null;
+        return $this->_form->getSubmitValue('submitbutton') !== null ||
+               $this->_form->getSubmitValue('previousPage') !== null ||
+               $this->_form->getSubmitValue('nextPage') !== null;
     }
 
     /**
@@ -174,6 +184,35 @@ class session_form extends moodleform {
 
             $key += 1;
         }
+    }
+    
+    /**
+     *  Will add the buttons on the bottom
+     *  
+     *
+     */
+    private function add_page_buttons($page_num, $num_sessions) {
+        $mform = $this->_form;
+        
+        $page_change_links=array();
+        
+        // Back page button
+        $page_change_links[] = $mform->createElement('submit', 'previousPage', get_string('previous_page', 'local_metadata'));
+        
+        // If is on the first page
+        if ($page_num === 0) {
+            $mform->disabledIf('previousPage', null);
+        }
+    
+        // Next page button
+        $page_change_links[] = $mform->createElement('submit', 'nextPage', get_string('next_page', 'local_metadata'));
+        
+        // If the next page would be empty
+        if (($page_num + 1) * self::NUM_PER_PAGE >= $num_sessions) {
+            $mform->disabledIf('nextPage', null);
+        }
+        
+        $mform->addGroup($page_change_links, 'buttonarray_sdafs', '', array(' '), false);
     }
     
     function setup_data_from_database_for_session($mform, $index, $session) {
@@ -277,6 +316,16 @@ class session_form extends moodleform {
         $types = array('50 minutes', '80 minutes', '110 minutes', '140 minutes', '170 minutes');
 
         return $types;
+    }
+    
+    public function get_page_change() {
+        if ($this->_form->getSubmitValue('previousPage') !== null) {
+            return -1;
+        } else if ($this->_form->getSubmitValue('nextPage') !== null) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 
     /**

@@ -128,3 +128,5 @@ $string['university_editor'] = 'University Policy: ';
 $string['mcreate_required'] = 'You must enter something.';
 $string['psla_exists'] = 'That learning objective already exists.';
 
+$string['next_page'] = 'Next Page';
+$string['previous_page'] = 'Previous Page';

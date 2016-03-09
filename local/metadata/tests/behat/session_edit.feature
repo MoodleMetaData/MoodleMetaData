@@ -1,4 +1,4 @@
-@local_metadata
+@local_metadata @local_metadata_session
 Feature: Session tab
 	In order to use the session tab
 	As an instructor
@@ -30,7 +30,7 @@ Feature: Session tab
       | sessiondescription[0] | Will normally be a long title |
       | sessionguestteacher[0] | Bob the Builder|
       | sessiontype[0] | lab |
-    When I press "Save changes session"
+    When I press "Save changes"
     Then I wait to be redirected
     Then the following fields match these values:
       | sessiontitle[0] | Some title |
@@ -44,30 +44,7 @@ Feature: Session tab
   Scenario: Adding two sessions, filling out both. Then delete first before saving. Should have second unchanged, and in [0]
     Given I press "sessions_list_add_element"
     And I set the following fields to these values:
-      | sessiontitle[0] | Some title |
-      | sessiondescription[0] | Will normally be a long title |
-      | sessionguestteacher[0] | Bob the Builder|
-      | sessiontype[0] | lab |
-    And I press "sessions_list_add_element"
-    And I set the following fields to these values:
-      | sessiontitle[1] | Other title |
-      | sessiondescription[1] | Will be a different description |
-      | sessionguestteacher[1] | Bob the Builder2 |
-    When I press "deleteSession[0]"
-    And I wait to be redirected
-    And I press "Save changes session"
-    Then I wait to be redirected
-    And the following fields match these values:
-      | sessiontitle[0] | Second title |
-      | sessiondescription[0] | Will be a different description |
-      | sessionguestteacher[0] | Bob the Builder2 |
-    
-  
-  @javascript @current
-  Scenario: Adding two sessions, filling out both. Save both. Then delete first. Should have second unchanged, and first removed
-    Given I press "sessions_list_add_element"
-    And I set the following fields to these values:
-      | sessiontitle[0] | Some title |
+      | sessiontitle[0] | First title |
       | sessiondescription[0] | Will normally be a long title |
       | sessionguestteacher[0] | Bob the Builder|
       | sessiontype[0] | lab |
@@ -76,12 +53,35 @@ Feature: Session tab
       | sessiontitle[1] | Second title |
       | sessiondescription[1] | Will be a different description |
       | sessionguestteacher[1] | Bob the Builder2 |
-    And I press "Save changes session"
-    And I wait to be redirected
     When I press "deleteSession[0]"
     And I wait to be redirected
-    Then the following fields match these values:
+    And I press "Save changes"
+    Then I wait to be redirected
+    And the following fields match these values:
       | sessiontitle[0] | Second title |
       | sessiondescription[0] | Will be a different description |
       | sessionguestteacher[0] | Bob the Builder2 |
     
+  
+  @javascript
+  Scenario: Adding two sessions, filling out both. Save both. Then delete first. Should have second unchanged, and first removed
+    Given I press "sessions_list_add_element"
+    And I set the following fields to these values:
+      | sessiontitle[0] | Some title |
+      | sessiondescription[0] | Will normally be a long title |
+      | sessionguestteacher[0] | Bob the Builder|
+    And I press "sessions_list_add_element"
+    And I set the following fields to these values:
+      | sessiontitle[1] | Second title |
+      | sessiondescription[1] | Will be a different description |
+      | sessionguestteacher[1] | Bob the Builder2 |
+    And I press "Save changes"
+    And I wait to be redirected
+    And I press "Cancel"
+    And I wait to be redirected
+    Given I press "deleteSession[1]"
+    And I wait to be redirected
+    Then the following fields match these values:
+      | sessiontitle[0] | Some title |
+      | sessiondescription[0] | Will normally be a long title |
+      | sessionguestteacher[0] | Bob the Builder |
