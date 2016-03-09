@@ -22,7 +22,7 @@ $general_url = create_insview_url('general',$courseId);
 $assessment_url = create_insview_url('assessment', $courseId);
 $session_url = create_insview_url('session', $courseId);
 $page = optional_param('page', 0, PARAM_INT);
-        
+
 $session_url->param('page', $page);
     
 // Set up page information
@@ -31,7 +31,9 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->shortname, $course->fullname);
 $PAGE->set_heading($heading);
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_session.php');
+
+// TODO: Improve how this is done
+$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_session.php', array('id' => $courseId, 'page' => $page));
 $PAGE->requires->css('/local/metadata/insview_style.css');
 $PAGE->requires->css('/local/metadata/session_element_style.css');
 
