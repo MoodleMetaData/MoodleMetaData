@@ -40,7 +40,7 @@ class general_form extends moodleform {
 		foreach($learning_objectives as $obj){
 			if($obj->objectivetype === 'Knowledge'){
 				$knowledge_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
-			}else if($obj->objectivetype === 'Skills'){
+			}else if($obj->objectivetype === 'Skill'){
 				$skill_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
 			}else{
 				$attitude_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
@@ -419,7 +419,7 @@ class general_form extends moodleform {
 						}else{
 							$skill_info = new stdClass();
 							$skill_info->objectivename = $s_name[$i];
-							$skill_info->objectivetype = 'Skills';
+							$skill_info->objectivetype = 'Skill';
 							$insert_learningobj = $DB->insert_record('learningobjectives', $skill_info, true, false);
 							$scobj = new stdClass();
 							$scobj->objectiveid = $insert_learningobj;
@@ -450,7 +450,7 @@ class general_form extends moodleform {
 						}else{
 							$attitude_info = new stdClass();
 							$attitude_info->objectivename = $a_name[$i];
-							$attitude_info->objectivetype = 'Attitudes';
+							$attitude_info->objectivetype = 'Attitude';
 							$insert_learningobj = $DB->insert_record('learningobjectives', $attitude_info, true, false);
 							$acobj = new stdClass();
 							$acobj->objectiveid = $insert_learningobj;
