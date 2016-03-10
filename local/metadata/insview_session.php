@@ -21,6 +21,7 @@ $base_url = create_insview_url('session', $courseId);
 $general_url = create_insview_url('general',$courseId);
 $assessment_url = create_insview_url('assessment', $courseId);
 $session_url = create_insview_url('session', $courseId);
+$syllabus_url = create_insview_url('syllabus',$courseId);
 $page = optional_param('page', 0, PARAM_INT);
 
 $session_url->param('page', $page);
@@ -66,6 +67,7 @@ echo $OUTPUT->header();
 		<li><a href=" <?php echo $general_url; ?> ">General</a></li>
 		<li><a href=" <?php echo $assessment_url; ?> ">Assessment</a></li>
 		<li class="onclick_nav"><a href=" <?php echo $session_url; ?> ">Session</a></li>
+		<li><a href=" <?php echo $syllabus_url; ?> ">Syllabus</a></li>
 		</ul>
 	</div>
 	

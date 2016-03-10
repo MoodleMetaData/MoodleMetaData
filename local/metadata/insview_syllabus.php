@@ -12,7 +12,7 @@ $courseId = get_course_id();
 $context = context_course::instance($courseId);
 //require_capability('local/metadata:ins_view', $context);
 
-require_once($CFG->dirroot.'/local/metadata/general_form.php');
+require_once($CFG->dirroot.'/local/metadata/syllabus_form.php');
 
 // Define global variable for DB result
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
@@ -23,31 +23,29 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->shortname, $course->fullname);
 $PAGE->set_heading($heading);
-
-// TODO: Improve how this is done
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_general.php', array('id' => $courseId));
+$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_general.php');
 $PAGE->requires->css('/local/metadata/insview_style.css');
 
 // Create url
-$base_url = create_insview_url('general', $courseId);
+$base_url = create_insview_url('syllabus', $courseId);
 $general_url = create_insview_url('general',$courseId);
 $assessment_url = create_insview_url('assessment', $courseId);
 $session_url = create_insview_url('session', $courseId);
 $syllabus_url = create_insview_url('syllabus',$courseId);
 
 // Create forms
-$general_form = new general_form($base_url);
+$syllabus_form = new syllabus_form($base_url);
 
 // Case where they cancelled the form. Just redirect to it, to reset values
-if ($general_form->is_cancelled()) {
-    redirect($general_url);
+if ($syllabus_form->is_cancelled()) {
+    redirect($syllabus_url);
 }
-	
+
 // Submitted the data
-if ($data = $general_form->get_data()) {
-    $general_form->save_data($data);
+if ($data = $syllabus_form->get_data()) {
+    //syllabus_form::save_data($data);
     //print_object($data);
-	redirect($general_url);
+    //redirect($syllabus_url);
 }
 
 echo $OUTPUT->header();
@@ -56,15 +54,15 @@ echo $OUTPUT->header();
 <html>
 	<div class="nav_header">
 		<ul>
-		<li class="onclick_nav"><a href=" <?php echo $general_url; ?> ">General</a></li>
+		<li><a href=" <?php echo $general_url; ?> ">General</a></li>
 		<li><a href=" <?php echo $assessment_url; ?> ">Assessment</a></li>
 		<li><a href=" <?php echo $session_url; ?> ">Session</a></li>
-		<li><a href=" <?php echo $syllabus_url; ?> ">Syllabus</a></li>
+		<li class="onclick_nav"><a href=" <?php echo $syllabus_url; ?> ">Syllabus</a></li>
 		</ul>
 	</div>
 	
 	<div class="form_container">
-		<?php $general_form->display(); ?>
+		<?php $syllabus_form->display(); ?>
 	</div>
 </html>
 
