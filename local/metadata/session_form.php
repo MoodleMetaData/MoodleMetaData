@@ -336,7 +336,7 @@ class session_form extends moodleform {
      * @param object $data value from calling get_data on this form
      *
      */
-    public static function save_data($data) {
+    public function save_data($data) {
         global $DB;
         
         // Set up the recurring element parser
@@ -360,8 +360,7 @@ class session_form extends moodleform {
         // Get the tuples (one for each session) from the parser
         $tuples = $session_recurring_parser->getTuplesFromData($data);
         
-        
-        // Handles deleting a session and updating the learning_objectives and session_related_assessment for the session
+        // Handles deleting a session
         foreach ($tuples as $tupleKey => $tuple) {
             // Clean out the sessionobjectives and session_related_assessment for this session
             $DB->delete_records('sessionobjectives', array('sessionid'=>$tuple['id']));
@@ -375,6 +374,14 @@ class session_form extends moodleform {
                 unset($tuples[$tupleKey]);
                 continue;
             }
+        }
+        
+        // Save the remaining data for the sessions/tuples
+            // Will also update the id for elements that are new
+        $session_recurring_parser->saveTuplesToDB($tuples);
+        
+        // Handles updating the objectives and related assessments
+        foreach ($tuples as $tupleKey => $tuple) {
             
             // Save the learning_objective
             // Template for this was found in \mod\glossary\edit.php
@@ -403,9 +410,6 @@ class session_form extends moodleform {
             }
             
         }
-        
-        // Save the remaining data for the sessions/tuples
-        $session_recurring_parser->saveTuplesToDB($tuples);
     }
 
 }
