@@ -15,15 +15,6 @@ require_once($CFG->dirroot.'/local/metadata/session_form.php');
 
 // Define global variable for DB result
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
-    
-// Set up page information
-$PAGE->set_context($context);
-$PAGE->set_pagelayout('standard');
-$PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
-$heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->shortname, $course->fullname);
-$PAGE->set_heading($heading);
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_session.php');
-$PAGE->requires->css('/local/metadata/insview_style.css');
 
 // Create url
 $base_url = create_insview_url('session', $courseId);
@@ -31,10 +22,26 @@ $general_url = create_insview_url('general',$courseId);
 $assessment_url = create_insview_url('assessment', $courseId);
 $session_url = create_insview_url('session', $courseId);
 $syllabus_url = create_insview_url('syllabus',$courseId);
+$page = optional_param('page', 0, PARAM_INT);
 
-// Create forms
+$session_url->param('page', $page);
+    
+// Set up page information
+$PAGE->set_context($context);
+$PAGE->set_pagelayout('standard');
+$PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
+$heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->shortname, $course->fullname);
+$PAGE->set_heading($heading);
+
+// TODO: Improve how this is done
+$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_session.php', array('id' => $courseId, 'page' => $page));
+$PAGE->requires->css('/local/metadata/insview_style.css');
+$PAGE->requires->css('/local/metadata/session_element_style.css');
+
+
+// Create form
 $sessions = get_table_data_for_course('coursesession');
-$session_form = new session_form($base_url, array('sessions' => $sessions));
+$session_form = new session_form($session_url, array('sessions' => $sessions));
 
 // Case where they cancelled the form. Just redirect to it, to reset values
 if ($session_form->is_cancelled()) {
@@ -42,8 +49,12 @@ if ($session_form->is_cancelled()) {
 }
 
 // Submitted the data
-if ($data = $session_form->get_data()) {
-    session_form::save_data($data);
+if ($session_form->ensure_was_submitted() && $data = $session_form->get_data()) {
+    $session_form->save_data($data);
+    
+    $page += $session_form->get_page_change();
+    $session_url->param('page', $page);
+    
     redirect($session_url);
 }
 

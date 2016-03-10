@@ -65,9 +65,8 @@ function get_table_data_for_course($table) {
  * @return array containing string of all types
  */
 function get_learning_objective_types() {
-    return array('Attitudes', 'Knowledge', 'Skills');
+    return array('Attitude', 'Knowledge', 'Skill');
 }
-
 
 function create_insview_url($form, $courseId) {
     return new moodle_url('/local/metadata/insview_'.$form.'.php', array('id' => $courseId));

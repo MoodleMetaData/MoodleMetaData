@@ -83,9 +83,9 @@ $string['session_type'] = 'Type';
 $string['session_length'] = 'Length';
 $string['session_date'] = 'Date';
 
-$string['learning_objective_Attitudes'] = 'Learning Objective - Attitudes';
-$string['learning_objective_Knowledge'] = 'Learning Objective - Knowledge';
-$string['learning_objective_Skills'] = 'Learning Objectives - Skills';
+$string['learning_objective_Attitude'] = 'Learning Objective: Attitude';
+$string['learning_objective_Knowledge'] = 'Learning Objective: Knowledge';
+$string['learning_objective_Skill'] = 'Learning Objectives: Skill';
 $string['related_assessments'] = 'Related Assessments';
 $string['deletesession'] = 'Delete Session';
 
@@ -135,3 +135,5 @@ $string['university_editor'] = 'University Policy: ';
 $string['mcreate_required'] = 'You must enter something.';
 $string['psla_exists'] = 'That learning objective already exists.';
 
+$string['next_page'] = 'Next Page';
+$string['previous_page'] = 'Previous Page';

@@ -23,7 +23,9 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->shortname, $course->fullname);
 $PAGE->set_heading($heading);
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_general.php');
+
+// TODO: Improve how this is done
+$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_general.php', array('id' => $courseId));
 $PAGE->requires->css('/local/metadata/insview_style.css');
 
 // Create url
