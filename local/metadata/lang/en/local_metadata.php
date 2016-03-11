@@ -32,6 +32,7 @@ $string['course_faculty'] = 'Faculty: ';
 $string['course_gradAtt'] = 'Attribute {no}: ';
 $string['assessment_counter'] = 'Number of assessment: ';
 $string['session_counter'] = 'Number of session: ';
+$string['teaching_assumption'] = 'Instructor assumption: ';
 
 $string['knowledge_desc'] = 'Students who successfully complete the course will be able to:';
 $string['skill_desc'] = 'Students who successfully complete the course will be able to:';
@@ -58,8 +59,9 @@ $string['course_general_header'] = 'General';
 $string['course_contact_header'] = 'Contact information';
 $string['course_desc_header'] = 'Description';
 $string['course_format_header'] = 'Course format';
-$string['course_gradatt_header'] = 'Graduate Attribute';
+$string['course_gradatt_header'] = 'Graduate attribute';
 $string['course_obj_header'] = 'Upload course objectives';
+$string['teaching_assumption_header'] = 'Teaching assumption';
 
 $string['obj_knowledge_header_help'] = 'Leave the space blank to delete the entry.';
 $string['obj_skill_header_help'] = 'Leave the space blank to delete the entry.';
