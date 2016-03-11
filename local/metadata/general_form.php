@@ -24,15 +24,17 @@ class general_form extends moodleform {
 		} else {
 			$contactinfo = NULL;
 		}
+		$coursereadings = $DB->get_records('coursereadings', array('courseid'=>$courseId));
 		
-		// setup form elements
-		$this->setup_general($mform, $courseinfo, $contactinfo);
-		$this->setup_contact($mform, $courseinfo, $contactinfo);
-		$this->setup_description($mform, $courseinfo);
-		$this->setup_format($mform, $courseinfo);
-		$this->setup_upload_course_obj($mform);
+		$reading_list = array();
+		foreach($coursereadings as $reading){
+			$obj = new stdClass();
+			$obj->id = $reading->id;
+			$obj->name = $reading->readingname;
+			$obj->url = $reading->readingurl;
+			$reading_list[] = $obj;
+		}
 		
-		// setup course objectives
 		$learning_objectives = get_course_learning_objectives();
 		$knowledge_list = array();
 		$skill_list = array();
@@ -47,11 +49,18 @@ class general_form extends moodleform {
 				$attitude_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
 			}
 		} 
-				
+		
+		// setup form elements
+		$this->setup_general($mform, $courseinfo, $contactinfo);
+		$this->setup_contact($mform, $courseinfo, $contactinfo);
+		$this->setup_description($mform, $courseinfo);
+		$this->setup_upload_req_reading($mform);	
+		$this->setup_req_reading($mform, $reading_list);	
+		$this->setup_format($mform, $courseinfo);
+		$this->setup_upload_course_obj($mform);	
 		$this->setup_course_obj($mform, 'knowledge', $knowledge_list, 'skill');
 		$this->setup_course_obj($mform, 'skill', $skill_list, 'attitude');
 		$this->setup_course_obj($mform, 'attitude', $attitude_list, 'gradatt');
-	
 		$this->setup_graduate_attributes($mform);
 		$this->setup_teaching_assumption($mform, $courseinfo);
  
@@ -61,6 +70,10 @@ class general_form extends moodleform {
 	
 	/**
 	 * Add form elements for general course information.
+	 * @param $mform		form definition
+	 * @param $courseinfo	a record of general information from course info table.
+	 * @param $contactinfo	a record of contact information from course instructor table.
+	 * @return void
 	 */
 	private function setup_general($mform, $courseinfo, $contactinfo){
 		global $CFG, $DB, $USER; //Declare our globals for use
@@ -121,6 +134,10 @@ class general_form extends moodleform {
 	
 	/**
 	 * Add form elements for course contact information.
+	 * @param $mform		form definition
+	 * @param $courseinfo	a record of general information from course info table.
+	 * @param $contactinfo	a record of contact information from course instructor table.
+	 * @return void
 	 */
 	private function setup_contact($mform, $courseinfo, $contactinfo){
 		global $CFG, $DB, $USER; //Declare our globals for use
@@ -167,6 +184,9 @@ class general_form extends moodleform {
 
 	/**
 	 * Add form elements for course description.
+	 * @param $mform		form definition
+	 * @param $courseinfo	a record of general information from course info table.
+	 * @return void
 	 */
 	private function setup_description($mform, $courseinfo){
 		global $CFG, $DB, $USER; //Declare our globals for use
@@ -197,7 +217,67 @@ class general_form extends moodleform {
 	}
 	
 	/**
+	 * Add form elements for upload requred readinds.
+	 * @param $mform		form definition.
+	 * @return void
+	 */
+	private function setup_upload_req_reading($mform){
+		$mform->addElement('header', 'upload_reading_header', get_string('upload_reading_header', 'local_metadata'));
+		$mform->addHelpButton('upload_reading_header', 'upload_reading_header', 'local_metadata');
+		$mform->addElement('filepicker', 'temp_reading', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
+		$mform->addElement('submit', 'upload_reading', get_string('upload_reading', 'local_metadata'));
+	}
+	
+	/**
+	 * Add form elements for required readings.
+	 * @param $mform	form definition
+	 * @param $list		a list of readings
+	 * @return void
+	 */
+	private function setup_req_reading($mform, $list){
+		global $CFG, $DB, $USER; //Declare our globals for use
+        global $course;
+		
+		$mform->addElement('header', 'course_reading_header', get_string('course_reading_header', 'local_metadata'));
+		$mform->addHelpButton('course_reading_header', 'course_reading_header', 'local_metadata');
+
+		$_array = array();
+		$_array[] = $mform->createElement('static', 'course_reading_desc', '', get_string('course_reading_desc', 'local_metadata'));
+		$_array[] = $mform->createElement('text', 'readingname_option', get_string('readingname_label', 'local_metadata') ,'size="60"');
+		$_array[] = $mform->createElement('text', 'readingurl_option', get_string('readingurl_label', 'local_metadata') ,'size="60"');
+		$_array[] = $mform->createElement('hidden', 'reading_id', -1);
+
+		$_options = array();       
+		$mform->setType('readingname_option', PARAM_TEXT);
+		$mform->setType('readingurl_option', PARAM_TEXT);
+		$mform->setType('reading_id', PARAM_INT);
+		$this->repeat_elements($_array, count($list), $_options, 'option_repeats_reading', 'option_add_fields_reading', 1, get_string('add_reading', 'local_metadata'), true);
+
+		$key = 0;
+		foreach ($list as $_item) {
+			$index = '['.$key.']';
+			$mform->setDefault('readingname_option'.$index, $_item->name);
+			if($_item->url !== '0'){
+				$mform->setDefault('readingurl_option'.$index, $_item->url);
+			}
+			$mform->setDefault('reading_id'.$index, $_item->id);
+			$key += 1;
+		}
+		
+		$mform->closeHeaderBefore('course_format_header');
+
+		// If list is not empty, open the header
+		if(count($list) > 0){
+			$mform->setExpanded('course_reading_header');
+		}
+		
+	}
+	
+	/**
 	 * Add form elements for course format.
+	 * @param $mform		form definition
+	 * @param $courseinfo	a record of general information from course info table.
+	 * @return void
 	 */
 	private function setup_format($mform, $courseinfo){
 		global $CFG, $DB, $USER; //Declare our globals for use
@@ -232,6 +312,8 @@ class general_form extends moodleform {
 	
 	/**
 	 * Add form elements for upload course objective.
+	 * @param $mform		form definition
+	 * @return void
 	 */
 	private function setup_upload_course_obj($mform){
 		$mform->addElement('header', 'course_obj_header', get_string('course_obj_header', 'local_metadata'));
@@ -246,7 +328,6 @@ class general_form extends moodleform {
 	 * @param $id		objective id
 	 * @param $name		objective name
 	 * return $obj		learning objective object
-	 * return $obj		learning objective object
 	 */
 	function get_learning_obj($id, $name){
 		$obj = new stdClass();
@@ -257,6 +338,11 @@ class general_form extends moodleform {
 	
 	/**
 	 * Add form elements for course objective.
+	 * @param $mform		form definition
+	 * @param $type			course objective type
+	 * @param $list			a list of learning objective with specified type
+	 * @param $nextheader	the next form header name
+	 * @return void
 	 */
 	private function setup_course_obj($mform, $type, $list, $nextheader){
 		global $CFG, $DB, $USER; //Declare our globals for use
@@ -322,7 +408,10 @@ class general_form extends moodleform {
 	}
 	
 	/**
-	 * TODO: Add form elements for teaching assumption.
+	 * Add form elements for teaching assumption.
+	 * @param $mform		form definition
+	 * @param $courseinfo	a record of general information from course info table.
+	 * @return void
 	 */
 	private function setup_teaching_assumption($mform, $courseinfo){
 		global $CFG, $DB, $USER; //Declare our globals for use
@@ -341,7 +430,7 @@ class general_form extends moodleform {
 	 * Insert a record to learning and course objective table.
 	 * @param $name		learning objective name
 	 * @param $type		learning objective type
-	 *
+	 * @patam void
 	 */
 	function insert_course_objective($name, $type){
 		global $DB, $CFG, $USER; //Declare them if you need them
@@ -359,6 +448,7 @@ class general_form extends moodleform {
 	
 	/**
 	 * Upload course objectives.
+	 * @return void
 	 */
 	public function upload_course_obj(){
 		global $DB, $CFG, $USER; //Declare them if you need them
@@ -388,6 +478,48 @@ class general_form extends moodleform {
 	}
 	
 	/**
+	 * Upload course required readings.
+	 * @return void
+	 */
+	public function upload_req_reading(){
+		global $DB, $CFG, $USER; //Declare them if you need them
+		global $course, $courseId;  
+		
+		if(!empty('upload_reading')){
+	
+			$files = $this->get_draft_files('temp_reading');
+			if(!empty($files)){
+				$file = reset($files); 
+				$content = $file->get_content();
+				
+				$parsed = str_getcsv($content, "\n");
+				foreach($parsed as $row){
+					$url = substr($row, strrpos($row, ",")+1);
+					$name = substr($row, 0, strrpos($row, ","));
+					$this->insert_readings($name, $url);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Insert a record to course reading table.
+	 * @param $name	reading's name/title
+	 * @param $url	reading's url
+	 * @return void
+	 */
+	function insert_readings($name, $url){
+		global $DB, $CFG, $USER; //Declare them if you need them
+		global $course, $courseId;
+
+		$_reading = new stdClass();
+		$_reading->readingname = $name;
+		$_reading->readingurl = $url;
+		$_reading->courseid = $courseId;
+		$insert_reading = $DB->insert_record('coursereadings', $_reading, true, false);
+	}
+	
+	/**
 	 * Validate the form.
 	 */
 	function validation($data, $files) {
@@ -398,6 +530,7 @@ class general_form extends moodleform {
 	/**
 	 * Save the given data to database.
 	 * @param $data 	data generated by the form
+	 * @return void
 	 */
 	public function save_data($data) {
 		global $CFG, $DB, $USER; //Declare our globals for use
@@ -447,8 +580,29 @@ class general_form extends moodleform {
 				$insert_instructorinfo = $DB->insert_record('courseinstructors', $instructor_info, false);
 			}
 
+			// Handle course readings
+			if(!empty($data->readingname_option)){
+				$r_name = $data->readingname_option;
+				$r_url = $data->readingurl_option;
+				$r_id = $data->reading_id;
+				for($i = 0; $i < count($r_name); $i++){
+					if($r_name[$i] === ''){
+						$delete_reading = $DB->delete_records('coursereadings', array('id'=>$r_id[$i]));
+					} else {
+						if($readingExist = $DB->record_exists('coursereadings', array('id'=>$r_id[$i]))){
+							$r = new stdClass();
+							$r->id = $r_id[$i];
+							$r->readingname = $r_name[$i];
+							$r->readingurl = $r_url[$i];
+							$update_reading = $DB->update_record('coursereadings', $r, false);
+						}else{
+							$this->insert_readings($r_name[$i], $r_url[$i]);
+						}
+					}
+				}
+			}
+			
 			// Handle course objectives
-
 			if(!empty($data->knowledge_option)){
 				$k_name = $data->knowledge_option;
 				$k_id = $data->knowledge_id;
@@ -528,6 +682,17 @@ class general_form extends moodleform {
 			// courseinfo->id => courseinstructor->courseid
 			$instructor_info->courseid = $insert_courseinfo;
 			$insert_instructorinfo = $DB->insert_record('courseinstructors', $instructor_info, false);
+			
+			// Handle course reading
+			if(!empty($data->readingname_option)){
+				$names = $data->readingname_option;
+				$urls = $data->readingurl_option;
+				for($i = 0; $i < count($names); $i++){
+					if($names[$i] != NULL){
+						$this->insert_readings($names[$i], $urls[$i]);
+					}
+				}
+			}
 			
 			// Handle course objectives
 			// knowledge
