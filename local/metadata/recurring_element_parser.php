@@ -99,14 +99,17 @@ class recurring_element_parser {
 
     /*
      * Save all of the given tuples to the database
+     *      For new elements, will update their ['id'] with the index they are inserted into
+     *
+     * Can include extra fields that will not be saved in the 
      *
      * @param array $tuples array of tuples to be updated in the database, or inserted into it.
      *
      */
-    function saveTuplesToDB($tuples) {
+    function saveTuplesToDB(&$tuples) {
         global $DB;
         
-        foreach ($tuples as $tuple) {
+        foreach ($tuples as &$tuple) {
             // Two different cases for each tuple
             if ($this->isInDatabase($tuple)) {
                 
@@ -115,10 +118,9 @@ class recurring_element_parser {
                 
             } else {
                 // Need to add to database
-                unset($tuple['id']);
                 $courseIdArray = array('courseid' => get_course_id());
                 $inserted = array_merge($tuple, $courseIdArray);
-                $DB->insert_record($this->tableName, $inserted, false);
+                $tuple['id'] = $DB->insert_record($this->tableName, $inserted);
             }
         }
     }

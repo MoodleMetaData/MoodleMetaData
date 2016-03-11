@@ -43,7 +43,7 @@ $string['add_knowledge'] = 'Add';
 $string['add_skill'] = 'Add';
 $string['add_attitude'] = 'Add';
 $string['add_gradAtt'] = 'Add';
-$string['course_obj_warning'] = 'Upload course objectives to populate';
+
 $string['upload_course_obj'] = "Upload";
 
 $string['course_email'] = 'E-mail: ';
@@ -61,11 +61,14 @@ $string['course_format_header'] = 'Course format';
 $string['course_gradatt_header'] = 'Graduate Attribute';
 $string['course_obj_header'] = 'Upload course objectives';
 
-$string['obj_knowledge_header_help'] = 'Leave the space blank to delete the input.';
-$string['obj_skill_header_help'] = 'Leave the space blank to delete the input.';
-$string['obj_attitude_header_help'] = 'Leave the space blank to delete the input.';
-
-
+$string['obj_knowledge_header_help'] = 'Leave the space blank to delete the entry.';
+$string['obj_skill_header_help'] = 'Leave the space blank to delete the entry.';
+$string['obj_attitude_header_help'] = 'Leave the space blank to delete the entry.';
+$string['course_obj_header_help'] = 'To upload course objectives, only .csv file is permitted.
+									The format is: [column1],[column2]
+									, where [column1] is the course objective description
+									and [column2] is the course objective type = {K, S, A}.
+									Enter the new line to create a new entry.';
 
 $string['course_data'] = 'Course data';
 
@@ -80,9 +83,9 @@ $string['session_type'] = 'Type';
 $string['session_length'] = 'Length';
 $string['session_date'] = 'Date';
 
-$string['learning_objective_Attitudes'] = 'Learning Objective - Attitudes';
-$string['learning_objective_Knowledge'] = 'Learning Objective - Knowledge';
-$string['learning_objective_Skills'] = 'Learning Objectives - Skills';
+$string['learning_objective_Attitude'] = 'Learning Objective: Attitude';
+$string['learning_objective_Knowledge'] = 'Learning Objective: Knowledge';
+$string['learning_objective_Skill'] = 'Learning Objectives: Skill';
 $string['related_assessments'] = 'Related Assessments';
 $string['deletesession'] = 'Delete Session';
 
@@ -132,3 +135,5 @@ $string['university_editor'] = 'University Policy: ';
 $string['mcreate_required'] = 'You must enter something.';
 $string['psla_exists'] = 'That learning objective already exists.';
 
+$string['next_page'] = 'Next Page';
+$string['previous_page'] = 'Previous Page';
