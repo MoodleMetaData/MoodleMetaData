@@ -32,19 +32,25 @@ $string['course_faculty'] = 'Faculty: ';
 $string['course_gradAtt'] = 'Attribute {no}: ';
 $string['assessment_counter'] = 'Number of assessment: ';
 $string['session_counter'] = 'Number of session: ';
+$string['teaching_assumption'] = 'Instructor assumption: ';
 
+$string['course_reading_desc'] = 'Required reading: ';
+$string['readingname_label'] = 'Title {no}:';
+$string['readingurl_label'] = 'Url {no}:';
 $string['knowledge_desc'] = 'Students who successfully complete the course will be able to:';
 $string['skill_desc'] = 'Students who successfully complete the course will be able to:';
 $string['attitude_desc'] = 'Students who successfully complete this course will:';
 $string['knowledge_label'] = 'Knowledge {no}:';
 $string['skill_label'] = 'Skill {no}:';
 $string['attitude_label'] = 'Attitude {no}:';
-$string['add_knowledge'] = 'Add';
-$string['add_skill'] = 'Add';
-$string['add_attitude'] = 'Add';
-$string['add_gradAtt'] = 'Add';
+$string['add_reading'] = 'Add new reading';
+$string['add_knowledge'] = 'Add new knowledge';
+$string['add_skill'] = 'Add new skill';
+$string['add_attitude'] = 'Add new attitude';
+$string['add_gradAtt'] = 'Add graduate attribute';
 
-$string['upload_course_obj'] = "Upload";
+$string['upload_reading'] = 'Upload readings';
+$string['upload_course_obj'] = 'Upload course objectives';
 
 $string['course_email'] = 'E-mail: ';
 $string['course_phone'] = 'Phone: ';
@@ -56,11 +62,15 @@ $string['obj_skill_header'] = 'Course objective: Skill';
 $string['obj_attitude_header'] = 'Course objective: Attitude';
 $string['course_general_header'] = 'General';
 $string['course_contact_header'] = 'Contact information';
+$string['upload_reading_header'] = 'Upload required readings';
+$string['course_reading_header'] = 'Required readings';
 $string['course_desc_header'] = 'Description';
 $string['course_format_header'] = 'Course format';
-$string['course_gradatt_header'] = 'Graduate Attribute';
+$string['course_gradatt_header'] = 'Graduate attribute';
 $string['course_obj_header'] = 'Upload course objectives';
+$string['teaching_assumption_header'] = 'Teaching assumption';
 
+$string['course_reading_header_help'] = 'Leave the TITLE space blank to delete the entry.';
 $string['obj_knowledge_header_help'] = 'Leave the space blank to delete the entry.';
 $string['obj_skill_header_help'] = 'Leave the space blank to delete the entry.';
 $string['obj_attitude_header_help'] = 'Leave the space blank to delete the entry.';
@@ -68,8 +78,12 @@ $string['course_obj_header_help'] = 'To upload course objectives, only .csv file
 									The format is: [column1],[column2]
 									, where [column1] is the course objective description
 									and [column2] is the course objective type = {K, S, A}.
-									Enter the new line to create a new entry.';
-
+									Enter a new line to create a new entry.';
+$string['upload_reading_header_help'] = 'To upload course required readings, only .csv file is permitted.
+									The format is: [column1],[column2]
+									, where [column1] is the reading title
+									and [column2] is the reading url.
+									Enter a new line to create a new entry.';
 $string['course_data'] = 'Course data';
 
 $string['instructor_heading'] = 'Metadata for %s: %s';

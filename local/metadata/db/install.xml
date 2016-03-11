@@ -10,6 +10,7 @@
         <FIELD NAME="coursename" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="coursetopic" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="coursedescription" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+		<FIELD NAME="teachingassumption" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="coursefaculty" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="assessmentnumber" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="sessionnumber" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
