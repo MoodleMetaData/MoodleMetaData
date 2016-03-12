@@ -123,6 +123,8 @@ $string['assessment_prof_default'] = 'First, Last';
 $string['assessment_due'] = 'Date: ';
 $string['assessment_duration'] = 'Duration: ';
 $string['assessment_due'] = 'Due Date: ';
+$string['general_header'] = 'General';
+
 
 // Metadata manager strings
 $string['manage_knowledge'] = 'Knowledge Attributes: ';
