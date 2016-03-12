@@ -96,6 +96,8 @@ $string['session_guest_teacher_help'] = 'If there is a different lecuturer, writ
 $string['session_type'] = 'Type';
 $string['session_length'] = 'Length';
 $string['session_date'] = 'Date';
+$string['manage_topics'] = 'Topics';
+$string['add_topic'] = 'Add';
 
 $string['learning_objective_Attitude'] = 'Learning Objective: Attitude';
 $string['learning_objective_Knowledge'] = 'Learning Objective: Knowledge';

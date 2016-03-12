@@ -21,6 +21,7 @@ require_once 'recurring_element_parser.php';
  */
 class session_form extends moodleform {
     const NUM_PER_PAGE = 10;
+    const TOPIC_SEPARATOR = '&|&|';
 
     /**
      * Will set up the form elements
@@ -102,32 +103,37 @@ class session_form extends moodleform {
         $assessmentsEl->setMultiple(true);
         $repeatarray[] = $assessmentsEl;
 
-
+        
+        $repeatoptions = array();
+        $this->setup_topic_options($mform, $repeatarray, $repeatoptions);
+        
+        
+        
+        $repeatarray[] = $mform->createElement('submit', 'deleteSession', get_string('deletesession', 'local_metadata'));
+        
+        
+        
         // Add needed hidden elements
         // Stores the id for each element
         $repeatarray[] = $mform->createElement('hidden', 'coursesession_id', -1);
-        
-        // Two elements required for deleting
         $repeatarray[] = $mform->createElement('hidden', 'was_deleted', false);
-        $repeatarray[] = $mform->createElement('submit', 'deleteSession', get_string('deletesession', 'local_metadata'));
-        //$mform->registerNoSubmitButton('deleteSession');
         
-        
-        $repeateloptions = array();
         
         // Moodle complains if some elements aren't given a type
-        $repeateloptions['sessiontitle']['type'] = PARAM_TEXT;
-        $repeateloptions['sessionguestteacher']['type'] = PARAM_TEXT;
-        $repeateloptions['coursesession_id']['type'] = PARAM_INT;
-        $repeateloptions['was_deleted']['type'] = PARAM_RAW;
+        $repeatoptions['sessiontitle']['type'] = PARAM_TEXT;
+        $repeatoptions['sessionguestteacher']['type'] = PARAM_TEXT;
+        $repeatoptions['all_topics_text_array']['type'] = PARAM_TEXT;
+        $repeatoptions['new_topic']['type'] = PARAM_TEXT;
+        $repeatoptions['coursesession_id']['type'] = PARAM_INT;
+        $repeatoptions['was_deleted']['type'] = PARAM_RAW;
+        
 
         // Add the repeating elements to the form
         $this->repeat_elements($repeatarray, $numSessions,
-            $repeateloptions, 'sessions_list', 'sessions_list_add_element', 1, get_string('add_session', 'local_metadata'), true);
-        
-        
-        
+            $repeatoptions, 'sessions_list', 'sessions_list_add_element', 1, get_string('add_session', 'local_metadata'), true);
     }
+    
+    
 
     /**
      *  This function MUST be called, and return true, before get_data is called on this form.
@@ -232,17 +238,29 @@ class session_form extends moodleform {
         if ($assessmentsArr = $DB->get_records_menu("session_related_assessment", array('sessionid'=>$session->id), '', 'id, assessmentid')) {
             $mform->setDefault('assessments'.$index, array_values($assessmentsArr));
         }
+        
+        
+        // Will actually add them into select in the definition_after_data function
+        if ($topics_array = $DB->get_records_menu("sessiontopics", array('sessionid'=>$session->id), '', 'id, topicname')) {
+            // Create a string as array to store in form
+            $topics_as_string = implode(session_form::TOPIC_SEPARATOR, $topics_array);
+            
+            // Add to the hidden array
+            // Need to update the default, incase it is has already been changed
+            $mform->setDefault('all_topics_text_array'.$index, $topics_as_string);
+        }
     }
     
+    
     /**
-     *  This is only necessary to handle deleting elements.
-     *
+     *  This function is used for deleteing a session, and interacting with topics.
+     *      Both displaying and editing the topic list
      *  
      *
      */
     function definition_after_data() {
         parent::definition_after_data();
-        $mform =& $this->_form;
+        $mform = $this->_form;
         
         $numRepeated = $mform->getElementValue('sessions_list');
         
@@ -274,13 +292,112 @@ class session_form extends moodleform {
 
                 $mform->removeElement('assessments'.$index);
 
+                $mform->removeElement('manage_topics_group'.$index);
+                $mform->removeElement('add_topic_group'.$index);
+                
                 $mform->removeElement('deleteSession'.$index);
                 
                 $mform->getElement('was_deleted'.$index)->setValue(true);
             }
+            
+            
+            $this->update_topics($mform, $index);
         }
     }
 
+    
+    
+    
+    // Topic related functions
+    
+    private function setup_topic_options($mform, &$repeatarray, &$repeatoptions) {
+        // Viewing already added topics
+        $groupitems = array();
+        
+        // Load the options in the select for each session individually, where set the defaults
+        // Need to save them in a hidden array, since submitting would reset the select
+        $groupitems[] = $mform->createElement('hidden', 'all_topics_text_array', '');
+        
+        $course_topic_selection = $mform->createElement('select', 'all_topics');
+        $course_topic_selection->setMultiple(true);
+        $groupitems[] = $course_topic_selection;
+        
+        
+		// Delete Button
+		$groupitems[] = $mform->createElement('submit', 'delete_topics', get_string('delete'));
+		$repeatarray[] = $mform->createElement('group', 'manage_topics_group', get_string('manage_topics', 'local_metadata'), $groupitems, null, false);
+        
+        $repeatoptions['delete_topics']['disabledif'] = array('all_topics', 'noitemselected');
+        
+        // Adding a new topics
+        $groupitems = array();
+		$groupitems[] = $mform->createElement('text', 'new_topic');
+		$groupitems[] = $mform->createElement('submit', 'create_topic', get_string('add_topic', 'local_metadata'));
+        
+        $repeatarray[] = $mform->createElement('group', 'add_topic_group', '', $groupitems, null, false);
+    }
+    
+    private function get_topic_text_array($index) {
+        $manage_topics_group = $this->_form->getElement('manage_topics_group'.$index);
+        
+        // The select is the first item in the elements
+        return $manage_topics_group->getElements()[0];
+    }
+    
+    private function get_all_topics($index) {
+        $manage_topics_group = $this->_form->getElement('manage_topics_group'.$index);
+        
+        // The select is the second item in the elements
+        return $manage_topics_group->getElements()[1];
+    }
+    
+    private function get_new_topic_value($index) {
+        $add_topic_group = $this->_form->getElement('add_topic_group'.$index);
+        
+        // Is always in position 0
+        $new_topic = $add_topic_group->getElements()[0];
+        
+        return $new_topic->getValue();
+    }
+    
+    
+    private function update_topics($mform, $index) {
+        $topic_was_added = $mform->getSubmitValue('create_topic'.$index);
+        $topic_was_deleted = $mform->getSubmitValue('delete_topics'.$index);
+        // Add to the all_topics select
+        // The select is the second item in the elements
+        $all_topics = $this->get_all_topics($index);
+        
+        $topics_text_array = $this->get_topic_text_array($index);
+        $topics_array = explode(session_form::TOPIC_SEPARATOR, $topics_text_array->getValue());
+        
+        // TODO: Do this
+        if ($topic_was_deleted) {
+            $selected = $all_topics->getValue();
+            if (count($selected) > 0 and is_numeric($selected[0])) {
+                foreach ($selected as $key=> $indexOfDeleted) {
+                    unset($topics_array[$indexOfDeleted]);
+                }
+            }
+            
+        }
+        
+        if ($topic_was_added) {
+            $new_topic = $this->get_new_topic_value($index);
+            $index_added_to = count($topics_array);
+            
+            $topics_array[] = $new_topic;
+        }
+        
+        // Need to load all of the existing topics, including ones added. The $topics_array will not be updated with new ones
+        $topics_text_array->setValue(implode(session_form::TOPIC_SEPARATOR, $topics_array));
+        foreach ($topics_array as $id=>$topic) {
+            $all_topics->addOption($topic, $id);
+        }
+    }
+    
+    
+    
     /**
      * Ensure that the data the user entered is valid
      *
@@ -340,7 +457,9 @@ class session_form extends moodleform {
         global $DB;
         
         // Set up the recurring element parser
-        $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessionguestteacher', 'sessiontype', 'sessionlength', 'sessiondate', 'assessments', 'was_deleted');
+        $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessionguestteacher', 'sessiontype', 'sessionlength', 'sessiondate', 'assessments', 'was_deleted', 'all_topics_text_array');
+        
+        
         
         $learningObjectiveTypes = get_learning_objective_types();
         foreach ($learningObjectiveTypes as $learningObjectiveType) {
@@ -365,6 +484,7 @@ class session_form extends moodleform {
             // Clean out the sessionobjectives and session_related_assessment for this session
             $DB->delete_records('sessionobjectives', array('sessionid'=>$tuple['id']));
             $DB->delete_records('session_related_assessment', array('sessionid'=>$tuple['id']));
+            $DB->delete_records('sessiontopics', array('sessionid'=>$tuple['id']));
             
             // If the tuple has been deleted, then remove it from the database
             if ($tuple['was_deleted'] == true) {
@@ -409,6 +529,18 @@ class session_form extends moodleform {
                 }
             }
             
+            // Save the topics
+            // Template for this was found in \mod\glossary\edit.php
+            if (array_key_exists('all_topics_text_array', $tuple) and !is_null($tuple['all_topics_text_array'])) {
+                $topic_array = explode(session_form::TOPIC_SEPARATOR, $tuple['all_topics_text_array']);
+                
+                foreach ($topic_array as $topicname) {
+                    $newLink = new stdClass();
+                    $newLink->sessionid = $tuple['id'];
+                    $newLink->topicname = $topicname;
+                    $DB->insert_record('sessiontopics', $newLink, false);
+                }
+            }
         }
     }
 

@@ -115,6 +115,17 @@
         <KEY NAME="objectiveid" TYPE="foreign" FIELDS="objectiveid" REFTABLE="learningobjectives" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="sessiontopics" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="topicname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="sessionid" TYPE="foreign" FIELDS="sessionid" REFTABLE="coursesession" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
     <TABLE NAME="session_related_assessment" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>

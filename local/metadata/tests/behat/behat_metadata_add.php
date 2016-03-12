@@ -110,5 +110,22 @@ class behat_metadata_add extends behat_base {
         
         return $steps;
     }
+    
+    /**
+     * Adds a new topic to the session indexed with [$session_num]
+     *
+     * @Given /^I add to session (\d+) topic "([^"]*)"$/
+     *
+     * @param int $session_num The session indexed with [$session_num] 
+     * @param string $topic The value of the topic to add
+     *
+     * @return Given[]
+     */
+    public function i_add_to_session_topic($session_num, $topic) {
+        $steps = array(new Given('I set the field "new_topic['.$session_num.']" to "'.$topic.'"'),
+                       new Given('I press "create_topic['.$session_num.']"'));
+        
+        return $steps;
+    }
 }
 ?>
