@@ -24,6 +24,140 @@ class session_form extends moodleform {
     const TOPIC_SEPARATOR = '&|&|';
 
     /**
+     * Will return all of the type options
+     *   Will eventually load them from the configuration for the plugin
+     *
+     * @return array containing string of all types
+     */
+    public static function get_session_types() {
+        $types = array('lecture', 'lab', 'seminar');
+
+        return $types;
+    }
+    
+    /**
+     * Will return all of the length options
+     *   May eventually load them from the configuration for the plugin
+     *
+     * @return array containing string of all types
+     */
+    public static function get_session_lengths() {
+        // TODO: Will probably need to change this
+        $types = array('50 minutes', '80 minutes', '110 minutes', '140 minutes', '170 minutes');
+
+        return $types;
+    }
+    
+    public function get_page_change() {
+        if ($this->_form->getSubmitValue('previousPage') !== null) {
+            return -1;
+        } else if ($this->_form->getSubmitValue('nextPage') !== null) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Will save the given data, that should be from calling the get_data function. Data will be all of the sessions in the course
+     *
+     * Also handles removing elements that should be deleted from the form.
+     *
+     * @param object $data value from calling get_data on this form
+     *
+     */
+    public function save_data($data) {
+        global $DB;
+        // TODO: Need to save the topics specially, because they are stored in a (maybe bizzar) way
+        
+        // Set up the recurring element parser
+        $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessionguestteacher', 'sessiontype', 'sessionlength', 'sessiondate', 'assessments', 'was_deleted', 'all_topics_text_array');
+        
+        
+        
+        $learningObjectiveTypes = get_learning_objective_types();
+        foreach ($learningObjectiveTypes as $learningObjectiveType) {
+            $allChangedAttributes[] = 'learning_objective_'.$learningObjectiveType;
+        }
+        
+        $types = session_form::get_session_types();
+        $lengths = session_form::get_session_lengths();
+        $convertedAttributes = array('sessiontype' => function($value) use ($types) { return $types[$value]; },
+                                     'sessionlength' => function($value) use ($lengths) { return $lengths[$value]; }
+                                     );
+
+        $session_recurring_parser = new recurring_element_parser('coursesession', 'sessions_list', $allChangedAttributes, $convertedAttributes);
+        
+        
+
+        // Get the tuples (one for each session) from the parser
+        $tuples = $session_recurring_parser->getTuplesFromData($data);
+        
+        // Handles deleting a session
+        foreach ($tuples as $tupleKey => $tuple) {
+            // Clean out the sessionobjectives and session_related_assessment for this session
+            $DB->delete_records('sessionobjectives', array('sessionid'=>$tuple['id']));
+            $DB->delete_records('session_related_assessment', array('sessionid'=>$tuple['id']));
+            $DB->delete_records('sessiontopics', array('sessionid'=>$tuple['id']));
+            
+            // If the tuple has been deleted, then remove it from the database
+            if ($tuple['was_deleted'] == true) {
+                $session_recurring_parser->deleteTupleFromDB($tuple);
+                
+                // Finally, remove it from the tuples that will be saved, because otherwise will just be resaved anyway
+                unset($tuples[$tupleKey]);
+            }
+        }
+        
+        // Save the remaining data for the sessions/tuples
+            // Will also update the id for elements that are new
+        $session_recurring_parser->saveTuplesToDB($tuples);
+        
+        // Handles updating the objectives and related assessments
+        foreach ($tuples as $tupleKey => $tuple) {
+            
+            // Save the learning_objective
+            // Template for this was found in \mod\glossary\edit.php
+            $learningObjectiveTypes = get_learning_objective_types();
+            foreach ($learningObjectiveTypes as $learningObjectiveType) {
+                $key = 'learning_objective_'.$learningObjectiveType;
+                if (array_key_exists($key, $tuple) and is_array($tuple[$key])) {
+                    foreach ($tuple[$key] as $objectiveId) {
+                        $newLink = new stdClass();
+                        $newLink->sessionid = $tuple['id'];
+                        $newLink->objectiveid = $objectiveId;
+                        $DB->insert_record('sessionobjectives', $newLink, false);
+                    }
+                }
+            }
+            
+            // Save the assessments
+            // Template for this was found in \mod\glossary\edit.php
+            if (array_key_exists('assessments', $tuple) and is_array($tuple['assessments'])) {
+                foreach ($tuple['assessments'] as $assessmentId) {
+                    $newLink = new stdClass();
+                    $newLink->sessionid = $tuple['id'];
+                    $newLink->assessmentid = $assessmentId;
+                    $DB->insert_record('session_related_assessment', $newLink, false);
+                }
+            }
+            
+            // Save the topics
+            // Template for this was found in \mod\glossary\edit.php
+            if (array_key_exists('all_topics_text_array', $tuple) and !is_null($tuple['all_topics_text_array'])) {
+                $topic_array = explode(session_form::TOPIC_SEPARATOR, $tuple['all_topics_text_array']);
+                
+                foreach ($topic_array as $topicname) {
+                    $newLink = new stdClass();
+                    $newLink->sessionid = $tuple['id'];
+                    $newLink->topicname = $topicname;
+                    $DB->insert_record('sessiontopics', $newLink, false);
+                }
+            }
+        }
+    }
+    
+    /**
      * Will set up the form elements
      * @see lib/moodleform#definition()
      */
@@ -408,142 +542,6 @@ class session_form extends moodleform {
 
         return $errors;
     }
-
-
-    /**
-     * Will return all of the type options
-     *   Will eventually load them from the configuration for the plugin
-     *
-     * @return array containing string of all types
-     */
-    public static function get_session_types() {
-        $types = array('lecture', 'lab', 'seminar');
-
-        return $types;
-    }
-    
-    /**
-     * Will return all of the length options
-     *   May eventually load them from the configuration for the plugin
-     *
-     * @return array containing string of all types
-     */
-    public static function get_session_lengths() {
-        // TODO: Will probably need to change this
-        $types = array('50 minutes', '80 minutes', '110 minutes', '140 minutes', '170 minutes');
-
-        return $types;
-    }
-    
-    public function get_page_change() {
-        if ($this->_form->getSubmitValue('previousPage') !== null) {
-            return -1;
-        } else if ($this->_form->getSubmitValue('nextPage') !== null) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * Will save the given data, that should be from calling the get_data function. Data will be all of the sessions in the course
-     *
-     * Also handles removing elements that should be deleted from the form.
-     *
-     * @param object $data value from calling get_data on this form
-     *
-     */
-    public function save_data($data) {
-        global $DB;
-        
-        // Set up the recurring element parser
-        $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessionguestteacher', 'sessiontype', 'sessionlength', 'sessiondate', 'assessments', 'was_deleted', 'all_topics_text_array');
-        
-        
-        
-        $learningObjectiveTypes = get_learning_objective_types();
-        foreach ($learningObjectiveTypes as $learningObjectiveType) {
-            $allChangedAttributes[] = 'learning_objective_'.$learningObjectiveType;
-        }
-        
-        $types = session_form::get_session_types();
-        $lengths = session_form::get_session_lengths();
-        $convertedAttributes = array('sessiontype' => function($value) use ($types) { return $types[$value]; },
-                                     'sessionlength' => function($value) use ($lengths) { return $lengths[$value]; }
-                                     );
-
-        $session_recurring_parser = new recurring_element_parser('coursesession', 'sessions_list', $allChangedAttributes, $convertedAttributes);
-        
-        
-
-        // Get the tuples (one for each session) from the parser
-        $tuples = $session_recurring_parser->getTuplesFromData($data);
-        
-        // Handles deleting a session
-        foreach ($tuples as $tupleKey => $tuple) {
-            // Clean out the sessionobjectives and session_related_assessment for this session
-            $DB->delete_records('sessionobjectives', array('sessionid'=>$tuple['id']));
-            $DB->delete_records('session_related_assessment', array('sessionid'=>$tuple['id']));
-            $DB->delete_records('sessiontopics', array('sessionid'=>$tuple['id']));
-            
-            // If the tuple has been deleted, then remove it from the database
-            if ($tuple['was_deleted'] == true) {
-                $session_recurring_parser->deleteTupleFromDB($tuple);
-                
-                // Finally, remove it from the tuples that will be saved, because otherwise will just be resaved anyway
-                unset($tuples[$tupleKey]);
-                continue;
-            }
-        }
-        
-        // Save the remaining data for the sessions/tuples
-            // Will also update the id for elements that are new
-        $session_recurring_parser->saveTuplesToDB($tuples);
-        
-        // Handles updating the objectives and related assessments
-        foreach ($tuples as $tupleKey => $tuple) {
-            
-            // Save the learning_objective
-            // Template for this was found in \mod\glossary\edit.php
-            $learningObjectiveTypes = get_learning_objective_types();
-            foreach ($learningObjectiveTypes as $learningObjectiveType) {
-                $key = 'learning_objective_'.$learningObjectiveType;
-                if (array_key_exists($key, $tuple) and is_array($tuple[$key])) {
-                    foreach ($tuple[$key] as $objectiveId) {
-                        $newLink = new stdClass();
-                        $newLink->sessionid = $tuple['id'];
-                        $newLink->objectiveid = $objectiveId;
-                        $DB->insert_record('sessionobjectives', $newLink, false);
-                    }
-                }
-            }
-            
-            // Save the assessments
-            // Template for this was found in \mod\glossary\edit.php
-            if (array_key_exists('assessments', $tuple) and is_array($tuple['assessments'])) {
-                foreach ($tuple['assessments'] as $assessmentId) {
-                    $newLink = new stdClass();
-                    $newLink->sessionid = $tuple['id'];
-                    $newLink->assessmentid = $assessmentId;
-                    $DB->insert_record('session_related_assessment', $newLink, false);
-                }
-            }
-            
-            // Save the topics
-            // Template for this was found in \mod\glossary\edit.php
-            if (array_key_exists('all_topics_text_array', $tuple) and !is_null($tuple['all_topics_text_array'])) {
-                $topic_array = explode(session_form::TOPIC_SEPARATOR, $tuple['all_topics_text_array']);
-                
-                foreach ($topic_array as $topicname) {
-                    $newLink = new stdClass();
-                    $newLink->sessionid = $tuple['id'];
-                    $newLink->topicname = $topicname;
-                    $DB->insert_record('sessiontopics', $newLink, false);
-                }
-            }
-        }
-    }
-
 }
 
 ?>
