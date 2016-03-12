@@ -29,7 +29,7 @@ Feature: Session tab
   
   @javascript
   Scenario: Ensuring all of the select lists are properly populated
-    Given I press "sessions_list_add_element"
+    Given I create 1 sessions
     Then the "learning_objective_Attitude[0][]" select box should contain "A 1"
     And the "learning_objective_Attitude[0][]" select box should contain "A 2"
     And the "learning_objective_Attitude[0][]" select box should contain "A 3"
@@ -41,10 +41,10 @@ Feature: Session tab
     And the "assessments[0][]" select box should contain "Assessment 3"
   
   @javascript
-  Scenario: Filling out forms for two sessions, one that already exists in DB, and one that doesn't. Will be almost identical
-    Given I press "sessions_list_add_element"
+  Scenario: Filling out regular forms for two sessions, one that already exists in DB, and one that doesn't. Will be almost identical
+    Given I create 1 sessions
     And I press "Save changes"
-    And I press "sessions_list_add_element"
+    And I create 1 sessions
     And I set the following fields to these values:
       | sessiontitle[0] | First title |
       | sessiondescription[0] | Will normally be the first long title |
