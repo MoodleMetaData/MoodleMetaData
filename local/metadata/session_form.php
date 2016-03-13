@@ -18,10 +18,12 @@ require_once 'recurring_element_parser.php';
  * To look at how deleting a recurring element is done, see definition_after_data and save_data.
  *   As well, see the elements was_deleted and deleteSession (the delete button) in add_session_repeat_template
  *
+ *
  */
 class session_form extends moodleform {
     const NUM_PER_PAGE = 10;
     const TOPIC_SEPARATOR = '&|&|';
+    const DATE_FROM_FROM_FILE = 'Y-m-d';
 
     /**
      * Will return all of the type options
@@ -57,7 +59,73 @@ class session_form extends moodleform {
             return 0;
         }
     }
+    
+    /*
+     * Will determine if the sessions were uploaded
+     *
+     * @return boolean for if use wanted to upload file
+     */
+    public function sessions_were_uploaded() {
+        return $this->_form->getSubmitValue('upload_sessions') !== null;
+    }
 
+    public function upload_sessions() {
+		global $course, $DB;
+		
+        $files = $this->get_draft_files('uploaded_sessions');
+        
+        if (!empty($files)) {
+            $file = reset($files); 
+            $content = $file->get_content();
+            $all_rows = explode("\n", $content);
+            
+            $courseid = get_course_id();
+            // Need to delete everything related to course sessions, and each session
+            foreach ($this->_customdata['sessions'] as $session) {
+                $this->delete_all_relations_to_session($session->id);
+            }
+            
+            $DB->delete_records('coursesession', array('courseid'=>$courseid));
+            
+            
+            foreach ($all_rows as $row) {
+                if ($row != "") {
+                    $this->parse_and_save_session_row($row, $courseid);
+                }
+            }
+        }
+    }
+    
+    private function parse_and_save_session_row($row, $courseid) {
+        global $DB;
+        // Parse the row
+        $row = str_getcsv($row);
+        print_object($row);
+        
+        $data = array();
+        $data['courseid'] = $courseid;
+        $data['sessiontitle'] = $row[0];
+        $data['sessiondescription'] = $row[1];
+        $data['sessionguestteacher'] = $row[2];
+        $data['sessiontype'] = $row[3];
+        $data['sessionlength'] = $row[4];
+        
+        $date = DateTime::createFromFormat(session_form::DATE_FROM_FROM_FILE, $row[5]);
+        $data['sessiondate'] = $date->getTimestamp();
+        
+        // Then, save the session and get ids
+        $id = $DB->insert_record('coursesession', $data);
+        
+        // Then, parse all remaining topics
+        $topics = array_slice($row, 6);
+        foreach ($topics as $topicname) {
+            $newLink = new stdClass();
+            $newLink->sessionid = $id;
+            $newLink->topicname = $topicname;
+            $DB->insert_record('sessiontopics', $newLink, false);
+        }
+    }
+    
     /**
      * Will save the given data, that should be from calling the get_data function. Data will be all of the sessions in the course
      *
@@ -68,7 +136,6 @@ class session_form extends moodleform {
      */
     public function save_data($data) {
         global $DB;
-        // TODO: Need to save the topics specially, because they are stored in a (maybe bizzar) way
         
         // Set up the recurring element parser
         $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessionguestteacher', 'sessiontype', 'sessionlength', 'sessiondate', 'assessments', 'was_deleted', 'all_topics_text_array');
@@ -96,9 +163,7 @@ class session_form extends moodleform {
         // Handles deleting a session
         foreach ($tuples as $tupleKey => $tuple) {
             // Clean out the sessionobjectives and session_related_assessment for this session
-            $DB->delete_records('sessionobjectives', array('sessionid'=>$tuple['id']));
-            $DB->delete_records('session_related_assessment', array('sessionid'=>$tuple['id']));
-            $DB->delete_records('sessiontopics', array('sessionid'=>$tuple['id']));
+            $this->delete_all_relations_to_session($tuple['id']);
             
             // If the tuple has been deleted, then remove it from the database
             if ($tuple['was_deleted'] == true) {
@@ -158,18 +223,30 @@ class session_form extends moodleform {
     }
     
     /**
+     * Will delete from all tables information that is related to the sessions,
+     *   and that is set within this form
+     *   So topics, objectives, and related assessments
+     */
+    private function delete_all_relations_to_session($sessionid) {
+        global $DB;
+        
+        $DB->delete_records('sessionobjectives', array('sessionid'=>$sessionid));
+        $DB->delete_records('session_related_assessment', array('sessionid'=>$sessionid));
+        $DB->delete_records('sessiontopics', array('sessionid'=>$sessionid));
+    }
+    
+    /**
      * Will set up the form elements
      * @see lib/moodleform#definition()
      */
     function definition() {
-        global $CFG, $USER;
-
         $sessions = $this->_customdata['sessions'];
         
         $page_num = optional_param('page', 0, PARAM_INT);
         $subset_included = array_slice($sessions, $page_num * self::NUM_PER_PAGE, self::NUM_PER_PAGE);
         $count = min(count($subset_included), self::NUM_PER_PAGE);
         
+        $this->setup_upload_sessions();
         $this->add_session_repeat_template($count);
         
 
@@ -180,6 +257,21 @@ class session_form extends moodleform {
 
         $this->add_action_buttons();
     }
+    
+    /**
+	 * Add form elements for uploading all sessions
+	 */
+	private function setup_upload_sessions(){
+        $mform = $this->_form;
+        
+		$mform->addElement('header', 'upload_sessions_header', get_string('upload_sessions_header', 'local_metadata'));
+        
+		$mform->addHelpButton('upload_sessions_header', 'upload_sessions_header', 'local_metadata');
+		$mform->addElement('filepicker', 'uploaded_sessions', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
+		$mform->addElement('submit', 'upload_sessions', get_string('upload_sessions', 'local_metadata'));
+		$mform->closeHeaderBefore('sessions_list_add_element');
+		$mform->closeHeaderBefore('sessiontitle[0]');
+	}
 
     /**
      *  Will set up a repeate template, with elements for each piece of required data
@@ -279,7 +371,8 @@ class session_form extends moodleform {
     public function ensure_was_submitted() {
         return $this->_form->getSubmitValue('submitbutton') !== null ||
                $this->_form->getSubmitValue('previousPage') !== null ||
-               $this->_form->getSubmitValue('nextPage') !== null;
+               $this->_form->getSubmitValue('nextPage') !== null ||
+               $this->sessions_were_uploaded();
     }
 
     /**
@@ -432,10 +525,9 @@ class session_form extends moodleform {
                 $mform->removeElement('deleteSession'.$index);
                 
                 $mform->getElement('was_deleted'.$index)->setValue(true);
+            } else {
+                $this->update_topics($mform, $index);
             }
-            
-            
-            $this->update_topics($mform, $index);
         }
     }
 
@@ -505,7 +597,6 @@ class session_form extends moodleform {
         $topics_text_array = $this->get_topic_text_array($index);
         $topics_array = explode(session_form::TOPIC_SEPARATOR, $topics_text_array->getValue());
         
-        // TODO: Do this
         if ($topic_was_deleted) {
             $selected = $all_topics->getValue();
             if (count($selected) > 0 and is_numeric($selected[0])) {
@@ -513,7 +604,6 @@ class session_form extends moodleform {
                     unset($topics_array[$indexOfDeleted]);
                 }
             }
-            
         }
         
         if ($topic_was_added) {
