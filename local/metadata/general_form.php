@@ -24,8 +24,8 @@ class general_form extends moodleform {
 		} else {
 			$contactinfo = NULL;
 		}
-		$coursereadings = $DB->get_records('coursereadings', array('courseid'=>$courseId));
-		
+		$coursereadings = get_course_readings();
+
 		$reading_list = array();
 		foreach($coursereadings as $reading){
 			$obj = new stdClass();
@@ -245,6 +245,7 @@ class general_form extends moodleform {
 		$_array[] = $mform->createElement('static', 'course_reading_desc', '', get_string('course_reading_desc', 'local_metadata'));
 		$_array[] = $mform->createElement('text', 'readingname_option', get_string('readingname_label', 'local_metadata') ,'size="60"');
 		$_array[] = $mform->createElement('text', 'readingurl_option', get_string('readingurl_label', 'local_metadata') ,'size="60"');
+		$_array[] = $mform->createElement('submit', 'delete_req_reading', get_string('delete'));
 		$_array[] = $mform->createElement('hidden', 'reading_id', -1);
 
 		$_options = array();       
@@ -448,13 +449,14 @@ class general_form extends moodleform {
 	
 	/**
 	 * Upload course objectives.
+	 * @param $mform	form definition
 	 * @return void
 	 */
-	public function upload_course_obj(){
+	private function upload_course_obj($mform){
 		global $DB, $CFG, $USER; //Declare them if you need them
 		global $course, $courseId;  
-		
-		if(!empty('upload_course_obj')){
+		$obj_was_uploaded = $mform->getSubmitValue('upload_course_obj');
+		if($obj_was_uploaded){
 	
 			$files = $this->get_draft_files('temp_course_obj');
 			if(!empty($files)){
@@ -479,14 +481,15 @@ class general_form extends moodleform {
 	
 	/**
 	 * Upload course required readings.
+	 * @param $mform	form definition
 	 * @return void
 	 */
-	public function upload_req_reading(){
+	private function upload_req_reading($mform){
 		global $DB, $CFG, $USER; //Declare them if you need them
-		global $course, $courseId;  
-		
-		if(!empty('upload_reading')){
-	
+		global $course, $courseId;
+		$reading_was_uploaded = $mform->getSubmitValue('upload_reading');
+		if($reading_was_uploaded){
+
 			$files = $this->get_draft_files('temp_reading');
 			if(!empty($files)){
 				$file = reset($files); 
@@ -518,6 +521,40 @@ class general_form extends moodleform {
 		$_reading->courseid = $courseId;
 		$insert_reading = $DB->insert_record('coursereadings', $_reading, true, false);
 	}
+	
+	/**
+	 * Delete course reading when user clicks on "Delete" button in required readings.
+	 * @param $mform	form definition
+	 * @return void
+	 */
+	private function delete_reading($mform){
+		global $DB, $CFG, $USER; //Declare them if you need them
+		global $course, $courseId;
+		
+		if($reading_was_deleted = $mform->getSubmitValue('delete_req_reading')){
+			foreach($reading_was_deleted as $key=>$value) {
+				$index = '['.$key.']';
+				$r_id = $mform->getSubmitValue('reading_id'.$index);
+				$delete_reading = $DB->delete_records('coursereadings', array('id'=>$r_id));
+			}
+		}
+		
+	}
+	
+	/**
+	 * This function is used for uploading course objective and required readings.
+	 * and delete required reading.
+	 * @return void
+	 */
+	function definition_after_data() {
+        parent::definition_after_data();
+        $mform = $this->_form;
+		
+		$this->delete_reading($mform);
+		$this->upload_req_reading($mform);
+		$this->upload_course_obj($mform);
+	}
+	
 	
 	/**
 	 * Validate the form.
