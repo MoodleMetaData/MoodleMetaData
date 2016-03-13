@@ -10,11 +10,15 @@ class assessment_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
-                $courseId = get_course_id();
-		$this -> add_assessment_template(1);
-
+        $courseId = get_course_id();
+		$assessments = $this->_customdata['assessments'];
+		$this -> add_assessment_template($assessments);
+		
 		$this->add_action_buttons();
+		$this->populate_from_db($assessments);
+		
 	}
+	
 	
 	function add_assessment_template($assessmentCount){
 		
@@ -112,6 +116,21 @@ class assessment_form extends moodleform {
 	function get_knowledge(){
 		global $DB;
 
+	}
+	
+	function populate_from_db($assessments){
+		$mform = $this->_form;
+		$key = 0;
+		
+		foreach($assessments as $assessment){
+			$index = '['.$key.']';
+			
+			$mform->setDefault('assessmentname'.$index, $assessment->assessmentname);
+			$mform->setDefault('assessmentweight'.$index, $assessment->assessmentweight);
+			$mform->setDefault('assessmentduedate'.$index, $assessment->assessmentduedate);
+			$mform->setDefault('description'.$index, $assessment->description);
+		}
+		
 	}
 }
 	

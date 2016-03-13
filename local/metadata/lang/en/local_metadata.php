@@ -112,6 +112,7 @@ $string['assessment_type'] = 'Type of Assessment: ';
 $string['grade_weight'] = 'Weight: ';
 $string['objective_description'] = 'Description: ';
 $string['assessment_type'] = 'Type: ';
+$string['assessment_add'] = 'Add Assessment';
 
 $string['assessment_title'] = 'Title: ';
 $string['assessment_prof'] = 'Lecturer: ';
