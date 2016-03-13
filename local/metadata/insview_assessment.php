@@ -47,8 +47,8 @@ if ($assessment_form->is_cancelled()) {
 if ($data = $assessment_form->get_data()) {
     // TODO: Save the submission data, use a function/class from different file
     echo "Assessment";
-    print_object($data);
-
+    //print_object($data);
+	$assessment_form -> save_assessment_list($data);
     // TODO: Then, redirect
     // redirect($assessment_url);
 
