@@ -16,8 +16,7 @@ Feature: Session tab
     
   @javascript
   Scenario: Deleting session before saving
-    Given I press "sessions_list_add_element"
-    And I press "sessions_list_add_element"
+    Given I create 2 sessions
     And I set the following fields to these values:
       | sessiontitle[0] | First title |
       | sessiontitle[1] | Second title |
@@ -30,8 +29,7 @@ Feature: Session tab
   
   @javascript
   Scenario: Deleting session after saving
-    Given I press "sessions_list_add_element"
-    And I press "sessions_list_add_element"
+    Given I create 2 sessions
     And I set the following fields to these values:
       | sessiontitle[0] | First title |
       | sessiontitle[1] | Second title |
