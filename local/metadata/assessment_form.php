@@ -11,8 +11,9 @@ class assessment_form extends moodleform {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
         $courseId = get_course_id();
+		
 		$assessments = $this->_customdata['assessments'];
-		$this -> add_assessment_template($assessments);
+		$this -> add_assessment_template(3);
 		
 		$this->add_action_buttons();
 		$this->populate_from_db($assessments);
@@ -26,6 +27,7 @@ class assessment_form extends moodleform {
 		
 		//DUMMY DATA
 		$type_array = array();
+		$type_array[0] = 'Exam';
 		$type_array[1] = 'Assignment';
 		$type_array[2] = 'Lab';
 		$type_array[3] = 'Lab Exam';
@@ -41,18 +43,17 @@ class assessment_form extends moodleform {
 		$optionsArray['description']['type'] = PARAM_TEXT;
 		$optionsArray['gradingDesc']['type'] = PARAM_TEXT;
 		$optionsArray['assessmentweight']['type'] = PARAM_TEXT;
-		$optionsArray['assessment_prof']['disabledif'] = array('isexam', 'eq', 1);
+		$optionsArray['assessment_prof']['disabledif'] = array('type', 'eq', 0);
 		$optionsArray['assessment_knowledge']['setmultiple'] = true;
 		// Form elements
 
 		$elementArray[] = $mform -> createElement('header', 'general_header', get_string('general_header', 'local_metadata'));
 		$elementArray[] = $mform -> createElement('text', 'assessmentname', get_string('assessment_title', 'local_metadata'));
 		
-		//$mform->setDefault('assessment_prof', get_string('assessment_prof_default', 'local_metadata'));
 		
-		$elementArray[] = $mform ->createElement('selectyesno', 'isexam', get_string('assessment_isexam', 'local_metadata'));
+		//$elementArray[] = $mform ->createElement('selectyesno', 'isexam', get_string('assessment_isexam', 'local_metadata'));
 		$elementArray[] = $mform -> createElement('select','type', get_string('assessment_type','local_metadata'), $type_array, '');
-		$elementArray[] = $mform -> createElement('text', 'assessment_prof', get_string('assessment_prof', 'local_metadata'));
+		$elementArray[] = $mform -> createElement('text', 'assessmentprof', get_string('assessment_prof', 'local_metadata'));
 		$elementArray[] = $mform -> createElement('date', 'assessmentduedate', get_string('assessment_due', 'local_metadata'));
 		
 		
@@ -64,14 +65,16 @@ class assessment_form extends moodleform {
 		//REPLACE WITH DB CALLS
 
 		
-		
-		//Set the disabledIf rules
-		$mform -> disabledIf('type','isexam','eq','1');
-		$mform -> disabledIf('assessment_prof','isexam','eq','1');
+	
 		
 
-		$elementArray[] = $mform -> createElement('textarea', 'gradingDesc', get_string('assessment_grading_desc', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
+		$elementArray[] = $mform -> createElement('textarea', 'gdescription', get_string('assessment_grading_desc', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
 		$elementArray[] = $mform-> createElement('text','assessmentweight',get_string('grade_weight','local_metadata'));
+		
+		        // Add needed hidden elements
+        // Stores the id for each element
+        $repeatarray[] = $mform->createElement('hidden', 'id', -1);
+        $repeatarray[] = $mform->createElement('hidden', 'was_deleted', false);
 		
 		//copied from session_form.php
 		/////////////////////////////////////////////////
@@ -93,7 +96,7 @@ class assessment_form extends moodleform {
         }
 		/////////////////////////////////////////////////
 		
-		$this->repeat_elements($elementArray, 1,
+		$this->repeat_elements($elementArray, $assessmentCount,
             $optionsArray, 'assessment_list', 'assessment_list_add_element', 1, get_string('add_assessment', 'local_metadata'), true);
 		
 	}
@@ -106,7 +109,7 @@ class assessment_form extends moodleform {
 	
 	function save_assessment_list($data){
 		global $DB;
-		$changed = array('assessmentname', 'isexam', 'type', 'assessment_prof', 'description', 'gradingDesc', 'assessmentweight');
+		$changed = array('assessmentname', 'type', 'assessmentprof', 'description', 'gdescription', 'assessmentweight', 'id');
 		$assessment_parser = new recurring_element_parser('courseassessment', 'assessment_list', $changed, null);
 		
 		$tuples = $assessment_parser->getTuplesFromData($data);
@@ -127,8 +130,11 @@ class assessment_form extends moodleform {
 			
 			$mform->setDefault('assessmentname'.$index, $assessment->assessmentname);
 			$mform->setDefault('assessmentweight'.$index, $assessment->assessmentweight);
+			$mform->setDefault('assessmentprof'.$index, $assessment->assessmentprof);
 			$mform->setDefault('assessmentduedate'.$index, $assessment->assessmentduedate);
 			$mform->setDefault('description'.$index, $assessment->description);
+			$mform->setDefault('gdescription'.$index, $assessment->gdescription);
+			$mform->setDefault('id'.$index, $assessment->courseassessment_id);
 		}
 		
 	}
