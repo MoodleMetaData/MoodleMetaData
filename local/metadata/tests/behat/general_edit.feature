@@ -1,8 +1,8 @@
-  @local_metadata
-  Feature: Session tab
-  Need to be able to add general information to the list
-  And, this coveres X
-  Note, need to add tests for linking of learning objectives and general tab
+@local_metadata @local_metadata_general @local_metadata_general_edit
+Feature: General tab
+	In order to use the general tab
+	As an instructor
+	I need to be able to enter general course information
 
   Background:
     Given the following "courses" exist:

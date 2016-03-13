@@ -706,7 +706,7 @@ class general_form extends moodleform {
 							$a->objectivename = $a_name[$i];
 							$update_courseObj = $DB->update_record('learningobjectives', $a, false);
 						}else{
-							$this->insert_course_objective($a_name[$i], 'Skill');
+							$this->insert_course_objective($a_name[$i], 'Atittude');
 						}
 					}
 				}	
