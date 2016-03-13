@@ -105,12 +105,13 @@ $string['learning_objective_Skill'] = 'Learning Objectives: Skill';
 $string['related_assessments'] = 'Related Assessments';
 $string['deletesession'] = 'Delete Session';
 
-
+//assessment strings
 $string['assessment_description'] = 'Description: ';
 $string['learning_objective_selection_description']= 'Learning Objective(s): ';
 $string['assessment_type'] = 'Type of Assessment: ';
 $string['grade_weight'] = 'Weight: ';
 $string['objective_description'] = 'Description: ';
+$string['assessment_type'] = 'Type: ';
 
 $string['assessment_title'] = 'Title: ';
 $string['assessment_prof'] = 'Lecturer: ';

@@ -42,17 +42,17 @@ class assessment_form extends moodleform {
 		// Form elements
 
 		$elementArray[] = $mform -> createElement('header', 'general_header', get_string('general_header', 'local_metadata'));
-		$elementArray[] = $mform -> createElement('text', 'assessmentname', get_string('assessmentname', 'local_metadata'));
+		$elementArray[] = $mform -> createElement('text', 'assessmentname', get_string('assessment_title', 'local_metadata'));
 		
 		//$mform->setDefault('assessment_prof', get_string('assessment_prof_default', 'local_metadata'));
 		
 		$elementArray[] = $mform ->createElement('selectyesno', 'isexam', get_string('assessment_isexam', 'local_metadata'));
-		$elementArray[] = $mform -> createElement('select','type', get_string('type','local_metadata'), $type_array, '');
+		$elementArray[] = $mform -> createElement('select','type', get_string('assessment_type','local_metadata'), $type_array, '');
 		$elementArray[] = $mform -> createElement('text', 'assessment_prof', get_string('assessment_prof', 'local_metadata'));
-		$elementArray[] = $mform -> createElement('date', 'assessmentduedate', get_string('assessmentduedate', 'local_metadata'));
+		$elementArray[] = $mform -> createElement('date', 'assessmentduedate', get_string('assessment_due', 'local_metadata'));
 		
 		
-		$elementArray[] = $mform->createElement('textarea', 'description', get_string('description', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
+		$elementArray[] = $mform->createElement('textarea', 'description', get_string('assessment_description', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
 		//$mform->addRule('description', get_string('required'),'required', null, 'client');
 		
 				// For Testing Purposes, Probably should be replaced with db calls
@@ -67,7 +67,7 @@ class assessment_form extends moodleform {
 		
 
 		$elementArray[] = $mform -> createElement('textarea', 'gradingDesc', get_string('assessment_grading_desc', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
-		$elementArray[] = $mform-> createElement('text','assessmentweight',get_string('assessmentweight','local_metadata'));
+		$elementArray[] = $mform-> createElement('text','assessmentweight',get_string('grade_weight','local_metadata'));
 		
 		//copied from session_form.php
 		/////////////////////////////////////////////////
