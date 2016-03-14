@@ -99,6 +99,16 @@ $string['session_date'] = 'Date';
 $string['manage_topics'] = 'Topics';
 $string['add_topic'] = 'Add';
 
+$string['upload_sessions_header'] = 'Upload All Sessions';
+$string['upload_sessions_header_help'] = 'To upload course objectives, only .csv file is permitted. This will overwrite ALL existing sessions.
+                                        The format is: [column1],[column2]
+                                        , where [column1] is the course objective description
+                                        and [column2] is the course objective type = {K, S, A}.
+                                        Enter a new line to create a new entry.';
+$string['upload_sessions'] = 'Upload sessions';
+$string['add_topic'] = 'Add';
+$string['add_topic'] = 'Add';
+
 $string['learning_objective_Attitude'] = 'Learning Objective: Attitude';
 $string['learning_objective_Knowledge'] = 'Learning Objective: Knowledge';
 $string['learning_objective_Skill'] = 'Learning Objectives: Skill';
