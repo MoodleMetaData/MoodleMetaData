@@ -45,6 +45,8 @@ class assessment_form extends moodleform {
 		$optionsArray['assessmentweight']['type'] = PARAM_TEXT;
 		$optionsArray['assessment_prof']['disabledif'] = array('type', 'eq', 0);
 		$optionsArray['assessment_knowledge']['setmultiple'] = true;
+		$optionsArray['assessmentid']['type'] = PARAM_TEXT;
+
 		// Form elements
 
 		$elementArray[] = $mform -> createElement('header', 'general_header', get_string('general_header', 'local_metadata'));
@@ -73,8 +75,8 @@ class assessment_form extends moodleform {
 		
 		        // Add needed hidden elements
         // Stores the id for each element
-        $repeatarray[] = $mform->createElement('hidden', 'id', -1);
-        $repeatarray[] = $mform->createElement('hidden', 'was_deleted', false);
+        $elementArray[] = $mform->createElement('hidden', 'assessmentid', -1);
+        $elementArray[] = $mform->createElement('hidden', 'was_deleted', false);
 		
 		//copied from session_form.php
 		/////////////////////////////////////////////////
@@ -109,7 +111,7 @@ class assessment_form extends moodleform {
 	
 	function save_assessment_list($data){
 		global $DB;
-		$changed = array('assessmentname', 'type', 'assessmentprof', 'description', 'gdescription', 'assessmentweight', 'id');
+		$changed = array('assessmentname', 'type', 'assessmentprof', 'description', 'gdescription', 'assessmentweight');
 		$assessment_parser = new recurring_element_parser('courseassessment', 'assessment_list', $changed, null);
 		
 		$tuples = $assessment_parser->getTuplesFromData($data);
@@ -134,7 +136,6 @@ class assessment_form extends moodleform {
 			$mform->setDefault('assessmentduedate'.$index, $assessment->assessmentduedate);
 			$mform->setDefault('description'.$index, $assessment->description);
 			$mform->setDefault('gdescription'.$index, $assessment->gdescription);
-			$mform->setDefault('id'.$index, $assessment->id);
 		}
 		
 	}
