@@ -44,7 +44,7 @@ class assessment_form extends moodleform {
 		$optionsArray['description']['type'] = PARAM_TEXT;
 		$optionsArray['gradingDesc']['type'] = PARAM_TEXT;
 		$optionsArray['assessmentweight']['type'] = PARAM_TEXT;
-		$optionsArray['assessment_prof']['disabledif'] = array('type', 'eq', 0);
+		$optionsArray['assessmentprof']['disabledif'] = array('type', 'eq', 0);
 		$optionsArray['assessment_knowledge']['setmultiple'] = true;
 		$optionsArray['courseassessment_id']['type'] = PARAM_TEXT;
 		$optionsArray['was_deleted']['type'] = PARAM_TEXT;
