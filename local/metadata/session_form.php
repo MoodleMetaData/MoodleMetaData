@@ -4,6 +4,7 @@ require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
 require_once 'lib.php';
+require_once 'metadata_form.php';
 require_once 'recurring_element_parser.php';
 
 
@@ -20,7 +21,7 @@ require_once 'recurring_element_parser.php';
  *
  *
  */
-class session_form extends moodleform {
+class session_form extends metadata_form {
     const NUM_PER_PAGE = 10;
     const TOPIC_SEPARATOR = '&|&|';
     const DATE_FROM_FROM_FILE = 'Y-m-d';
@@ -245,6 +246,8 @@ class session_form extends moodleform {
      * @see lib/moodleform#definition()
      */
     function definition() {
+        parent::definition();
+        
         $sessions = $this->_customdata['sessions'];
         
         $page_num = optional_param('page', 0, PARAM_INT);
@@ -343,7 +346,8 @@ class session_form extends moodleform {
         
         
         $repeatarray[] = $mform->createElement('submit', 'deleteSession', get_string('deletesession', 'local_metadata'));
-        
+        $mform->registerNoSubmitButton('delete_topics');
+        $this->_recurring_nosubmit_buttons[] = 'delete_topics';
         
         
         // Add needed hidden elements
@@ -365,22 +369,6 @@ class session_form extends moodleform {
         // Add the repeating elements to the form
         $this->repeat_elements($repeatarray, $numSessions,
             $repeatoptions, 'sessions_list', 'sessions_list_add_element', 1, get_string('add_session', 'local_metadata'));
-    }
-    
-    
-
-    /**
-     *  This function MUST be called, and return true, before get_data is called on this form.
-     *    The need for this function is because of how noSubmitButton is handled terribly in moodle
-     *    and using it will cause a warning, that causes the tests to fail.
-     *
-     *  @return true iff the actual submit button was pressed
-     */
-    public function ensure_was_submitted() {
-        return $this->_form->getSubmitValue('submitbutton') !== null ||
-               $this->_form->getSubmitValue('previousPage') !== null ||
-               $this->_form->getSubmitValue('nextPage') !== null ||
-               $this->sessions_were_uploaded();
     }
 
     /**
@@ -559,6 +547,9 @@ class session_form extends moodleform {
         
 		// Delete Button
 		$groupitems[] = $mform->createElement('submit', 'delete_topics', get_string('delete'));
+        $this->_recurring_nosubmit_buttons[] = 'create_topic';
+        $mform->registerNoSubmitButton('create_topic');
+        
 		$repeatarray[] = $mform->createElement('group', 'manage_topics_group', get_string('manage_topics', 'local_metadata'), $groupitems, null, false);
         
         $repeatoptions['delete_topics']['disabledif'] = array('all_topics', 'noitemselected');
@@ -567,7 +558,9 @@ class session_form extends moodleform {
         $groupitems = array();
 		$groupitems[] = $mform->createElement('text', 'new_topic');
 		$groupitems[] = $mform->createElement('submit', 'create_topic', get_string('add_topic', 'local_metadata'));
-        
+        $this->_recurring_nosubmit_buttons[] = 'deleteSession';
+        $mform->registerNoSubmitButton('deleteSession');
+                
         $repeatarray[] = $mform->createElement('group', 'add_topic_group', '', $groupitems, null, false);
     }
     

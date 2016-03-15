@@ -50,7 +50,7 @@ if ($session_form->is_cancelled()) {
 }
 
 // Submitted the data
-if ($session_form->ensure_was_submitted() && $data = $session_form->get_data()) {
+if ($data = $session_form->get_data()) {
     if ($session_form->sessions_were_uploaded()) {
         $session_form->upload_sessions();
     } else {
