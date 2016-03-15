@@ -11,8 +11,9 @@ class assessment_form extends moodleform {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
         $courseId = get_course_id();
-		$assessmentCount = 1;
 		$assessments = $this->_customdata['assessments'];
+		$assessmentCount = sizeof($assessments);
+		$this -> add_upload(200);
 		$this -> add_assessment_template($assessmentCount);
 		
 		$this->add_action_buttons();
@@ -132,6 +133,7 @@ class assessment_form extends moodleform {
 		foreach($assessments as $assessment){
 			$index = '['.$key.']';
 			
+			$mform->setDefault('general_header'.$index, $assessment->assessmentname);
 			$mform->setDefault('assessmentname'.$index, $assessment->assessmentname);
 			$mform->setDefault('assessmentweight'.$index, $assessment->assessmentweight);
 			$mform->setDefault('assessmentprof'.$index, $assessment->assessmentprof);
@@ -139,8 +141,16 @@ class assessment_form extends moodleform {
 			$mform->setDefault('description'.$index, $assessment->description);
 			$mform->setDefault('gdescription'.$index, $assessment->gdescription);
 			$mform->setDefault('courseassessment_id'.$index, $assessment->id);
+			
+			$key += 1;
 		}
 		
+	}
+	
+	function add_upload($maxbytes){
+		$mform = $this -> _form;
+		
+		$mform->addElement('filepicker', 'assessmentFile', get_string('filepicker', 'local_metadata'), null, array('maxbytes' => $maxbytes, 'accepted_types' => '.csv'));
 	}
 }
 	
