@@ -36,7 +36,8 @@ $session_url = create_insview_url('session', $courseId);
 $syllabus_url = create_insview_url('syllabus',$courseId);
 
 // Create forms
-$assessment_form = new assessment_form($base_url);
+$assessments = get_table_data_for_course('courseassessment');
+$assessment_form = new assessment_form($base_url, array('assessments'=>$assessments));
 
 // Case where they cancelled the form. Just redirect to it, to reset values
 if ($assessment_form->is_cancelled()) {
@@ -47,10 +48,10 @@ if ($assessment_form->is_cancelled()) {
 if ($data = $assessment_form->get_data()) {
     // TODO: Save the submission data, use a function/class from different file
     echo "Assessment";
-    print_object($data);
-
+    //print_object($data);
+	$assessment_form -> save_assessment_list($data);
     // TODO: Then, redirect
-    // redirect($assessment_url);
+    redirect($assessment_url);
 
 } 
 
