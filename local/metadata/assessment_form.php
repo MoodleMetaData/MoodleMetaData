@@ -102,7 +102,7 @@ class assessment_form extends moodleform {
 		/////////////////////////////////////////////////
 		
 		$this->repeat_elements($elementArray, $assessmentCount,
-            $optionsArray, 'assessment_list', 'assessment_list_add_element', 1, get_string('add_assessment', 'local_metadata'), true);
+            $optionsArray, 'assessment_list', 'assessment_list_add_element', 1, get_string('add_assessment', 'local_metadata'));
 		
 	}
 	

@@ -275,7 +275,6 @@ class session_form extends moodleform {
 		$mform->addElement('filepicker', 'uploaded_sessions', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
 		$mform->addElement('submit', 'upload_sessions', get_string('upload_sessions', 'local_metadata'));
 		$mform->closeHeaderBefore('sessions_list_add_element');
-		$mform->closeHeaderBefore('sessiontitle[0]');
 	}
 
     /**
@@ -288,7 +287,10 @@ class session_form extends moodleform {
         $mform = $this->_form;
 
         $repeatarray = array();
+	    $repeatarray[] = $mform->createElement('header', 'sessionheader');
+        
         $repeatarray[] = $mform->createElement('text', 'sessiontitle', get_string('session_title', 'local_metadata'));
+        
         $repeatarray[] = $mform->createElement('textarea', 'sessiondescription', get_string('session_description', 'local_metadata'));
         
         $repeatarray[] = $mform->createElement('text', 'sessionguestteacher', get_string('session_guest_teacher', 'local_metadata'));
@@ -349,6 +351,7 @@ class session_form extends moodleform {
         $repeatarray[] = $mform->createElement('hidden', 'coursesession_id', -1);
         $repeatarray[] = $mform->createElement('hidden', 'was_deleted', false);
         
+        $repeatoptions['sessionheader']['default'] = get_string('new_session_header', 'local_metadata');
         
         // Moodle complains if some elements aren't given a type
         $repeatoptions['sessiontitle']['type'] = PARAM_TEXT;
@@ -361,7 +364,7 @@ class session_form extends moodleform {
 
         // Add the repeating elements to the form
         $this->repeat_elements($repeatarray, $numSessions,
-            $repeatoptions, 'sessions_list', 'sessions_list_add_element', 1, get_string('add_session', 'local_metadata'), true);
+            $repeatoptions, 'sessions_list', 'sessions_list_add_element', 1, get_string('add_session', 'local_metadata'));
     }
     
     
@@ -397,16 +400,18 @@ class session_form extends moodleform {
             // Add the help button for sessionguestteacher
             $mform->addHelpButton('sessionguestteacher'.$index, 'session_guest_teacher', 'local_metadata');
             
+            if ($session->sessiontitle == '') {
+                $mform->setDefault('sessionheader'.$index, get_string('unnamed_session', 'local_metadata'));
+            } else {
+                $mform->setDefault('sessionheader'.$index, $session->sessiontitle);
+            }
+            
             // Easiest way to set the initial data is to set the default for each session in sessions
             $mform->setDefault('coursesession_id'.$index, $session->id);
-            
             $mform->setDefault('sessiontitle'.$index, $session->sessiontitle);
-            
             $mform->setDefault('sessionguestteacher'.$index, $session->sessionguestteacher);
-            
             $mform->setDefault('sessiondescription'.$index, $session->sessiondescription);
             $mform->setDefault('sessiondate'.$index, $session->sessiondate);
-
             $mform->setDefault('sessiondate'.$index, $session->sessiondate);
 
             // Handled specially, because the default must be an int, which needs to be translated from string in database
@@ -418,8 +423,6 @@ class session_form extends moodleform {
             $mform->setDefault('sessionlength'.$index, array_search($session->sessionlength, $lengths));
 
             $this->setup_data_from_database_for_session($mform, $index, $session);
-
-
             $key += 1;
         }
     }
