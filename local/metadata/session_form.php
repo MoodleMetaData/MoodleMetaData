@@ -119,6 +119,11 @@ class session_form extends moodleform {
         // Then, parse all remaining topics
         $topics = array_slice($row, 6);
         foreach ($topics as $topicname) {
+            if ($topicname == "") {
+                continue;
+            }
+            
+            
             $newLink = new stdClass();
             $newLink->sessionid = $id;
             $newLink->topicname = $topicname;
