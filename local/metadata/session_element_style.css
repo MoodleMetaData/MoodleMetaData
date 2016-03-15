@@ -20,7 +20,9 @@ body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="sessiondate_"
 body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="learning_objective_Attitude"],
 body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="learning_objective_Knowledge"],
 body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="learning_objective_Skill"],
-body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="assessments_"] {
+body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="assessments_"],
+body#page-local-metadata-insview_session div[id^="fgroup_id_"][id*="manage_topics_group_"],
+body#page-local-metadata-insview_session div[id^="fgroup_id_"][id*="add_topic_group_"] {
     background: #EEE;
     margin-bottom: 0;
     margin-top: 0;

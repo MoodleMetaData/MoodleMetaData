@@ -498,6 +498,7 @@ class session_form extends metadata_form {
             if ($deleted or $mform->getElementValue('was_deleted'.$index) == true) {
                 // If deleted, just remove the visual elements
                     // Will not save to the database until the user presses submit
+                $mform->removeElement('sessionheader'.$index);
                 $mform->removeElement('sessiontitle'.$index);
                 $mform->removeElement('sessiondescription'.$index);
                 $mform->removeElement('sessionguestteacher'.$index);
@@ -523,6 +524,12 @@ class session_form extends metadata_form {
                 $mform->getElement('was_deleted'.$index)->setValue(true);
             } else {
                 $this->update_topics($mform, $index);
+                
+                // New element, so expand header by default
+                if ($mform->getElement('coursesession_id'.$index)->getValue() == -1) {
+                    $mform->setExpanded('sessionheader'.$index);
+                }
+                
             }
         }
     }
