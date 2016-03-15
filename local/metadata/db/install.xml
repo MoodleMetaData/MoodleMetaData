@@ -23,11 +23,13 @@
     <TABLE NAME="courseassessment" COMMENT="assessment info">
       <FIELDS>
         <FIELD NAME="assessmentname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+		<FIELD NAME="assessmentprof" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="assessmentweight" TYPE="int" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="assessment's grade in %"/>
         <FIELD NAME="assessmentduedate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+		<FIELD NAME="gdescription" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="type" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>

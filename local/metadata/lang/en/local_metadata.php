@@ -115,12 +115,14 @@ $string['learning_objective_Skill'] = 'Learning Objectives: Skill';
 $string['related_assessments'] = 'Related Assessments';
 $string['deletesession'] = 'Delete Session';
 
-
+//assessment strings
 $string['assessment_description'] = 'Description: ';
 $string['learning_objective_selection_description']= 'Learning Objective(s): ';
 $string['assessment_type'] = 'Type of Assessment: ';
 $string['grade_weight'] = 'Weight: ';
 $string['objective_description'] = 'Description: ';
+$string['assessment_type'] = 'Type: ';
+$string['assessment_add'] = 'Add Assessment';
 
 $string['assessment_title'] = 'Title: ';
 $string['assessment_prof'] = 'Lecturer: ';
@@ -135,6 +137,8 @@ $string['assessment_prof_default'] = 'First, Last';
 $string['assessment_due'] = 'Date: ';
 $string['assessment_duration'] = 'Duration: ';
 $string['assessment_due'] = 'Due Date: ';
+$string['general_header'] = 'General';
+
 
 // Metadata manager strings
 $string['manage_knowledge'] = 'Knowledge Attributes: ';
