@@ -20,18 +20,18 @@ class syllabus_form extends moodleform {
 		
 		$mform->registerNoSubmitButton('syllubusgenerate');
 
- 		$mform->addElement('html','<form> generate syllabus: <input type="submit" 
-				name="syllubusgenerate" value="generate"/></form>'); 
+ 		$mform->addElement('html','<form> generate syllabus: 
+ 				<input type="submit" name="syllubusdisplay" value="preview"/>
+ 				<input type="submit" name="syllubusdownload" value="download"/></form>'); 
 		
 		
-		if(isset($_POST['syllubusgenerate'])){
+		if(isset($_POST['syllubusdownload'])){
 
-			$filename = $this->do_generate();
-			//$this->sample_pdf();
-/* 			$mform->addElement('html','<form> 					
-					click following link for download: <br>
-					<a href="#" download="'.$filename.'">download</a></form>'); */
-			
+			$filename = $this->do_generate(2);
+		}
+		if(isset($_POST['syllubusdisplay'])){
+		
+			$filename = $this->do_generate(1);
 		}
 
 		
@@ -51,7 +51,7 @@ class syllabus_form extends moodleform {
 		global $course, $courseId;
 	}
 	
-	function do_generate(){
+	function do_generate($optionno){
 		global $CFG, $DB, $USER;
 		global $course;
 		$sessionnumber = 0;
@@ -59,7 +59,12 @@ class syllabus_form extends moodleform {
 		$instructoremail = '';
 		$officehours = '';
 		$officelocation = '';
-		//$coursesessions = array();
+		$courseInstructor = '';
+		$phonenumber = 0;
+		$instructoremail = '';
+		$coursedescription = '';
+		
+//collecting relative data from database===============================================================================		
 		if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
 			$coursetopic = $existCourseInfo->coursetopic;
 			$coursedescription = $existCourseInfo->coursedescription;
@@ -71,7 +76,6 @@ class syllabus_form extends moodleform {
 				$phonenumber = $existInstructorInfo->phonenumber;
 			}
 			$sessionnumber = $DB->count_records('coursesession', array('courseid'=>$existCourseInfo->courseid));
-			//echo "<script type='text/javascript'>alert('$sessionnumber');</script>";
 			if($sessionnumber>0){
 				$coursesessions = $DB->get_records('coursesession', array('courseid'=>$existCourseInfo->courseid));			
 			}	
@@ -81,20 +85,18 @@ class syllabus_form extends moodleform {
 			}
 			
 			$courseobjectives = $DB->get_records('courseobjectives', array('courseid'=>$existCourseInfo->courseid));
+			$courseassessments = $DB->get_records('courseassessment', array('courseid'=>$existCourseInfo->courseid));
 		}
 		
-		
-		
-		
-		
+
 		
 //start pdf generation===============================================================================		
 		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 		$pdf->SetCreator(PDF_CREATOR);
 		$pdf->SetAuthor('Olaf Lederer');
-		$pdf->SetTitle('TCPDF Example');
-		$pdf->SetSubject('TCPDF Tutorial');
-		$pdf->SetKeywords('TCPDF, PDF, example, tutorial');
+		$pdf->SetTitle('Course Syllabus');
+		$pdf->SetSubject('Syllabus PDF');
+		$pdf->SetKeywords('TCPDF, PDF, Course, Syllubs');
 		 
 		// remove default header/footer
 		$pdf->setPrintHeader(false);
@@ -102,9 +104,10 @@ class syllabus_form extends moodleform {
 		
 	// set font
 	$pdf->SetFont('times', 'B', 20);
-	
 	// add a page
 	$pdf->AddPage();
+	$logo = '<p><img src="ualbertalogo.jpg" alt="test alt attribute" width="200" height="70" border="0" /></p>';
+	$pdf->writeHTMLCell(0, 0, '', '', $logo, 0, 1, 0, true, 'L', true);
 	$coursefullname = $course->shortname.': '.$course->fullname;
 	$pdf->Cell(0, 0, '', 0, 0, 'C');
 	$pdf->Ln();
@@ -119,22 +122,22 @@ class syllabus_form extends moodleform {
 	$pdf->Ln();
 //put general course information(instructor,officehour,location) into the pdf------------------------------------------
 	$courselogistics = <<<EOD
-	Fall/Winter/Spring/Summer
-	Course Weight: *3
+	Fall/Winter/Spring/Summer<br>
+	<b>Course Weight</b>: *3
 EOD;
-	$pdf->SetFont('times', '', 10);
-	$pdf->Write(5, $courselogistics, '', 0, 'C', true, 0, false, false, 0);	
+	$pdf->SetFont('times', '', 12);
+	$pdf->writeHTMLCell(0, 0, '', '', $courselogistics, 0, 1, 0, true, 'C', true);
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	$courselogistics = <<<EOD
-	Coordinator: $courseInstructor
-	Office: $officelocation, phone: $phonenumber
-	Email: $instructoremail
-	Office Hours: $officehours 
+	<b>Coordinator</b>: $courseInstructor<br>
+	<b>Office</b>: $officelocation, <b>phone</b>: $phonenumber<br>
+	<b>Email</b>: $instructoremail<br>
+	<b>Office Hours</b>: $officehours 
 EOD;
-	$pdf->SetFont('times', '', 10);
-	$pdf->Write(0, $courselogistics, '', 0, 'C', true, 0, false, false, 0);
+	$pdf->SetFont('times', '', 12);
+	$pdf->writeHTMLCell(0, 0, '', '', $courselogistics, 0, 1, 0, true, 'C', true);
 	$pdf->AddPage();
 	
 	
@@ -174,6 +177,7 @@ EOD;
 	$pdf->SetFont('times', '', 10);
 	$objdes = 'The course is designed to develop the following knowledge, skills and attitudes:';
 	$pdf->Write(5, $objdes, '', 0, 'L', true, 0, false, false, 0);
+	if(isset($courseobjectives)){
 	$knowledge = <<<EOD
 		Knowledge
 		Students who successfully complete this course will be able to:
@@ -236,177 +240,83 @@ EOD;
 	}
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+	}
 	
 	
-	
-//put course session information into the pdf------------------------------------------
+//put course grading information into the pdf------------------------------------------
 	$pdf->SetFont('times', 'B', 15);
 	$pdf->Write(5, 'Grading', '', 0, 'L', true, 0, false, false, 0);
-
+	$pdf->SetFont('times', '', 10);
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-
+	if (isset($courseassessments)){
+		$assessmenttable = '
+	<table border="0.1" cellspacing="0.1" cellpadding="0.1" id="gradingtable">
+    <tr>
+        <th width="17%" align="center"><b>Title</b></th>
+        <th width="10%" align="center"><b>Weight</b></th>
+        <th width="16%" align="center"><b>Date</b></th>
+		<th width="17%" align="center"><b>Type</b></th>
+		<th width="40%" align="center"><b>Description</b></th>
+    </tr>';	
+		foreach ($courseassessments as $courseassessment) {
+			$assessmenttable .= '<tr>
+					<td width="17%">'.$courseassessment->assessmentname.'</td>
+					<td width="10%" align="center">'.$courseassessment->assessmentweight.'%</td>
+					<td width="16%" align="center">'.$courseassessment->assessmentduedate.'</td>
+					<td width="17%">'.$courseassessment->type.'</td>	
+					<td width="40%">'.$courseassessment->description.'</td>	
+					</tr>';
+		}
+		$assessmenttable .= '</table>';
+		$pdf->writeHTML($assessmenttable, true, false, true, false, '');
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+	}
 	
 	
 //put course session information into the pdf------------------------------------------
-	$pdf->SetFont('times', 'B', 15);
-	$pdf->Write(5, 'Course Sessions', '', 0, 'L', true, 0, false, false, 0);
-	if($sessionnumber>0){
-		$pdf->SetFont('times', '', 10);
-		$sessionno = 1;
-		foreach ($coursesessions as $coursesession) {
-			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-			$courselectures = <<<EOD
-			<font size="10"><b>$sessionno: $coursesession->sessiontitle </b></font><br>
-			Date: $coursesession->sessiondate <br>
-			Length: $coursesession->sessionlength <br>
-			Type: $coursesession->sessiontype <br>
-			Description: $coursesession->sessiondescription <br>
-			Guest teacher: $coursesession->sessionguestteacher
+		$pdf->SetFont('times', 'B', 15);
+		$pdf->Write(5, 'Course Sessions', '', 0, 'L', true, 0, false, false, 0);
+		if($sessionnumber>0){
+			$pdf->SetFont('times', '', 10);
+			$sessionno = 1;
+			foreach ($coursesessions as $coursesession) {
+				$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+				$courselectures = <<<EOD
+				<font size="10"><b>$sessionno: $coursesession->sessiontitle </b></font><br><hr>
+				<b>Date</b>: $coursesession->sessiondate <br>
+				<b>Length</b>: $coursesession->sessionlength <br>
+				<b>Type</b>: $coursesession->sessiontype <br>
+				<b>Description</b>:<br> $coursesession->sessiondescription <br>
+				<b>Guest teacher</b>: $coursesession->sessionguestteacher<hr>
 EOD;
-			//$pdf->Write(8, $courselectures, '', 0, 'L', true, 0, false, false, 0);
-			$pdf->writeHTMLCell(0, 0, '', '', $courselectures, 0, 1, 0, true, '', true);
-			$sessionno ++;
+				$pdf->writeHTMLCell(0, 0, '', '', $courselectures, 0, 1, 0, true, '', true);
+				$sessionno ++;
+			}
 		}
-	}
-	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	
 	
 	
 //put course policy information into the pdf------------------------------------------
-	$pdf->SetFont('times', 'B', 15);
-	$pdf->Write(5, 'Policy', '', 0, 'L', true, 0, false, false, 0);
-	
-	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	
-	
-
-
+		$pdf->SetFont('times', 'B', 15);
+		$pdf->Write(5, 'Policy', '', 0, 'L', true, 0, false, false, 0);
 		
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	
 	
-	# terminat$courseInstructorur file with TCPDF output
-	$pdf->Output('syllubusgenerate.pdf', 'I'); 
-	$filename= "syllubusgenerate.pdf";
-	return $filename;
-	}
+
 	
-	
-	
-	
-	
-	function sample_pdf(){
-	
-		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-	
-		// set document information
-		$pdf->SetCreator(PDF_CREATOR);
-		$pdf->SetAuthor('Nicola Asuni');
-		$pdf->SetTitle('TCPDF Example 028');
-		$pdf->SetSubject('TCPDF Tutorial');
-		$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
-	
-		// remove default header/footer
-		$pdf->setPrintHeader(false);
-		$pdf->setPrintFooter(false);
-	
-		// set default monospaced font
-		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-	
-		// set margins
-		$pdf->SetMargins(10, PDF_MARGIN_TOP, 10);
-	
-		// set auto page breaks
-		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-	
-		// set image scale factor
-		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-	
-		// set some language-dependent strings (optional)
-		if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-			require_once(dirname(__FILE__).'/lang/eng.php');
-			$pdf->setLanguageArray($l);
+// terminat$courseInstructorur file with TCPDF output------------------------------------------
+		if ($optionno == 1){
+			$pdf->Output('syllubus.pdf', 'I'); 
+		}else if ($optionno == 2){
+			$pdf->Output('syllubus.pdf', 'D');
 		}
-	
-		// ---------------------------------------------------------
-	
-		$pdf->SetDisplayMode('fullpage', 'SinglePage', 'UseNone');
-	
-		// set font
-		$pdf->SetFont('times', 'B', 20);
-	
-		$pdf->AddPage('P', 'A4');
-		$pdf->Cell(0, 0, 'A4 PORTRAIT', 0, 1, 'C');
-	
-		$pdf->AddPage('L', 'A4');
-		$pdf->Cell(0, 0, 'A4 LANDSCAPE', 1, 1, 'C');
-	
-		$pdf->AddPage('P', 'A5');
-		$pdf->Cell(0, 0, 'A5 PORTRAIT', 1, 1, 'C');
-	
-		$pdf->AddPage('L', 'A5');
-		$pdf->Cell(0, 0, 'A5 LANDSCAPE', 1, 1, 'C');
-	
-		$pdf->AddPage('P', 'A6');
-		$pdf->Cell(0, 0, 'A6 PORTRAIT', 1, 1, 'C');
-	
-		$pdf->AddPage('L', 'A6');
-		$pdf->Cell(0, 0, 'A6 LANDSCAPE', 1, 1, 'C');
-	
-		$pdf->AddPage('P', 'A7');
-		$pdf->Cell(0, 0, 'A7 PORTRAIT', 1, 1, 'C');
-	
-		$pdf->AddPage('L', 'A7');
-		$pdf->Cell(0, 0, 'A7 LANDSCAPE', 1, 1, 'C');
-	
-	
-		// --- test backward editing ---
-	
-	
-		$pdf->setPage(1, true);
-		$pdf->SetY(50);
-		$pdf->Cell(0, 0, 'A4 test', 1, 1, 'C');
-	
-		$pdf->setPage(2, true);
-		$pdf->SetY(50);
-		$pdf->Cell(0, 0, 'A4 test', 1, 1, 'C');
-	
-		$pdf->setPage(3, true);
-		$pdf->SetY(50);
-		$pdf->Cell(0, 0, 'A5 test', 1, 1, 'C');
-	
-		$pdf->setPage(4, true);
-		$pdf->SetY(50);
-		$pdf->Cell(0, 0, 'A5 test', 1, 1, 'C');
-	
-		$pdf->setPage(5, true);
-		$pdf->SetY(50);
-		$pdf->Cell(0, 0, 'A6 test', 1, 1, 'C');
-	
-		$pdf->setPage(6, true);
-		$pdf->SetY(50);
-		$pdf->Cell(0, 0, 'A6 test', 1, 1, 'C');
-	
-		$pdf->setPage(7, true);
-		$pdf->SetY(40);
-		$pdf->Cell(0, 0, 'A7 test', 1, 1, 'C');
-	
-		$pdf->setPage(8, true);
-		$pdf->SetY(40);
-		$pdf->Cell(0, 0, 'A7 test', 1, 1, 'C');
-	
-		$pdf->lastPage();
-	
-		// ---------------------------------------------------------
-	
-		//Close and output PDF document
-		$pdf->Output('example_028.pdf', 'I');
-	
-	
-	
 	}
+	
 }
 
 ?>

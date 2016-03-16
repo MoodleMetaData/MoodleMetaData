@@ -99,18 +99,30 @@ $string['session_date'] = 'Date';
 $string['manage_topics'] = 'Topics';
 $string['add_topic'] = 'Add';
 
+$string['upload_sessions_header'] = 'Upload All Sessions';
+$string['upload_sessions_header_help'] = 'To upload course objectives, only .csv file is permitted. This will overwrite ALL existing sessions.
+                                        The format is: [column1],[column2]
+                                        , where [column1] is the course objective description
+                                        and [column2] is the course objective type = {K, S, A}.
+                                        Enter a new line to create a new entry.';
+$string['upload_sessions'] = 'Upload sessions';
+$string['add_topic'] = 'Add';
+$string['add_topic'] = 'Add';
+
 $string['learning_objective_Attitude'] = 'Learning Objective: Attitude';
 $string['learning_objective_Knowledge'] = 'Learning Objective: Knowledge';
 $string['learning_objective_Skill'] = 'Learning Objectives: Skill';
 $string['related_assessments'] = 'Related Assessments';
 $string['deletesession'] = 'Delete Session';
 
-
+//assessment strings
 $string['assessment_description'] = 'Description: ';
 $string['learning_objective_selection_description']= 'Learning Objective(s): ';
 $string['assessment_type'] = 'Type of Assessment: ';
 $string['grade_weight'] = 'Weight: ';
 $string['objective_description'] = 'Description: ';
+$string['assessment_type'] = 'Type: ';
+$string['assessment_add'] = 'Add Assessment';
 
 $string['assessment_title'] = 'Title: ';
 $string['assessment_prof'] = 'Lecturer: ';
@@ -125,6 +137,8 @@ $string['assessment_prof_default'] = 'First, Last';
 $string['assessment_due'] = 'Date: ';
 $string['assessment_duration'] = 'Duration: ';
 $string['assessment_due'] = 'Due Date: ';
+$string['general_header'] = 'General';
+
 
 // Metadata manager strings
 $string['manage_knowledge'] = 'Knowledge Attributes: ';

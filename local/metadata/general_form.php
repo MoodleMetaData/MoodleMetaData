@@ -90,6 +90,7 @@ class general_form extends moodleform {
 		$mform->setDefault('course_name', $courseName);
 				
 		// Instructor
+
 		$courseInstructor = $USER->lastname.', '.$USER->firstname;
 		$course_instructor = $mform->addElement('text', 'course_instructor', get_string('course_instructor', 'local_metadata'), '');
 		if($contactinfo){
@@ -107,6 +108,7 @@ class general_form extends moodleform {
 		}   
 		$mform->addRule('course_faculty', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->setType('course_faculty', PARAM_TEXT);
+
 
 		// Program types
 		// TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
@@ -198,6 +200,7 @@ class general_form extends moodleform {
 		// If description does not exist in the extra table, display the default description.
 				
 		// Course summary
+
 		$default_description = $course->summary;
 		$course_description_editor = $mform->addElement('editor', 'course_description', get_string('course_description', 'local_metadata'));
 		if($courseinfo){
@@ -210,6 +213,8 @@ class general_form extends moodleform {
 		}
 		$mform->addRule('course_description', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->setType('course_description', PARAM_TEXT);      
+
+
 
 		$mform->closeHeaderBefore('course_format_header');
 
@@ -285,6 +290,7 @@ class general_form extends moodleform {
         global $course;
 		$mform->addElement('header', 'course_format_header', get_string('course_format_header', 'local_metadata'));
 		// Assessment
+
 		// TODO: MANIPULATE ASSESSMENT FIELD AS SPECIFIED
 		$course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'), '');
 		$mform->addRule('course_assessment', get_string('err_required', 'local_metadata'), 'required', null, 'client');
@@ -494,6 +500,7 @@ class general_form extends moodleform {
 			if(!empty($files)){
 				$file = reset($files); 
 				$content = $file->get_content();
+
 				
 				$parsed = str_getcsv($content, "\n");
 				foreach($parsed as $row){

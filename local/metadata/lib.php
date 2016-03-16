@@ -93,4 +93,13 @@ function create_mange_url($courseId, $anchor=null) {
 	return new moodle_url('/local/metadata/manage_psla_form.php', array('id' => $courseId), $anchor);
 }
 
+function get_assessment_type($value){
+	$assessmentTypeArray = array();
+	$assessmentTypeArray[0] = "Exam";
+	$assessmentTypeArray[1] = "Assignment";
+	$assessmentTypeArray[2] = "Lab";
+	$assessmentTypeArray[3] = "Lab Exam";
+	
+	return $assessmentTypeArray[$value];
+}
 ?>
