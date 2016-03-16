@@ -20,18 +20,18 @@ class syllabus_form extends moodleform {
 		
 		$mform->registerNoSubmitButton('syllubusgenerate');
 
- 		$mform->addElement('html','<form> generate syllabus: <input type="submit" 
-				name="syllubusgenerate" value="generate"/></form>'); 
+ 		$mform->addElement('html','<form> generate syllabus: 
+ 				<input type="submit" name="syllubusdisplay" value="preview"/>
+ 				<input type="submit" name="syllubusdownload" value="download"/></form>'); 
 		
 		
-		if(isset($_POST['syllubusgenerate'])){
+		if(isset($_POST['syllubusdownload'])){
 
-			$filename = $this->do_generate();
-			//$this->sample_pdf();
-/* 			$mform->addElement('html','<form> 					
-					click following link for download: <br>
-					<a href="#" download="'.$filename.'">download</a></form>'); */
-			
+			$filename = $this->do_generate(2);
+		}
+		if(isset($_POST['syllubusdisplay'])){
+		
+			$filename = $this->do_generate(1);
 		}
 
 		
@@ -51,7 +51,7 @@ class syllabus_form extends moodleform {
 		global $course, $courseId;
 	}
 	
-	function do_generate(){
+	function do_generate($optionno){
 		global $CFG, $DB, $USER;
 		global $course;
 		$sessionnumber = 0;
@@ -59,7 +59,12 @@ class syllabus_form extends moodleform {
 		$instructoremail = '';
 		$officehours = '';
 		$officelocation = '';
-		//$coursesessions = array();
+		$courseInstructor = '';
+		$phonenumber = 0;
+		$instructoremail = '';
+		$coursedescription = '';
+		
+//collecting relative data from database===============================================================================		
 		if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
 			$coursetopic = $existCourseInfo->coursetopic;
 			$coursedescription = $existCourseInfo->coursedescription;
@@ -71,7 +76,6 @@ class syllabus_form extends moodleform {
 				$phonenumber = $existInstructorInfo->phonenumber;
 			}
 			$sessionnumber = $DB->count_records('coursesession', array('courseid'=>$existCourseInfo->courseid));
-			//echo "<script type='text/javascript'>alert('$sessionnumber');</script>";
 			if($sessionnumber>0){
 				$coursesessions = $DB->get_records('coursesession', array('courseid'=>$existCourseInfo->courseid));			
 			}	
@@ -102,6 +106,8 @@ class syllabus_form extends moodleform {
 	$pdf->SetFont('times', 'B', 20);
 	// add a page
 	$pdf->AddPage();
+	$logo = '<p><img src="ualbertalogo.jpg" alt="test alt attribute" width="200" height="70" border="0" /></p>';
+	$pdf->writeHTMLCell(0, 0, '', '', $logo, 0, 1, 0, true, 'L', true);
 	$coursefullname = $course->shortname.': '.$course->fullname;
 	$pdf->Cell(0, 0, '', 0, 0, 'C');
 	$pdf->Ln();
@@ -121,7 +127,6 @@ class syllabus_form extends moodleform {
 EOD;
 	$pdf->SetFont('times', '', 12);
 	$pdf->writeHTMLCell(0, 0, '', '', $courselogistics, 0, 1, 0, true, 'C', true);
-	//$pdf->Write(5, $courselogistics, '', 0, 'C', true, 0, false, false, 0);	
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
@@ -133,7 +138,6 @@ EOD;
 EOD;
 	$pdf->SetFont('times', '', 12);
 	$pdf->writeHTMLCell(0, 0, '', '', $courselogistics, 0, 1, 0, true, 'C', true);
-	//$pdf->Write(0, $courselogistics, '', 0, 'C', true, 0, false, false, 0);
 	$pdf->AddPage();
 	
 	
@@ -173,6 +177,7 @@ EOD;
 	$pdf->SetFont('times', '', 10);
 	$objdes = 'The course is designed to develop the following knowledge, skills and attitudes:';
 	$pdf->Write(5, $objdes, '', 0, 'L', true, 0, false, false, 0);
+	if(isset($courseobjectives)){
 	$knowledge = <<<EOD
 		Knowledge
 		Students who successfully complete this course will be able to:
@@ -235,7 +240,7 @@ EOD;
 	}
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	
+	}
 	
 	
 //put course grading information into the pdf------------------------------------------
@@ -243,8 +248,9 @@ EOD;
 	$pdf->Write(5, 'Grading', '', 0, 'L', true, 0, false, false, 0);
 	$pdf->SetFont('times', '', 10);
 	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	$assessmenttable = '
-<table border="0.1" cellspacing="0.1" cellpadding="0.1" id="gradingtable">
+	if (isset($courseassessments)){
+		$assessmenttable = '
+	<table border="0.1" cellspacing="0.1" cellpadding="0.1" id="gradingtable">
     <tr>
         <th width="17%" align="center"><b>Title</b></th>
         <th width="10%" align="center"><b>Weight</b></th>
@@ -252,232 +258,65 @@ EOD;
 		<th width="17%" align="center"><b>Type</b></th>
 		<th width="40%" align="center"><b>Description</b></th>
     </tr>';	
-	foreach ($courseassessments as $courseassessment) {
-		$assessmenttable .= '<tr>
-				<td width="17%">'.$courseassessment->assessmentname.'</td>
-				<td width="10%" align="center">'.$courseassessment->assessmentweight.'%</td>
-				<td width="16%" align="center">'.$courseassessment->assessmentduedate.'</td>
-				<td width="17%">'.$courseassessment->type.'</td>	
-				<td width="40%">'.$courseassessment->description.'</td>	
-				</tr>';
+		foreach ($courseassessments as $courseassessment) {
+			$assessmenttable .= '<tr>
+					<td width="17%">'.$courseassessment->assessmentname.'</td>
+					<td width="10%" align="center">'.$courseassessment->assessmentweight.'%</td>
+					<td width="16%" align="center">'.$courseassessment->assessmentduedate.'</td>
+					<td width="17%">'.$courseassessment->type.'</td>	
+					<td width="40%">'.$courseassessment->description.'</td>	
+					</tr>';
+		}
+		$assessmenttable .= '</table>';
+		$pdf->writeHTML($assessmenttable, true, false, true, false, '');
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	}
-	$assessmenttable .= '</table>';
-	$pdf->writeHTML($assessmenttable, true, false, true, false, '');
-	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-
 	
 	
 //put course session information into the pdf------------------------------------------
-	$pdf->SetFont('times', 'B', 15);
-	$pdf->Write(5, 'Course Sessions', '', 0, 'L', true, 0, false, false, 0);
-	if($sessionnumber>0){
-		$pdf->SetFont('times', '', 10);
-		$sessionno = 1;
-		foreach ($coursesessions as $coursesession) {
-			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-			$courselectures = <<<EOD
-			<font size="10"><b>$sessionno: $coursesession->sessiontitle </b></font><br><hr>
-			<b>Date</b>: $coursesession->sessiondate <br>
-			<b>Length</b>: $coursesession->sessionlength <br>
-			<b>Type</b>: $coursesession->sessiontype <br>
-			<b>Description</b>:<br> $coursesession->sessiondescription <br>
-			<b>Guest teacher</b>: $coursesession->sessionguestteacher<hr>
+		$pdf->SetFont('times', 'B', 15);
+		$pdf->Write(5, 'Course Sessions', '', 0, 'L', true, 0, false, false, 0);
+		if($sessionnumber>0){
+			$pdf->SetFont('times', '', 10);
+			$sessionno = 1;
+			foreach ($coursesessions as $coursesession) {
+				$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+				$courselectures = <<<EOD
+				<font size="10"><b>$sessionno: $coursesession->sessiontitle </b></font><br><hr>
+				<b>Date</b>: $coursesession->sessiondate <br>
+				<b>Length</b>: $coursesession->sessionlength <br>
+				<b>Type</b>: $coursesession->sessiontype <br>
+				<b>Description</b>:<br> $coursesession->sessiondescription <br>
+				<b>Guest teacher</b>: $coursesession->sessionguestteacher<hr>
 EOD;
-			//$pdf->Write(8, $courselectures, '', 0, 'L', true, 0, false, false, 0);
-			$pdf->writeHTMLCell(0, 0, '', '', $courselectures, 0, 1, 0, true, '', true);
-			$sessionno ++;
+				$pdf->writeHTMLCell(0, 0, '', '', $courselectures, 0, 1, 0, true, '', true);
+				$sessionno ++;
+			}
 		}
-	}
-	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	
 	
 	
 //put course policy information into the pdf------------------------------------------
-	$pdf->SetFont('times', 'B', 15);
-	$pdf->Write(5, 'Policy', '', 0, 'L', true, 0, false, false, 0);
-	
-	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		$pdf->SetFont('times', 'B', 15);
+		$pdf->Write(5, 'Policy', '', 0, 'L', true, 0, false, false, 0);
+		
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 	
 	
 
-
-		
 	
-	
-	# terminat$courseInstructorur file with TCPDF output
-	$pdf->Output('syllubusgenerate.pdf', 'I'); 
-	$filename= "syllubusgenerate.pdf";
-	return $filename;
-	}
-	
-	
-	
-	
-	
-	function sample_pdf(){
-		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		
-		// set document information
-		$pdf->SetCreator(PDF_CREATOR);
-		$pdf->SetAuthor('Nicola Asuni');
-		$pdf->SetTitle('TCPDF Example 014');
-		$pdf->SetSubject('TCPDF Tutorial');
-		$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
-		
-		// set default header data
-		$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 014', PDF_HEADER_STRING);
-		
-		// set header and footer fonts
-		$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-		$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
-		
-		// set default monospaced font
-		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
-		
-		// set margins
-		$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-		$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-		$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
-		
-		// set auto page breaks
-		$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
-		
-		// set image scale factor
-		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
-		
-		// set some language-dependent strings (optional)
-		if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-			require_once(dirname(__FILE__).'/lang/eng.php');
-			$pdf->setLanguageArray($l);
+// terminat$courseInstructorur file with TCPDF output------------------------------------------
+		if ($optionno == 1){
+			$pdf->Output('syllubus.pdf', 'I'); 
+		}else if ($optionno == 2){
+			$pdf->Output('syllubus.pdf', 'D');
 		}
-		
-		// ---------------------------------------------------------
-		
-		// IMPORTANT: disable font subsetting to allow users editing the document
-		$pdf->setFontSubsetting(false);
-		
-		// set font
-		$pdf->SetFont('helvetica', '', 10, '', false);
-		
-		// add a page
-		$pdf->AddPage();
-		
-		/*
-		 It is possible to create text fields, combo boxes, check boxes and buttons.
-		 Fields are created at the current position and are given a name.
-		 This name allows to manipulate them via JavaScript in order to perform some validation for instance.
-		 */
-		
-		// set default form properties
-		$pdf->setFormDefaultProp(array('lineWidth'=>1, 'borderStyle'=>'solid', 'fillColor'=>array(255, 255, 200), 'strokeColor'=>array(255, 128, 128)));
-		
-		$pdf->SetFont('helvetica', 'BI', 18);
-		$pdf->Cell(0, 5, 'Example of Form', 0, 1, 'C');
-		$pdf->Ln(10);
-		
-		$pdf->SetFont('helvetica', '', 12);
-		
-		// First name
-		$pdf->Cell(35, 5, 'First name:');
-		$pdf->TextField('firstname', 50, 5);
-		$pdf->Ln(6);
-		
-		// Last name
-		$pdf->Cell(35, 5, 'Last name:');
-		$pdf->TextField('lastname', 50, 5);
-		$pdf->Ln(6);
-		
-		// Gender
-		$pdf->Cell(35, 5, 'Gender:');
-		$pdf->ComboBox('gender', 30, 5, array(array('', '-'), array('M', 'Male'), array('F', 'Female')));
-		$pdf->Ln(6);
-		
-		// Drink
-		$pdf->Cell(35, 5, 'Drink:');
-		//$pdf->RadioButton('drink', 5, array('readonly' => 'true'), array(), 'Water');
-		$pdf->RadioButton('drink', 5, array(), array(), 'Water');
-		$pdf->Cell(35, 5, 'Water');
-		$pdf->Ln(6);
-		$pdf->Cell(35, 5, '');
-		$pdf->RadioButton('drink', 5, array(), array(), 'Beer', true);
-		$pdf->Cell(35, 5, 'Beer');
-		$pdf->Ln(6);
-		$pdf->Cell(35, 5, '');
-		$pdf->RadioButton('drink', 5, array(), array(), 'Wine');
-		$pdf->Cell(35, 5, 'Wine');
-		$pdf->Ln(6);
-		$pdf->Cell(35, 5, '');
-		$pdf->RadioButton('drink', 5, array(), array(), 'Milk');
-		$pdf->Cell(35, 5, 'Milk');
-		$pdf->Ln(10);
-		
-		// Newsletter
-		$pdf->Cell(35, 5, 'Newsletter:');
-		$pdf->CheckBox('newsletter', 5, true, array(), array(), 'OK');
-		
-		$pdf->Ln(10);
-		// Address
-		$pdf->Cell(35, 5, 'Address:');
-		$pdf->TextField('address', 60, 18, array('multiline'=>true, 'lineWidth'=>0, 'borderStyle'=>'none'), array('v'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', 'dv'=>'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'));
-		$pdf->Ln(19);
-		
-		// Listbox
-		$pdf->Cell(35, 5, 'List:');
-		$pdf->ListBox('listbox', 60, 15, array('', 'item1', 'item2', 'item3', 'item4', 'item5', 'item6', 'item7'), array('multipleSelection'=>'true'));
-		$pdf->Ln(20);
-		
-		// E-mail
-		$pdf->Cell(35, 5, 'E-mail:');
-		$pdf->TextField('email', 50, 5);
-		$pdf->Ln(6);
-		
-		// Date of the day
-		$pdf->Cell(35, 5, 'Date:');
-		$pdf->TextField('date', 30, 5, array(), array('v'=>date('Y-m-d'), 'dv'=>date('Y-m-d')));
-		$pdf->Ln(10);
-		
-		$pdf->SetX(50);
-		
-		// Button to validate and print
-		$pdf->Button('print', 30, 10, 'Print', 'Print()', array('lineWidth'=>2, 'borderStyle'=>'beveled', 'fillColor'=>array(128, 196, 255), 'strokeColor'=>array(64, 64, 64)));
-		
-		// Reset Button
-		$pdf->Button('reset', 30, 10, 'Reset', array('S'=>'ResetForm'), array('lineWidth'=>2, 'borderStyle'=>'beveled', 'fillColor'=>array(128, 196, 255), 'strokeColor'=>array(64, 64, 64)));
-		
-		// Submit Button
-		$pdf->Button('submit', 30, 10, 'Submit', array('S'=>'SubmitForm', 'F'=>'http://localhost/printvars.php', 'Flags'=>array('ExportFormat')), array('lineWidth'=>2, 'borderStyle'=>'beveled', 'fillColor'=>array(128, 196, 255), 'strokeColor'=>array(64, 64, 64)));
-		
-		// Form validation functions
-		$js = <<<EOD
-function CheckField(name,message) {
-    var f = getField(name);
-    if(f.value == '') {
-        app.alert(message);
-        f.setFocus();
-        return false;
-    }
-    return true;
-}
-function Print() {
-    if(!CheckField('firstname','First name is mandatory')) {return;}
-    if(!CheckField('lastname','Last name is mandatory')) {return;}
-    if(!CheckField('gender','Gender is mandatory')) {return;}
-    if(!CheckField('address','Address is mandatory')) {return;}
-    print();
-}
-EOD;
-		
-		// Add Javascript code
-		$pdf->IncludeJS($js);
-		
-		// ---------------------------------------------------------
-		
-		//Close and output PDF document
-		$pdf->Output('example_014.pdf', 'I');
 	}
+	
 }
 
 ?>
