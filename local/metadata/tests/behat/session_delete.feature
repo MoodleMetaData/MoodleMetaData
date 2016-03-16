@@ -27,13 +27,14 @@ Feature: Session tab
     And "sessiontitle[1]" "text" should not exist
     
   
-  @javascript
+  @javascript @current
   Scenario: Deleting session after saving
     Given I create 2 sessions
     And I set the following fields to these values:
       | sessiontitle[0] | First title |
       | sessiontitle[1] | Second title |
     And I press "Save changes"
+    And I press "Second title"
     When I press "deleteSession[1]"
     And I press "Save changes"
     Then the following fields match these values:
