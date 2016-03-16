@@ -39,9 +39,9 @@
     </TABLE>
     <TABLE NAME="coursereadings" COMMENT="readings info include url">
       <FIELDS>
+		<FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+		<FIELD NAME="readingname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="readingurl" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="readingname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>

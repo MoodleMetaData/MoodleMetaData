@@ -51,6 +51,20 @@ function get_course_learning_objectives() {
     return $DB->get_records_list('learningobjectives', 'id', $wantedIds);
 }
 
+function get_course_readings() {
+    global $DB;
+
+    $courseId = get_course_id();
+    $coursereadings = $DB->get_records('coursereadings', array('courseid'=>$courseId), '', 'id');
+    
+    $wantedIds = array();
+    foreach ($coursereadings as $coursereading) {
+        $wantedIds[] = $coursereading->id;
+    }
+    
+    return $DB->get_records_list('coursereadings', 'id', $wantedIds);
+}
+
 function get_table_data_for_course($table) {
     global $DB;
 
