@@ -10,7 +10,7 @@ class university_form extends moodleform {
 		//Form Elements
 		// Rich text editor
 		$pform->addElement('editor', 'university_editor', get_string('university_editor', 'local_metadata'));
-		$pform->setType('policy_editor', PARAM_RAW);
+		$pform->setType('university_editor', PARAM_TEXT);
 		
 		//Save Changes Button
 		$pform->addElement('submit', 'submit_policy', get_string('submit_policy', 'local_metadata'));
@@ -28,14 +28,16 @@ class university_form extends moodleform {
 		global $DB, $CFG, $USER;
 		$policyInfo = new stdClass();
 		
-		$policyInfo->facultyid = 1;
-		$policyInfo->policytext = $data->policy_editor;
+		$policyInfo->category = -1;
+		$policyInfo->policy = $data->university_editor['text'];
 		
-		if ($existsRecord = $DB->get_record('facultypolicy', array('facultyid' => $facultyid, 'policytext' => $policyText))) {
+		print_r ($policyInfo);
+		if ($existsRecord = $DB->get_record('syllabuspolicy', array('category' => $policyInfo->category))) {
 			$policyInfo->id = $existsRecord->id;
-			$updatePolicy = $DB->update_record('facultypolicy', $policyInfo, false);
+			$updatePolicy = $DB->update_record('syllabuspolicy', $policyInfo, false);
 		} else {
-			$createPolicy = $DB->instert_record('facultypolicy', $policyInfo, false);
+			$createPolicy = $DB->insert_record('syllabuspolicy', $policyInfo, false);
+			print_r ($createPolicy);
 		}
 	}
 }
