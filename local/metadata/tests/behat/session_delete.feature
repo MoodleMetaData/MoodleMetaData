@@ -20,22 +20,22 @@ Feature: Session tab
     And I set the following fields to these values:
       | sessiontitle[0] | First title |
       | sessiontitle[1] | Second title |
-    When I press "deleteSession[0]"
+    When I press "delete_session[0]"
     And I press "Save changes"
     Then the following fields match these values:
       | sessiontitle[0] | Second title |
     And "sessiontitle[1]" "text" should not exist
     
   
-  @javascript @current
+  @javascript
   Scenario: Deleting session after saving
     Given I create 2 sessions
     And I set the following fields to these values:
       | sessiontitle[0] | First title |
       | sessiontitle[1] | Second title |
     And I press "Save changes"
-    And I press "Second title"
-    When I press "deleteSession[1]"
+    And I expand all fieldsets
+    When I press "delete_session[1]"
     And I press "Save changes"
     Then the following fields match these values:
       | sessiontitle[0] | First title |
