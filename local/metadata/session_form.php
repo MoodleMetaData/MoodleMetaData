@@ -4,6 +4,7 @@ require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
 require_once 'lib.php';
+require_once 'metadata_form.php';
 require_once 'recurring_element_parser.php';
 
 
@@ -20,7 +21,7 @@ require_once 'recurring_element_parser.php';
  *
  *
  */
-class session_form extends moodleform {
+class session_form extends metadata_form {
     const NUM_PER_PAGE = 10;
     const TOPIC_SEPARATOR = '&|&|';
     const DATE_FROM_FROM_FILE = 'Y-m-d';
@@ -245,6 +246,8 @@ class session_form extends moodleform {
      * @see lib/moodleform#definition()
      */
     function definition() {
+        parent::definition();
+        
         $sessions = $this->_customdata['sessions'];
         
         $page_num = optional_param('page', 0, PARAM_INT);
@@ -275,7 +278,6 @@ class session_form extends moodleform {
 		$mform->addElement('filepicker', 'uploaded_sessions', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
 		$mform->addElement('submit', 'upload_sessions', get_string('upload_sessions', 'local_metadata'));
 		$mform->closeHeaderBefore('sessions_list_add_element');
-		$mform->closeHeaderBefore('sessiontitle[0]');
 	}
 
     /**
@@ -288,7 +290,10 @@ class session_form extends moodleform {
         $mform = $this->_form;
 
         $repeatarray = array();
+	    $repeatarray[] = $mform->createElement('header', 'sessionheader');
+        
         $repeatarray[] = $mform->createElement('text', 'sessiontitle', get_string('session_title', 'local_metadata'));
+        
         $repeatarray[] = $mform->createElement('textarea', 'sessiondescription', get_string('session_description', 'local_metadata'));
         
         $repeatarray[] = $mform->createElement('text', 'sessionguestteacher', get_string('session_guest_teacher', 'local_metadata'));
@@ -341,7 +346,8 @@ class session_form extends moodleform {
         
         
         $repeatarray[] = $mform->createElement('submit', 'deleteSession', get_string('deletesession', 'local_metadata'));
-        
+        $mform->registerNoSubmitButton('delete_topics');
+        $this->_recurring_nosubmit_buttons[] = 'delete_topics';
         
         
         // Add needed hidden elements
@@ -349,6 +355,7 @@ class session_form extends moodleform {
         $repeatarray[] = $mform->createElement('hidden', 'coursesession_id', -1);
         $repeatarray[] = $mform->createElement('hidden', 'was_deleted', false);
         
+        $repeatoptions['sessionheader']['default'] = get_string('new_session_header', 'local_metadata');
         
         // Moodle complains if some elements aren't given a type
         $repeatoptions['sessiontitle']['type'] = PARAM_TEXT;
@@ -361,23 +368,7 @@ class session_form extends moodleform {
 
         // Add the repeating elements to the form
         $this->repeat_elements($repeatarray, $numSessions,
-            $repeatoptions, 'sessions_list', 'sessions_list_add_element', 1, get_string('add_session', 'local_metadata'), true);
-    }
-    
-    
-
-    /**
-     *  This function MUST be called, and return true, before get_data is called on this form.
-     *    The need for this function is because of how noSubmitButton is handled terribly in moodle
-     *    and using it will cause a warning, that causes the tests to fail.
-     *
-     *  @return true iff the actual submit button was pressed
-     */
-    public function ensure_was_submitted() {
-        return $this->_form->getSubmitValue('submitbutton') !== null ||
-               $this->_form->getSubmitValue('previousPage') !== null ||
-               $this->_form->getSubmitValue('nextPage') !== null ||
-               $this->sessions_were_uploaded();
+            $repeatoptions, 'sessions_list', 'sessions_list_add_element', 1, get_string('add_session', 'local_metadata'));
     }
 
     /**
@@ -397,16 +388,18 @@ class session_form extends moodleform {
             // Add the help button for sessionguestteacher
             $mform->addHelpButton('sessionguestteacher'.$index, 'session_guest_teacher', 'local_metadata');
             
+            if ($session->sessiontitle == '') {
+                $mform->setDefault('sessionheader'.$index, get_string('unnamed_session', 'local_metadata'));
+            } else {
+                $mform->setDefault('sessionheader'.$index, $session->sessiontitle);
+            }
+            
             // Easiest way to set the initial data is to set the default for each session in sessions
             $mform->setDefault('coursesession_id'.$index, $session->id);
-            
             $mform->setDefault('sessiontitle'.$index, $session->sessiontitle);
-            
             $mform->setDefault('sessionguestteacher'.$index, $session->sessionguestteacher);
-            
             $mform->setDefault('sessiondescription'.$index, $session->sessiondescription);
             $mform->setDefault('sessiondate'.$index, $session->sessiondate);
-
             $mform->setDefault('sessiondate'.$index, $session->sessiondate);
 
             // Handled specially, because the default must be an int, which needs to be translated from string in database
@@ -418,8 +411,6 @@ class session_form extends moodleform {
             $mform->setDefault('sessionlength'.$index, array_search($session->sessionlength, $lengths));
 
             $this->setup_data_from_database_for_session($mform, $index, $session);
-
-
             $key += 1;
         }
     }
@@ -507,6 +498,7 @@ class session_form extends moodleform {
             if ($deleted or $mform->getElementValue('was_deleted'.$index) == true) {
                 // If deleted, just remove the visual elements
                     // Will not save to the database until the user presses submit
+                $mform->removeElement('sessionheader'.$index);
                 $mform->removeElement('sessiontitle'.$index);
                 $mform->removeElement('sessiondescription'.$index);
                 $mform->removeElement('sessionguestteacher'.$index);
@@ -532,6 +524,12 @@ class session_form extends moodleform {
                 $mform->getElement('was_deleted'.$index)->setValue(true);
             } else {
                 $this->update_topics($mform, $index);
+                
+                // New element, so expand header by default
+                if ($mform->getElement('coursesession_id'.$index)->getValue() == -1) {
+                    $mform->setExpanded('sessionheader'.$index);
+                }
+                
             }
         }
     }
@@ -556,6 +554,9 @@ class session_form extends moodleform {
         
 		// Delete Button
 		$groupitems[] = $mform->createElement('submit', 'delete_topics', get_string('delete'));
+        $this->_recurring_nosubmit_buttons[] = 'create_topic';
+        $mform->registerNoSubmitButton('create_topic');
+        
 		$repeatarray[] = $mform->createElement('group', 'manage_topics_group', get_string('manage_topics', 'local_metadata'), $groupitems, null, false);
         
         $repeatoptions['delete_topics']['disabledif'] = array('all_topics', 'noitemselected');
@@ -564,7 +565,9 @@ class session_form extends moodleform {
         $groupitems = array();
 		$groupitems[] = $mform->createElement('text', 'new_topic');
 		$groupitems[] = $mform->createElement('submit', 'create_topic', get_string('add_topic', 'local_metadata'));
-        
+        $this->_recurring_nosubmit_buttons[] = 'deleteSession';
+        $mform->registerNoSubmitButton('deleteSession');
+                
         $repeatarray[] = $mform->createElement('group', 'add_topic_group', '', $groupitems, null, false);
     }
     
