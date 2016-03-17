@@ -156,16 +156,16 @@ class behat_metadata_add extends behat_base {
     
     
     /**
-     * Creates N course assessments. Nothing is filled in for them
+     * Creates N course assessments through the database
      *
-     * @Given /^I create the following assessments for course "([^"]*)":$/
+     * @Given /^the following assessments for course "([^"]*)" exist:$/
      *
      * @param TableNode $data Each row will be a assessments. Should have at least the title. Everything else is optional
      * @param string $course_short The short name of the course
      *
      * @return Given[]
      */
-    public function i_create_assessments_for_course($course_short, TableNode $table) {
+    public function the_following_assessments_for_course_exist($course_short, TableNode $table) {
         global $DB;
         
         if (!$course_id = $DB->get_field('course', 'id', array('shortname' => $course_short))) {
@@ -215,6 +215,46 @@ class behat_metadata_add extends behat_base {
             $sessionfield = 'sessiontitle['.$i.']';
             $formattedTitle = sprintf($title, $i);
             $steps[] = new Given('I set the field "'.$sessionfield.'" to "'.$formattedTitle.'"');
+        }
+        
+        return $steps;
+    }
+    
+    /**
+     * Creates N course assessments. Nothing is filled in for them
+     *
+     * @Given /^I create (\d+) assessments$/
+     *
+     * @param int $N The number of assessments to create
+     *
+     * @return Given[]
+     */
+    public function i_create_assessments($N) {
+        $steps = array();
+        for ($i = 0; $i < $N; $i++) {
+            $steps[] = new Given('I press "assessment_list_add_element"');
+        }
+        
+        return $steps;
+    }
+    
+    /**
+     * Creates N course assessments. Each will have a title with the title formatted with the session number
+     *
+     * @Given /^I create (\d+) assessments with title "([^"]*)"$/
+     *
+     * @param int $N The number of assessments to create
+     * @param string $title The value of the title
+     *
+     * @return Given[]
+     */
+    public function i_create_assessments_with_title($N, $title) {
+        $steps = array();
+        for ($i = 0; $i < $N; $i++) {
+            $steps[] = new Given('I press "assessment_list_add_element"');
+            $assessmentfield = 'assessmentname['.$i.']';
+            $formattedTitle = sprintf($title, $i);
+            $steps[] = new Given('I set the field "'.$assessmentfield.'" to "'.$formattedTitle.'"');
         }
         
         return $steps;
