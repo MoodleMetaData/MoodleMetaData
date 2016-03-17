@@ -4,9 +4,12 @@ require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
 require_once 'lib.php';
+require_once 'metadata_form.php';
 require_once 'recurring_element_parser.php';
 
-class assessment_form extends moodleform {
+class assessment_form extends metadata_form {
+    const NUM_PER_PAGE = 10;
+    
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
@@ -100,11 +103,56 @@ class assessment_form extends moodleform {
             $elementArray[] = $learningObjectivesEl;
         }
 		/////////////////////////////////////////////////
+        
+        $elementArray[] = $mform->createElement('submit', 'delete_assessment', get_string('deleteassessment', 'local_metadata'));
+        $mform->registerNoSubmitButton('delete_assessment');
+        $this->_recurring_nosubmit_buttons[] = 'delete_assessment';
 		
 		$this->repeat_elements($elementArray, $assessmentCount,
             $optionsArray, 'assessment_list', 'assessment_list_add_element', 1, get_string('add_assessment', 'local_metadata'));
 		
 	}
+    
+     function definition_after_data() {
+        parent::definition_after_data();
+        $mform = $this->_form;
+        
+        $numRepeated = $mform->getElementValue('assessment_list');
+        
+        // Go through each session, and delete elements for ones that should be deleted
+        for ($key = 0; $key < $numRepeated; ++$key) {
+            $index = '['.$key.']';
+            $deleted = $mform->getSubmitValue('delete_assessment'.$index);
+            
+            // If a button is pressed, then doing $mform->getSubmitValue(buttonId) will return a non-null value
+                // However, if other buttons are subsequently pressed, then $mform->getSubmitValue(buttonId) will return null
+                // So use the element 'was_deleted' for that repeated element to store if has been deleted
+            if ($deleted or $mform->getElementValue('was_deleted'.$index) == true) {
+                // If deleted, just remove the visual elements
+                    // Will not save to the database until the user presses submit
+                $mform->removeElement('general_header'.$index);
+                $mform->removeElement('assessmentname'.$index);
+                $mform->removeElement('type'.$index);
+                $mform->removeElement('assessmentprof'.$index);
+                $mform->removeElement('assessmentduedate'.$index);
+
+                $mform->removeElement('description'.$index);
+                $mform->removeElement('gdescription'.$index);
+
+                $mform->removeElement('assessmentweight'.$index);
+                
+                
+                $learningObjectiveTypes = get_learning_objective_types();
+                foreach ($learningObjectiveTypes as $learningObjectiveType) {
+                    $mform->removeElement('learning_objective_'.$learningObjectiveType.$index);
+                }
+                
+                $mform->removeElement('delete_assessment'.$index);
+                
+                $mform->getElement('was_deleted'.$index)->setValue(true);
+            }
+        }
+    }
 	
 	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
 	function validation($data, $files) {
@@ -114,10 +162,23 @@ class assessment_form extends moodleform {
 	
 	function save_assessment_list($data){
 		global $DB;
-		$changed = array('assessmentname', 'type', 'assessmentprof', 'description', 'gdescription', 'assessmentweight');
-		$assessment_parser = new recurring_element_parser('courseassessment', 'assessment_list', $changed, null);
+		$changed = array('assessmentname', 'type', 'assessmentprof', 'description', 'gdescription', 'assessmentweight', 'was_deleted');
+		$assessment_parser = new recurring_element_parser('courseassessment', 'assessment_list', $changed);
 		
 		$tuples = $assessment_parser->getTuplesFromData($data);
+        
+        foreach ($tuples as $tupleKey => $tuple) {
+            // TODO: Should also delete all the relations for each assessment
+            
+            // If the tuple has been deleted, then remove it from the database
+            if ($tuple['was_deleted'] == true) {
+                $assessment_parser->deleteTupleFromDB($tuple);
+                
+                // Finally, remove it from the tuples that will be saved, because otherwise will just be resaved anyway
+                unset($tuples[$tupleKey]);
+            }
+        }
+        
 		print_object($tuples);
 		$assessment_parser -> saveTuplesToDB($tuples);
 	}

@@ -138,7 +138,7 @@ $string['assessment_due'] = 'Date: ';
 $string['assessment_duration'] = 'Duration: ';
 $string['assessment_due'] = 'Due Date: ';
 $string['general_header'] = 'General';
-
+$string['deleteassessment'] = 'Delete Assessment';
 
 // Metadata manager strings
 $string['manage_knowledge'] = 'Knowledge Attributes: ';
