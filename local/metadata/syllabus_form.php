@@ -70,7 +70,6 @@ class syllabus_form extends moodleform {
 		$phonenumber = 0;
 		$instructoremail = 'To be assigned';
 		$coursedescription = '';
-		
 //collecting relative data from database===============================================================================		
 		if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
 			$coursetopic = $existCourseInfo->coursetopic;
@@ -82,38 +81,36 @@ class syllabus_form extends moodleform {
 				$instructoremail =  $existInstructorInfo->email;
 				$phonenumber = $existInstructorInfo->phonenumber;
 			}
+		}
+		$sessionnumber = $DB->count_records('coursesession', array('courseid'=>$course->id));
+		if($sessionnumber>0){
+			$coursesessions = $DB->get_records('coursesession', array('courseid'=>$course->id), $sort='sessiondate');
+		}
 			
-			$sessionnumber = $DB->count_records('coursesession', array('courseid'=>$existCourseInfo->courseid));
-			if($sessionnumber>0){
-				$coursesessions = $DB->get_records('coursesession', array('courseid'=>$existCourseInfo->courseid));			
-			}	
+		$readingnumber = $DB->count_records('coursereadings', array('courseid'=>$course->id));
+		if($readingnumber>0){
+			$coursereadings = $DB->get_records('coursereadings', array('courseid'=>$course->id));
+		}
 			
-			$readingnumber = $DB->count_records('coursereadings', array('courseid'=>$existCourseInfo->courseid));
-			if($readingnumber>0){
-				$coursereadings = $DB->get_records('coursereadings', array('courseid'=>$existCourseInfo->courseid));
-			}
+		$objectivegnumber = $DB->count_records('courseobjectives', array('courseid'=>$course->id));
+		if($objectivegnumber>0){
+			$courseobjectives = $DB->get_records('courseobjectives', array('courseid'=>$course->id));
+		}
 			
-			$objectivegnumber = $DB->count_records('coursereadings', array('courseid'=>$existCourseInfo->courseid));
-			if($objectivegnumber>0){				
-				$courseobjectives = $DB->get_records('courseobjectives', array('courseid'=>$existCourseInfo->courseid));	
-			}
-			
-			$assessmentnumber = $DB->count_records('courseassessment', array('courseid'=>$existCourseInfo->courseid));
-			if($assessmentnumber>0){
-				$courseassessments = $DB->get_records('courseassessment', array('courseid'=>$existCourseInfo->courseid));
-			}
-
+		$assessmentnumber = $DB->count_records('courseassessment', array('courseid'=>$course->id));
+		if($assessmentnumber>0){
+			$courseassessments = $DB->get_records('courseassessment', array('courseid'=>$course->id), $sort='assessmentduedate');
 		}
 		
 
 		
 //start pdf generation===============================================================================		
 		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-		$pdf->SetCreator(PDF_CREATOR);
+/* 		$pdf->SetCreator(PDF_CREATOR);
 		$pdf->SetAuthor('Olaf Lederer');
 		$pdf->SetTitle('Course Syllabus');
 		$pdf->SetSubject('Syllabus PDF');
-		$pdf->SetKeywords('TCPDF, PDF, Course, Syllubs');
+		$pdf->SetKeywords('TCPDF, PDF, Course, Syllubs'); */
 		 
 		// remove default header/footer
 		$pdf->setPrintHeader(false);
@@ -162,7 +159,7 @@ EOD;
 //put course overview information into the pdf------------------------------------------
 		if($coursedescription != ''){
 			$decripthtml =  '<h1>Course description</h1>
-					<font size="11">'.$coursedescription.'<font>';
+					<font size="11%">'.$coursedescription.'<font>';
 			$pdf->writeHTML($decripthtml, true, false, true, false, '');
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
@@ -173,7 +170,7 @@ EOD;
 			$readinghtml = '<b><h1>Course Readings</h1></b><ul>';
 			foreach ($coursereadings as $coursereading) {
 				$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-				$readinghtml.= '<font size="11"><li>
+				$readinghtml.= '<font size="11%"><li>
 				'.$coursereading->readingname.'<br>
 				<a href="url">'.$coursereading->readingurl.'</a></li></font>';
 			}
@@ -187,14 +184,14 @@ EOD;
 //put course objective information into the pdf------------------------------------------
 		if(isset($courseobjectives)){
 			$objhtml = '<b><h1>Course Objectives</h1></b>
-					<font size="11">The course is designed to develop the following knowledge, skills and attitudes:</font>';
+					<font size="11%">The course is designed to develop the following knowledge, skills and attitudes:</font>';
 			
 			
 	//Knowledge learning objectives ===========================================================================================
 			$count =0;
 			$kobj = '<b><h3>Knowledge</h3><br>
 					<h4>Students who successfully complete this course will be able to:</h4></b>
-					<br><font size="11"><ul>';
+					<br><font size="11%"><ul>';
 			foreach ($courseobjectives as $courseobjective) {
 				if($thisobj = $DB->get_record('learningobjectives', array('id'=>$courseobjective->objectiveid))){
 					if($thisobj->objectivetype == 'Knowledge'){
@@ -213,7 +210,7 @@ EOD;
 			$count =0;
 			$sobj = '<b><h3>Skill</h3><br>
 					<h4>Students who successfully complete this course will be able to:</h4></b>
-					<br><font size="11"><ul>';
+					<br><font size="11%"><ul>';
 			foreach ($courseobjectives as $courseobjective) {
 				if($thisobj = $DB->get_record('learningobjectives', array('id'=>$courseobjective->objectiveid))){
 					if($thisobj->objectivetype == 'Skill'){
@@ -233,7 +230,7 @@ EOD;
 			$count =0;
 			$aobj = '<b><h3>Atittude</h3><br>
 					<h4>Students who successfully complete this course will be able to:</h4></b>
-					<br><font size="11"><ul>';
+					<br><font size="11%"><ul>';
 			foreach ($courseobjectives as $courseobjective) {
 				if($thisobj = $DB->get_record('learningobjectives', array('id'=>$courseobjective->objectiveid))){
 					if($thisobj->objectivetype == 'Atittude'){
@@ -254,7 +251,8 @@ EOD;
 	
 //put course grading information into the pdf------------------------------------------
 		if (isset($courseassessments)){
-			$assessmenthtml = '<b><h1>Grading</h1></b><br><font size="10">';
+			$asstype = array('Exam','Assignment','Lab','Lab Exam');
+			$assessmenthtml = '<b><h1>Grading</h1></b><br><font size="11%">';
 			$assessmenthtml .= '
 		<table border="0.1" cellspacing="0.1" cellpadding="0.1" id="gradingtable">
 		<tr>
@@ -270,7 +268,7 @@ EOD;
 						<td width="17%">'.$courseassessment->assessmentname.'</td>
 						<td width="10%" align="center">'.$courseassessment->assessmentweight.'%</td>
 						<td width="16%" align="center">'.$assessmentduedate.'</td>
-						<td width="17%" align="center">'.$courseassessment->type.'</td>	
+						<td width="17%" align="center">'.$asstype[(int)$courseassessment->type].'</td>	
 						<td width="40%">'.$courseassessment->description.'</td>	
 						</tr>';
 			}
@@ -294,9 +292,9 @@ EOD;
 				}
 				$sessiondate = $this->GetTimeStamp($coursesession->sessiondate);
 				$sessionhtml.= '
-				<font size="12"><b>'.$sessionno.'</b>:'. $coursesession->sessiontitle.'</font>
+				<font size="12%"><b>'.$sessionno.'</b>:'. $coursesession->sessiontitle.'</font>
 				<hr>
-				<font size="11"><b>Date</b>:'. $sessiondate.' <br>
+				<font size="11%"><b>Date</b>:'. $sessiondate.' <br>
 				<b>Length</b>:'. $coursesession->sessionlength .'<br>
 				<b>Type</b>:'. $coursesession->sessiontype .'<br>
 				<b>Description</b>:<br>'. $coursesession->sessiondescription .'<br>
@@ -312,8 +310,17 @@ EOD;
 	
 //put course policy information into the pdf------------------------------------------
 		$policyhtml = '<b><h1>Policy</h1></b>';
+		//add school policy	
+		if($Universitypolicy = $DB->get_record('syllabuspolicy', array('category'=>-1))){
+			$policyhtml.='<h3>School Policy</h3><br><font size="10%">'.$Universitypolicy->policy.'<font>';
+		}
 		
-		
+		$coursemaininfo = $DB->get_record('course', array('id'=>$course->id));
+		if($facultypolicy = $DB->get_record('syllabuspolicy', array('category'=>$coursemaininfo->category))){
+		//add faculty policy	
+			 $policyhtml.='<br><h3>Faculty Policy</h3><br>
+			 <font size="11%">'.$facultypolicy->policy.'<font>';
+		}
 		
 		$pdf->writeHTML($policyhtml, true, false, true, false, '');
 		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
