@@ -13,15 +13,15 @@ $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = "Univeristy Syllabus Policy";
 $PAGE->set_heading($heading);
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/manage_psla_form.php');
+$PAGE->set_url($CFG->wwwroot.'/local/metadata/universityview.php');
 
-$base_url = new moodle_url('/local/metadata/manage_psla_form.php', null, null);
+$base_url = new moodle_url('/local/metadata/universityview.php', null, null);
 
 $university_form = new university_form($base_url);
 
 // Hande Button events for policy tab
 if ($data = $university_form->get_data()) {
-	//policy_form::save_data($data);
+	university_form::save_data($data);
 	redirect($base_url);
 }
 
