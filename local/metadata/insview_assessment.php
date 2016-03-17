@@ -27,6 +27,7 @@ $PAGE->set_heading($heading);
 // TODO: Improve how this is done
 $PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_assessment.php', array('id' => $courseId));
 $PAGE->requires->css('/local/metadata/insview_style.css');
+$PAGE->requires->css('/local/metadata/assessment_element_style.css');
 
 // Create url
 $base_url = create_insview_url('assessment', $courseId);
