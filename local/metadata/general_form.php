@@ -24,6 +24,7 @@ class general_form extends moodleform {
 		} else {
 			$contactinfo = NULL;
 		}
+		
 		$coursereadings = get_course_readings();
 
 		$reading_list = array();
@@ -250,7 +251,7 @@ class general_form extends moodleform {
 		$_array[] = $mform->createElement('static', 'course_reading_desc', '', get_string('course_reading_desc', 'local_metadata'));
 		$_array[] = $mform->createElement('text', 'readingname_option', get_string('readingname_label', 'local_metadata') ,'size="60"');
 		$_array[] = $mform->createElement('text', 'readingurl_option', get_string('readingurl_label', 'local_metadata') ,'size="60"');
-		$_array[] = $mform->createElement('submit', 'delete_req_reading', get_string('delete'));
+		$_array[] = $mform->createElement('submit', 'delete_req_reading', get_string('delete_reading_label', 'local_metadata'));
 		$_array[] = $mform->createElement('hidden', 'reading_id', -1);
 
 		$_options = array();       
@@ -287,18 +288,25 @@ class general_form extends moodleform {
 	 */
 	private function setup_format($mform, $courseinfo){
 		global $CFG, $DB, $USER; //Declare our globals for use
-        global $course;
+        global $courseId;
 		$mform->addElement('header', 'course_format_header', get_string('course_format_header', 'local_metadata'));
+		$mform->addHelpButton('course_format_header', 'course_format_header', 'local_metadata');
+		
 		// Assessment
-
 		// TODO: MANIPULATE ASSESSMENT FIELD AS SPECIFIED
 		$course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'), '');
 		$mform->addRule('course_assessment', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->addRule('course_assessment', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
-		if($courseinfo){
-			$mform->setDefault('course_assessment', $courseinfo->assessmentnumber);
+		$courseassessment = $DB->count_records('courseassessment', array('courseid'=>$courseId));
+		if($courseassessment != 0){
+			$mform->setDefault('course_assessment', $courseassessment);
+		} else {
+			if($courseinfo){
+				$mform->setDefault('course_assessment', $courseinfo->assessmentnumber);
+			}
 		}
+
 		$mform->setType('course_assessment', PARAM_INT);
 
 		// Session
@@ -307,9 +315,15 @@ class general_form extends moodleform {
 		$mform->addRule('course_session', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->addRule('course_session', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
-		if($courseinfo){
-			$mform->setDefault('course_session', $courseinfo->sessionnumber);
+		$coursesession = $DB->count_records('coursesession', array('courseid'=>$courseId));
+		if($coursesession != 0){
+			$mform->setDefault('course_session', $coursesession);
+		} else {
+			if($courseinfo){
+				$mform->setDefault('course_session', $courseinfo->sessionnumber);
+			}
 		}
+
 		$mform->setType('course_session', PARAM_INT);
 		
 		$mform->closeHeaderBefore('course_obj_header');
@@ -336,7 +350,7 @@ class general_form extends moodleform {
 	 * @param $name		objective name
 	 * return $obj		learning objective object
 	 */
-	function get_learning_obj($id, $name){
+	private function get_learning_obj($id, $name){
 		$obj = new stdClass();
 		$obj->id = $id;
 		$obj->name = $name;
@@ -439,7 +453,7 @@ class general_form extends moodleform {
 	 * @param $type		learning objective type
 	 * @patam void
 	 */
-	function insert_course_objective($name, $type){
+	private function insert_course_objective($name, $type){
 		global $DB, $CFG, $USER; //Declare them if you need them
 		global $course, $courseId;  
 		$info = new stdClass();
@@ -452,7 +466,7 @@ class general_form extends moodleform {
 		$cobj->courseid = $course->id;
 		$insert_courseobj = $DB->insert_record('courseobjectives', $cobj, true, false);
 	}
-	
+		
 	/**
 	 * Upload course objectives.
 	 * @param $mform	form definition
@@ -518,7 +532,7 @@ class general_form extends moodleform {
 	 * @param $url	reading's url
 	 * @return void
 	 */
-	function insert_readings($name, $url){
+	private function insert_readings($name, $url){
 		global $DB, $CFG, $USER; //Declare them if you need them
 		global $course, $courseId;
 
@@ -549,6 +563,46 @@ class general_form extends moodleform {
 	}
 	
 	/**
+	 * Insert a record to course format (session or assessment)
+	 * @param $course_format	either 'session' or 'assessment'
+	 * @return void
+	 */
+	private function insert_number_of_course_format($course_format){
+		global $DB, $CFG, $USER; //Declare them if you need them
+		global $courseId;
+		$format = new stdClass();
+		$format->courseid = $courseId;
+		$insert_format = $DB->insert_record($course_format, $format, true, false);
+	}
+	
+	/**
+	 * Edit the number of course session or assessment.
+	 * @param $course_format				either 'session' or 'assessment'
+	 * @param $new_course_format_number		a new number of session or assessment
+	 * @return void
+	 */
+	private function edit_course_format($course_format, $new_course_format_number){
+		global $DB, $CFG, $USER; //Declare them if you need them
+		global $course, $courseId;
+		
+		$current_course_format = $DB->count_records($course_format, array('courseid'=>$courseId));
+		if($new_course_format_number > $current_course_format){
+			// insert new record
+			$new_add = $new_course_format_number - $current_course_format;
+			for($i = 0; $i < $new_add; $i++){
+				$this->insert_number_of_course_format($course_format);
+			}			
+		} else {
+			// delete the latest record
+			$number_deleted = $current_course_format - $new_course_format_number;
+			for($i = 0; $i < $number_deleted; $i++){
+				$exist_sessions = get_table_data_for_course($course_format);
+				$delete_session = $DB->delete_records($course_format, array('id'=>(end($exist_sessions)->id)));		
+			}	
+		}
+	}
+	
+	/**
 	 * This function is used for uploading course objective and required readings.
 	 * and delete required reading.
 	 * @return void
@@ -568,6 +622,12 @@ class general_form extends moodleform {
 	 */
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
+		if($data['course_session'] < 0){
+			$errors['course_session'] = get_string('err_positivenumber', 'local_metadata');
+		}
+		if($data['course_assessment'] < 0){
+			$errors['course_assessment'] = get_string('err_positivenumber', 'local_metadata');
+		}
 		return $errors;
     }
 	
@@ -610,7 +670,7 @@ class general_form extends moodleform {
 		// objectiveid = learningobjectives->id
 		// courseid = courseinfo->id
 
-		if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
+		if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$courseId))){
 		// Must have an entry for 'id' to map the table specified.
 			$course_info->id = $existCourseInfo->id;
 			$update_courseinfo = $DB->update_record('courseinfo', $course_info, false);
@@ -624,6 +684,10 @@ class general_form extends moodleform {
 				$insert_instructorinfo = $DB->insert_record('courseinstructors', $instructor_info, false);
 			}
 
+			// Handle session and assessment
+			$this->edit_course_format('coursesession', $data->course_session);
+			$this->edit_course_format('courseassessment', $data->course_assessment);
+			
 			// Handle course readings
 			if(!empty($data->readingname_option)){
 				$r_name = $data->readingname_option;
@@ -726,6 +790,15 @@ class general_form extends moodleform {
 			// courseinfo->id => courseinstructor->courseid
 			$instructor_info->courseid = $insert_courseinfo;
 			$insert_instructorinfo = $DB->insert_record('courseinstructors', $instructor_info, false);
+
+			// Handle session and assessment form
+			for($i = 0; $i < $data->course_session; $i++){
+				$this->insert_number_of_course_format('coursesession');
+			}
+			
+			for($i = 0; $i < $data->course_assessment; $i++){
+				$this->insert_number_of_course_format('courseassessment');
+			}
 			
 			// Handle course reading
 			if(!empty($data->readingname_option)){
