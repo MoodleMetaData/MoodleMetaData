@@ -2,7 +2,7 @@
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
-require_once $CFG->dirroot.'\lib\tcpdf\tcpdf.php';
+require_once $CFG->dirroot.'/lib/tcpdf/tcpdf.php';
 require_once 'lib.php';
 
 /**
