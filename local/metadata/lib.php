@@ -86,11 +86,8 @@ function create_insview_url($form, $courseId) {
     return new moodle_url('/local/metadata/insview_'.$form.'.php', array('id' => $courseId));
 }
 
-function create_mange_url($courseId, $anchor=null) {
-	if ($anchor) {
-		return new moodle_url('/local/metadata/manage_psla_form.php', array('id' => $courseId), 'tab='.$anchor);
-	}
-	return new moodle_url('/local/metadata/manage_psla_form.php', array('id' => $courseId), $anchor);
+function create_manage_url($form) {
+	return new moodle_url('/local/metadata/admview_'.$form.'.php');
 }
 
 function get_assessment_type($value){

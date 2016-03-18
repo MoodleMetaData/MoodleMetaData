@@ -9,20 +9,25 @@ class university_form extends moodleform {
 		
 		//Form Elements
 		// Rich text editor
-		$pform->addElement('editor', 'university_editor', get_string('university_editor', 'local_metadata'));
-		$pform->setType('university_editor', PARAM_TEXT);
+		$defaulttext = '';
+		if($exists = $DB->get_record('syllabuspolicy', array ('category' => -1))) {
+			$defaulttext = $exists->policy;
+		}
+		$pform->addElement('editor', 'university_editor', get_string('university_editor', 'local_metadata'))->setValue( array('text' => $defaulttext));
+		//$pform->addRule('university_editor', get_string('err_required', 'local_metadata'), 'required', null, 'client');
+		$pform->setType('university_editor', PARAM_RAW);
 		
 		//Save Changes Button
 		$pform->addElement('submit', 'submit_policy', get_string('submit_policy', 'local_metadata'));
 		
 	}
 	
+	/*
 	function validation($data, $file) {
 		$errors = parent::validation ( $data, $files );
-		global $DB, $CFG, $USER; // Declare them if you need them
-		
 		return $errors;
-	}
+	} */
+	
 	
 	public static function save_data($data) {
 		global $DB, $CFG, $USER;

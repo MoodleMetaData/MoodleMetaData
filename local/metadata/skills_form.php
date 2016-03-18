@@ -12,7 +12,7 @@ class skills_form extends moodleform {
 		// Multiselect for program topics
 		                       // Get all from DB
 		$program_topics = array ();
-		$program_topics = $DB->get_records ( 'learningobjectives', array ('objectivetype' => 'skills') );
+		$program_topics = $DB->get_records ( 'programobjectives', array ('objectivetype' => 2) );
 		// $mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
 		
 		$psla_default = array ();
@@ -28,6 +28,8 @@ class skills_form extends moodleform {
 		
 		// Text box to add new program specific learning objectives
 		$mform->addElement ( 'text', 'new_skills', get_string ( 'new_skills', 'local_metadata' ), '' );
+		$mform->setType('new_skills', PARAM_RAW);
+		
 		// $add_group =& $mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
 		
 		// Submit button
@@ -39,12 +41,13 @@ class skills_form extends moodleform {
 		$errors = parent::validation ( $data, $files );
 		global $DB, $CFG, $USER; // Declare them if you need them
 		
-		if (!empty($data[create_skills])) {
-			if(empty($data[new_skills])) {
+		if (!empty($data['create_skills'])) {
+			if(empty($data['new_skills'])) {
 				$errors['new_skills'] = get_string('mcreate_required', 'local_metadata');
 			} else {
-				$check = $DB->get_records('learningobjectives', array ('objectivename' => $data[new_skills],
-						'objectivetype' => 'skills'));
+				$table = 'programobjectives';
+				$select = $DB->sql_compare_text('objectivename')." = '".$data['new_skills']."' AND objectivetype = 2";
+				$check = $DB->get_records_select($table, $select);
 				if (count($check) != 0) {
 					$errors['new_skills'] = get_string('psla_exists', 'local_metadata');
 				}
@@ -59,9 +62,9 @@ class skills_form extends moodleform {
 		global $CFG, $DB, $USER;
 		$new_la = new stdClass ();
 		$new_la->objectivename = $data->new_skills;
-		$new_la->objectivetype = 'skills';
+		$new_la->objectivetype = 2;
 		
-		$insert_newla = $DB->insert_record ( 'learningobjectives', $new_la, false );
+		$insert_newla = $DB->insert_record ( 'programobjectives', $new_la, false );
 	}
 	
 	// Deletes all selected already existing elements from the database
@@ -69,7 +72,7 @@ class skills_form extends moodleform {
 		global $CFG, $DB, $USER;
 	
 		foreach ($data->manage_skills as $value) {
-			$delete_oldla = $DB->delete_records('learningobjectives', array('id'=>$value));
+			$delete_oldla = $DB->delete_records('programobjectives', array('id'=>$value));
 		}
 	
 	}

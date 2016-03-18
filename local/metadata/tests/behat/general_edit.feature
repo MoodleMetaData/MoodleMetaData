@@ -9,8 +9,8 @@ Feature: General tab
       | fullname | shortname | category |
       | Course 1 | C_shortname | 0 |
 	And I create the following general info for course "C_shortname":
-	  | coursetopic | coursedescription | teachingassumption | coursefaculty | assessmentnumber | sessionnumber |
-	  | Topic 1 | Description 1 | Teaching assumption 1 | Faculty 1 | 1 | 1 |
+	  | categoryid | coursedescription | teachingassumption | coursefaculty | assessmentnumber | sessionnumber |
+	  | 1 | Description 1 | Teaching assumption 1 | Faculty 1 | 1 | 1 |
 	And I create the following instructor info for course "C_shortname" and user "admin":
 	  | name | officelocation | officehours | email | phonenumber |
 	  | Instructor 1 | Office 1 | W 1:00 pm | instructor@i.com | 111-111-1111 |
