@@ -9,6 +9,7 @@ class university_form extends moodleform {
 		
 		//Form Elements
 		// Rich text editor
+		$defaulttext = '';
 		if($exists = $DB->get_record('syllabuspolicy', array ('category' => -1))) {
 			$defaulttext = $exists->policy;
 		}
