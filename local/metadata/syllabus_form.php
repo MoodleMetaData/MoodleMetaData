@@ -72,7 +72,7 @@ class syllabus_form extends moodleform {
 		$coursedescription = '';
 //collecting relative data from database===============================================================================		
 		if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
-			$coursetopic = $existCourseInfo->coursetopic;
+			//$coursetopic = $existCourseInfo->coursetopic;
 			$coursedescription = $existCourseInfo->coursedescription;
 			$courseInstructor = $USER->lastname.', '.$USER->firstname;
 			if($existInstructorInfo = $DB->get_record('courseinstructors', array('courseid'=>$existCourseInfo->id, 'userid'=>$USER->id))){
