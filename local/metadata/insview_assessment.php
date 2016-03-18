@@ -66,7 +66,7 @@ echo $OUTPUT->header();
 		<ul>
 		<li><a href=" <?php echo $general_url; ?> ">General</a></li>
 		<li class="onclick_nav"><a href=" <?php echo $assessment_url; ?> ">Assessment</a></li>
-		<li><a href=" <?php echo $base_url; ?> ">Session</a></li>
+		<li><a href=" <?php echo $session_url; ?> ">Session</a></li>
 		<li><a href=" <?php echo $syllabus_url; ?> ">Syllabus</a></li>
 		</ul>
 	</div>
