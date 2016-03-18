@@ -115,11 +115,29 @@ class assessment_form extends moodleform {
 	function save_assessment_list($data){
 		global $DB;
 		$changed = array('assessmentname', 'type', 'assessmentprof', 'description', 'gdescription', 'assessmentweight');
-		$assessment_parser = new recurring_element_parser('courseassessment', 'assessment_list', $changed, null);
+		$assessment_parser = new recurring_element_parser('courseassessment', 'assessment_list', $changed, array());
 		
 		$tuples = $assessment_parser->getTuplesFromData($data);
-		print_object($tuples);
+		//print_object($tuples);
 		$assessment_parser -> saveTuplesToDB($tuples);
+		
+		foreach ($tuples as $tuplekey => $tuple){
+			$learningObjectiveTypes = get_learning_objective_types();
+			foreach ($learningObjectiveTypes as $learningObjectiveType) {
+                $key = 'learning_objective_'.$learningObjectiveType;
+                if (array_key_exists($key, $tuple) and is_array($tuple[$key])) {
+                    foreach ($tuple[$key] as $objectiveId) {
+                        $newLink = new stdClass();
+                        $newLink->assessmentid = $tuple['id'];
+                        $newLink->objectiveid = $objectiveId;
+						print_object($newlink);
+                        $DB->insert_record('assessmentobjectives', $newLink, false);
+                    }
+                }
+            }
+		}
+		
+		
 	}
 	function get_knowledge(){
 		global $DB;
