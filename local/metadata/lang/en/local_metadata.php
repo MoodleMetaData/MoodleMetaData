@@ -145,6 +145,9 @@ $string['assessment_due'] = 'Due Date: ';
 $string['general_header'] = 'General';
 $string['deleteassessment'] = 'Delete Assessment';
 $string['assessment_filepicker'] = 'Upload Assessments';
+$string['upload_assessments'] = 'Submit';
+$string['assessment_grading_upload'] = 'Upload Grading Description';
+$string['assessment_grading_upload_submit'] = 'Submit';
 
 // Metadata manager strings
 $string['manage_knowledge'] = 'Knowledge Attributes: ';
