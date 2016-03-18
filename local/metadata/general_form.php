@@ -41,13 +41,15 @@ class general_form extends moodleform {
 		}
 		
 		$gradatt_list = array();
-		foreach($coursegradattributes as $gradatt){
-			$obj = new stdClass();
-			$obj->id = $gradatt->id;
-			$gradatts = $DB->get_record('graduateattributes', array('id'=>$gradatt->gradattid));
-			$obj->gradattid = $gradatts->id;
-			$gradatt_list[] = $obj;
-		}
+        if (!is_null($coursegradattributes)) {
+            foreach($coursegradattributes as $gradatt){
+                $obj = new stdClass();
+                $obj->id = $gradatt->id;
+                $gradatts = $DB->get_record('graduateattributes', array('id'=>$gradatt->gradattid));
+                $obj->gradattid = $gradatts->id;
+                $gradatt_list[] = $obj;
+            }
+        }
 		
 		$learning_objectives = get_course_learning_objectives();
 		$knowledge_list = array();
