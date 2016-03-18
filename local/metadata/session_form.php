@@ -252,10 +252,10 @@ class session_form extends metadata_form {
         
         $page_num = optional_param('page', 0, PARAM_INT);
         $subset_included = array_slice($sessions, $page_num * self::NUM_PER_PAGE, self::NUM_PER_PAGE);
-        $count = min(count($subset_included), self::NUM_PER_PAGE);
+        $displayed_count = count($subset_included);
         
         $this->setup_upload_sessions();
-        $this->add_session_repeat_template($count);
+        $this->add_session_repeat_template($displayed_count);
         
 
         $this->setup_data_for_repeat($subset_included);

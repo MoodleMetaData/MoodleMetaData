@@ -23,7 +23,7 @@ Feature: Session tab pages
     And the "nextPage" "button" should be disabled
       
   @javascript
-  Scenario: Ensuring the page buttons are disabled no matter how many are added
+  Scenario: Ensuring the page buttons are disabled no matter how many are added, until is saved
     Given I create 11 sessions
     Then the "previousPage" "button" should be disabled
     And the "nextPage" "button" should be disabled
