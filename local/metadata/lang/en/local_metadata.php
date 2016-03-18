@@ -17,6 +17,7 @@ $string['err_nonzero']='You must enter a number not starting with a 0 here.';
 $string['err_numeric']='You must enter a number here.';
 $string['err_rangelength']='You must enter between {$a->format[0]} and {$a->format[1]} characters here.';
 $string['err_required']='You must supply a value here.';
+$string['err_positivenumber']='You must enter a positive number here.';
 
 // General form elements
 $string['course_code'] = 'Course short name: ';
@@ -37,6 +38,7 @@ $string['teaching_assumption'] = 'Instructor assumption: ';
 $string['course_reading_desc'] = 'Required reading: ';
 $string['readingname_label'] = 'Title {no}:';
 $string['readingurl_label'] = 'Url {no}:';
+$string['delete_reading_label'] = "Delete reading {no}";
 $string['knowledge_desc'] = 'Students who successfully complete the course will be able to:';
 $string['skill_desc'] = 'Students who successfully complete the course will be able to:';
 $string['attitude_desc'] = 'Students who successfully complete this course will:';
@@ -70,19 +72,21 @@ $string['course_gradatt_header'] = 'Graduate attribute';
 $string['course_obj_header'] = 'Upload course objectives';
 $string['teaching_assumption_header'] = 'Teaching assumption';
 
+$string['course_format_header_help'] = 'By reducing the number, the newest entry or the one with the highest id will be deleted.';
 $string['course_reading_header_help'] = 'Leave the TITLE space blank to delete the entry.';
 $string['obj_knowledge_header_help'] = 'Leave the space blank to delete the entry.';
 $string['obj_skill_header_help'] = 'Leave the space blank to delete the entry.';
 $string['obj_attitude_header_help'] = 'Leave the space blank to delete the entry.';
-$string['course_obj_header_help'] = 'To upload course objectives, only .csv file is permitted.
-									The format is: [column1],[column2]
-									, where [column1] is the course objective description
-									and [column2] is the course objective type = {K, S, A}.
+$string['course_obj_header_help'] = 'To upload course objectives, only .csv file is permitted. <br />
+									The format is: [column1],[column2],[column3] <br />
+									[column1] is the course objective: knowledge. <br />
+									[column2] is the course objective: skill. <br />
+									[column3] is the course objective: attitude. <br />
 									Enter a new line to create a new entry.';
-$string['upload_reading_header_help'] = 'To upload course required readings, only .csv file is permitted.
-									The format is: [column1],[column2]
-									, where [column1] is the reading title
-									and [column2] is the reading url.
+$string['upload_reading_header_help'] = 'To upload course required readings, only .csv file is permitted. <br />
+									The format is: [column1],[column2] <br />
+									[column1] is the reading title. <br />
+									[column2] is the reading url. <br />
 									Enter a new line to create a new entry.';
 $string['course_data'] = 'Course data';
 
