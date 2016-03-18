@@ -46,7 +46,6 @@ if ($general_form->is_cancelled()) {
 // Submitted the data
 if ($data = $general_form->get_data()) {
 	if(!empty($data->submitbutton)){
-		echo 'Hello';
 		$general_form->save_data($data);
 	}
     //print_object($data);
@@ -59,7 +58,7 @@ echo $OUTPUT->header();
 <html>
 	<div class="nav_header">
 		<ul>
-		<li class="onclick_nav"><a href=" <?php echo $general_url; ?> ">General</a></li>
+		<li class="onclick_nav" ><a href=" <?php echo $general_url; ?> ">General</a></li>
 		<li><a href=" <?php echo $assessment_url; ?> ">Assessment</a></li>
 		<li><a href=" <?php echo $session_url; ?> ">Session</a></li>
 		<li><a href=" <?php echo $syllabus_url; ?> ">Syllabus</a></li>

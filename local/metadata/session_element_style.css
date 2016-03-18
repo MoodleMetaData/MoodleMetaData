@@ -33,7 +33,7 @@ body#page-local-metadata-insview_session div[id^="fgroup_id_"][id*="add_topic_gr
     border-bottom: 0;
 }
 /* Bottom */
-body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="deleteSession_"] {
+body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="delete_session_"] {
     background: #EEE;
     margin-bottom: 2em;
     margin-top: 0;

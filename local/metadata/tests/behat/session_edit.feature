@@ -16,7 +16,7 @@ Feature: Session tab
       | K 1 | Knowledge |
       | K 2 | Knowledge |
       | S 1 | Skill |
-    And I create the following assessments for course "C_shortname":
+    And the following assessments for course "C_shortname" exist:
       | assessmentname |
       | Assessment 1 |
       | Assessment 2 |
