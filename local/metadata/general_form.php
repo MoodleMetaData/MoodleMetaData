@@ -19,6 +19,7 @@ class general_form extends moodleform {
 	
 		// retrieve data from course info and instructor table
 		$courseinfo = $DB->get_record('courseinfo', array('courseid'=>$courseId));
+		
 		if($courseinfo != NULL){
 			$contactinfo = $DB->get_record('courseinstructors', array('courseid'=>$courseinfo->id, 'userid'=>$USER->id));
 			$coursegradattributes = $DB->get_records('coursegradattributes', array('courseinfoid'=>$courseinfo->id));
@@ -41,12 +42,14 @@ class general_form extends moodleform {
 		}
 		
 		$gradatt_list = array();
-		foreach($coursegradattributes as $gradatt){
-			$obj = new stdClass();
-			$obj->id = $gradatt->id;
-			$gradatts = $DB->get_record('graduateattributes', array('id'=>$gradatt->gradattid));
-			$obj->gradattid = $gradatts->id;
-			$gradatt_list[] = $obj;
+		if(is_array($coursegradattributes) || is_object($coursegradattributes)){
+			foreach($coursegradattributes as $gradatt){
+				$obj = new stdClass();
+				$obj->id = $gradatt->id;
+				$gradatts = $DB->get_record('graduateattributes', array('id'=>$gradatt->gradattid));
+				$obj->gradattid = $gradatts->id;
+				$gradatt_list[] = $obj;
+			}	
 		}
 		
 		$learning_objectives = get_course_learning_objectives();
