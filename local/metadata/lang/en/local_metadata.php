@@ -39,6 +39,7 @@ $string['course_reading_desc'] = 'Required reading: ';
 $string['readingname_label'] = 'Title {no}:';
 $string['readingurl_label'] = 'Url {no}:';
 $string['delete_reading_label'] = "Delete reading {no}";
+$string['delete_gradAtt_label'] = "Delete graduate attribute {no}";
 $string['knowledge_desc'] = 'Students who successfully complete the course will be able to:';
 $string['skill_desc'] = 'Students who successfully complete the course will be able to:';
 $string['attitude_desc'] = 'Students who successfully complete this course will:';
@@ -165,9 +166,12 @@ $string['new_attitudes'] = 'New Learning Objective';
 $string['create_attitudes'] = 'Add';
 $string['delete_attitudes'] = 'Delete';
 
+$string['course_gradatt'] = 'Graduate Attributes: ';
 $string['new_gradatt'] = 'New Graduate Attribute';
 $string['create_gradatt'] = 'Add';
 $string['delete_gradatt'] = 'Delete';
+$string['course_gradatt_help'] = 'By removing a graduate attribute here, 
+								 any record corresponding to this graduate attribute will be removed as well.';
 
 $string['policy_editor'] = 'Faculty Policy: ';
 $string['submit_policy'] = 'Submit';

@@ -431,8 +431,9 @@ class general_form extends moodleform {
 		foreach($graduateattributes as $graduateattribute){
 			$course_gradAtts[$graduateattribute->id] = $graduateattribute->attribute;
 		}		
-
+		
 		$gradAtt_array[] = $mform->createElement('select', 'gradAtt_option', get_string('course_gradAtt', 'local_metadata'), $course_gradAtts, '');
+		$gradAtt_array[] = $mform->createElement('submit', 'delete_gradAtt', get_string('delete_gradAtt_label', 'local_metadata'));
 		$gradAtt_array[] = $mform->createElement('hidden', 'gradAtt_id', -1);
 
 		$gradAtt_options = array();
@@ -598,6 +599,25 @@ class general_form extends moodleform {
 	}
 	
 	/**
+	 * Delete course graduate attributes when user clicks on "Delete" button in graduate attributes.
+	 * @param $mform	form definition
+	 * @return void
+	 */
+	private function delete_graduate_attribute($mform){
+		global $DB, $CFG, $USER; //Declare them if you need them
+		global $course, $courseId;
+		
+		if($gradatt_was_deleted = $mform->getSubmitValue('delete_gradAtt')){
+			foreach($gradatt_was_deleted as $key=>$value) {
+				$index = '['.$key.']';
+				$g_id = $mform->getSubmitValue('gradAtt_id'.$index);
+				$delete_graduate_attribute = $DB->delete_records('coursegradattributes', array('id'=>$g_id));
+			}
+		}
+		
+	}
+	
+	/**
 	 * Insert a record to course format (session or assessment)
 	 * @param $course_format	either 'session' or 'assessment'
 	 * @return void
@@ -649,6 +669,7 @@ class general_form extends moodleform {
 		$this->delete_reading($mform);
 		$this->upload_req_reading($mform);
 		$this->upload_course_obj($mform);
+		$this->delete_graduate_attribute($mform);
 	}
 	
 	
