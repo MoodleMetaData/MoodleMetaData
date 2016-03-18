@@ -24,7 +24,7 @@ class general_form extends moodleform {
 		} else {
 			$contactinfo = NULL;
 		}
-		
+		$coursecategories = $DB->get_records('course_categories');
 		$coursereadings = get_course_readings();
 
 		$reading_list = array();
@@ -52,7 +52,7 @@ class general_form extends moodleform {
 		} 
 		
 		// setup form elements
-		$this->setup_general($mform, $courseinfo, $contactinfo);
+		$this->setup_general($mform, $courseinfo, $contactinfo, $coursecategories);
 		$this->setup_contact($mform, $courseinfo, $contactinfo);
 		$this->setup_description($mform, $courseinfo);
 		$this->setup_upload_req_reading($mform);	
@@ -76,7 +76,7 @@ class general_form extends moodleform {
 	 * @param $contactinfo	a record of contact information from course instructor table.
 	 * @return void
 	 */
-	private function setup_general($mform, $courseinfo, $contactinfo){
+	private function setup_general($mform, $courseinfo, $contactinfo, $coursecategories){
 		global $CFG, $DB, $USER; //Declare our globals for use
         global $course;           
 	    $mform->addElement('header', 'course_general_header', get_string('course_general_header', 'local_metadata'));
@@ -91,7 +91,6 @@ class general_form extends moodleform {
 		$mform->setDefault('course_name', $courseName);
 				
 		// Instructor
-
 		$courseInstructor = $USER->lastname.', '.$USER->firstname;
 		$course_instructor = $mform->addElement('text', 'course_instructor', get_string('course_instructor', 'local_metadata'), '');
 		if($contactinfo){
@@ -110,7 +109,7 @@ class general_form extends moodleform {
 		$mform->addRule('course_faculty', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->setType('course_faculty', PARAM_TEXT);
 
-
+		/*
 		// Program types
 		// TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
 		$program_types = array();
@@ -119,16 +118,20 @@ class general_form extends moodleform {
 		// -------------------------------------
 		$program_type_selection = $mform->addElement('select', 'program_type', get_string('program_type', 'local_metadata'), $program_types, '');
 		$mform->addRule('program_type', get_string('err_required', 'local_metadata'), 'required', null, 'client');
-
+		*/
 
 		// Courses category
-		// TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
-		$course_categories = array();
-		$course_categories[] = 'category 1';
-		$course_categories[] = 'category 2';
-		// -------------------------------------
-		$course_category_selection = $mform->addElement('select', 'course_category', get_string('course_category', 'local_metadata'), $course_categories, '');
+		$category_list = array();
+		foreach($coursecategories as $coursecategory){
+			$category_list[$coursecategory->id] = $coursecategory->name;
+		}
+		
+		$course_category_selection = $mform->addElement('select', 'course_category', get_string('course_category', 'local_metadata'), $category_list, '');
 		$mform->addRule('course_category', get_string('err_required', 'local_metadata'), 'required', null, 'client');
+		if($courseinfo){
+			$course_category_selection->setSelected($courseinfo->categoryid);
+		}
+		
 		
 		$mform->closeHeaderBefore('course_contact_header');  
 
@@ -650,7 +653,7 @@ class general_form extends moodleform {
 		$course_info->coursename = $course->fullname;
 		$course_info->coursedescription = $data->course_description['text'];
 		$course_info->coursefaculty = $data->course_faculty;
-		//$course_info->coursedescription = $data->course_description;
+		$course_info->categoryid = $data->course_category;
 		$course_info->assessmentnumber = $data->course_assessment;
 		$course_info->sessionnumber = $data->course_session;
 		if($data->teaching_assumption != NULL){

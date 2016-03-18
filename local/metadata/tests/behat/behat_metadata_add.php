@@ -13,8 +13,8 @@ class behat_metadata_add extends behat_base {
      * @Given /^I create the following general info for course "([^"]*)":$/
      *
      * @param TableNode $data Each row will be a course information. Write out:
-	 * 		| coursetopic | coursedescription | teachingassumption | coursefaculty | assessmentnumber | sessionnumber |
-	 * 		| Topic name | Description | Teaching assumption | Faculty name | number | number |
+	 * 		| categoryid | coursedescription | teachingassumption | coursefaculty | assessmentnumber | sessionnumber |
+	 * 		| Category id | Description | Teaching assumption | Faculty name | number | number |
      * @param string $course_short The short name of the course
      *
      * @return Given[]
@@ -30,7 +30,7 @@ class behat_metadata_add extends behat_base {
             $record = array();
             $record['courseid'] = $course_id;
             $record['coursename'] = $course_short;
-			$record['coursetopic'] = $course_info['coursetopic'];
+			$record['categoryid'] = $course_info['categoryid'];
 			$record['coursedescription'] = $course_info['coursedescription'];
 			$record['teachingassumption'] = $course_info['teachingassumption'];
             $record['coursefaculty'] = $course_info['coursefaculty'];
