@@ -232,7 +232,7 @@ class behat_metadata_add extends behat_base {
     public function i_create_assessments($N) {
         $steps = array();
         for ($i = 0; $i < $N; $i++) {
-            $steps[] = new Given('I press "assessment_list_add_element"');
+            $steps[] = new Given('I press "Add Assessment"');
         }
         
         return $steps;
@@ -241,17 +241,17 @@ class behat_metadata_add extends behat_base {
     /**
      * Creates N course assessments. Each will have a title with the title formatted with the session number
      *
-     * @Given /^I create (\d+) assessments with title "([^"]*)"$/
+     * @Given /^I create (\d+) assessments with name "([^"]*)"$/
      *
      * @param int $N The number of assessments to create
      * @param string $title The value of the title
      *
      * @return Given[]
      */
-    public function i_create_assessments_with_title($N, $title) {
+    public function i_create_assessments_with_name($N, $title) {
         $steps = array();
         for ($i = 0; $i < $N; $i++) {
-            $steps[] = new Given('I press "assessment_list_add_element"');
+            $steps[] = new Given('I press "Add Assessment"');
             $assessmentfield = 'assessmentname['.$i.']';
             $formattedTitle = sprintf($title, $i);
             $steps[] = new Given('I set the field "'.$assessmentfield.'" to "'.$formattedTitle.'"');

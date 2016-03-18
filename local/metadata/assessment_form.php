@@ -15,12 +15,18 @@ class assessment_form extends metadata_form {
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
         $courseId = get_course_id();
 		$assessments = $this->_customdata['assessments'];
-		$assessmentCount = sizeof($assessments);
+        $page_num = optional_param('page', 0, PARAM_INT);
+        $subset_included = array_slice($assessments, $page_num * self::NUM_PER_PAGE, self::NUM_PER_PAGE);
+        $assessmentCount = count($assessments);
+        $displayed_count = count($subset_included);
+        
 		$this -> add_upload(200);
-		$this -> add_assessment_template($assessmentCount);
+		$this -> add_assessment_template($displayed_count);
+        
+        $this->add_page_buttons($page_num, $assessmentCount);
 		
 		$this->add_action_buttons();
-		$this->populate_from_db($assessments);
+		$this->populate_from_db($subset_included);
 		
 	}
 	
@@ -127,6 +133,7 @@ class assessment_form extends metadata_form {
             // If a button is pressed, then doing $mform->getSubmitValue(buttonId) will return a non-null value
                 // However, if other buttons are subsequently pressed, then $mform->getSubmitValue(buttonId) will return null
                 // So use the element 'was_deleted' for that repeated element to store if has been deleted
+            // Otherwise, if the assessment is new, should expand its header
             if ($deleted or $mform->getElementValue('was_deleted'.$index) == true) {
                 // If deleted, just remove the visual elements
                     // Will not save to the database until the user presses submit
@@ -150,6 +157,10 @@ class assessment_form extends metadata_form {
                 $mform->removeElement('delete_assessment'.$index);
                 
                 $mform->getElement('was_deleted'.$index)->setValue(true);
+            } else {
+                if ($mform->getElement('courseassessment_id'.$index)->getValue() == -1) {
+                    $mform->setExpanded('general_header'.$index);
+                }
             }
         }
     }
@@ -179,14 +190,53 @@ class assessment_form extends metadata_form {
             }
         }
         
-		print_object($tuples);
 		$assessment_parser -> saveTuplesToDB($tuples);
 	}
+    
+    public function get_page_change() {
+        if ($this->_form->getSubmitValue('previousPage') !== null) {
+            return -1;
+        } else if ($this->_form->getSubmitValue('nextPage') !== null) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    
 	function get_knowledge(){
 		global $DB;
 
 	}
 	
+    /**
+     *  Will add the buttons on the bottom
+     *  
+     *
+     */
+    private function add_page_buttons($page_num, $num_assessments) {
+        $mform = $this->_form;
+        
+        $page_change_links=array();
+        
+        // Back page button
+        $page_change_links[] = $mform->createElement('submit', 'previousPage', get_string('previous_page', 'local_metadata'));
+        
+        // If is on the first page
+        if ($page_num === 0) {
+            $mform->disabledIf('previousPage', null);
+        }
+    
+        // Next page button
+        $page_change_links[] = $mform->createElement('submit', 'nextPage', get_string('next_page', 'local_metadata'));
+        
+        // If the next page would be empty
+        if (($page_num + 1) * self::NUM_PER_PAGE >= $num_assessments) {
+            $mform->disabledIf('nextPage', null);
+        }
+        
+        $mform->addGroup($page_change_links, 'buttonarray', '', array(' '), false);
+    }
+    
 	function populate_from_db($assessments){
 		$mform = $this->_form;
 		$key = 0;
