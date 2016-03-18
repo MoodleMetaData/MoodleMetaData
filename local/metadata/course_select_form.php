@@ -9,12 +9,14 @@ class course_select_form extends moodleform {
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 		
 		// Set course category
-		$coursecategory = 1;
+		//$coursecategory = 1;
 		
 		// Pull all courses in category
+		/*
 		$table = 'courseinfo';
 		$select = $DB->sql_compare_text('categoryid')." = '".$coursecategory."'";
-		$courseall = $DB->get_records_select($table, $select);
+		$courseall = $DB->get_records_select($table, $select); */
+		$courseall = $DB->get_records('courseinfo', array());
 		
 		$courselist = array();
 		foreach($courseall as $record) {
