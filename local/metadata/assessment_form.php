@@ -37,7 +37,56 @@ class assessment_form extends metadata_form {
     public function sessions_were_uploaded() {
         return $this->_form->getSubmitValue('upload_assessments') !== null;
     }
-	
+	    public function upload_assessments() {
+		global $course, $DB;
+		
+        $files = $this->get_draft_files('uploaded_assessments');
+        
+        if (!empty($files)) {
+            $file = reset($files); 
+            $content = $file->get_content();
+            $all_rows = explode("\n", $content);
+            
+            $courseid = get_course_id();
+            // Need to delete everything related to course sessions, and each session
+            foreach ($this->_customdata['assessments'] as $assessment) {
+                $this->delete_all_relations_to_session($assessment->id);
+            }
+            
+            $DB->delete_records('courseassessment', array('courseid'=>$courseid));
+            
+            
+            foreach ($all_rows as $row) {
+                if ($row != "") {
+                    $this->parse_and_save_session_row($row, $courseid);
+                }
+            }
+        }
+    }
+    
+    private function parse_and_save_session_row($row, $courseid) {
+        global $DB;
+        // Parse the row
+        $row = str_getcsv($row);
+        print_object($row);
+        
+        $data = array();
+        $data['courseid'] = $courseid;
+        $data['assessmenttitle'] = $row[0];
+        $data['assessmenttype'] = $row[1];
+        $data['assessmentprof'] = $row[2];
+        $data['description'] = $row[4];
+		$data['assessmentweight'] = $row[5];
+		
+        
+        $date = DateTime::createFromFormat(session_form::DATE_FROM_FROM_FILE, $row[5]);
+        $data['assessmentduedate'] = $date->getTimestamp();
+        
+        // Then, save the session and get ids
+        $id = $DB->insert_record('courseassessment', $data);
+        
+    }
+    
 	function add_assessment_template($assessmentCount){
 		
 		$mform = $this->_form;
@@ -88,7 +137,7 @@ class assessment_form extends metadata_form {
 		
 	
 		
-
+		$elementArray[] = $mform -> createElement('filepicker', 'gradingDescriptionUpload', get_string('assessment_grading_upload', 'local_metadata', null, array('maxbytes' => $maxbytes, 'accepted_types' => '*')));
 		$elementArray[] = $mform -> createElement('textarea', 'gdescription', get_string('assessment_grading_desc', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
 		$elementArray[] = $mform-> createElement('text','assessmentweight',get_string('grade_weight','local_metadata'));
 		
@@ -122,7 +171,7 @@ class assessment_form extends metadata_form {
         $this->_recurring_nosubmit_buttons[] = 'delete_assessment';
 		
 		$this->repeat_elements($elementArray, $assessmentCount,
-            $optionsArray, 'assessment_list', 'assessment_list_add_element', 1, get_string('add_assessment', 'local_metadata'));
+            $optionsArray, 'assessment_list', 'assessment_list_add_element', 1, get_string('assessment_add', 'local_metadata'));
 		
 	}
     
@@ -198,7 +247,6 @@ class assessment_form extends metadata_form {
             // If the tuple has been deleted, then remove it from the database
             if ($tuple['was_deleted'] == true) {
                 $assessment_parser->deleteTupleFromDB($tuple);
-                
                 // Finally, remove it from the tuples that will be saved, because otherwise will just be resaved anyway
                 unset($tuples[$tupleKey]);
             }
@@ -311,7 +359,7 @@ class assessment_form extends metadata_form {
 	function add_upload($maxbytes){
 		$mform = $this -> _form;
 		
-		$mform->addElement('filepicker', 'assessmentFile', get_string('filepicker', 'local_metadata'), null, array('maxbytes' => $maxbytes, 'accepted_types' => '.csv'));
+		$mform->addElement('filepicker', 'assessmentFile', get_string('assessment_filepicker', 'local_metadata'), null, array('maxbytes' => $maxbytes, 'accepted_types' => '.csv'));
 	}
 }
 	
