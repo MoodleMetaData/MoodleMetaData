@@ -17,7 +17,7 @@ require_once 'recurring_element_parser.php';
  * For an example, see how it is instantiated in insview.php
  *
  * To look at how deleting a recurring element is done, see definition_after_data and save_data.
- *   As well, see the elements was_deleted and deleteSession (the delete button) in add_session_repeat_template
+ *   As well, see the elements was_deleted and delete_session (the delete button) in add_session_repeat_template
  *
  *
  */
@@ -252,10 +252,10 @@ class session_form extends metadata_form {
         
         $page_num = optional_param('page', 0, PARAM_INT);
         $subset_included = array_slice($sessions, $page_num * self::NUM_PER_PAGE, self::NUM_PER_PAGE);
-        $count = min(count($subset_included), self::NUM_PER_PAGE);
+        $displayed_count = count($subset_included);
         
         $this->setup_upload_sessions();
-        $this->add_session_repeat_template($count);
+        $this->add_session_repeat_template($displayed_count);
         
 
         $this->setup_data_for_repeat($subset_included);
@@ -345,7 +345,7 @@ class session_form extends metadata_form {
         
         
         
-        $repeatarray[] = $mform->createElement('submit', 'deleteSession', get_string('deletesession', 'local_metadata'));
+        $repeatarray[] = $mform->createElement('submit', 'delete_session', get_string('deletesession', 'local_metadata'));
         $mform->registerNoSubmitButton('delete_topics');
         $this->_recurring_nosubmit_buttons[] = 'delete_topics';
         
@@ -441,7 +441,7 @@ class session_form extends metadata_form {
             $mform->disabledIf('nextPage', null);
         }
         
-        $mform->addGroup($page_change_links, 'buttonarray_sdafs', '', array(' '), false);
+        $mform->addGroup($page_change_links, 'buttonarray', '', array(' '), false);
     }
     
     function setup_data_from_database_for_session($mform, $index, $session) {
@@ -490,7 +490,7 @@ class session_form extends metadata_form {
         // Go through each session, and delete elements for ones that should be deleted
         for ($key = 0; $key < $numRepeated; ++$key) {
             $index = '['.$key.']';
-            $deleted = $mform->getSubmitValue('deleteSession'.$index);
+            $deleted = $mform->getSubmitValue('delete_session'.$index);
             
             // If a button is pressed, then doing $mform->getSubmitValue(buttonId) will return a non-null vaue
                 // However, if other buttons are subsequently pressed, then $mform->getSubmitValue(buttonId) will return null
@@ -519,7 +519,7 @@ class session_form extends metadata_form {
                 $mform->removeElement('manage_topics_group'.$index);
                 $mform->removeElement('add_topic_group'.$index);
                 
-                $mform->removeElement('deleteSession'.$index);
+                $mform->removeElement('delete_session'.$index);
                 
                 $mform->getElement('was_deleted'.$index)->setValue(true);
             } else {
@@ -565,8 +565,8 @@ class session_form extends metadata_form {
         $groupitems = array();
 		$groupitems[] = $mform->createElement('text', 'new_topic');
 		$groupitems[] = $mform->createElement('submit', 'create_topic', get_string('add_topic', 'local_metadata'));
-        $this->_recurring_nosubmit_buttons[] = 'deleteSession';
-        $mform->registerNoSubmitButton('deleteSession');
+        $this->_recurring_nosubmit_buttons[] = 'delete_session';
+        $mform->registerNoSubmitButton('delete_session');
                 
         $repeatarray[] = $mform->createElement('group', 'add_topic_group', '', $groupitems, null, false);
     }

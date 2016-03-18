@@ -102,11 +102,12 @@ $string['new_session_header'] = 'New Session';
 $string['unnamed_session'] = 'Unnamed Session';
 
 $string['upload_sessions_header'] = 'Upload All Sessions';
-$string['upload_sessions_header_help'] = 'To upload course objectives, only .csv file is permitted. This will overwrite ALL existing sessions.
-                                        The format is: [column1],[column2]
-                                        , where [column1] is the course objective description
-                                        and [column2] is the course objective type = {K, S, A}.
-                                        Enter a new line to create a new entry.';
+$string['upload_sessions_header_help'] = 'To upload course objectives, only .csv file is permitted. This will overwrite ALL existing sessions.<br />
+                                        The format for each line is: title, description, guest teacher, type, length, date, first topic, second topic...<br />
+                                        If there is no guest teacher, leave it blank.<br />
+                                        The type should be lecture, lab, or seminar. Will default to lecture.<br />
+                                        The length should be 50, 80, 110, 140, or 170 followed by minutes. EG: 110 minutes.<br />
+                                        The date should be in the form YYYY-MM-DD. EG: 2016-03-17 would be March 17, 2016.';
 $string['upload_sessions'] = 'Upload sessions';
 
 $string['learning_objective_Attitude'] = 'Learning Objective: Attitude';
@@ -138,7 +139,7 @@ $string['assessment_due'] = 'Date: ';
 $string['assessment_duration'] = 'Duration: ';
 $string['assessment_due'] = 'Due Date: ';
 $string['general_header'] = 'General';
-
+$string['deleteassessment'] = 'Delete Assessment';
 
 // Metadata manager strings
 $string['manage_knowledge'] = 'Knowledge Attributes: ';
