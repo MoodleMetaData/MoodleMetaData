@@ -22,12 +22,12 @@
     </TABLE>
     <TABLE NAME="courseassessment" COMMENT="assessment info">
       <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="assessmentname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
 		<FIELD NAME="assessmentprof" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="assessmentweight" TYPE="int" LENGTH="3" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="assessment's grade in %"/>
         <FIELD NAME="assessmentduedate" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
 		<FIELD NAME="gdescription" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="type" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
@@ -39,9 +39,9 @@
     </TABLE>
     <TABLE NAME="coursereadings" COMMENT="readings info include url">
       <FIELDS>
+		<FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+		<FIELD NAME="readingname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="readingurl" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="readingname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -67,8 +67,8 @@
     </TABLE>
     <TABLE NAME="courseinstructors" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
-        <FIELD NAME="name" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="officelocation" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="officehours" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="type" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
@@ -119,8 +119,8 @@
     </TABLE>
     <TABLE NAME="sessiontopics" COMMENT="Default comment for the table, please edit me">
       <FIELDS>
-        <FIELD NAME="sessionid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="topicname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
@@ -149,6 +149,28 @@
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>
         <KEY NAME="assessmentid" TYPE="foreign" FIELDS="assessmentid" REFTABLE="courseassessment" REFFIELDS="id"/>
+        <KEY NAME="objectiveid" TYPE="foreign" FIELDS="objectiveid" REFTABLE="learningobjectives" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="syllabuspolicy" COMMENT="Syllabus Policy for Faculties and Departments">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="category" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="policy" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="graduateattributes" COMMENT="Ref table to link faculty uploaded learning objectives to courses">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="objectiveid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="courseinfo" REFFIELDS="id"/>
         <KEY NAME="objectiveid" TYPE="foreign" FIELDS="objectiveid" REFTABLE="learningobjectives" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
