@@ -41,6 +41,8 @@ if ($data = $knowledge_form->get_data()) {
 	if (!empty($data->delete_knowledge)) {
 		knowledge_form::delete_data($data);
 		redirect($knowledge_url);
+	} elseif (!empty($data->upload_program_obj)) {
+		redirect($knowledge_url);
 	} else {
     	knowledge_form::save_data($data);
    		redirect($knowledge_url);
