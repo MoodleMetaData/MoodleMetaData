@@ -38,7 +38,7 @@ class tag_form extends moodleform {
 			$mform->addElement('submit', 'admaddobjective', get_string('admaddobjective', 'local_metadata'));
 			
 			$currentoptions = array();
-			$curtags = $DB->get_records ( 'graduateattributes', array('courseid' => $courseId, 'tagid' => $objectiveId));
+			$curtags = $DB->get_records ( 'programpolicytag', array('courseid' => $courseId, 'tagid' => $objectiveId));
 			foreach($curtags as $record) {
 				$objective = $DB->get_record ( 'programobjectives', array ('id' => $record->objectiveid));
 				$currentoptions[$record->id] = $objective->objectivename;
@@ -74,7 +74,7 @@ class tag_form extends moodleform {
 		
 		foreach ($data->admpro_select as $value) {
 			$newtags->objectiveid = $value;
-			$insert_tags = $DB->insert_record ( 'graduateattributes', $newtags, false );
+			$insert_tags = $DB->insert_record ( 'programpolicytag', $newtags, false );
 		}
 		
 	}
@@ -88,7 +88,7 @@ class tag_form extends moodleform {
 		global $CFG, $DB, $USER;
 
 		foreach ($data->admpro_current as $value) {
-			$remove_tags = $DB->delete_records ( 'graduateattributes', array('id' => $value) );
+			$remove_tags = $DB->delete_records ( 'programpolicytag', array('id' => $value) );
 		}
 	}
 	
