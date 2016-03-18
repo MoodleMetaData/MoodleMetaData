@@ -163,18 +163,25 @@
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="graduateattributes" COMMENT="Ref table to link faculty uploaded learning objectives to courses">
+    <TABLE NAME="graduateattributes" COMMENT="Defined by faculty administrator">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
-        <FIELD NAME="objectiveid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="tagid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="attribute" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>
-        <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="courseinfo" REFFIELDS="id"/>
-        <KEY NAME="objectiveid" TYPE="foreign" FIELDS="objectiveid" REFTABLE="programobjectives" REFFIELDS="id"/>
-        <KEY NAME="tagid" TYPE="foreign" FIELDS="tagid" REFTABLE="courseobjectives" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+	<TABLE NAME="coursegradattributes" COMMENT="Refer to courseinfo">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+		<FIELD NAME="courseinfoid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+		<FIELD NAME="gradattid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+		<KEY NAME="courseinfoid" TYPE="foreign" FIELDS="courseinfoid" REFTABLE="courseinfo" REFFIELDS="id"/>
+		<KEY NAME="gradattid" TYPE="foreign" FIELDS="gradattid" REFTABLE="graduateattributes" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="programobjectives" COMMENT="Program specific learning objectives. 1 knowledge 2 skills 3 attitudes">

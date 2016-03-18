@@ -30,6 +30,7 @@ $base_url = create_manage_url('policy');
 $knowledge_url = create_manage_url('knowledge');
 $policy_url = create_manage_url('policy');
 $course_url = create_manage_url('course');
+$gradatt_url = create_manage_url('gradatt');
 
 // Create forms
 $policy_form = new policy_form($base_url);
@@ -48,6 +49,7 @@ echo $OUTPUT->header();
 	<div class="nav_header">
 		<ul>
 		<li><a href=" <?php echo $knowledge_url; ?> ">Program Objectives</a></li>
+		<li><a href=" <?php echo $gradatt_url; ?> ">Graduate Attribute</a></li>
 		<li class="onclick_nav"><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
 		<li><a href=" <?php echo $course_url; ?> ">Tags</a></li>
 		</ul>

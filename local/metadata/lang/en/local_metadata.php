@@ -49,7 +49,7 @@ $string['add_reading'] = 'Add new reading';
 $string['add_knowledge'] = 'Add new knowledge';
 $string['add_skill'] = 'Add new skill';
 $string['add_attitude'] = 'Add new attitude';
-$string['add_gradAtt'] = 'Add graduate attribute';
+$string['add_gradAtt'] = 'Add new graduate attribute';
 
 $string['upload_reading'] = 'Upload readings';
 $string['upload_course_obj'] = 'Upload course objectives';
@@ -164,6 +164,10 @@ $string['manage_attitudes'] = 'Attitudes Attributes: ';
 $string['new_attitudes'] = 'New Learning Objective';
 $string['create_attitudes'] = 'Add';
 $string['delete_attitudes'] = 'Delete';
+
+$string['new_gradatt'] = 'New Graduate Attribute';
+$string['create_gradatt'] = 'Add';
+$string['delete_gradatt'] = 'Delete';
 
 $string['policy_editor'] = 'Faculty Policy: ';
 $string['submit_policy'] = 'Submit';
