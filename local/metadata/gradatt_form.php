@@ -9,29 +9,24 @@ class gradatt_form extends moodleform {
 		$mform = $this->_form; // Tell this object to initialize with the properties of the Moodle form.
 		                       
 		// Form elements
-		                       
-		// Multiselect for program topics
-		                       // Get all from DB
+		// Get all from DB
 		$gradatt_list = array ();
 		$gradatt_list = $DB->get_records ( 'graduateattributes');
-		// $mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
 		
 		$psla_default = array ();
 		foreach ( $gradatt_list as $value ) {
 			$psla_default [$value->id] = $value->attribute;
 		}
 		
-		$gradatt_selection = $mform->addElement ( 'select', 'course_gradatt', get_string ( 'course_gradatt_header', 'local_metadata' ), $psla_default, '' );
+		$gradatt_selection = $mform->addElement ( 'select', 'course_gradatt', get_string ( 'course_gradatt', 'local_metadata' ), $psla_default, '' );
 		$gradatt_selection->setMultiple ( true );
 		
 		// Delete Button
 		$mform->addElement ( 'submit', 'delete_gradatt', get_string ( 'delete_gradatt', 'local_metadata' ) );
+		$mform->addHelpButton('course_gradatt', 'course_gradatt', 'local_metadata');
 		
-		// Text box to add new program specific learning objectives
 		$mform->addElement ( 'text', 'new_gradatt', get_string ( 'new_gradatt', 'local_metadata' ), '' );
 		$mform->setType('new_gradatt', PARAM_RAW);
-		
-		// $add_group =& $mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
 		
 		// Submit button
 		$mform->addElement ( 'submit', 'create_gradatt', get_string ( 'create_gradatt', 'local_metadata' ) );
@@ -73,6 +68,7 @@ class gradatt_form extends moodleform {
 	
 		foreach ($data->course_gradatt as $value) {
 			$delete_oldla = $DB->delete_records('graduateattributes', array('id'=>$value));
+			$delete_coursegradatt = $DB->delete_records('coursegradattributes', array('gradattid'=>$value));
 		}
 	
 	}
