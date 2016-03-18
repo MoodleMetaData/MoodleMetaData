@@ -10,7 +10,7 @@ class attitudes_form extends moodleform {
 		// Form elements
 		                       
 		// Multiselect for program topics
-		                       // Get all from DB
+		// Get all from DB
 		$program_topics = array ();
 		$program_topics = $DB->get_records ( 'programobjectives', array ('objectivetype' => 3));
 		// $mform->addRule('new_psla', get_string('required'), 'required', null, 'client');

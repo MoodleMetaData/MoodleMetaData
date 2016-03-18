@@ -171,8 +171,8 @@ $string['submit_policy'] = 'Submit';
 $string['university_editor'] = 'University Policy: ';
 
 $string['program_knowledge_header'] = 'Program Objective: Knowledge';
-$string['program_skills_header'] = 'Program Objective: Skill';
-$string['program_attitudes_header'] = 'Program Objective: Attitude';
+$string['program_skills_header'] = 'Program Objective: Skills';
+$string['program_attitudes_header'] = 'Program Objective: Attitudes';
 $string['program_obj_header'] = 'Upload Program Objectives';
 $string['program_obj_header_help'] = 'To upload program objectives, only .csv file is permitted. <br />
 									The format is: [column1],[column2],[column3] <br />

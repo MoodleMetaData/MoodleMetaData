@@ -28,8 +28,6 @@ $PAGE->requires->css('/local/metadata/insview_style.css');
 // Create url
 $base_url = create_manage_url('course');
 $knowledge_url = create_manage_url('knowledge');
-$skills_url = create_manage_url('skills');
-$attitudes_url = create_manage_url('attitudes');
 $policy_url = create_manage_url('policy');
 $course_url = create_manage_url('course');
 
@@ -50,9 +48,7 @@ echo $OUTPUT->header();
 <html>
 	<div class="nav_header">
 		<ul>
-		<li><a href=" <?php echo $knowledge_url; ?> ">Knowledge</a></li>
-		<li><a href=" <?php echo $skills_url; ?> ">Skills</a></li>
-		<li><a href=" <?php echo $attitudes_url; ?> ">Attitudes</a></li>
+		<li><a href=" <?php echo $knowledge_url; ?> ">Program Objectives</a></li>
 		<li><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
 		<li class="onclick_nav"><a href=" <?php echo $course_url; ?> ">Tags</a></li>
 		</ul>

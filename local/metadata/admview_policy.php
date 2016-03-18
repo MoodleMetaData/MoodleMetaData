@@ -18,7 +18,7 @@ require_once($CFG->dirroot.'/local/metadata/policy_form.php');
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
-$heading = "Learning Objectives Management";
+$heading = "Faculty Policy Management";
 $PAGE->set_heading($heading);
 
 // TODO: Improve how this is done
@@ -28,8 +28,6 @@ $PAGE->requires->css('/local/metadata/insview_style.css');
 // Create url
 $base_url = create_manage_url('policy');
 $knowledge_url = create_manage_url('knowledge');
-$skills_url = create_manage_url('skills');
-$attitudes_url = create_manage_url('attitudes');
 $policy_url = create_manage_url('policy');
 $course_url = create_manage_url('course');
 
@@ -49,9 +47,7 @@ echo $OUTPUT->header();
 <html>
 	<div class="nav_header">
 		<ul>
-		<li><a href=" <?php echo $knowledge_url; ?> ">Knowledge</a></li>
-		<li><a href=" <?php echo $skills_url; ?> ">Skills</a></li>
-		<li><a href=" <?php echo $attitudes_url; ?> ">Attitudes</a></li>
+		<li><a href=" <?php echo $knowledge_url; ?> ">Program Objectives</a></li>
 		<li class="onclick_nav"><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
 		<li><a href=" <?php echo $course_url; ?> ">Tags</a></li>
 		</ul>
