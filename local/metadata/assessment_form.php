@@ -29,7 +29,14 @@ class assessment_form extends metadata_form {
 		$this->populate_from_db($subset_included);
 		
 	}
-	
+	    /*
+     * Will determine if the sessions were uploaded
+     *
+     * @return boolean for if use wanted to upload file
+     */
+    public function sessions_were_uploaded() {
+        return $this->_form->getSubmitValue('upload_assessments') !== null;
+    }
 	
 	function add_assessment_template($assessmentCount){
 		
@@ -174,9 +181,16 @@ class assessment_form extends metadata_form {
 	function save_assessment_list($data){
 		global $DB;
 		$changed = array('assessmentname', 'type', 'assessmentprof', 'description', 'gdescription', 'assessmentweight', 'was_deleted');
+		
+		$learningObjectiveTypes = get_learning_objective_types();
+        foreach ($learningObjectiveTypes as $learningObjectiveType) {
+            $changed[] = 'learning_objective_'.$learningObjectiveType;
+        }
+		
 		$assessment_parser = new recurring_element_parser('courseassessment', 'assessment_list', $changed);
 		
 		$tuples = $assessment_parser->getTuplesFromData($data);
+		
         
         foreach ($tuples as $tupleKey => $tuple) {
             // TODO: Should also delete all the relations for each assessment
@@ -194,6 +208,7 @@ class assessment_form extends metadata_form {
 		$assessment_parser -> saveTuplesToDB($tuples);
 		
 		foreach ($tuples as $tuplekey => $tuple){
+			
 			$learningObjectiveTypes = get_learning_objective_types();
 			foreach ($learningObjectiveTypes as $learningObjectiveType) {
                 $key = 'learning_objective_'.$learningObjectiveType;
@@ -202,8 +217,9 @@ class assessment_form extends metadata_form {
                         $newLink = new stdClass();
                         $newLink->assessmentid = $tuple['id'];
                         $newLink->objectiveid = $objectiveId;
-						print_object($newlink);
+						print_object($newLink);
                         $DB->insert_record('assessmentobjectives', $newLink, false);
+						
                     }
                 }
             }
@@ -272,11 +288,26 @@ class assessment_form extends metadata_form {
 			$mform->setDefault('gdescription'.$index, $assessment->gdescription);
 			$mform->setDefault('courseassessment_id'.$index, $assessment->id);
 			
+			$this->setup_data_from_database_for_assessment($mform, $index, $assessment);
 			$key += 1;
 		}
 		
 	}
 	
+	//Stolen from Session_form
+	
+	function setup_data_from_database_for_assessment($mform, $index, $assessment) {
+        global $DB;
+        // Load the learning objectives for the assessment
+        // Template for this was found in \mod\glossary\edit.php
+        if ($learningObjectivesArr = $DB->get_records_menu("assessmentobjectives", array('assessmentid'=>$assessment->id), '', 'id, objectiveid')) {
+            $learningObjectiveTypes = get_learning_objective_types();
+            foreach ($learningObjectiveTypes as $learningObjectiveType) {
+                $mform->setDefault('learning_objective_'.$learningObjectiveType.$index, array_values($learningObjectivesArr));
+            }
+            
+        }
+	}
 	function add_upload($maxbytes){
 		$mform = $this -> _form;
 		
