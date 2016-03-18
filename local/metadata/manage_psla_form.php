@@ -23,13 +23,15 @@ require_once($CFG->dirroot.'/local/metadata/policy_form.php');
     
 // Set up page information
 //$PAGE->set_context($context);
+$PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = "Learning Objectives Management";
 $PAGE->set_heading($heading);
 $PAGE->set_url($CFG->wwwroot.'/local/metadata/manage_psla_form.php');
-$PAGE->requires->js('/local/metadata/tabview.js');
-$PAGE->requires->js('/local/metadata/util.php');
+
+//$PAGE->requires->js('/local/metadata/tabview.js');
+//$PAGE->requires->js('/local/metadata/util.php');
 
 
 // Create forms
@@ -82,7 +84,7 @@ if ($data = $attitudes_form->get_data()) {
 
 // Hande Button events for policy tab
 if ($data = $policy_form->get_data()) {
-	//policy_form::save_data($data);
+	policy_form::save_data($data);
 	redirect($policy_url);
 }
 
