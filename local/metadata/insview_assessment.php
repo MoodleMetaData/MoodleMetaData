@@ -16,6 +16,7 @@ require_once($CFG->dirroot.'/local/metadata/assessment_form.php');
 
 // Define global variable for DB result
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
+$page = optional_param('page', 0, PARAM_INT);
     
 // Set up page information
 $PAGE->set_context($context);
@@ -25,8 +26,9 @@ $heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->
 $PAGE->set_heading($heading);
 
 // TODO: Improve how this is done
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_assessment.php', array('id' => $courseId));
+$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_assessment.php', array('id' => $courseId, 'page' => $page));
 $PAGE->requires->css('/local/metadata/insview_style.css');
+$PAGE->requires->css('/local/metadata/assessment_element_style.css');
 
 // Create url
 $base_url = create_insview_url('assessment', $courseId);
@@ -35,9 +37,11 @@ $assessment_url = create_insview_url('assessment', $courseId);
 $session_url = create_insview_url('session', $courseId);
 $syllabus_url = create_insview_url('syllabus',$courseId);
 
+$assessment_url->param('page', $page);
+
 // Create forms
 $assessments = get_table_data_for_course('courseassessment');
-$assessment_form = new assessment_form($base_url, array('assessments'=>$assessments));
+$assessment_form = new assessment_form($assessment_url, array('assessments'=>$assessments));
 
 // Case where they cancelled the form. Just redirect to it, to reset values
 if ($assessment_form->is_cancelled()) {
@@ -46,13 +50,12 @@ if ($assessment_form->is_cancelled()) {
 
 // Submitted the data
 if ($data = $assessment_form->get_data()) {
-    // TODO: Save the submission data, use a function/class from different file
-    echo "Assessment";
-    //print_object($data);
 	$assessment_form -> save_assessment_list($data);
-    // TODO: Then, redirect
+    
+    $page += $assessment_form->get_page_change();
+    $assessment_url->param('page', $page);
+    
     redirect($assessment_url);
-
 } 
 
 echo $OUTPUT->header();
@@ -63,7 +66,7 @@ echo $OUTPUT->header();
 		<ul>
 		<li><a href=" <?php echo $general_url; ?> ">General</a></li>
 		<li class="onclick_nav"><a href=" <?php echo $assessment_url; ?> ">Assessment</a></li>
-		<li><a href=" <?php echo $session_url; ?> ">Session</a></li>
+		<li><a href=" <?php echo $base_url; ?> ">Session</a></li>
 		<li><a href=" <?php echo $syllabus_url; ?> ">Syllabus</a></li>
 		</ul>
 	</div>

@@ -1,8 +1,8 @@
-@local_metadata @local_metadata_session
-Feature: Session tab
-	In order to use the session tab
+@local_metadata @local_metadata_assessment
+Feature: Assessment tab
+	In order to use the assessment tab
 	As an instructor
-	I need to be able to add and delete sessions
+	I need to be able to add and delete assessment
   
   Background:
     Given the following "courses" exist:
@@ -12,31 +12,31 @@ Feature: Session tab
     And I am on homepage
     And I follow "Course 1"
     And I follow "Instructor Moodle Metadata"
-    Then I follow "Session"
+    Then I follow "Assessment"
     
   @javascript
   Scenario: Deleting session before saving
-    Given I create 2 sessions
+    Given I create 2 assessments
     And I set the following fields to these values:
-      | sessiontitle[0] | First title |
-      | sessiontitle[1] | Second title |
-    When I press "delete_session[0]"
+      | assessmentname[0] | First name |
+      | assessmentname[1] | Second name |
+    When I press "delete_assessment[0]"
     And I press "Save changes"
     Then the following fields match these values:
-      | sessiontitle[0] | Second title |
-    And "sessiontitle[1]" "text" should not exist
+      | assessmentname[0] | Second name |
+    And "assessmentname[1]" "text" should not exist
     
   
   @javascript
   Scenario: Deleting session after saving
-    Given I create 2 sessions
+    Given I create 2 assessments
     And I set the following fields to these values:
-      | sessiontitle[0] | First title |
-      | sessiontitle[1] | Second title |
+      | assessmentname[0] | First name |
+      | assessmentname[1] | Second name |
     And I press "Save changes"
     And I expand all fieldsets
-    When I press "delete_session[1]"
+    When I press "delete_assessment[1]"
     And I press "Save changes"
     Then the following fields match these values:
-      | sessiontitle[0] | First title |
-    And "sessiontitle[1]" "text" should not exist
+      | assessmentname[0] | First name |
+    And "assessmentname[1]" "text" should not exist

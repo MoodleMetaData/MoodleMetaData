@@ -71,12 +71,13 @@ class recurring_element_parser {
 
             $session['id'] = $data[$this->primaryKey][$index];
 
-            foreach($this->convertedAttributes as $element=>$func) {
-                if ($session[$element] != null) {
-                    $session[$element] = $func($session[$element]);
+            if (!is_null($this->convertedAttributes)) {
+                foreach($this->convertedAttributes as $element=>$func) {
+                    if ($session[$element] != null) {
+                        $session[$element] = $func($session[$element]);
+                    }
                 }
             }
-
             $sessions[] = $session;
         }
 
