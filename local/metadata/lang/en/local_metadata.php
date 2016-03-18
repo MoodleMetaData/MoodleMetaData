@@ -78,9 +78,10 @@ $string['obj_knowledge_header_help'] = 'Leave the space blank to delete the entr
 $string['obj_skill_header_help'] = 'Leave the space blank to delete the entry.';
 $string['obj_attitude_header_help'] = 'Leave the space blank to delete the entry.';
 $string['course_obj_header_help'] = 'To upload course objectives, only .csv file is permitted. <br />
-									The format is: [column1],[column2] <br />
-									[column1] is the course objective description. <br />
-									[column2] is the course objective type = {K, S, A}. <br />
+									The format is: [column1],[column2],[column3] <br />
+									[column1] is the course objective: knowledge. <br />
+									[column2] is the course objective: skill. <br />
+									[column3] is the course objective: attitude. <br />
 									Enter a new line to create a new entry.';
 $string['upload_reading_header_help'] = 'To upload course required readings, only .csv file is permitted. <br />
 									The format is: [column1],[column2] <br />

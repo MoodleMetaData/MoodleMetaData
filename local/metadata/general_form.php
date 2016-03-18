@@ -482,18 +482,23 @@ class general_form extends moodleform {
 			if(!empty($files)){
 				$file = reset($files); 
 				$content = $file->get_content();
+				$all_rows = explode("\n", $content);
 				
-				$parsed = str_getcsv($content, "\n");
-				foreach($parsed as $row){
-					$type = strrchr($row, ",")[1];
-					$name = substr($row, 0, strrpos($row, ","));
-					if($type === 'K'){
-						$this->insert_course_objective($name, 'Knowledge');
-					} else if ($type === 'S'){
-						$this->insert_course_objective($name, 'Skill');
-					} else {
-						$this->insert_course_objective($name, 'Attitude');
+				foreach($all_rows as $row){
+					$parsed = str_getcsv($row);
+					
+					if(!is_null($parsed[0])){
+						if($parsed[0] != ''){
+							$this->insert_course_objective($parsed[0], 'Knowledge');
+						}
+						if($parsed[1] != ''){
+							$this->insert_course_objective($parsed[1], 'Skill');
+						}
+						if($parsed[2] != ''){
+							$this->insert_course_objective($parsed[2], 'Attitude');
+						}
 					}
+					
 				}
 			}
 		}
