@@ -9,6 +9,7 @@ require_login();
 
 require_once($CFG->dirroot.'/local/metadata/university_policy.php');
 
+$PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = "Univeristy Syllabus Policy";
