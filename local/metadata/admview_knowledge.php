@@ -31,6 +31,7 @@ $knowledge_url = create_manage_url('knowledge');
 $skills_url = create_manage_url('skills');
 $attitudes_url = create_manage_url('attitudes');
 $policy_url = create_manage_url('policy');
+$course_url = create_manage_url('course');
 
 // Create forms
 $knowledge_form = new knowledge_form($base_url);
@@ -59,6 +60,7 @@ echo $OUTPUT->header();
 		<li><a href=" <?php echo $skills_url; ?> ">Skills</a></li>
 		<li><a href=" <?php echo $attitudes_url; ?> ">Attitudes</a></li>
 		<li><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
+		<li><a href=" <?php echo $course_url; ?> ">Tags</a></li>
 		</ul>
 	</div>
 	

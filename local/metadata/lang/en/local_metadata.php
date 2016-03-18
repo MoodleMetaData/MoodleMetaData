@@ -178,6 +178,15 @@ $string['program_obj_header_help'] = 'To upload program objectives, only .csv fi
 									Enter a new line to create a new entry.';
 $string['upload_program_obj'] = 'Upload';
 
+$string['admcourse_select'] = 'Select Course: ';
+$string['admselect_course'] = 'Select';
+$string['admobj_select'] = 'Learning Objective: ';
+$string['admselcourse'] = 'Select';
+$string['admpro_select'] = 'Program Objectives: ';
+$string['admaddobjective'] = 'Tag Objectives';
+$string['admpro_current'] = 'Current Tags: ';
+$string['admdelobjective'] = 'Remove Tag';
+
 // Metadata manager errors
 $string['mcreate_required'] = 'You must enter something.';
 $string['psla_exists'] = 'That learning objective already exists.';

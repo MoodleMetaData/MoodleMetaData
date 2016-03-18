@@ -99,4 +99,8 @@ function get_assessment_type($value){
 	
 	return $assessmentTypeArray[$value];
 }
+
+function get_objective_id() {
+	return optional_param('obj', -1, PARAM_INT);
+}
 ?>
