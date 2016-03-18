@@ -1,0 +1,81 @@
+<?php
+require_once '../../config.php';
+require_once $CFG->dirroot . '/lib/formslib.php';
+require_once $CFG->dirroot . '/lib/datalib.php';
+
+class gradatt_form extends moodleform {
+	function definition() {
+		global $CFG, $DB, $USER; // Declare our globals for use
+		$mform = $this->_form; // Tell this object to initialize with the properties of the Moodle form.
+		                       
+		// Form elements
+		                       
+		// Multiselect for program topics
+		                       // Get all from DB
+		$gradatt_list = array ();
+		$gradatt_list = $DB->get_records ( 'graduateattributes');
+		// $mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
+		
+		$psla_default = array ();
+		foreach ( $gradatt_list as $value ) {
+			$psla_default [$value->id] = $value->attribute;
+		}
+		
+		$gradatt_selection = $mform->addElement ( 'select', 'course_gradatt', get_string ( 'course_gradatt_header', 'local_metadata' ), $psla_default, '' );
+		$gradatt_selection->setMultiple ( true );
+		
+		// Delete Button
+		$mform->addElement ( 'submit', 'delete_gradatt', get_string ( 'delete_gradatt', 'local_metadata' ) );
+		
+		// Text box to add new program specific learning objectives
+		$mform->addElement ( 'text', 'new_gradatt', get_string ( 'new_gradatt', 'local_metadata' ), '' );
+		$mform->setType('new_gradatt', PARAM_RAW);
+		
+		// $add_group =& $mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
+		
+		// Submit button
+		$mform->addElement ( 'submit', 'create_gradatt', get_string ( 'create_gradatt', 'local_metadata' ) );
+	}
+	
+	// If you need to validate your form information, you can override the parent's validation method and write your own.
+	function validation($data, $files) {
+		$errors = parent::validation ( $data, $files );
+		global $DB, $CFG, $USER; // Declare them if you need them
+		
+		if (!empty($data['create_gradatt'])) {
+			if(empty($data['new_gradatt'])) {
+				$errors['new_gradatt'] = get_string('mcreate_required', 'local_metadata');
+			} else {
+				$table = 'graduateattributes';
+				$select = $DB->sql_compare_text('attribute')." = '".$data['new_gradatt']."'";
+				$check = $DB->get_records_select($table, $select);
+				if (count($check) != 0) {
+					$errors['new_gradatt'] = get_string('psla_exists', 'local_metadata');
+				}
+			}
+		}
+		
+		return $errors;
+	}
+	
+	// Saves data from form to the database. Passed in is the data
+	public static function save_data($data) {
+		global $CFG, $DB, $USER;
+		$new_la = new stdClass ();
+		$new_la->attribute = $data->new_gradatt;
+		
+		$insert_newla = $DB->insert_record ( 'graduateattributes', $new_la, false );
+	}
+	
+	// Deletes all selected already existing elements from the database
+	public static function delete_data($data) {
+		global $CFG, $DB, $USER;
+	
+		foreach ($data->course_gradatt as $value) {
+			$delete_oldla = $DB->delete_records('graduateattributes', array('id'=>$value));
+		}
+	
+	}
+}
+
+?>

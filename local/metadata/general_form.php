@@ -21,12 +21,16 @@ class general_form extends moodleform {
 		$courseinfo = $DB->get_record('courseinfo', array('courseid'=>$courseId));
 		if($courseinfo != NULL){
 			$contactinfo = $DB->get_record('courseinstructors', array('courseid'=>$courseinfo->id, 'userid'=>$USER->id));
+			$coursegradattributes = $DB->get_records('coursegradattributes', array('courseinfoid'=>$courseinfo->id));
 		} else {
 			$contactinfo = NULL;
+			$coursegradattributes = NULL;
 		}
 		$coursecategories = $DB->get_records('course_categories');
 		$coursereadings = get_course_readings();
-
+		$graduateattributes = $DB->get_records('graduateattributes');
+		
+		
 		$reading_list = array();
 		foreach($coursereadings as $reading){
 			$obj = new stdClass();
@@ -34,6 +38,15 @@ class general_form extends moodleform {
 			$obj->name = $reading->readingname;
 			$obj->url = $reading->readingurl;
 			$reading_list[] = $obj;
+		}
+		
+		$gradatt_list = array();
+		foreach($coursegradattributes as $gradatt){
+			$obj = new stdClass();
+			$obj->id = $gradatt->id;
+			$gradatts = $DB->get_record('graduateattributes', array('id'=>$gradatt->gradattid));
+			$obj->gradattid = $gradatts->id;
+			$gradatt_list[] = $obj;
 		}
 		
 		$learning_objectives = get_course_learning_objectives();
@@ -62,7 +75,7 @@ class general_form extends moodleform {
 		$this->setup_course_obj($mform, 'knowledge', $knowledge_list, 'skill');
 		$this->setup_course_obj($mform, 'skill', $skill_list, 'attitude');
 		$this->setup_course_obj($mform, 'attitude', $attitude_list, 'gradatt');
-		$this->setup_graduate_attributes($mform);
+		$this->setup_graduate_attributes($mform, $graduateattributes, $gradatt_list);
 		$this->setup_teaching_assumption($mform, $courseinfo);
  
 		// Add form buttons
@@ -296,7 +309,6 @@ class general_form extends moodleform {
 		$mform->addHelpButton('course_format_header', 'course_format_header', 'local_metadata');
 		
 		// Assessment
-		// TODO: MANIPULATE ASSESSMENT FIELD AS SPECIFIED
 		$course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'), '');
 		$mform->addRule('course_assessment', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->addRule('course_assessment', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
@@ -313,7 +325,6 @@ class general_form extends moodleform {
 		$mform->setType('course_assessment', PARAM_INT);
 
 		// Session
-		// TODO: MANIPULATE SESSION FIELD AS SPEFICIED
 		$course_assessment = $mform->addElement('text', 'course_session', get_string('session_counter', 'local_metadata'), '');
 		$mform->addRule('course_session', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->addRule('course_session', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
@@ -403,9 +414,9 @@ class general_form extends moodleform {
 	}
 	
 	/**
-	 * TODO: Add form elements for graduate attributes.
+	 * Add form elements for graduate attributes.
 	 */
-	private function setup_graduate_attributes($mform){
+	private function setup_graduate_attributes($mform, $graduateattributes, $list){
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $course;
 		
@@ -413,22 +424,35 @@ class general_form extends moodleform {
 
 		$gradAtt_array = array();
 
-		// TODO: MANIPULATE THE LIST FROM DB
 		$course_gradAtts = array();
-		$course_gradAtts[] = 'attribute 1';
-		$course_gradAtts[] = 'attribute 2';
+		foreach($graduateattributes as $graduateattribute){
+			$course_gradAtts[$graduateattribute->id] = $graduateattribute->attribute;
+		}		
 
 		$gradAtt_array[] = $mform->createElement('select', 'gradAtt_option', get_string('course_gradAtt', 'local_metadata'), $course_gradAtts, '');
-		$gradAtt_array[] = $mform->createElement('hidden', 'gradAtt_id', 0);
-
-		$repeatg = 0;
+		$gradAtt_array[] = $mform->createElement('hidden', 'gradAtt_id', -1);
 
 		$gradAtt_options = array();
 		$mform->setType('gradAtt_option', PARAM_CLEANHTML);
 		$mform->setType('gradAtt_id', PARAM_INT);
-		$this->repeat_elements($gradAtt_array, $repeatg, $gradAtt_options, 'option_repeats4', 'option_add_fields_gradAtt', 1, get_string('add_gradAtt', 'local_metadata'), true);
+		$this->repeat_elements($gradAtt_array, count($list), $gradAtt_options, 'option_repeats_gradAtt', 'option_add_fields_gradAtt', 1, get_string('add_gradAtt', 'local_metadata'), true);
 
+		$key = 0;
+		foreach ($list as $_item) {
+			$index = '['.$key.']';
+			$mform->setDefault('gradAtt_option'.$index, $_item->gradattid);
+			$mform->setDefault('gradAtt_id'.$index, $_item->id);
+			$key += 1;
+		}
+		
 		$mform->closeHeaderBefore('teaching_assumption_header');
+
+		// If list is not empty, open the header
+		if(count($list) > 0){
+			$mform->setExpanded('course_gradatt_header');
+		}
+		
+		
 	}
 	
 	/**
@@ -791,6 +815,24 @@ class general_form extends moodleform {
 				}	
 			}
 
+			if(!empty($data->gradAtt_option)){
+				$grad_gradattid = $data->gradAtt_option;
+				$grad_id = $data->gradAtt_id;
+				for($i = 0; $i < count($grad_id); $i++){
+					if($gradattExist = $DB->record_exists('coursegradattributes', array('id'=>$grad_id[$i]))){
+						$g = new stdClass();
+						$g->id = $grad_id[$i];
+						$g->gradattid = $grad_gradattid[$i];
+						$update_courseObj = $DB->update_record('coursegradattributes', $g, false);
+					} else {
+						$grad_att = new stdClass();
+						$grad_att->courseinfoid = $existCourseInfo->id;
+						$grad_att->gradattid = $grad_gradattid[$i];
+						$insert_coursegradatt = $DB->insert_record('coursegradattributes', $grad_att, true, false);
+					}
+				}
+			}
+			
 		}else{
 			$insert_courseinfo = $DB->insert_record('courseinfo', $course_info, true, false);
 
@@ -844,6 +886,17 @@ class general_form extends moodleform {
 					if($attitude_temp != NULL){ 
 						$this->insert_course_objective($attitude_temp, 'Attitude');
 					}  
+				}
+			}
+			
+			// Handle graduate attributes
+			if(!empty($data->gradAtt_option)){
+				foreach($data->gradAtt_option as $gradAtt){
+					$grad_att = new stdClass();
+					$grad_att->courseinfoid = $insert_courseinfo;
+					$grad_att->gradattid = $gradAtt;
+					$insert_coursegradatt = $DB->insert_record('coursegradattributes', $grad_att, true, false);
+
 				}
 			}
 
