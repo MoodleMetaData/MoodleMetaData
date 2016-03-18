@@ -137,13 +137,17 @@ $string['knowledge_text'] = 'At the end of the course the student will be able t
 $string['skills_header'] = 'Skills';
 $string['attitudes_header'] ='Attitudes';
 $string['grading_header'] = 'Grading';
-$string['assessment_grading_desc'] = 'Description: ';
+$string['assessment_grading_desc'] = 'Grading Description: ';
 $string['assessment_prof_default'] = 'First, Last';
 $string['assessment_due'] = 'Date: ';
 $string['assessment_duration'] = 'Duration: ';
 $string['assessment_due'] = 'Due Date: ';
 $string['general_header'] = 'General';
 $string['deleteassessment'] = 'Delete Assessment';
+$string['assessment_filepicker'] = 'Upload Assessments';
+$string['upload_assessments'] = 'Submit';
+$string['assessment_grading_upload'] = 'Upload Grading Description';
+$string['assessment_grading_upload_submit'] = 'Submit';
 
 // Metadata manager strings
 $string['manage_knowledge'] = 'Knowledge Attributes: ';
