@@ -12,11 +12,11 @@ body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="sessiontitle_
 }
 
 /* Middle */
-body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="sessiondescription_"],
 body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="sessionguestteacher_"],
 body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="sessiontype_"],
 body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="sessionlength_"],
 body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="sessiondate_"],
+body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="sessionteachingstrategy_"],
 body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="learning_objective_Attitude"],
 body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="learning_objective_Knowledge"],
 body#page-local-metadata-insview_session div[id^="fitem_id_"][id*="learning_objective_Skill"],

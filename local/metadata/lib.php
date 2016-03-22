@@ -90,6 +90,10 @@ function create_manage_url($form) {
 	return new moodle_url('/local/metadata/admview_'.$form.'.php');
 }
 
+function get_teaching_strategies() {
+    return array('First', 'Second', 'Other');
+}
+
 function get_assessment_type($value){
 	$assessmentTypeArray = array();
 	$assessmentTypeArray[0] = "Exam";

@@ -106,7 +106,7 @@ class session_form extends metadata_form {
         $data = array();
         $data['courseid'] = $courseid;
         $data['sessiontitle'] = $row[0];
-        $data['sessiondescription'] = $row[1];
+        $data['sessionteachingstrategy'] = $row[1];
         $data['sessionguestteacher'] = $row[2];
         $data['sessiontype'] = $row[3];
         $data['sessionlength'] = $row[4];
@@ -144,7 +144,7 @@ class session_form extends metadata_form {
         global $DB;
         
         // Set up the recurring element parser
-        $allChangedAttributes = array('sessiontitle', 'sessiondescription', 'sessionguestteacher', 'sessiontype', 'sessionlength', 'sessiondate', 'assessments', 'was_deleted', 'all_topics_text_array');
+        $allChangedAttributes = array('sessiontitle', 'sessionteachingstrategy', 'sessionguestteacher', 'sessiontype', 'sessionlength', 'sessiondate', 'assessments', 'was_deleted', 'all_topics_text_array');
         
         
         
@@ -155,9 +155,10 @@ class session_form extends metadata_form {
         
         $types = session_form::get_session_types();
         $lengths = session_form::get_session_lengths();
+        $strategies = get_teaching_strategies();
         $convertedAttributes = array('sessiontype' => function($value) use ($types) { return $types[$value]; },
-                                     'sessionlength' => function($value) use ($lengths) { return $lengths[$value]; }
-                                     );
+                                     'sessionlength' => function($value) use ($lengths) { return $lengths[$value]; },
+                                     'sessionteachingstrategy' => function($value) use ($strategies) { return $strategies[$value]; });
 
         $session_recurring_parser = new recurring_element_parser('coursesession', 'sessions_list', $allChangedAttributes, $convertedAttributes);
         
@@ -294,17 +295,16 @@ class session_form extends metadata_form {
         
         $repeatarray[] = $mform->createElement('text', 'sessiontitle', get_string('session_title', 'local_metadata'));
         
-        $repeatarray[] = $mform->createElement('textarea', 'sessiondescription', get_string('session_description', 'local_metadata'));
-        
         $repeatarray[] = $mform->createElement('text', 'sessionguestteacher', get_string('session_guest_teacher', 'local_metadata'));
         
-
         $repeatarray[] = $mform->createElement('select', 'sessiontype', get_string('session_type', 'local_metadata'), session_form::get_session_types());
         
         $repeatarray[] = $mform->createElement('select', 'sessionlength', get_string('session_length', 'local_metadata'), session_form::get_session_lengths());
+        
 
         $repeatarray[] = $mform->createElement('date_selector', 'sessiondate', get_string('session_date', 'local_metadata'));
 
+        $repeatarray[] = $mform->createElement('select', 'sessionteachingstrategy', get_string('session_teaching_strategy', 'local_metadata'), get_teaching_strategies());
 
         // Set up the select for learning objectives
             // Will separate them based on type
@@ -398,10 +398,13 @@ class session_form extends metadata_form {
             $mform->setDefault('coursesession_id'.$index, $session->id);
             $mform->setDefault('sessiontitle'.$index, $session->sessiontitle);
             $mform->setDefault('sessionguestteacher'.$index, $session->sessionguestteacher);
-            $mform->setDefault('sessiondescription'.$index, $session->sessiondescription);
             $mform->setDefault('sessiondate'.$index, $session->sessiondate);
             $mform->setDefault('sessiondate'.$index, $session->sessiondate);
 
+            // Handled specially, because the default must be an int, which needs to be translated from string in database
+            $strategies = get_teaching_strategies();
+            $mform->setDefault('sessionteachingstrategy'.$index, array_search($session->sessionteachingstrategy, $strategies));
+            
             // Handled specially, because the default must be an int, which needs to be translated from string in database
             $types = session_form::get_session_types();
             $mform->setDefault('sessiontype'.$index, array_search($session->sessiontype, $types));
@@ -500,7 +503,7 @@ class session_form extends metadata_form {
                     // Will not save to the database until the user presses submit
                 $mform->removeElement('sessionheader'.$index);
                 $mform->removeElement('sessiontitle'.$index);
-                $mform->removeElement('sessiondescription'.$index);
+                $mform->removeElement('sessionteachingstrategy'.$index);
                 $mform->removeElement('sessionguestteacher'.$index);
 
                 $mform->removeElement('sessiontype'.$index);
@@ -603,7 +606,13 @@ class session_form extends metadata_form {
         $all_topics = $this->get_all_topics($index);
         
         $topics_text_array = $this->get_topic_text_array($index);
-        $topics_array = explode(session_form::TOPIC_SEPARATOR, $topics_text_array->getValue());
+        
+        $topics_text_array_val = $topics_text_array->getValue();
+        if ($topics_text_array_val !== '') {
+            $topics_array = explode(session_form::TOPIC_SEPARATOR, $topics_text_array_val);
+        } else {
+            $topics_array = array();
+        }
         
         if ($topic_was_deleted) {
             $selected = $all_topics->getValue();

@@ -59,7 +59,7 @@
         <FIELD NAME="sessionguestteacher" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="sessiontype" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="sessiondescription" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="sessionteachingstrategy" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>
@@ -161,6 +161,7 @@
       </FIELDS>
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+		<KEY NAME="category" TYPE="foreign" FIELDS="category" REFTABLE="course_categories" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="graduateattributes" COMMENT="Defined by faculty administrator">
@@ -206,6 +207,16 @@
         <KEY NAME="courseid" TYPE="foreign" FIELDS="courseid" REFTABLE="courseinfo" REFFIELDS="id"/>
         <KEY NAME="objectiveid" TYPE="foreign" FIELDS="objectiveid" REFTABLE="programobjectives" REFFIELDS="id"/>
         <KEY NAME="tagid" TYPE="foreign" FIELDS="tagid" REFTABLE="courseobjectives" REFFIELDS="id"/>
+    <TABLE NAME="requiredelements" COMMENT="Elements marked as required by the administrator">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="category" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="attributename" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="form" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+		<KEY NAME="category" TYPE="foreign" FIELDS="category" REFTABLE="course_categories" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
   </TABLES>

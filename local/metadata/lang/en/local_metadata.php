@@ -95,7 +95,7 @@ $string['instructor_heading'] = 'Metadata for %s: %s';
 
 $string['add_session'] = 'Add new session';
 $string['session_title'] = 'Title';
-$string['session_description'] = 'Description';
+$string['session_teaching_strategy'] = 'Teaching Strategy';
 $string['session_guest_teacher'] = 'Guest Lecturer';
 $string['session_guest_teacher_help'] = 'If there is a different lecuturer, write out their full name. Otherwise, leave blank';
 $string['session_type'] = 'Type';
