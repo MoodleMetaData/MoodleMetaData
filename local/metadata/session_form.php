@@ -603,7 +603,13 @@ class session_form extends metadata_form {
         $all_topics = $this->get_all_topics($index);
         
         $topics_text_array = $this->get_topic_text_array($index);
-        $topics_array = explode(session_form::TOPIC_SEPARATOR, $topics_text_array->getValue());
+        
+        $topics_text_array_val = $topics_text_array->getValue();
+        if ($topics_text_array_val !== '') {
+            $topics_array = explode(session_form::TOPIC_SEPARATOR, $topics_text_array_val);
+        } else {
+            $topics_array = array();
+        }
         
         if ($topic_was_deleted) {
             $selected = $all_topics->getValue();

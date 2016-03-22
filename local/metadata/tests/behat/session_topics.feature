@@ -18,6 +18,7 @@ Feature: Session tab
   @javascript
   Scenario: Adding and deleting topics for an existing session, with saved and unsaved topic deleted topics
     Given I create 1 sessions
+    And the "all_topics[0][]" select box should not contain ""
     And I set the field "sessiontitle[0]" to "Title"
     And I add to session 0 topic "Undeleted"
     And I add to session 0 topic "Saved Deleted Topic"
@@ -36,6 +37,7 @@ Feature: Session tab
     And the "all_topics[0][]" select box should not contain "Saved Deleted Topic"
     And the "all_topics[0][]" select box should not contain "Unsaved Deleted Topic"
     And the "all_topics[0][]" select box should not contain "Saved Deleted Topic"
+    And the "all_topics[0][]" select box should not contain ""
     And the field "sessiontitle[0]" matches value "Title"
   
   @javascript
