@@ -297,7 +297,6 @@ EOD;
 				<font size="11%"><b>Date</b>:'. $sessiondate.' <br>
 				<b>Length</b>:'. $coursesession->sessionlength .'<br>
 				<b>Type</b>:'. $coursesession->sessiontype .'<br>
-				<b>Description</b>:<br>'. $coursesession->sessiondescription .'<br>
 				<b>Guest teacher</b>:'. $guestteacher .'<hr></font>';
 				$sessionno ++;
 			}
