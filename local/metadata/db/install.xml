@@ -208,6 +208,7 @@
         <KEY NAME="objectiveid" TYPE="foreign" FIELDS="objectiveid" REFTABLE="programobjectives" REFFIELDS="id"/>
         <KEY NAME="tagid" TYPE="foreign" FIELDS="tagid" REFTABLE="courseobjectives" REFFIELDS="id"/>
       </KEYS>
+    </TABLE>
     <TABLE NAME="requiredelements" COMMENT="Elements marked as required by the administrator">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
