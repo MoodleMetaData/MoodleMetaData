@@ -15,7 +15,6 @@ Feature: Session tab
     Then I follow "Session"
     
   
-  @javascript
   Scenario: Adding and deleting topics for an existing session, with saved and unsaved topic deleted topics
     Given I create 1 sessions
     And the "all_topics[0][]" select box should not contain ""
@@ -40,7 +39,6 @@ Feature: Session tab
     And the "all_topics[0][]" select box should not contain ""
     And the field "sessiontitle[0]" matches value "Title"
   
-  @javascript
   Scenario: Adding and deleting topics for a new session. Then save and ensure stays
     Given I create 1 sessions
     And I set the field "sessiontitle[0]" to "Title"
@@ -57,7 +55,6 @@ Feature: Session tab
     And the "all_topics[0][]" select box should not contain "Unsaved Deleted Topic"
     And the field "sessiontitle[0]" matches value "Title"
   
-  @javascript
   Scenario: Pressing delete when nothing was selected for session, or pressing add when nothing was entered for topic
     Given I create 1 sessions
     And I set the field "sessiontitle[0]" to "Title"

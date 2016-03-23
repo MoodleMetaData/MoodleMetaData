@@ -213,7 +213,7 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="category" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="attributename" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="elementname" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="form" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
