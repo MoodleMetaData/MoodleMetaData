@@ -14,7 +14,6 @@ Feature: Session tab
     And I follow "Instructor Moodle Metadata"
     Then I follow "Session"
     
-  @javascript
   Scenario: Deleting session before saving
     Given I create 2 sessions
     And I set the following fields to these values:
@@ -27,7 +26,6 @@ Feature: Session tab
     And "sessiontitle[1]" "text" should not exist
     
   
-  @javascript
   Scenario: Deleting session after saving
     Given I create 2 sessions
     And I set the following fields to these values:
