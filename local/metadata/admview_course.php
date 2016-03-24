@@ -27,6 +27,7 @@ $policy_url = create_manage_url('policy');
 $course_url = create_manage_url('course');
 $gradatt_url = create_manage_url('gradatt');
 $required_url = create_manage_url('required');
+$reporting_url = create_manage_url('reporting');
 
 $PAGE->set_url($course_url);
 $PAGE->requires->css('/local/metadata/insview_style.css');
@@ -55,6 +56,7 @@ echo $OUTPUT->header();
 		<li><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
 		<li class="onclick_nav"><a href=" <?php echo $course_url; ?> ">Tags</a></li>
 		<li><a href=" <?php echo $required_url; ?> ">Required</a></li>
+		<li><a href=" <?php echo $reporting_url; ?> ">Reporting</a></li>
 		</ul>
 	</div>
 	
