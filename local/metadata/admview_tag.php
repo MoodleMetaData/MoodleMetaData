@@ -25,9 +25,6 @@ $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = 'Program Learning Objectives: '.$course->shortname.': '.$course->fullname;
 $PAGE->set_heading($heading);
 
-// TODO: Improve how this is done
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/admview_tag.php');
-$PAGE->requires->css('/local/metadata/insview_style.css');
 
 // Create url
 $base_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId));
@@ -35,6 +32,11 @@ $knowledge_url = create_manage_url('knowledge');
 $policy_url = create_manage_url('policy');
 $tag_url = create_manage_url('course');
 $gradatt_url = create_manage_url('gradatt');
+$required_url = create_manage_url('required');
+
+$PAGE->set_url($base_url);
+$PAGE->requires->css('/local/metadata/insview_style.css');
+
 
 // Create forms
 $tag_form = new tag_form($base_url);
@@ -67,6 +69,7 @@ echo $OUTPUT->header();
 		<li><a href=" <?php echo $gradatt_url; ?> ">Graduate Attribute</a></li>
 		<li><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
 		<li class="onclick_nav"><a href=" <?php echo $tag_url; ?> ">Tags</a></li>
+		<li><a href=" <?php echo $required_url; ?> ">Required</a></li>
 		</ul>
 	</div>
 	

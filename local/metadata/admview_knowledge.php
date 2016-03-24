@@ -21,19 +21,19 @@ $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = "Learning Objectives Management";
 $PAGE->set_heading($heading);
 
-// TODO: Improve how this is done
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/admview_knowledge.php');
-$PAGE->requires->css('/local/metadata/insview_style.css');
-
 // Create url
-$base_url = create_manage_url('knowledge');
 $knowledge_url = create_manage_url('knowledge');
 $policy_url = create_manage_url('policy');
 $course_url = create_manage_url('course');
 $gradatt_url = create_manage_url('gradatt');
+$required_url = create_manage_url('required');
+
+$PAGE->set_url($knowledge_url);
+$PAGE->requires->css('/local/metadata/insview_style.css');
+
 
 // Create forms
-$knowledge_form = new knowledge_form($base_url);
+$knowledge_form = new knowledge_form($knowledge_url);
 
 // Submitted the data
 if ($data = $knowledge_form->get_data()) {
@@ -63,6 +63,7 @@ echo $OUTPUT->header();
 		<li><a href=" <?php echo $gradatt_url; ?> ">Graduate Attribute</a></li>
 		<li><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
 		<li><a href=" <?php echo $course_url; ?> ">Tags</a></li>
+		<li><a href=" <?php echo $required_url; ?> ">Required</a></li>
 		</ul>
 	</div>
 	

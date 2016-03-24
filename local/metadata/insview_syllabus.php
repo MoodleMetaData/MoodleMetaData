@@ -16,25 +16,26 @@ require_once($CFG->dirroot.'/local/metadata/syllabus_form.php');
 
 // Define global variable for DB result
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
-    
+
 // Set up page information
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->shortname, $course->fullname);
 $PAGE->set_heading($heading);
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_general.php');
-$PAGE->requires->css('/local/metadata/insview_style.css');
 
-// Create url
-$base_url = create_insview_url('syllabus', $courseId);
+// Create urls
 $general_url = create_insview_url('general',$courseId);
 $assessment_url = create_insview_url('assessment', $courseId);
 $session_url = create_insview_url('session', $courseId);
 $syllabus_url = create_insview_url('syllabus',$courseId);
 
+$PAGE->set_url($syllabus_url);
+$PAGE->requires->css('/local/metadata/insview_style.css');
+
+
 // Create forms
-$syllabus_form = new syllabus_form($base_url);
+$syllabus_form = new syllabus_form($syllabus_url);
 
 // Case where they cancelled the form. Just redirect to it, to reset values
 if ($syllabus_form->is_cancelled()) {

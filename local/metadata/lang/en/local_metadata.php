@@ -94,14 +94,14 @@ $string['course_data'] = 'Course data';
 $string['instructor_heading'] = 'Metadata for %s: %s';
 
 $string['add_session'] = 'Add new session';
-$string['session_title'] = 'Title';
-$string['session_teaching_strategy'] = 'Teaching Strategy';
-$string['session_guest_teacher'] = 'Guest Lecturer';
+$string['session_title'] = 'Title:';
+$string['session_teaching_strategy'] = 'Teaching Strategy:';
+$string['session_guest_teacher'] = 'Guest Lecturer:';
 $string['session_guest_teacher_help'] = 'If there is a different lecuturer, write out their full name. Otherwise, leave blank';
-$string['session_type'] = 'Type';
-$string['session_length'] = 'Length';
-$string['session_date'] = 'Date';
-$string['manage_topics'] = 'Topics';
+$string['session_type'] = 'Type:';
+$string['session_length'] = 'Length:';
+$string['session_date'] = 'Date:';
+$string['manage_topics'] = 'Topics:';
 $string['add_topic'] = 'Add';
 $string['new_session_header'] = 'New Session';
 $string['unnamed_session'] = 'Unnamed Session';
@@ -202,6 +202,17 @@ $string['admdelobjective'] = 'Remove Tag';
 // Metadata manager errors
 $string['mcreate_required'] = 'You must enter something.';
 $string['psla_exists'] = 'That learning objective already exists.';
+
+// Required form, admin
+$string['admin_general_header'] = 'General Tab Required';
+$string['admin_general_header_help'] = 'Check the items that you would like to be required in the general form';
+$string['admin_assessment_header'] = 'Assessment Tab Required';
+$string['admin_assessment_header_help'] = 'Check the items that you would like to be required in the assessment form';
+$string['admin_session_header'] = 'Session Tab Required';
+$string['admin_session_header_help'] = 'Check the items that you would like to be required in the session form';
+
+// Specialized items
+$string['require_uploaded_rubric'] = 'Uploaded rubric:';
 
 $string['next_page'] = 'Next Page';
 $string['previous_page'] = 'Previous Page';
