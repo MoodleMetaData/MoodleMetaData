@@ -171,7 +171,7 @@ class knowledge_form extends moodleform {
 	 * Insert a record to program objective table.
 	 * @param $name		program objective name
 	 * @param $type		program objective type
-	 * @patam void
+	 * @return void
 	 */
 	private function insert_program_objective($name, $type){
 		global $DB, $CFG, $USER; //Declare them if you need them

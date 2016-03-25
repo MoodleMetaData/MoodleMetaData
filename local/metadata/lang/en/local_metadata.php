@@ -31,8 +31,8 @@ $string['course_category'] = 'Course category: ';
 $string['course_objective'] = 'Course learning objective(s): ';
 $string['course_faculty'] = 'Faculty: ';
 $string['course_gradAtt'] = 'Attribute {no}: ';
-$string['assessment_counter'] = 'Number of assessment: ';
-$string['session_counter'] = 'Number of session: ';
+$string['assessment_counter'] = 'Number of graded assessment: ';
+$string['session_counter'] = 'Number of session: <br />(lecture, lab, seminar) ';
 $string['teaching_assumption'] = 'Instructor assumption: ';
 
 $string['course_reading_desc'] = 'Required reading: ';
@@ -59,6 +59,10 @@ $string['course_email'] = 'E-mail: ';
 $string['course_phone'] = 'Phone: ';
 $string['course_office'] = 'Office: ';
 $string['course_officeh'] = 'Office hours: ';
+$string['default_officeh'] = 'By appointment';
+$string['default_officeh_help'] = 'By selecting "By appointment", below options will be ignored.';
+$string['fromhour_label'] = 'From: ';
+$string['tohour_label'] = 'To: ';
 
 $string['obj_knowledge_header'] = 'Course objective: Knowledge';
 $string['obj_skill_header'] = 'Course objective: Skill';

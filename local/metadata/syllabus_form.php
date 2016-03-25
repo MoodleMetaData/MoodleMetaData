@@ -6,7 +6,7 @@ require_once $CFG->dirroot.'/lib/tcpdf/tcpdf.php';
 require_once 'lib.php';
 
 /**
- * The form to display the tab for general information.
+ * The form to display the tab for generating syllabus.
  */
 class syllabus_form extends moodleform {
 	

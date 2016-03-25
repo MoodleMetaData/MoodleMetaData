@@ -27,7 +27,7 @@ class general_form extends moodleform {
 			$contactinfo = NULL;
 			$coursegradattributes = NULL;
 		}
-		$coursecategories = $DB->get_records('course_categories');
+		$coursecategory = $DB->get_record('course_categories', array('id'=>$course->category));
 		$coursereadings = get_course_readings();
 		$graduateattributes = $DB->get_records('graduateattributes');
 		
@@ -68,7 +68,7 @@ class general_form extends moodleform {
 		} 
 		
 		// setup form elements
-		$this->setup_general($mform, $courseinfo, $contactinfo, $coursecategories);
+		$this->setup_general($mform, $courseinfo, $contactinfo, $coursecategory);
 		$this->setup_contact($mform, $courseinfo, $contactinfo);
 		$this->setup_description($mform, $courseinfo);
 		$this->setup_upload_req_reading($mform);	
@@ -92,7 +92,7 @@ class general_form extends moodleform {
 	 * @param $contactinfo	a record of contact information from course instructor table.
 	 * @return void
 	 */
-	private function setup_general($mform, $courseinfo, $contactinfo, $coursecategories){
+	private function setup_general($mform, $courseinfo, $contactinfo, $coursecategory){
 		global $CFG, $DB, $USER; //Declare our globals for use
         global $course;           
 	    $mform->addElement('header', 'course_general_header', get_string('course_general_header', 'local_metadata'));
@@ -105,7 +105,21 @@ class general_form extends moodleform {
 		$courseName = $course->fullname;
 		$mform->addElement('static', 'course_name', get_string('course_name', 'local_metadata'));
 		$mform->setDefault('course_name', $courseName);
-				
+		
+		// Faculty
+		$course_faculty = $mform->addElement('static', 'course_faculty', get_string('course_faculty', 'local_metadata'), $coursecategory->name); 
+		$course_faculty_id = $mform->addElement('hidden', 'course_faculty_id', $coursecategory->id);
+		$mform->setType('course_faculty_id', PARAM_INT);
+		
+		// Courses category
+		$category_list = array();
+		
+		$course_category_selection = $mform->addElement('select', 'course_category', get_string('course_category', 'local_metadata'), $category_list, '');
+		//$mform->addRule('course_category', get_string('err_required', 'local_metadata'), 'required', null, 'client');
+		if($courseinfo){
+			//$course_category_selection->setSelected($courseinfo->coursecategory);
+		}
+		
 		// Instructor
 		$courseInstructor = $USER->lastname.', '.$USER->firstname;
 		$course_instructor = $mform->addElement('text', 'course_instructor', get_string('course_instructor', 'local_metadata'), '');
@@ -116,38 +130,6 @@ class general_form extends moodleform {
 		}
 		$mform->addRule('course_instructor', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->setType('course_instructor', PARAM_TEXT);
-		
-		// Faculty
-		$course_faculty = $mform->addElement('text', 'course_faculty', get_string('course_faculty', 'local_metadata'), '');
-		if($courseinfo){
-			$mform->setDefault('course_faculty', $courseinfo->coursefaculty);
-		}   
-		$mform->addRule('course_faculty', get_string('err_required', 'local_metadata'), 'required', null, 'client');
-		$mform->setType('course_faculty', PARAM_TEXT);
-
-		/*
-		// Program types
-		// TODO: FETCH DATA FROM DBTO MANIPULATE THE LIST
-		$program_types = array();
-		$program_types[] = 'program type 1';
-		$program_types[] = 'program type 2';
-		// -------------------------------------
-		$program_type_selection = $mform->addElement('select', 'program_type', get_string('program_type', 'local_metadata'), $program_types, '');
-		$mform->addRule('program_type', get_string('err_required', 'local_metadata'), 'required', null, 'client');
-		*/
-
-		// Courses category
-		$category_list = array();
-		foreach($coursecategories as $coursecategory){
-			$category_list[$coursecategory->id] = $coursecategory->name;
-		}
-		
-		$course_category_selection = $mform->addElement('select', 'course_category', get_string('course_category', 'local_metadata'), $category_list, '');
-		$mform->addRule('course_category', get_string('err_required', 'local_metadata'), 'required', null, 'client');
-		if($courseinfo){
-			$course_category_selection->setSelected($courseinfo->categoryid);
-		}
-		
 		
 		$mform->closeHeaderBefore('course_contact_header');  
 
@@ -170,6 +152,8 @@ class general_form extends moodleform {
 		$course_email = $mform->addElement('text', 'course_email', get_string('course_email', 'local_metadata'), '');
 		if($contactinfo){
 			$mform->setDefault('course_email', $contactinfo->email);
+		} else{
+			$mform->setDefault('course_email', $USER->email);
 		}
 		$mform->addRule('course_email', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->addRule('course_email', get_string('err_email', 'local_metadata'), 'email', null, 'client');
@@ -191,14 +175,63 @@ class general_form extends moodleform {
 		$mform->setType('course_office', PARAM_TEXT);
 
 		// Office hours
-		$course_officeh = $mform->addElement('text', 'course_officeh', get_string('course_officeh', 'local_metadata'), '');
-		if($contactinfo){
-			$mform->setDefault('course_officeh', $contactinfo->officehours);
+		// Set default hours
+		$mform->addElement('advcheckbox', 'default_officeh', get_string('course_officeh', 'local_metadata'), get_string('default_officeh', 'local_metadata'), null, array(0, get_string('default_officeh', 'local_metadata')));
+		$mform->addHelpButton('default_officeh', 'default_officeh', 'local_metadata');
+		
+		// Set day
+		$daygroup = array();
+		foreach(get_days() as $day){
+			$daygroup[] =& $mform->createElement('advcheckbox', $day, '', $day, null, array(0, $day));
 		}
-		$mform->setType('course_officeh', PARAM_TEXT);
-
-		$mform->addRule('course_officeh', get_string('err_required', 'local_metadata'), 'required', null, 'client');
-
+		$mform->addGroup($daygroup, 'daygroup', '', array(' '), false);
+		
+		// Set time
+		$timegroup = array();
+		$hour = array();
+		for($i = 0; $i < 13; $i++){
+			$hour[] = sprintf("%02d", $i);
+		}
+		$minute = array();
+		for($i = 0; $i < 60; $i++){
+			$minute[] = sprintf("%02d", $i);
+		}
+		$time_format = array('AM', 'PM');
+		$timegroup[] =& $mform->createElement('static', 'fromhour_label', '', get_string('fromhour_label', 'local_metadata'));
+		$timegroup[] =& $mform->createElement('select', 'fromhour', '', $hour, '');
+		$timegroup[] =& $mform->createElement('select', 'fromminute', '', $minute, '');
+		$timegroup[] =& $mform->createElement('select', 'fromformat', '', $time_format, '');
+		$timegroup[] =& $mform->createElement('static', 'tohour_label', '', get_string('tohour_label', 'local_metadata'));
+		$timegroup[] =& $mform->createElement('select', 'tohour', '', $hour, '');
+		$timegroup[] =& $mform->createElement('select', 'tominute', '', $minute, '');
+		$timegroup[] =& $mform->createElement('select', 'toformat', '', $time_format, '');
+		$mform->addGroup($timegroup, 'timegroup', '', array(' '), false);
+		
+		$mform->disabledIf('daygroup', 'default_officeh', 'checked');
+		$mform->disabledIf('timegroup', 'default_officeh', 'checked');
+		
+		if(empty($contactinfo->officehours)){
+			$mform->setDefault('default_officeh', true);
+		}else{
+			if($contactinfo->officehours == 'By appointment'){
+				$mform->setDefault('default_officeh', true);
+			}else{
+				$formats = explode(" ", $contactinfo->officehours);
+				$mform->setDefault('toformat', (array_pop($formats) == 'AM') ? 0 : 1);
+				$totimes = explode(":", array_pop($formats));
+				$mform->setDefault('tohour', $totimes[0]);
+				$mform->setDefault('tominute', $totimes[1]);
+				array_pop($formats); 
+				$mform->setDefault('fromformat', (array_pop($formats) == 'AM') ? 0 : 1);
+				$fromtimes = explode(":", array_pop($formats));
+				$mform->setDefault('fromhour', $fromtimes[0]);
+				$mform->setDefault('fromminute', $fromtimes[1]);
+				foreach($formats as $day){
+					$mform->setDefault($day, true);
+				}
+			}
+		}
+		
 		$mform->closeHeaderBefore('course_desc_header');
 
 		$mform->setExpanded('course_contact_header');
@@ -482,7 +515,7 @@ class general_form extends moodleform {
 	 * Insert a record to learning and course objective table.
 	 * @param $name		learning objective name
 	 * @param $type		learning objective type
-	 * @patam void
+	 * @return void
 	 */
 	private function insert_course_objective($name, $type){
 		global $DB, $CFG, $USER; //Declare them if you need them
@@ -658,6 +691,36 @@ class general_form extends moodleform {
 	}
 	
 	/**
+	 * Format office hours into a string and return it.
+	 * Will be used while saving office hours information to database.
+	 * @param $data 	data generated by the form
+	 * @return string
+	 */
+	private function get_formatted_office_hours($data){
+		global $CFG, $DB, $USER; //Declare our globals for use
+		$officehour = '';
+		if($data->default_officeh != '0'){
+			$officehour = $data->default_officeh;
+		}else{
+			foreach(get_days() as $day){
+				if($data->$day != '0'){
+					$officehour .= $data->$day.' ';
+				}
+			}
+			$officehour .= sprintf("%02d", $data->fromhour);
+			$officehour .= ':';
+			$officehour .= sprintf("%02d", $data->fromminute);
+			$officehour .= ($data->fromformat == 0) ? ' AM' : ' PM';
+			$officehour .= ' - ';
+			$officehour .= sprintf("%02d", $data->tohour);
+			$officehour .= ':';
+			$officehour .= sprintf("%02d", $data->tominute);
+			$officehour .= ($data->toformat == 0) ? ' AM' : ' PM';			
+		}
+		return $officehour;
+	}
+	
+	/**
 	 * This function is used for uploading course objective and required readings.
 	 * and delete required reading.
 	 * @return void
@@ -700,18 +763,18 @@ class general_form extends moodleform {
 		$course_info->courseid = $courseId;
 		$course_info->coursename = $course->fullname;
 		$course_info->coursedescription = $data->course_description['text'];
-		$course_info->coursefaculty = $data->course_faculty;
-		$course_info->categoryid = $data->course_category;
+		$course_info->facultyid = $data->course_faculty_id;
+		//$course_info->coursecategory = $data->course_category;
 		$course_info->assessmentnumber = $data->course_assessment;
 		$course_info->sessionnumber = $data->course_session;
 		if($data->teaching_assumption != NULL){
 			$course_info->teachingassumption = $data->teaching_assumption['text'];
 		}
-
+		
 		$instructor_info = new stdClass();
 		$instructor_info->name = $data->course_instructor;
-		$instructor_info->officelocation = $data->course_office;
-		$instructor_info->officehours = $data->course_officeh;
+		$instructor_info->officelocation = $data->course_office;	
+		$instructor_info->officehours = $this->get_formatted_office_hours($data);
 		$instructor_info->email = $data->course_email;
 		if($data->course_phone != NULL){
 			$instructor_info->phonenumber = $data->course_phone;

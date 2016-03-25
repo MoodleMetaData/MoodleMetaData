@@ -82,6 +82,15 @@ function get_learning_objective_types() {
     return array('Attitude', 'Knowledge', 'Skill');
 }
 
+/**
+ * Will return the days
+ *
+ * @return array containing string of all days
+ */
+function get_days() {
+    return array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
+}
+
 function create_insview_url($form, $courseId) {
     return new moodle_url('/local/metadata/insview_'.$form.'.php', array('id' => $courseId));
 }
