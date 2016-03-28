@@ -116,4 +116,27 @@ function get_assessment_type($value){
 function get_objective_id() {
 	return optional_param('obj', -1, PARAM_INT);
 }
+
+/**
+ * Redirects the page to the new added element in repeating element.
+ * Will be used while "add button" is clicked.
+ * @param string $anchorname 	the name of an anchor
+ * @param string $nextelement	the id of the next element in the form
+ * @param integer $Y			the offset in pixels to scroll vertically	
+ * @return void
+ */
+function redirect_to_anchor($anchorname, $nextelement, $Y){
+	echo ' <script type="text/javascript">
+			window.onload = function load(){
+				var newAnchor = document.createElement("a");
+				newAnchor.setAttribute("name", "'.$anchorname.'");
+				var getNextElement = document.getElementById("'.$nextelement.'");
+				getNextElement.parentNode.insertBefore(newAnchor, getNextElement);
+				
+				window.location.hash="'.$anchorname.'";
+				window.scrollBy(0, '.$Y.');
+			};
+			</script>';
+}
+
 ?>

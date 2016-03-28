@@ -66,7 +66,7 @@ class general_form extends moodleform {
 				$attitude_list[] = $this->get_learning_obj($obj->id, $obj->objectivename);
 			}
 		} 
-		
+
 		// setup form elements
 		$this->setup_general($mform, $courseinfo, $contactinfo, $coursecategory);
 		$this->setup_contact($mform, $courseinfo, $contactinfo);
@@ -295,7 +295,7 @@ class general_form extends moodleform {
 	private function setup_req_reading($mform, $list){
 		global $CFG, $DB, $USER; //Declare our globals for use
         global $course;
-		
+
 		$mform->addElement('header', 'course_reading_header', get_string('course_reading_header', 'local_metadata'));
 		$mform->addHelpButton('course_reading_header', 'course_reading_header', 'local_metadata');
 
@@ -310,8 +310,9 @@ class general_form extends moodleform {
 		$mform->setType('readingname_option', PARAM_TEXT);
 		$mform->setType('readingurl_option', PARAM_TEXT);
 		$mform->setType('reading_id', PARAM_INT);
-		$this->repeat_elements($_array, count($list), $_options, 'option_repeats_reading', 'option_add_fields_reading', 1, get_string('add_reading', 'local_metadata'), true);
 
+		$this->repeat_elements($_array, count($list), $_options, 'option_repeats_reading', 'option_add_fields_reading', 1, get_string('add_reading', 'local_metadata'), true);
+		
 		$key = 0;
 		foreach ($list as $_item) {
 			$index = '['.$key.']';
@@ -628,7 +629,6 @@ class general_form extends moodleform {
 				$delete_reading = $DB->delete_records('coursereadings', array('id'=>$r_id));
 			}
 		}
-		
 	}
 	
 	/**
@@ -727,12 +727,22 @@ class general_form extends moodleform {
 	 */
 	function definition_after_data() {
         parent::definition_after_data();
+		global $general_url;
+		
         $mform = $this->_form;
 		
 		$this->delete_reading($mform);
 		$this->upload_req_reading($mform);
 		$this->upload_course_obj($mform);
 		$this->delete_graduate_attribute($mform);
+		
+		if(isset($_POST['option_add_fields_reading'])) redirect_to_anchor('reading', 'id_option_add_fields_reading', -200);
+		if(isset($_POST['option_add_fields_knowledge'])) redirect_to_anchor('knowledge', 'id_option_add_fields_knowledge', -100);
+		if(isset($_POST['option_add_fields_skill'])) redirect_to_anchor('skill', 'id_option_add_fields_skill', -100);
+		if(isset($_POST['option_add_fields_attitude'])) redirect_to_anchor('attitude', 'id_option_add_fields_attitude', -100);
+		if(isset($_POST['option_add_fields_gradAtt'])) redirect_to_anchor('gradAtt', 'id_option_add_fields_gradAtt', -100);
+		
+		
 	}
 	
 	
