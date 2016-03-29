@@ -22,6 +22,8 @@ $string['err_positivenumber']='You must enter a positive number here.';
 // General form elements
 $string['course_code'] = 'Course short name: ';
 $string['course_name'] = 'Course full name: ';
+$string['course_year'] = 'Course year: ';
+$string['course_term'] = 'Course term: ';
 $string['course_description'] = 'Course summary: ';
 $string['course_instructor'] = 'Instructor: ';
 $string['upload_ctype_file'] = 'Upload course type file: ';
@@ -174,9 +176,13 @@ $string['new_attitudes'] = 'New Learning Objective';
 $string['create_attitudes'] = 'Add';
 $string['delete_attitudes'] = 'Delete';
 
-$string['course_gradatt'] = 'Graduate Attributes: ';
-$string['new_gradatt'] = 'New Graduate Attribute';
-$string['upload_gradatt'] = 'Upload Graduate Attributes';
+$string['delete_category'] = 'Delete';
+$string['category_label'] = 'Categories label:';
+$string['sumbit_category'] = 'Submit new category';
+
+$string['course_gradatt'] = 'Graduate attributes: ';
+$string['new_gradatt'] = 'New graduate attribute';
+$string['upload_gradatt'] = 'Upload graduate attributes';
 $string['create_gradatt'] = 'Add';
 $string['delete_gradatt'] = 'Delete';
 $string['course_gradatt_help'] = 'By removing a graduate attribute here, 
@@ -228,6 +234,14 @@ $string['upload_gradatt_header_help'] = 'To upload graduate attributes, only .cs
 									[column4] is graduate attribute sublist. <br />
 									Enter a new line to create a new entry. <br />
 									<a href="example/graduate_attributes.csv">Download example here.</a><br />
+									You need csv editor or Excel to open this file.';
+$string['category_header'] = 'Course categories';									
+$string['upload_category_header'] = 'Upload course categories';
+$string['upload_category_header_help'] = 'To upload course categories, only .csv file is permitted. <br />
+									The format: [column1] <br />
+									[column1] is a course category name. <br />
+									Enter a new line to create a new entry. <br />
+									<a href="example/course_categories.csv">Download example here.</a><br />
 									You need csv editor or Excel to open this file.';
 
 
