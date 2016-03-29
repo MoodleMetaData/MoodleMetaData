@@ -78,7 +78,7 @@ class general_form extends moodleform {
 		$this->setup_course_obj($mform, 'knowledge', $knowledge_list, 'skill');
 		$this->setup_course_obj($mform, 'skill', $skill_list, 'attitude');
 		$this->setup_course_obj($mform, 'attitude', $attitude_list, 'gradatt');
-		//$this->setup_graduate_attributes($mform, $graduateattributes, $gradatt_list);
+		$this->setup_graduate_attributes($mform, $graduateattributes, $gradatt_list);
 		$this->setup_teaching_assumption($mform, $courseinfo);
  
 		// Add form buttons
@@ -504,14 +504,26 @@ class general_form extends moodleform {
 		$mform->addElement('html', '<a name="graduate_attributes"></a>'); // anchor
 		$mform->addElement('header', 'course_gradatt_header', get_string('course_gradatt_header', 'local_metadata'));
 
-		$gradAtt_array = array();
-
-		$course_gradAtts = array();
-		foreach($graduateattributes as $graduateattribute){
-			$course_gradAtts[$graduateattribute->id] = $graduateattribute->attribute;
-		}		
+		$gradatt_list = array ();
+		$parent_number = 0;
+		$child_number = 1;
 		
-		$gradAtt_array[] = $mform->createElement('select', 'gradAtt_option', get_string('course_gradAtt', 'local_metadata'), $course_gradAtts, '');
+		foreach($graduateattributes as $value) {
+			if(is_null($value->node)){
+				// parent
+				$parent_number += 1;
+				$gradatt_list[$value->id] = '('.$parent_number.') '.$value->attribute;
+				$child_number = 1; // reset child number
+			} else {
+				// child
+				$gradatt_list[$value->id] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$parent_number.'.'.$child_number.'. '.$value->attribute;
+				$child_number += 1;
+			}
+			
+		}
+		
+		$gradAtt_array = array();
+		$gradAtt_array[] = $mform->createElement('select', 'gradAtt_option', get_string('course_gradAtt', 'local_metadata'), $gradatt_list, '');
 		$gradAtt_array[] = $mform->createElement('submit', 'delete_gradAtt', get_string('delete_gradAtt_label', 'local_metadata'));
 		$gradAtt_array[] = $mform->createElement('hidden', 'gradAtt_id', -1);
 

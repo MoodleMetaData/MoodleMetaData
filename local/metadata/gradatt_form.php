@@ -9,7 +9,7 @@ class gradatt_form extends moodleform {
 		$mform = $this->_form; // Tell this object to initialize with the properties of the Moodle form.
 		
 		$gradatt_records = array ();
-		$gradatt_records = $DB->get_records( 'graduateattributes');
+		$gradatt_records = $DB->get_records('graduateattributes', null, 'id');
 		$gradatt_list = array ();
 		
 		$parent_number = 0;
@@ -141,8 +141,28 @@ class gradatt_form extends moodleform {
 	
 		foreach ($data->course_gradatt as $value) {
 			// TODO : delete parent -> delete children
-			$delete_oldla = $DB->delete_records('graduateattributes', array('id'=>$value));
-			$delete_coursegradatt = $DB->delete_records('coursegradattributes', array('gradattid'=>$value));
+			if($getParent = $DB->get_record('graduateattributes', array('id'=>$value))){
+				if(is_null($getParent->node)){
+					// delete the corresponding record in course graduate attribute
+					/*
+					$delete_coursegradatt = $DB->delete_records('coursegradattributes', array('gradattid'=>$value));
+					if($getChildren = $DB->get_records('graduateattributes', array('node'=>$value))){
+						foreach($getChildren as $child){
+							$delete_coursegradatt = $DB->delete_records('coursegradattributes', array('gradattid'=>$child));
+						}
+					}*/
+					// it is parent -> delete parent and its children
+					$delete_parent = $DB->delete_records('graduateattributes', array('id'=>$value));
+					$delete_children = $DB->delete_records('graduateattributes', array('node'=>$value));
+				} else {
+					// it is the child -> delete child
+					$delete_child = $DB->delete_records('graduateattributes', array('id'=>$value));
+					// delete the corresponding record in course graduate attribute
+					$delete_coursegradatt = $DB->delete_records('coursegradattributes', array('gradattid'=>$value));
+				}
+			}
+			//$delete_oldla = $DB->delete_records('graduateattributes', array('id'=>$value));
+			//$delete_coursegradatt = $DB->delete_records('coursegradattributes', array('gradattid'=>$value));
 		}
 	
 	}
