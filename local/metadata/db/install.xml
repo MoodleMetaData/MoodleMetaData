@@ -14,6 +14,8 @@
         <FIELD NAME="facultyid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="assessmentnumber" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="sessionnumber" TYPE="int" LENGTH="20" NOTNULL="false" SEQUENCE="false"/>
+		<FIELD NAME="courseyear" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+		<FIELD NAME="courseterm" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>
@@ -21,6 +23,18 @@
 		<KEY NAME="facultyid" TYPE="foreign" FIELDS="facultyid" REFTABLE="course_categories" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
+    <TABLE NAME="coursecategories" COMMENT="defined by administration">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="categoryname" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+		<FIELD NAME="categoryid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="label" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+		<KEY NAME="categoryid" TYPE="foreign" FIELDS="categoryid" REFTABLE="course_categories" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>	
     <TABLE NAME="courseassessment" COMMENT="assessment info">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
