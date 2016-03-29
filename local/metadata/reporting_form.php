@@ -5,7 +5,20 @@ require_once $CFG->dirroot.'/lib/datalib.php';
 require_once $CFG->dirroot.'/lib/tcpdf/tcpdf.php';
 require_once 'lib.php';
 
+/**
+ * The form to display the tab for report information.
+ * which will allow the user to preview or download the pdf
+ * format of generated program objective report
+ * Or
+ * allow the user to download the csv
+ * format of generated program objective report
+ * and course general information(plus all the related learning objectives) report
+ */
 class reporting_form extends moodleform {
+	/**
+	 * Will set up the form elements
+	 * @see lib/moodleform#definition()
+	 */
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $course, $courseId;
@@ -45,20 +58,27 @@ class reporting_form extends moodleform {
 		}
 	}
 
-	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
+	 /**
+     * Ensure that the data the user entered is valid
+     *
+     * @see lib/moodleform#validation()
+     */
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
 		global $DB, $CFG, $USER; //Declare them if you need them
 		
 		return $errors;
     }
+
 	
-	public static function save_data($data) {
-		global $CFG, $DB, $USER; //Declare our globals for use
-		global $course, $courseId;
-	}
-	
-	
+    /**
+     * Used to get how many sessions that one program objective tags to 
+     *
+     * @param object $programobjective database records that contains the
+     * full information of one progeam objective
+     *
+     * @return integer $sessionno the number of sessions the program objective tags to
+     */
 	function get_session_time($programobjective){
 		$sessionno = 0;
 		$taginfos = $DB->get_records('programpolicytag', array('objectiveid'=>$programobjective->id));
@@ -71,13 +91,28 @@ class reporting_form extends moodleform {
 		return $sessionno;
 	}
 	
+	/**
+	 * Used to get how many courses that one program objective tags to
+	 *
+	 * @param object $programobjective database records that contains the
+	 * full information of one progeam objective
+	 *
+	 * @return integer $sessionno the number of courses the program objective tags to
+	 */
 	function get_course_time($programobjective){
 		$courseno = 0;
 		$courseno = $DB->count_records('programpolicytag', array('objectiveid'=>$programobjective->id));
 		return $courseno;
 	}
 	
-	
+	/**
+	 * Used to get how many assessments that one program objective tags to
+	 *
+	 * @param object $programobjective database records that contains the
+	 * full information of one progeam objective
+	 *
+	 * @return integer $sessionno the number of assessments the program objective tags to
+	 */
 	function get_assessment_time($programobjective){
 		$assessmentno = 0;
 		$taginfos = $DB->get_records('programpolicytag', array('objectiveid'=>$programobjective->id));
@@ -90,7 +125,13 @@ class reporting_form extends moodleform {
 		return $assessmentno;
 	}
 	
-	
+	/**
+	 * Used to generate the pdf format of the program objective report
+	 *
+	 * @param  integer $optionno the option to choose wether(1) display the generated report in the current window
+	 * or(2) showing the user a download window directly for downloading the pdf file.
+	 *
+	 */
 	function generatepdf($optionno){
 		global $CFG, $DB, $USER;
 		global $course;
@@ -140,6 +181,11 @@ class reporting_form extends moodleform {
 		}
 	}
 	
+	
+	/**
+	 * Used to generate the csv format of the program project report
+	 *
+	 */
 	function generatepocsv(){
 		global $CFG, $DB, $USER;
 		global $course;
@@ -170,6 +216,10 @@ class reporting_form extends moodleform {
 		fclose($file);
 	}
 	
+	/**
+	 * Used to generate the csv format of the course general information report
+	 *
+	 */
 	function generatecocsv(){
 		global $CFG, $DB, $USER;
 		global $course;
