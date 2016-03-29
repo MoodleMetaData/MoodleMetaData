@@ -46,9 +46,15 @@ if ($general_form->is_cancelled()) {
 if ($data = $general_form->get_data()) {
 	if(!empty($data->submitbutton)){
 		$general_form->save_data($data);
+	} else if(!empty($data->delete_req_reading)){
+		redirect($general_url.'#req_reading');
+	} else if(!empty($data->delete_gradAtt)){
+		redirect($general_url.'#graduate_attributes');
+	} else {
+		redirect($general_url);
 	}
     //print_object($data);
-	redirect($general_url);
+	
 }
 
 echo $OUTPUT->header();

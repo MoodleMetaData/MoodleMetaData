@@ -31,8 +31,8 @@ $string['course_category'] = 'Course category: ';
 $string['course_objective'] = 'Course learning objective(s): ';
 $string['course_faculty'] = 'Faculty: ';
 $string['course_gradAtt'] = 'Attribute {no}: ';
-$string['assessment_counter'] = 'Number of assessment: ';
-$string['session_counter'] = 'Number of session: ';
+$string['assessment_counter'] = 'Number of graded assessment: ';
+$string['session_counter'] = 'Number of session: <br />(lecture, lab, seminar) ';
 $string['teaching_assumption'] = 'Instructor assumption: ';
 
 $string['course_reading_desc'] = 'Required reading: ';
@@ -59,6 +59,10 @@ $string['course_email'] = 'E-mail: ';
 $string['course_phone'] = 'Phone: ';
 $string['course_office'] = 'Office: ';
 $string['course_officeh'] = 'Office hours: ';
+$string['default_officeh'] = 'By appointment';
+$string['default_officeh_help'] = 'By selecting "By appointment", below options will be ignored.';
+$string['fromhour_label'] = 'From: ';
+$string['tohour_label'] = 'To: ';
 
 $string['obj_knowledge_header'] = 'Course objective: Knowledge';
 $string['obj_skill_header'] = 'Course objective: Skill';
@@ -69,11 +73,11 @@ $string['upload_reading_header'] = 'Upload required readings';
 $string['course_reading_header'] = 'Required readings';
 $string['course_desc_header'] = 'Description';
 $string['course_format_header'] = 'Course format';
-$string['course_gradatt_header'] = 'Graduate attribute';
+$string['course_gradatt_header'] = 'Graduate attributes';
 $string['course_obj_header'] = 'Upload course objectives';
 $string['teaching_assumption_header'] = 'Teaching assumption';
 
-$string['course_format_header_help'] = 'By reducing the number, the newest entry or the one with the highest id will be deleted.';
+$string['course_format_header_help'] = 'By reducing the number, the newest or latest entry will be deleted.';
 $string['course_reading_header_help'] = 'Leave the TITLE space blank to delete the entry.';
 $string['obj_knowledge_header_help'] = 'Leave the space blank to delete the entry.';
 $string['obj_skill_header_help'] = 'Leave the space blank to delete the entry.';
@@ -83,12 +87,16 @@ $string['course_obj_header_help'] = 'To upload course objectives, only .csv file
 									[column1] is the course objective: knowledge. <br />
 									[column2] is the course objective: skill. <br />
 									[column3] is the course objective: attitude. <br />
-									Enter a new line to create a new entry.';
+									Enter a new line to create a new entry.<br />
+									<a href="example/course_objectives.csv">Download example here.</a><br />
+									You need csv editor or Excel to open this file.';
 $string['upload_reading_header_help'] = 'To upload course required readings, only .csv file is permitted. <br />
 									The format is: [column1],[column2] <br />
 									[column1] is the reading title. <br />
 									[column2] is the reading url. <br />
-									Enter a new line to create a new entry.';
+									Enter a new line to create a new entry.<br />
+									<a href="example/readings.csv">Download example here.</a><br />
+									You need csv editor or Excel to open this file.';
 $string['course_data'] = 'Course data';
 
 $string['instructor_heading'] = 'Metadata for %s: %s';
@@ -97,7 +105,7 @@ $string['add_session'] = 'Add new session';
 $string['session_title'] = 'Title:';
 $string['session_teaching_strategy'] = 'Teaching Strategy:';
 $string['session_guest_teacher'] = 'Guest Lecturer:';
-$string['session_guest_teacher_help'] = 'If there is a different lecuturer, write out their full name. Otherwise, leave blank';
+$string['session_guest_teacher_help'] = 'If there is a different lecturer, write out their full name. Otherwise, leave blank';
 $string['session_type'] = 'Type:';
 $string['session_length'] = 'Length:';
 $string['session_date'] = 'Date:';
@@ -168,6 +176,7 @@ $string['delete_attitudes'] = 'Delete';
 
 $string['course_gradatt'] = 'Graduate Attributes: ';
 $string['new_gradatt'] = 'New Graduate Attribute';
+$string['upload_gradatt'] = 'Upload Graduate Attributes';
 $string['create_gradatt'] = 'Add';
 $string['delete_gradatt'] = 'Delete';
 $string['course_gradatt_help'] = 'By removing a graduate attribute here, 
@@ -210,6 +219,17 @@ $string['admin_assessment_header'] = 'Assessment Tab Required';
 $string['admin_assessment_header_help'] = 'Check the items that you would like to be required in the assessment form';
 $string['admin_session_header'] = 'Session Tab Required';
 $string['admin_session_header_help'] = 'Check the items that you would like to be required in the session form';
+$string['upload_gradatt_header'] = 'Upload graduate attributes';
+$string['upload_gradatt_header_help'] = 'To upload graduate attributes, only .csv file is permitted. <br />
+									The format: [column1],[column2],[column3],[column4] <br />
+									[column1] is first level numbering. <br />
+									[column2] is graduate attribute header. <br />
+									[column3] is second level numbering. <br />
+									[column4] is graduate attribute sublist. <br />
+									Enter a new line to create a new entry. <br />
+									<a href="example/graduate_attributes.csv">Download example here.</a><br />
+									You need csv editor or Excel to open this file.';
+
 
 // Specialized items
 $string['require_uploaded_rubric'] = 'Uploaded rubric:';
