@@ -6,7 +6,7 @@ require_once $CFG->dirroot.'/lib/tcpdf/tcpdf.php';
 require_once 'lib.php';
 
 /**
- * The form to display the tab for generating syllabus.
+ * The form to display the tab for general information.
  */
 class syllabus_form extends moodleform {
 	
@@ -225,19 +225,18 @@ class syllabus_form extends moodleform {
 	function session_part_generation($sessionnumber){
 		global $CFG, $DB, $USER;
 		global $course;
-		$assessmenthtml = '<b><h1>Grading</h1></b><br>';
+		$sessionhtml = '<b><h1>Course Sessions</h1></b><font size="11%">';
 		if ($sessionnumber>0){
-			$coursesessions = $DB->get_records('coursesession', array('courseid'=>$course->id), $sort='sessiondate');
-			$sessionhtml = '<b><h1>Course Sessions</h1></b><font size="11%">';
+			$coursesessions = $DB->get_records('coursesession', array('courseid'=>$course->id), $sort='sessiondate');		
 			$sessionhtml .= '
 		<table border="0.1" cellspacing="0.1" cellpadding="0.1" id="gradingtable">
 		<tr>
 			<th width="15%" align="center"><b>Title</b></th>
-			<th width="15%" align="center"><b>date</b></th>
-			<th width="10%" align="center"><b>length</b></th>
+			<th width="15%" align="center"><b>Date</b></th>
+			<th width="10%" align="center"><b>Length</b></th>
 			<th width="10%" align="center"><b>Type</b></th>
-			<th width="10%" align="center"><b>lecturer</b></th>
-			<th width="40%" align="center"><b>topic</b></th>
+			<th width="10%" align="center"><b>Instructor</b></th>
+			<th width="40%" align="center"><b>Topic</b></th>
 		</tr>';
 			foreach ($coursesessions as $coursesession) {
 				$guestteacher = '';
@@ -312,10 +311,15 @@ class syllabus_form extends moodleform {
 		$phonenumber = 0;
 		$instructoremail = 'To be assigned';
 		$coursedescription = '';
+		$courseterm = 'Fall/Winter/Spring/Summer';$courseyear='';
 //collecting relative data from database===============================================================================		
 		if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
 			//$coursetopic = $existCourseInfo->coursetopic;
 			$coursedescription = $existCourseInfo->coursedescription;
+			$courseterm = $existCourseInfo->courseterm;
+			$termarray = array("Spring","Summer","Fall","Winter");
+			$courseterm = $termarray[$courseterm];
+			$courseyear = $existCourseInfo->courseyear;
 			$courseInstructor = $USER->lastname.', '.$USER->firstname;
 			if($existInstructorInfo = $DB->get_record('courseinstructors', array('courseid'=>$existCourseInfo->id, 'userid'=>$USER->id))){
 				$officelocation = $existInstructorInfo->officelocation;
@@ -361,8 +365,9 @@ class syllabus_form extends moodleform {
 		$pdf->Cell(0, 0, '', 0, 0, 'C');
 		$pdf->Ln();
 //put general course information(instructor,officehour,location) into the pdf------------------------------------------
+
 		$courselogistics = <<<EOD
-		Fall/Winter/Spring/Summer<br>
+		$courseterm $courseyear<br>
 		<b>Course Weight</b>: *3
 EOD;
 		$pdf->SetFont('times', '', 12);

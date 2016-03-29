@@ -13,25 +13,35 @@ class reporting_form extends moodleform {
 		// initialize the form.
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
  		$mform->addElement('html','<form> <b>generate report:</b><br><br>
-				In pdf format:
- 				<input type="submit" name="reportdisplay" value="preview"/>
- 				<input type="submit" name="reportdownload" value="download"/>
+ 				<ul>
+ 				<li><b>Program objective report:</b>
+				<br><br>In pdf format:
+ 				<input type="submit" name="poreportdisplay" value="preview"/>
+ 				<input type="submit" name="poreportdownload" value="download"/>
 				<br>In csv format:
- 				<input type="submit" name="reportcsv" value="download"/>
+ 				<input type="submit" name="poreportcsv" value="download"/>
+ 				</li>
+ 				 <li><b>Course report:</b>
+				<br><br>In csv format:
+ 				<input type="submit" name="coursereportcsv" value="download"/>
 				</form>'); 
 		
 		
-		if(isset($_POST['reportdisplay'])){
+		if(isset($_POST['poreportdisplay'])){
 
 			$this->generatepdf(1);
 		}
-		if(isset($_POST['reportdownload'])){
+		if(isset($_POST['poreportdownload'])){
 		
 			$this->generatepdf(2);
 		}
-		if(isset($_POST['reportcsv'])){
+		if(isset($_POST['poreportcsv'])){
 		
-			$this->generatecsv();
+			$this->generatepocsv();
+		}
+		if(isset($_POST['coursereportcsv'])){
+		
+			$this->generatecocsv();
 		}
 	}
 
@@ -51,20 +61,32 @@ class reporting_form extends moodleform {
 	
 	function get_session_time($programobjective){
 		$sessionno = 0;
-
+		$taginfos = $DB->get_records('programpolicytag', array('objectiveid'=>$programobjective->id));
+		foreach ($taginfos as $taginfo){
+			$courseobjid = $taginfo->tagid;
+			$objid = $DB->get_record('learningobjectives', array('id'=>$courseobjid->objectiveid));
+			break;
+		}
+		$sessionno = $DB->count_records('sessionobjectives', array('objectiveid'=>$objid));
 		return $sessionno;
 	}
 	
 	function get_course_time($programobjective){
 		$courseno = 0;
-		
+		$courseno = $DB->count_records('programpolicytag', array('objectiveid'=>$programobjective->id));
 		return $courseno;
 	}
 	
 	
 	function get_assessment_time($programobjective){
 		$assessmentno = 0;
-		
+		$taginfos = $DB->get_records('programpolicytag', array('objectiveid'=>$programobjective->id));
+		foreach ($taginfos as $taginfo){
+			$courseobjid = $taginfo->tagid;
+			$objid = $DB->get_record('learningobjectives', array('id'=>$courseobjid->objectiveid));
+			break;
+		}
+		$assessmentno = $DB->count_records('courseassessment', array('objectiveid'=>$objid));
 		return $assessmentno;
 	}
 	
@@ -118,7 +140,7 @@ class reporting_form extends moodleform {
 		}
 	}
 	
-	function generatecsv(){
+	function generatepocsv(){
 		global $CFG, $DB, $USER;
 		global $course;
 		//get data
@@ -141,6 +163,56 @@ class reporting_form extends moodleform {
 		// output headers so that the file is downloaded rather than displayed
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=reports.csv');
+		// do not cache the file
+		header('Pragma: no-cache');
+		header('Expires: 0');
+		exit();
+		fclose($file);
+	}
+	
+	function generatecocsv(){
+		global $CFG, $DB, $USER;
+		global $course;
+		//get data
+		$courseinfos = $DB->get_records('courseinfo');
+		//set a clean html
+		ob_start();
+		ob_end_clean();
+		$file = fopen("php://output", "w");
+		// send the column headers
+		fputcsv($file, array('Short Name', 'Full Name', 'Faculty', 'Category', 'Instructor', 'All Program Objectives'));
+		//generate table for report
+		$instructor = 'to be assigned';
+		foreach ($courseinfos as $courseinfo)
+		{
+			$generalinfo = $DB->get_record('course', array('id'=>$courseinfo->courseid));
+			//get course name
+			$shortname = $generalinfo->shortname;
+			$fullname = $generalinfo->fullname;
+			//get faculty name
+			$facultyinfo = $DB->get_record('course_categories', array('id'=>$courseinfo->facultyid));
+			$faculty = $facultyinfo->name;
+			//get category name
+			$category = $courseinfo->coursecategory;
+			//get instructor name
+			if($instructorinfo = $DB->get_record('courseinstructors', array('courseid'=>$courseinfo->id))){
+				$instructor = $instructorinfo->name;
+			}	
+			//get objectives
+			$objectives = array();
+			$courseobjs = $DB->get_records('courseobjectives', array('courseid'=>$courseinfo->courseid));
+			//insert into csv file
+			$row = array($shortname,$fullname,$faculty,$category,$instructor);
+			foreach ($courseobjs as $courseobj)
+			{
+				$objinfo = $DB->get_record('learningobjectives', array('id'=>$courseobj->objectiveid));
+				array_push($row, $objinfo->objectivename);
+			}
+			fputcsv($file, $row);
+		}
+		// output headers so that the file is downloaded rather than displayed
+		header('Content-Type: text/csv; charset=utf-8');
+		header('Content-Disposition: attachment; filename=coursereports.csv');
 		// do not cache the file
 		header('Pragma: no-cache');
 		header('Expires: 0');
