@@ -68,17 +68,17 @@ class general_form extends moodleform {
 		} 
 
 		// setup form elements
-		$this->setup_general($mform, $courseinfo, $contactinfo, $coursecategory);
+		$this->setup_general($mform, $courseinfo, $contactinfo, $coursecategory);		
 		$this->setup_contact($mform, $courseinfo, $contactinfo);
 		$this->setup_description($mform, $courseinfo);
-		$this->setup_upload_req_reading($mform);	
-		$this->setup_req_reading($mform, $reading_list);	
+		$this->setup_upload_req_reading($mform);		
+		$this->setup_req_reading($mform, $reading_list);
 		$this->setup_format($mform, $courseinfo);
-		$this->setup_upload_course_obj($mform);	
+		$this->setup_upload_course_obj($mform);
 		$this->setup_course_obj($mform, 'knowledge', $knowledge_list, 'skill');
 		$this->setup_course_obj($mform, 'skill', $skill_list, 'attitude');
 		$this->setup_course_obj($mform, 'attitude', $attitude_list, 'gradatt');
-		$this->setup_graduate_attributes($mform, $graduateattributes, $gradatt_list);
+		//$this->setup_graduate_attributes($mform, $graduateattributes, $gradatt_list);
 		$this->setup_teaching_assumption($mform, $courseinfo);
  
 		// Add form buttons
@@ -87,14 +87,16 @@ class general_form extends moodleform {
 	
 	/**
 	 * Add form elements for general course information.
-	 * @param $mform		form definition
-	 * @param $courseinfo	a record of general information from course info table.
-	 * @param $contactinfo	a record of contact information from course instructor table.
+	 * @param object $mform			form definition
+	 * @param object $courseinfo		a record of general information from course info table.
+	 * @param object $contactinfo	a record of contact information from course instructor table.
 	 * @return void
 	 */
 	private function setup_general($mform, $courseinfo, $contactinfo, $coursecategory){
 		global $CFG, $DB, $USER; //Declare our globals for use
-        global $course;           
+        global $course;
+		
+		$mform->addElement('html', '<a name="general"></a>'); // anchor
 	    $mform->addElement('header', 'course_general_header', get_string('course_general_header', 'local_metadata'));
 				
 		// Course shortname
@@ -131,21 +133,29 @@ class general_form extends moodleform {
 		$mform->addRule('course_instructor', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->setType('course_instructor', PARAM_TEXT);
 		
-		$mform->closeHeaderBefore('course_contact_header');  
-
+		$mform->addElement('static', 'h_1', ''); // end of header
+		$mform->setType('h_1', PARAM_RAW );
+		
+		$mform->closeHeaderBefore('h_1'); 
+		
 		$mform->setExpanded('course_general_header');
+		
+		
 	}
 	
 	/**
 	 * Add form elements for course contact information.
-	 * @param $mform		form definition
-	 * @param $courseinfo	a record of general information from course info table.
-	 * @param $contactinfo	a record of contact information from course instructor table.
+	 * @param object $mform			form definition
+	 * @param object $courseinfo	a record of general information from course info table.
+	 * @param object $contactinfo	a record of contact information from course instructor table.
 	 * @return void
 	 */
 	private function setup_contact($mform, $courseinfo, $contactinfo){
 		global $CFG, $DB, $USER; //Declare our globals for use
         global $course;  
+		
+		$mform->addElement('html', '<a name="contact"></a>'); // anchor
+		
 		$mform->addElement('header', 'course_contact_header', get_string('course_contact_header', 'local_metadata'));
 
 		// Email
@@ -232,26 +242,27 @@ class general_form extends moodleform {
 			}
 		}
 		
-		$mform->closeHeaderBefore('course_desc_header');
+		$mform->addElement('static', 'h_2', ''); // end of header
+		$mform->setType('h_2', PARAM_RAW );
+		
+		$mform->closeHeaderBefore('h_2');
 
 		$mform->setExpanded('course_contact_header');
 	}
 
 	/**
 	 * Add form elements for course description.
-	 * @param $mform		form definition
-	 * @param $courseinfo	a record of general information from course info table.
+	 * @param object $mform			form definition
+	 * @param object $courseinfo	a record of general information from course info table.
 	 * @return void
 	 */
 	private function setup_description($mform, $courseinfo){
 		global $CFG, $DB, $USER; //Declare our globals for use
         global $course;
+		
+		$mform->addElement('html', '<a name="description"></a>'); // anchor
+		
 		$mform->addElement('header', 'course_desc_header', get_string('course_desc_header', 'local_metadata'));
-		// TODO: EDITOR HAS AUTOSAVE AND AUTORESTORE DATA, WHICH WILL REMOVE THE FETCHED DATA FROM DB
-		// Add editor for create or modify course description.              
-		// Get default course description from DB.
-		// If description does not exist in the extra table, display the default description.
-				
 		// Course summary
 
 		$default_description = $course->summary;
@@ -267,38 +278,47 @@ class general_form extends moodleform {
 		$mform->addRule('course_description', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->setType('course_description', PARAM_TEXT);      
 
+		$mform->addElement('static', 'h_3', ''); // end of header
+		$mform->setType('h_3', PARAM_RAW );
 
-
-		$mform->closeHeaderBefore('course_format_header');
+		$mform->closeHeaderBefore('h_3');
 
 		$mform->setExpanded('course_desc_header');
 	}
 	
 	/**
 	 * Add form elements for upload requred readinds.
-	 * @param $mform		form definition.
+	 * @param object $mform		form definition.
 	 * @return void
 	 */
 	private function setup_upload_req_reading($mform){
+		$mform->addElement('html', '<a name="upload_req_reading"></a>'); // anchor
 		$mform->addElement('header', 'upload_reading_header', get_string('upload_reading_header', 'local_metadata'));
 		$mform->addHelpButton('upload_reading_header', 'upload_reading_header', 'local_metadata');
 		$mform->addElement('filepicker', 'temp_reading', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
 		$mform->addElement('submit', 'upload_reading', get_string('upload_reading', 'local_metadata'));
+		
+		$mform->addElement('static', 'h_4', ''); // end of header
+		$mform->setType('h_4', PARAM_RAW );
+
+		$mform->closeHeaderBefore('h_4');
 	}
 	
 	/**
 	 * Add form elements for required readings.
-	 * @param $mform	form definition
-	 * @param $list		a list of readings
+	 * @param object $mform	form definition
+	 * @param array $list	list of readings
 	 * @return void
 	 */
 	private function setup_req_reading($mform, $list){
 		global $CFG, $DB, $USER; //Declare our globals for use
         global $course;
-
+		
+		$mform->addElement('html', '<a name="req_reading"></a>'); // anchor
+		
 		$mform->addElement('header', 'course_reading_header', get_string('course_reading_header', 'local_metadata'));
 		$mform->addHelpButton('course_reading_header', 'course_reading_header', 'local_metadata');
-
+		
 		$_array = array();
 		$_array[] = $mform->createElement('static', 'course_reading_desc', '', get_string('course_reading_desc', 'local_metadata'));
 		$_array[] = $mform->createElement('text', 'readingname_option', get_string('readingname_label', 'local_metadata') ,'size="60"');
@@ -324,7 +344,10 @@ class general_form extends moodleform {
 			$key += 1;
 		}
 		
-		$mform->closeHeaderBefore('course_format_header');
+		$mform->addElement('static', 'h_5', ''); // end of header
+		$mform->setType('h_5', PARAM_RAW );
+
+		$mform->closeHeaderBefore('h_5');
 
 		// If list is not empty, open the header
 		if(count($list) > 0){
@@ -335,13 +358,16 @@ class general_form extends moodleform {
 	
 	/**
 	 * Add form elements for course format.
-	 * @param $mform		form definition
-	 * @param $courseinfo	a record of general information from course info table.
+	 * @param object $mform			form definition
+	 * @param object $courseinfo	a record of general information from course info table
 	 * @return void
 	 */
 	private function setup_format($mform, $courseinfo){
 		global $CFG, $DB, $USER; //Declare our globals for use
         global $courseId;
+		
+		$mform->addElement('html', '<a name="format"></a>'); // anchor
+		
 		$mform->addElement('header', 'course_format_header', get_string('course_format_header', 'local_metadata'));
 		$mform->addHelpButton('course_format_header', 'course_format_header', 'local_metadata');
 		
@@ -377,29 +403,38 @@ class general_form extends moodleform {
 
 		$mform->setType('course_session', PARAM_INT);
 		
-		$mform->closeHeaderBefore('course_obj_header');
+		$mform->addElement('static', 'h_6', ''); // end of header
+		$mform->setType('h_6', PARAM_RAW );
+
+		$mform->closeHeaderBefore('h_6');
 
 		$mform->setExpanded('course_format_header');
 	}
 	
 	/**
 	 * Add form elements for upload course objective.
-	 * @param $mform		form definition
+	 * @param object $mform		form definition
 	 * @return void
 	 */
 	private function setup_upload_course_obj($mform){
+		$mform->addElement('html', '<a name="upload_course_obj"></a>'); // anchor
 		$mform->addElement('header', 'course_obj_header', get_string('course_obj_header', 'local_metadata'));
 		$mform->addHelpButton('course_obj_header', 'course_obj_header', 'local_metadata');
 		$mform->addElement('filepicker', 'temp_course_obj', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
 		$mform->addElement('submit', 'upload_course_obj', get_string('upload_course_obj', 'local_metadata'));
+		
+		$mform->addElement('static', 'h_7', ''); // end of header
+		$mform->setType('h_7', PARAM_RAW );
+
+		$mform->closeHeaderBefore('h_7');
 	}
 	
 	/**
 	 * Get the learning objective id and name.
-	 * @param $list		objective type list
-	 * @param $id		objective id
-	 * @param $name		objective name
-	 * return $obj		learning objective object
+	 * @param array $list		objective type list
+	 * @param integer $id		objective id
+	 * @param string $name		objective name
+	 * return $obj				learning objective object
 	 */
 	private function get_learning_obj($id, $name){
 		$obj = new stdClass();
@@ -410,15 +445,17 @@ class general_form extends moodleform {
 	
 	/**
 	 * Add form elements for course objective.
-	 * @param $mform		form definition
-	 * @param $type			course objective type
-	 * @param $list			a list of learning objective with specified type
-	 * @param $nextheader	the next form header name
+	 * @param object $mform			form definition
+	 * @param string $type			course objective type
+	 * @param array $list			a list of learning objective with specified type
+	 * @param string $nextheader	the next form header name
 	 * @return void
 	 */
 	private function setup_course_obj($mform, $type, $list, $nextheader){
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $course;
+		
+		$mform->addElement('html', '<a name="'.$type.'"></a>'); // anchor
 		
 		$mform->addElement('header', 'obj_'.$type.'_header', get_string('obj_'.$type.'_header', 'local_metadata'));
 		$mform->addHelpButton('obj_'.$type.'_header', 'obj_'.$type.'_header', 'local_metadata');
@@ -442,7 +479,10 @@ class general_form extends moodleform {
 			$key += 1;
 		}
 
-		$mform->closeHeaderBefore('obj_'.$nextheader.'_header');
+		$mform->addElement('static', 'h_'.$type, ''); // end of header
+		$mform->setType('h_'.$type, PARAM_RAW );
+
+		$mform->closeHeaderBefore('h_'.$type);
 
 		// If list is not empty, open the header
 		if(count($list) > 0){
@@ -452,11 +492,16 @@ class general_form extends moodleform {
 	
 	/**
 	 * Add form elements for graduate attributes.
+	 * @param object $mform					form definition
+	 * @patam object $graduateattributes	a record of graduate attributes from graduate attributes table.
+	 * @param array $list					a list of graduate attributes
+	 * @return void
 	 */
 	private function setup_graduate_attributes($mform, $graduateattributes, $list){
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $course;
 		
+		$mform->addElement('html', '<a name="graduate_attributes"></a>'); // anchor
 		$mform->addElement('header', 'course_gradatt_header', get_string('course_gradatt_header', 'local_metadata'));
 
 		$gradAtt_array = array();
@@ -483,7 +528,10 @@ class general_form extends moodleform {
 			$key += 1;
 		}
 		
-		$mform->closeHeaderBefore('teaching_assumption_header');
+		$mform->addElement('static', 'h_8', ''); // end of header
+		$mform->setType('h_8', PARAM_RAW );
+		
+		$mform->closeHeaderBefore('h_8');
 
 		// If list is not empty, open the header
 		if(count($list) > 0){
@@ -495,13 +543,15 @@ class general_form extends moodleform {
 	
 	/**
 	 * Add form elements for teaching assumption.
-	 * @param $mform		form definition
-	 * @param $courseinfo	a record of general information from course info table.
+	 * @param object $mform			form definition
+	 * @param object $courseinfo	a record of general information from course info table.
 	 * @return void
 	 */
 	private function setup_teaching_assumption($mform, $courseinfo){
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $course;
+		
+		$mform->addElement('html', '<a name="teaching_assumption"></a>'); // anchor
 		
 		$mform->addElement('header', 'teaching_assumption_header', get_string('teaching_assumption_header', 'local_metadata'));
 		$teaching_assumption_editor = $mform->addElement('editor', 'teaching_assumption', get_string('teaching_assumption', 'local_metadata'));
@@ -509,13 +559,18 @@ class general_form extends moodleform {
 			$teaching_assumption_editor->setValue(array('text' => $courseinfo->teachingassumption));
 			$mform->setExpanded('teaching_assumption_header');
 		}
-		$mform->setType('teaching_assumption', PARAM_TEXT);     
+		$mform->setType('teaching_assumption', PARAM_TEXT);
+
+		$mform->addElement('static', 'h_9', ''); // end of header
+		$mform->setType('h_9', PARAM_RAW );
+		
+		$mform->closeHeaderBefore('h_9'); 		
 	}
 	
 	/**
 	 * Insert a record to learning and course objective table.
-	 * @param $name		learning objective name
-	 * @param $type		learning objective type
+	 * @param string $name		learning objective name
+	 * @param string $type		learning objective type
 	 * @return void
 	 */
 	private function insert_course_objective($name, $type){
@@ -534,7 +589,7 @@ class general_form extends moodleform {
 		
 	/**
 	 * Upload course objectives.
-	 * @param $mform	form definition
+	 * @param object $mform		form definition
 	 * @return void
 	 */
 	private function upload_course_obj($mform){
@@ -571,7 +626,7 @@ class general_form extends moodleform {
 	
 	/**
 	 * Upload course required readings.
-	 * @param $mform	form definition
+	 * @param object $mform		form definition
 	 * @return void
 	 */
 	private function upload_req_reading($mform){
@@ -598,8 +653,8 @@ class general_form extends moodleform {
 	
 	/**
 	 * Insert a record to course reading table.
-	 * @param $name	reading's name/title
-	 * @param $url	reading's url
+	 * @param string $name	reading's name/title
+	 * @param string $url	reading's url
 	 * @return void
 	 */
 	private function insert_readings($name, $url){
@@ -615,7 +670,7 @@ class general_form extends moodleform {
 	
 	/**
 	 * Delete course reading when user clicks on "Delete" button in required readings.
-	 * @param $mform	form definition
+	 * @param object $mform	form definition
 	 * @return void
 	 */
 	private function delete_reading($mform){
@@ -633,7 +688,7 @@ class general_form extends moodleform {
 	
 	/**
 	 * Delete course graduate attributes when user clicks on "Delete" button in graduate attributes.
-	 * @param $mform	form definition
+	 * @param object $mform		form definition
 	 * @return void
 	 */
 	private function delete_graduate_attribute($mform){
@@ -652,7 +707,7 @@ class general_form extends moodleform {
 	
 	/**
 	 * Insert a record to course format (session or assessment)
-	 * @param $course_format	either 'session' or 'assessment'
+	 * @param string $course_format		either 'session' or 'assessment'
 	 * @return void
 	 */
 	private function insert_number_of_course_format($course_format){
@@ -665,8 +720,8 @@ class general_form extends moodleform {
 	
 	/**
 	 * Edit the number of course session or assessment.
-	 * @param $course_format				either 'session' or 'assessment'
-	 * @param $new_course_format_number		a new number of session or assessment
+	 * @param string $course_format					either 'session' or 'assessment'
+	 * @param integer $new_course_format_number		a new number of session or assessment
 	 * @return void
 	 */
 	private function edit_course_format($course_format, $new_course_format_number){
@@ -693,7 +748,7 @@ class general_form extends moodleform {
 	/**
 	 * Format office hours into a string and return it.
 	 * Will be used while saving office hours information to database.
-	 * @param $data 	data generated by the form
+	 * @param object $data 		data generated by the form
 	 * @return string
 	 */
 	private function get_formatted_office_hours($data){
@@ -727,7 +782,6 @@ class general_form extends moodleform {
 	 */
 	function definition_after_data() {
         parent::definition_after_data();
-		global $general_url;
 		
         $mform = $this->_form;
 		
@@ -741,13 +795,13 @@ class general_form extends moodleform {
 		if(isset($_POST['option_add_fields_skill'])) redirect_to_anchor('skill', 'id_option_add_fields_skill', -100);
 		if(isset($_POST['option_add_fields_attitude'])) redirect_to_anchor('attitude', 'id_option_add_fields_attitude', -100);
 		if(isset($_POST['option_add_fields_gradAtt'])) redirect_to_anchor('gradAtt', 'id_option_add_fields_gradAtt', -100);
-		
-		
+			
 	}
 	
 	
 	/**
-	 * Validate the form.
+	 * Ensure that the data the user entered is valid.
+	 * @see lib/moodleform#validation()
 	 */
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
@@ -762,7 +816,7 @@ class general_form extends moodleform {
 	
 	/**
 	 * Save the given data to database.
-	 * @param $data 	data generated by the form
+	 * @param object $data 	data generated by the form
 	 * @return void
 	 */
 	public function save_data($data) {
