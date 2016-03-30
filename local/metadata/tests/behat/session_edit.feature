@@ -1,4 +1,4 @@
-@local_metadata @local_metadata_session
+@local_metadata @local_metadata_session @c
 Feature: Session tab
 	In order to use the session tab
 	As an instructor
@@ -47,7 +47,7 @@ Feature: Session tab
       | sessiontitle[0] | First title |
       | sessionguestteacher[0] | Bob the first Builder |
       | sessiontype[0] | lab |
-      | sessionteachingstrategy[0] | Other |
+      | sessionteachingstrategy[0][] | Direct Lecture, Team Based Learning |
       | learning_objective_Attitude[0][] | A 1, A 3 |
       | learning_objective_Knowledge[0][] | K 1 |
       | learning_objective_Skill[0][] | S 1 |
@@ -55,7 +55,7 @@ Feature: Session tab
       | sessiontitle[1] | Second title |
       | sessionguestteacher[1] | Bob the second Builder|
       | sessiontype[1] | seminar |
-      | sessionteachingstrategy[1] | Second |
+      | sessionteachingstrategy[1][] | Other |
       | learning_objective_Attitude[1][] | A 2, A 3 |
       | learning_objective_Knowledge[1][] | K 2 |
       | learning_objective_Skill[1][] | S 1 |
@@ -66,7 +66,7 @@ Feature: Session tab
       | sessiontitle[0] | First title |
       | sessionguestteacher[0] | Bob the first Builder |
       | sessiontype[0] | lab |
-      | sessionteachingstrategy[0] | Other |
+      | sessionteachingstrategy[0][] | Direct Lecture, Team Based Learning |
       | learning_objective_Attitude[0][] | A 1, A 3 |
       | learning_objective_Knowledge[0][] | K 1 |
       | learning_objective_Skill[0][] | S 1 |
@@ -74,7 +74,7 @@ Feature: Session tab
       | sessiontitle[1] | Second title |
       | sessionguestteacher[1] | Bob the second Builder|
       | sessiontype[1] | seminar |
-      | sessionteachingstrategy[1] | Second |
+      | sessionteachingstrategy[1][] | Other |
       | learning_objective_Attitude[1][] | A 2, A 3 |
       | learning_objective_Knowledge[1][] | K 2 |
       | learning_objective_Skill[1][] | S 1 |

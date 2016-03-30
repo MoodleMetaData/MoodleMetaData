@@ -13,7 +13,7 @@ Feature: Session tab
     And I follow "Course 1"
     And I follow "Instructor Moodle Metadata"
     Then I follow "Session"
-    
+  
   Scenario: Deleting session before saving
     Given I create 2 sessions
     And I set the following fields to these values:
@@ -25,14 +25,12 @@ Feature: Session tab
       | sessiontitle[0] | Second title |
     And "sessiontitle[1]" "text" should not exist
     
-  
   Scenario: Deleting session after saving
     Given I create 2 sessions
     And I set the following fields to these values:
       | sessiontitle[0] | First title |
       | sessiontitle[1] | Second title |
     And I press "Save changes"
-    And I expand all fieldsets
     When I press "delete_session[1]"
     And I press "Save changes"
     Then the following fields match these values:

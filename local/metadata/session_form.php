@@ -22,35 +22,26 @@ require_once 'recurring_element_parser.php';
  *
  */
 class session_form extends metadata_form {
+    /**
+     * @var int NUM_PER_PAGE Number of sessions to be displayed per page
+     */
     const NUM_PER_PAGE = 10;
+    /**
+     * @var string TOPIC_SEPARATOR Unusual string to ensure that the topics will be able to be stored as a string based array
+            and changed back without issue
+     */
     const TOPIC_SEPARATOR = '&|&|';
+    /**
+     * @var int DATE_FROM_FROM_FILE Format used when parsing the data from upload
+     */
     const DATE_FROM_FROM_FILE = 'Y-m-d';
 
-    /**
-     * Will return all of the type options
-     *   Will eventually load them from the configuration for the plugin
-     *
-     * @return array containing string of all types
-     */
-    public static function get_session_types() {
-        $types = array('lecture', 'lab', 'seminar');
-
-        return $types;
-    }
     
     /**
-     * Will return all of the length options
-     *   May eventually load them from the configuration for the plugin
+     * Determine what change should be done to the page number
      *
-     * @return array containing string of all types
+     * @return integer page change amount
      */
-    public static function get_session_lengths() {
-        // TODO: Will probably need to change this
-        $types = array('50 minutes', '80 minutes', '110 minutes', '140 minutes', '170 minutes');
-
-        return $types;
-    }
-    
     public function get_page_change() {
         if ($this->_form->getSubmitValue('previousPage') !== null) {
             return -1;
@@ -61,7 +52,7 @@ class session_form extends metadata_form {
         }
     }
     
-    /*
+    /**
      * Will determine if the sessions were uploaded
      *
      * @return boolean for if use wanted to upload file
@@ -70,6 +61,11 @@ class session_form extends metadata_form {
         return $this->_form->getSubmitValue('upload_sessions') !== null;
     }
 
+    /**
+     * Will use the csv file submitted by the instructor to create all of the sessions
+     *   Note that it does clear all existing data in the session related tables first
+     *
+     */
     public function upload_sessions() {
 		global $course, $DB;
 		
@@ -81,15 +77,16 @@ class session_form extends metadata_form {
             $all_rows = explode("\n", $content);
             
             $courseid = get_course_id();
+            
             // Need to delete everything related to course sessions, and each session
             foreach ($this->_customdata['sessions'] as $session) {
                 $this->delete_all_relations_to_session($session->id);
             }
-            
             $DB->delete_records('coursesession', array('courseid'=>$courseid));
             
             
             foreach ($all_rows as $row) {
+                // Skip rows that are blank
                 if ($row != "") {
                     $this->parse_and_save_session_row($row, $courseid);
                 }
@@ -97,38 +94,44 @@ class session_form extends metadata_form {
         }
     }
     
+    /**
+     * Will use the csv file submitted by the instructor to create all of the sessions
+     *
+     * @param string $row The current row of the csv file being operated on
+     * @param integer $courseid The id for the course this session will be added to
+     *
+     */
     private function parse_and_save_session_row($row, $courseid) {
         global $DB;
         // Parse the row
         $row = str_getcsv($row);
-        print_object($row);
         
         $data = array();
         $data['courseid'] = $courseid;
         $data['sessiontitle'] = $row[0];
-        $data['sessionteachingstrategy'] = $row[1];
-        $data['sessionguestteacher'] = $row[2];
-        $data['sessiontype'] = $row[3];
-        $data['sessionlength'] = $row[4];
+        $data['sessionguestteacher'] = $row[1];
+        $data['sessiontype'] = $row[2];
+        $data['sessionlength'] = $row[3];
         
-        $date = DateTime::createFromFormat(session_form::DATE_FROM_FROM_FILE, $row[5]);
+        $date = DateTime::createFromFormat(session_form::DATE_FROM_FROM_FILE, $row[4]);
+        print_object(date_get_last_errors());
         $data['sessiondate'] = $date->getTimestamp();
         
-        // Then, save the session and get ids
+        // Then, save the session and get the id
         $id = $DB->insert_record('coursesession', $data);
         
-        // Then, parse all remaining topics
-        $topics = array_slice($row, 6);
+        // Then, parse all remaining topics, and add them to the sessiontopics table
+        $topics = array_slice($row, 5);
         foreach ($topics as $topicname) {
+            // Ignore topics that are just empty strings
             if ($topicname == "") {
                 continue;
             }
             
-            
             $newLink = new stdClass();
             $newLink->sessionid = $id;
             $newLink->topicname = $topicname;
-            $DB->insert_record('sessiontopics', $newLink, false);
+            $DB->insert_record('sessiontopics', $newLink);
         }
     }
     
@@ -153,12 +156,11 @@ class session_form extends metadata_form {
             $allChangedAttributes[] = 'learning_objective_'.$learningObjectiveType;
         }
         
-        $types = session_form::get_session_types();
-        $lengths = session_form::get_session_lengths();
+        $types = get_session_types();
+        $lengths = get_session_lengths();
         $strategies = get_teaching_strategies();
         $convertedAttributes = array('sessiontype' => function($value) use ($types) { return $types[$value]; },
-                                     'sessionlength' => function($value) use ($lengths) { return $lengths[$value]; },
-                                     'sessionteachingstrategy' => function($value) use ($strategies) { return $strategies[$value]; });
+                                     'sessionlength' => function($value) use ($lengths) { return $lengths[$value]; });
 
         $session_recurring_parser = new recurring_element_parser('coursesession', 'sessions_list', $allChangedAttributes, $convertedAttributes);
         
@@ -214,6 +216,18 @@ class session_form extends metadata_form {
                 }
             }
             
+            // Save the learning strategies
+            // Template for this was found in \mod\glossary\edit.php
+            if (array_key_exists('sessionteachingstrategy', $tuple) and is_array($tuple['sessionteachingstrategy'])) {
+                $strategies = get_teaching_strategies();
+                foreach ($tuple['sessionteachingstrategy'] as $strategyIndex) {
+                    $newLink = new stdClass();
+                    $newLink->sessionid = $tuple['id'];
+                    $newLink->strategy = $strategies[$strategyIndex];
+                    $DB->insert_record('sessionteachingstrategies', $newLink);
+                }
+            }
+            
             // Save the topics
             // Template for this was found in \mod\glossary\edit.php
             if (array_key_exists('all_topics_text_array', $tuple) and !is_null($tuple['all_topics_text_array'])) {
@@ -233,6 +247,9 @@ class session_form extends metadata_form {
      * Will delete from all tables information that is related to the sessions,
      *   and that is set within this form
      *   So topics, objectives, and related assessments
+     *
+     * @param int $sessionid The id for the current session
+     *
      */
     private function delete_all_relations_to_session($sessionid) {
         global $DB;
@@ -240,10 +257,12 @@ class session_form extends metadata_form {
         $DB->delete_records('sessionobjectives', array('sessionid'=>$sessionid));
         $DB->delete_records('session_related_assessment', array('sessionid'=>$sessionid));
         $DB->delete_records('sessiontopics', array('sessionid'=>$sessionid));
+        $DB->delete_records('sessionteachingstrategies', array('sessionid'=>$sessionid));
     }
     
     /**
      * Will set up the form elements
+     *
      * @see lib/moodleform#definition()
      */
     function definition() {
@@ -282,7 +301,9 @@ class session_form extends metadata_form {
 	}
 
     /**
-     *  Will set up a repeate template, with elements for each piece of required data
+     *  Will set up a repeating template, with elements for each piece of required data
+     *
+     *  Does not set defaults for the elements.
      *
      *  @param int $numSessions number of Sessions that have been created for the course
      */
@@ -297,14 +318,18 @@ class session_form extends metadata_form {
         
         $repeatarray[] = $mform->createElement('text', 'sessionguestteacher', get_string('session_guest_teacher', 'local_metadata'));
         
-        $repeatarray[] = $mform->createElement('select', 'sessiontype', get_string('session_type', 'local_metadata'), session_form::get_session_types());
+        $repeatarray[] = $mform->createElement('select', 'sessiontype', get_string('session_type', 'local_metadata'), get_session_types());
         
-        $repeatarray[] = $mform->createElement('select', 'sessionlength', get_string('session_length', 'local_metadata'), session_form::get_session_lengths());
+        $repeatarray[] = $mform->createElement('select', 'sessionlength', get_string('session_length', 'local_metadata'), get_session_lengths());
         
 
         $repeatarray[] = $mform->createElement('date_selector', 'sessiondate', get_string('session_date', 'local_metadata'));
 
-        $repeatarray[] = $mform->createElement('select', 'sessionteachingstrategy', get_string('session_teaching_strategy', 'local_metadata'), get_teaching_strategies());
+        $strategies = get_teaching_strategies();
+        $teachingStrategyEl = $mform->createElement('select', 'sessionteachingstrategy', get_string('session_teaching_strategy', 'local_metadata'), $strategies, array('size'=>count($strategies)));
+        $teachingStrategyEl->setMultiple(true);
+        
+        $repeatarray[] = $teachingStrategyEl;
 
         // Set up the select for learning objectives
             // Will separate them based on type
@@ -365,6 +390,8 @@ class session_form extends metadata_form {
         $repeatoptions['coursesession_id']['type'] = PARAM_INT;
         $repeatoptions['was_deleted']['type'] = PARAM_RAW;
         
+        $repeatoptions['sessionteachingstrategy']['helpbutton'] = array('session_teaching_strategy', 'local_metadata');
+        
 
         // Add the repeating elements to the form
         $this->repeat_elements($repeatarray, $numSessions,
@@ -374,6 +401,8 @@ class session_form extends metadata_form {
     /**
      *  Will set up the data for each of the elements in the repeat_elements
      *  
+     * @param object $sessions The array containing all of the sessions that was loaded from the database
+     *
      *
      */
     private function setup_data_for_repeat($sessions) {
@@ -401,16 +430,13 @@ class session_form extends metadata_form {
             $mform->setDefault('sessiondate'.$index, $session->sessiondate);
             $mform->setDefault('sessiondate'.$index, $session->sessiondate);
 
-            // Handled specially, because the default must be an int, which needs to be translated from string in database
-            $strategies = get_teaching_strategies();
-            $mform->setDefault('sessionteachingstrategy'.$index, array_search($session->sessionteachingstrategy, $strategies));
             
             // Handled specially, because the default must be an int, which needs to be translated from string in database
-            $types = session_form::get_session_types();
+            $types = get_session_types();
             $mform->setDefault('sessiontype'.$index, array_search($session->sessiontype, $types));
             
             // Handled specially, because the default must be an int, which needs to be translated from string in database
-            $lengths = session_form::get_session_lengths();
+            $lengths = get_session_lengths();
             $mform->setDefault('sessionlength'.$index, array_search($session->sessionlength, $lengths));
 
             $this->setup_data_from_database_for_session($mform, $index, $session);
@@ -419,8 +445,10 @@ class session_form extends metadata_form {
     }
     
     /**
-     *  Will add the buttons on the bottom
-     *  
+     *  Will add the buttons for changing the current page
+     *
+     *  @param int $page_num Current page that the form is on
+     *  @param int $num_sessions The number of sessions that there are in total
      *
      */
     private function add_page_buttons($page_num, $num_sessions) {
@@ -447,6 +475,14 @@ class session_form extends metadata_form {
         $mform->addGroup($page_change_links, 'buttonarray', '', array(' '), false);
     }
     
+    /**
+     *  For the current session, will populate the learning objectives, related assessments, and topics from the database
+     *
+     *  @param int $mform Form that will be added to
+     *  @param string $index Index that must be used to access form elements for the current session
+     *  @param object $session The database tuple for the current session
+     *
+     */
     function setup_data_from_database_for_session($mform, $index, $session) {
         global $DB;
         // Load the learning objectives for the session
@@ -465,6 +501,20 @@ class session_form extends metadata_form {
             $mform->setDefault('assessments'.$index, array_values($assessmentsArr));
         }
         
+        // Load the teaching strategies for the session
+        // Template for this was found in \mod\glossary\edit.php
+        if ($bdStrategiesArr = $DB->get_records_menu("sessionteachingstrategies", array('sessionid'=>$session->id), '', 'id, strategy')) {
+            
+            $strategies = get_teaching_strategies();
+            // Need to change each one to be the index, rather than the string value
+            
+            $displayedArray = array();
+            foreach ($bdStrategiesArr as $strategy) {
+                $displayedArray[] = array_search($strategy, $strategies);
+            }
+            $mform->setDefault('sessionteachingstrategy'.$index, $displayedArray);
+        }
+            
         
         // Will actually add them into select in the definition_after_data function
         if ($topics_array = $DB->get_records_menu("sessiontopics", array('sessionid'=>$session->id), '', 'id, topicname')) {
@@ -541,7 +591,14 @@ class session_form extends metadata_form {
     
     
     // Topic related functions
-    
+    /**
+     *  Will add all of the topics related items to the given repatedarray, and sets the options as well
+     *
+     *  @param int $mform Form that will be added to
+     *  @param int $repeatarray Array of elements that will be repeated for each session
+     *  @param int $repeatoptions Options for the repeated elements
+     *
+     */
     private function setup_topic_options($mform, &$repeatarray, &$repeatoptions) {
         // Viewing already added topics
         $groupitems = array();
@@ -574,22 +631,45 @@ class session_form extends metadata_form {
         $repeatarray[] = $mform->createElement('group', 'add_topic_group', '', $groupitems, null, false);
     }
     
-    private function get_topic_text_array($index) {
-        $manage_topics_group = $this->_form->getElement('manage_topics_group'.$index);
+    /**
+     *  Will return the hidden form element that stores the stored topics as a textual array
+     *
+     *  @param int $mform Form that will be added to
+     *  @param string $index Index that must be used to access form elements for the current session
+     *
+     *  @return object form element
+     */
+    private function get_topic_text_array($mform, $index) {
+        $manage_topics_group = $mform->getElement('manage_topics_group'.$index);
         
-        // The select is the first item in the elements
         return $manage_topics_group->getElements()[0];
     }
     
-    private function get_all_topics($index) {
-        $manage_topics_group = $this->_form->getElement('manage_topics_group'.$index);
+    /**
+     *  Will return the topic select element
+     *
+     *  @param int $mform Form that will be added to
+     *  @param string $index Index that must be used to access form elements for the current session
+     *
+     *  @return object form element
+     */
+    private function get_all_topics($mform, $index) {
+        $manage_topics_group = $mform->getElement('manage_topics_group'.$index);
         
         // The select is the second item in the elements
         return $manage_topics_group->getElements()[1];
     }
     
-    private function get_new_topic_value($index) {
-        $add_topic_group = $this->_form->getElement('add_topic_group'.$index);
+    /**
+     *  Will return the value of the topic that should be added.
+     *
+     *  @param int $mform Form the element is stored in
+     *  @param string $index Index that must be used to access form elements for the current session
+     *
+     *  @return string topic value
+     */
+    private function get_new_topic_value($mform, $index) {
+        $add_topic_group = $mform->getElement('add_topic_group'.$index);
         
         // Is always in position 0
         $new_topic = $add_topic_group->getElements()[0];
@@ -597,15 +677,23 @@ class session_form extends metadata_form {
         return $new_topic->getValue();
     }
     
-    
+    /**
+     *  Will handle displaying and updating the topics that are displayed for the session corresponding to given index
+     *
+     *     Able to handle the button pressess related to adding/deleting topics
+     *
+     *  @param int $mform Form that will be added to
+     *  @param string $index Index that must be used to access form elements for the current session
+     *
+     */
     private function update_topics($mform, $index) {
         $topic_was_added = $mform->getSubmitValue('create_topic'.$index);
         $topic_was_deleted = $mform->getSubmitValue('delete_topics'.$index);
         // Add to the all_topics select
         // The select is the second item in the elements
-        $all_topics = $this->get_all_topics($index);
+        $all_topics = $this->get_all_topics($mform, $index);
         
-        $topics_text_array = $this->get_topic_text_array($index);
+        $topics_text_array = $this->get_topic_text_array($mform, $index);
         
         $topics_text_array_val = $topics_text_array->getValue();
         if ($topics_text_array_val !== '') {
@@ -624,7 +712,7 @@ class session_form extends metadata_form {
         }
         
         if ($topic_was_added) {
-            $new_topic = $this->get_new_topic_value($index);
+            $new_topic = $this->get_new_topic_value($mform, $index);
             $index_added_to = count($topics_array);
             
             $topics_array[] = $new_topic;
@@ -643,6 +731,11 @@ class session_form extends metadata_form {
      * Ensure that the data the user entered is valid
      *
      * @see lib/moodleform#validation()
+     *
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array of "element_name"=>"error_description" if there are errors,
+     *         or an empty array if everything is OK (true allowed for backwards compatibility too).
      */
     function validation($data, $files) {
         $errors = parent::validation($data, $files);
