@@ -256,3 +256,8 @@ $string['require_uploaded_rubric'] = 'Uploaded rubric:';
 
 $string['next_page'] = 'Next Page';
 $string['previous_page'] = 'Previous Page';
+
+
+// Report items
+$string['programobj_report_header'] = 'Program objective report generation';
+$string['courseobj_report_header'] = 'Course report generation';
