@@ -314,14 +314,12 @@ class syllabus_form extends moodleform {
 		$phonenumber = 0;
 		$instructoremail = 'To be assigned';
 		$coursedescription = '';
-		$courseterm = 'Fall/Winter/Spring/Summer';$courseyear='';
+		$courseyear='';
 //collecting relative data from database===============================================================================		
 		if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
 			//$coursetopic = $existCourseInfo->coursetopic;
 			$coursedescription = $existCourseInfo->coursedescription;
 			$courseterm = $existCourseInfo->courseterm;
-			$termarray = array("Spring","Summer","Fall","Winter");
-			$courseterm = $termarray[$courseterm];
 			$courseyear = $existCourseInfo->courseyear;
 			$courseInstructor = $USER->lastname.', '.$USER->firstname;
 			if($existInstructorInfo = $DB->get_record('courseinstructors', array('courseid'=>$existCourseInfo->id, 'userid'=>$USER->id))){
