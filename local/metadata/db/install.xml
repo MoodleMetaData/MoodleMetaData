@@ -73,7 +73,6 @@
         <FIELD NAME="sessionguestteacher" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="courseid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
         <FIELD NAME="sessiontype" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="sessionteachingstrategy" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>
@@ -130,6 +129,17 @@
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>
         <KEY NAME="sessionid" TYPE="foreign" FIELDS="sessionid" REFTABLE="coursesession" REFFIELDS="id"/>
         <KEY NAME="objectiveid" TYPE="foreign" FIELDS="objectiveid" REFTABLE="learningobjectives" REFFIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="sessionteachingstrategies" COMMENT="Default comment for the table, please edit me">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="sessionid" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="strategy" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="id" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="sessionid" TYPE="foreign" FIELDS="sessionid" REFTABLE="coursesession" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
     <TABLE NAME="sessiontopics" COMMENT="Default comment for the table, please edit me">

@@ -24,7 +24,7 @@ Feature: Administrator program objectvies tab
     And I expand all fieldsets
     Then the "manage_knowledge[]" select box should not contain "K1"
   	
-  @javascript @c
+  @javascript
   Scenario: Filling out skils objective
   	And I set the field "new_skills" to "S1"
   	And I press "create_skills"
