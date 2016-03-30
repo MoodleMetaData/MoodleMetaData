@@ -16,6 +16,7 @@ require_once($CFG->dirroot.'/local/metadata/tag_form.php');
 
 $courseId = get_course_id();
 $objectiveId = get_objective_id();
+$groupId = get_group_id();
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
     
 // Set up page information
@@ -27,11 +28,10 @@ $PAGE->set_heading($heading);
 
 
 // Create url
-$base_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId));
+$base_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId, 'grp' => $groupId));
 $knowledge_url = create_manage_url('knowledge');
 $policy_url = create_manage_url('policy');
 $tag_url = create_manage_url('course');
-$gradatt_url = create_manage_url('gradatt');
 $required_url = create_manage_url('required');
 $reporting_url = create_manage_url('reporting');
 $categories_url = create_manage_url('categories');
@@ -47,15 +47,19 @@ $tag_form = new tag_form($base_url);
 if ($data = $tag_form->get_data()) {
 	if(!empty($data->admaddobjective)) {
 		$tag_form->add_tags($data);
-		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId));
+		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId, 'grp' => $groupId));
 		redirect($tags_url);
 	} elseif(!empty($data->admselcourse)) {
 		$objid = $tag_form->get_obj($data);
-		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objid));
+		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objid, 'grp' => $groupId));
+		redirect($tags_url);
+	} elseif(!empty($data->groupsel)) {
+		$grpid = $tag_form->get_grp($data);
+		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId, 'grp' => $grpid));
 		redirect($tags_url);
 	} elseif (!empty($data->admdelobjective)) {
 		$tag_form->remove_tags($data);
-		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId));
+		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId, 'grp' => $groupId));
 		redirect($tags_url);
 	}
 	
@@ -69,7 +73,6 @@ echo $OUTPUT->header();
 		<ul>
 		<li><a href=" <?php echo $knowledge_url; ?> ">Program Objectives</a></li>
 		<li><a href=" <?php echo $categories_url; ?> ">Categories</a></li>
-		<li><a href=" <?php echo $gradatt_url; ?> ">Graduate Attribute</a></li>
 		<li><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
 		<li class="onclick_nav"><a href=" <?php echo $tag_url; ?> ">Tags</a></li>
 		<li><a href=" <?php echo $required_url; ?> ">Required</a></li>

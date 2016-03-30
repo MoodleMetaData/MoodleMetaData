@@ -7,11 +7,28 @@ class knowledge_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
-
-		$this->setup_knowledge_program_obj($mform);
-		$this->setup_skills_program_obj($mform);
-		$this->setup_attitudes_program_obj($mform);
+		$this->setup_program_obj($mform);
 		$this->setup_upload_program_obj($mform);
+	}
+	
+	private function setup_program_obj($mform) {
+		global $CFG, $DB, $USER;
+		$mform->addElement('header', 'program_grp_header', get_string('program_grp_header', 'local_metadata'));
+		
+		$program_topics = array();
+		$program_topics = $DB->get_records('objectivetypes', array ('category' => 1));
+		//$mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
+		
+		$psla_default = array();
+		foreach ($program_topics as $value) {
+			$psla_default[$value->id] = $value->typename;
+		}
+		
+		$course_topic_selection = $mform->addElement('select', 'manage_groups', get_string('manage_groups', 'local_metadata'), $psla_default, '');
+		$course_topic_selection->setMultiple(true);
+		
+		// Delete Button
+		$mform->addElement('submit', 'delete_groups', get_string('delete_groups', 'local_metadata'));
 	}
 	
 	/**
@@ -21,114 +38,15 @@ class knowledge_form extends moodleform {
 	 */
 	private function setup_upload_program_obj($mform){
 		$mform->addElement('header', 'program_obj_header', get_string('program_obj_header', 'local_metadata'));
+		
+		// Text box to add new program specific learning objectives
+		$mform->addElement('text', 'new_group', get_string('new_group', 'local_metadata'), '');
+		//$mform->addRule('new_group', get_string('err_required', 'local_metadata'), 'required', null, 'client');
+		$mform->setType('new_group', PARAM_RAW);
+		
 		$mform->addHelpButton('program_obj_header', 'program_obj_header', 'local_metadata');
 		$mform->addElement('filepicker', 'temp_program_obj', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
 		$mform->addElement('submit', 'upload_program_obj', get_string('upload_program_obj', 'local_metadata'));
-	}
-	
-	/**
-	 * Add form elements for creation of knowledge objectives.
-	 * @param $mform		form definition
-	 * @return void
-	 */
-	private function setup_knowledge_program_obj($mform){
-		global $CFG, $DB, $USER;
-		$mform->addElement('header', 'program_knowledge_header', get_string('program_knowledge_header', 'local_metadata'));
-		// Form elements
-		
-		// Multiselect for program topics
-		// Get all from DB
-		$program_topics = array();
-		$program_topics = $DB->get_records('programobjectives', array ('objectivetype' => 1));
-		//$mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
-		
-		$psla_default = array();
-		foreach ($program_topics as $value) {
-			$psla_default[$value->id] = $value->objectivename;
-		}
-		
-		$course_topic_selection = $mform->addElement('select', 'manage_knowledge', get_string('manage_knowledge', 'local_metadata'), $psla_default, '');
-		$course_topic_selection->setMultiple(true);
-		
-		// Delete Button
-		$mform->addElement('submit', 'delete_knowledge', get_string('delete_knowledge', 'local_metadata'));
-		
-		// Text box to add new program specific learning objectives
-		$mform->addElement('text', 'new_knowledge', get_string('new_knowledge', 'local_metadata'), '');
-		$mform->setType('new_knowledge', PARAM_RAW);
-		
-		// Submit button
-		$mform->addElement('submit', 'create_knowledge', get_string('create_knowledge', 'local_metadata'));
-	}
-	
-	/**
-	 * Add form elements for creation of skillsobjectives.
-	 * @param $mform		form definition
-	 * @return void
-	 */
-	private function setup_skills_program_obj($mform) {
-		global $CFG, $DB, $USER;
-		$mform->addElement('header', 'program_skills_header', get_string('program_skills_header', 'local_metadata'));
-		
-		$program_topics = array ();
-		$program_topics = $DB->get_records ( 'programobjectives', array ('objectivetype' => 2) );
-		// $mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
-		
-		$psla_default = array ();
-		foreach ( $program_topics as $value ) {
-			$psla_default [$value->id] = $value->objectivename;
-		}
-		
-		$course_topic_selection = $mform->addElement ( 'select', 'manage_skills', get_string ( 'manage_skills', 'local_metadata' ), $psla_default, '' );
-		$course_topic_selection->setMultiple ( true );
-		
-		// Delete Button
-		$mform->addElement ( 'submit', 'delete_skills', get_string ( 'delete_skills', 'local_metadata' ) );
-		
-		// Text box to add new program specific learning objectives
-		$mform->addElement ( 'text', 'new_skills', get_string ( 'new_skills', 'local_metadata' ), '' );
-		$mform->setType('new_skills', PARAM_RAW);
-		
-		// $add_group =& $mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
-		
-		// Submit button
-		$mform->addElement ( 'submit', 'create_skills', get_string ( 'create_skills', 'local_metadata' ) );
-	}
-	
-	/**
-	 * Add form elements for creation of attitudes objectives.
-	 * @param $mform		form definition
-	 * @return void
-	 */
-	private function setup_attitudes_program_obj($mform) {
-		global $CFG, $DB, $USER;
-		$mform->addElement('header', 'program_attitudes_header', get_string('program_attitudes_header', 'local_metadata'));
-		
-		// Multiselect for program topics
-		// Get all from DB
-		$program_topics = array ();
-		$program_topics = $DB->get_records ( 'programobjectives', array ('objectivetype' => 3));
-		// $mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
-		
-		$psla_default = array ();
-		foreach ( $program_topics as $value ) {
-			$psla_default [$value->id] = $value->objectivename;
-		}
-		
-		$course_topic_selection = $mform->addElement ( 'select', 'manage_attitudes', get_string ( 'manage_attitudes', 'local_metadata' ), $psla_default, '' );
-		$course_topic_selection->setMultiple ( true );
-		
-		// Delete Button
-		$mform->addElement ( 'submit', 'delete_attitudes', get_string ( 'delete_attitudes', 'local_metadata' ) );
-		
-		// Text box to add new program specific learning objectives
-		$mform->addElement ( 'text', 'new_attitudes', get_string ( 'new_attitudes', 'local_metadata' ), '' );
-		$mform->setType('new_attitudes', PARAM_RAW);
-		
-		// $add_group =& $mform->addRule('new_psla', get_string('required'), 'required', null, 'client');
-		
-		// Submit button
-		$mform->addElement ( 'submit', 'create_attitudes', get_string ( 'create_attitudes', 'local_metadata' ) );
 	}
 	
 	/**
@@ -146,44 +64,64 @@ class knowledge_form extends moodleform {
 				$file = reset($files);
 				$content = $file->get_content();
 				$all_rows = explode("\n", $content);
+				$groups = array();
+				$titles = array();
+				
+				$type = new stdClass();
+				$type->typename = $mform->getSubmitValue('new_group');
+				$type-> category = 1;
+				$masterid = $DB->insert_record('objectivetypes', $type, true);
 	
 				foreach($all_rows as $row){
 					$parsed = str_getcsv($row);
 						
 					if(!is_null($parsed[0])){
-						if($parsed[0] != ''){
-							$this->insert_program_objective($parsed[0], 1);
-						}
-						if($parsed[1] != ''){
-							$this->insert_program_objective($parsed[1], 2);
-						}
-						if($parsed[2] != ''){
-							$this->insert_program_objective($parsed[2], 3);
+						if($parsed[0] != '' && $parsed[1] != ''){
+							$parsed[0] = fix_utf8($parsed[0]);
+							$parsed[1] = fix_utf8($parsed[1]);
+							if(!array_key_exists($parsed[0], $groups)) {
+								$group = new stdClass();
+								$group->groupname = $parsed[0];
+								$group->parent = $masterid;
+								
+								//echo "writing group\n";
+								$groupid = $DB->insert_record('objectivegroups', $group, true);
+								//echo "wrote group\n";
+								
+								//$groupid = 1;
+								
+								$groups[$parsed[0]] = $groupid; // set to ID
+							}
+							if(!array_key_exists($parsed[1], $titles)) {
+								$title = new stdClass();
+								$title->objectivename = $parsed[1];
+								$title->parent = null;
+								$title->objectivegroup = $groups[$parsed[0]];
+								
+								//echo "writing title\n";
+								//echo $parsed[1];
+								$titleid = $DB->insert_record('programobjectives', $title, true);
+								//echo "wrote title\n";
+								//$titleid = 1;
+								$titles[$parsed[1]] = $titleid; // set to ID
+							}
+							if($parsed[2] != '') {
+								$parsed[2] = fix_utf8($parsed[2]);
+								
+								$title = new stdClass();
+								$title->objectivename = $parsed[2];
+								$title->parent =  $titles[$parsed[1]];
+								$title->objectivegroup = $groups[$parsed[0]];
+								
+								$DB->insert_record('programobjectives', $title, false);
+							}
+							//$this->insert_program_objective($groups[$parsed[0]], $groups[$parsed[1]], $parsed[2]);
 						}
 					}
+					
 						
 				}
 			}
-		}
-	}
-	
-	/**
-	 * Insert a record to program objective table.
-	 * @param $name		program objective name
-	 * @param $type		program objective type
-	 * @return void
-	 */
-	private function insert_program_objective($name, $type){
-		global $DB, $CFG, $USER; //Declare them if you need them
-		$info = new stdClass();
-		$info->objectivename = $name;
-		$info->objectivetype = $type;
-		
-		$table = 'programobjectives';
-		$select = $DB->sql_compare_text('objectivename')." = '".$info->objectivename."' AND objectivetype = ".$info->objectivetype;
-		$check = $DB->get_records_select($table, $select);
-		if (count($check) == 0) {
-			$insert_learningobj = $DB->insert_record('programobjectives', $info, false);
 		}
 	}
 	
@@ -199,44 +137,6 @@ class knowledge_form extends moodleform {
 		$errors = parent::validation($data, $files);
 		global $DB, $CFG, $USER; //Declare them if you need them
 	
-		// Validate that on creating a new objective it is not empty or already in the database
-		if (!empty($data['create_knowledge'])) {
-			if(empty($data['new_knowledge'])) {
-				$errors['new_knowledge'] = get_string('mcreate_required', 'local_metadata');
-			} else {
-				$table = 'programobjectives';
-				$select = $DB->sql_compare_text('objectivename')." = '".$data['new_knowledge']."' AND objectivetype = 1";
-				$check = $DB->get_records_select($table, $select);
-				if (count($check) != 0) {
-					$errors['new_knowledge'] = get_string('psla_exists', 'local_metadata');
-				}
-			}
-		}
-		if (!empty($data['create_skills'])) {
-			if(empty($data['new_skills'])) {
-				$errors['new_skills'] = get_string('mcreate_required', 'local_metadata');
-			} else {
-				$table = 'programobjectives';
-				$select = $DB->sql_compare_text('objectivename')." = '".$data['new_skills']."' AND objectivetype = 2";
-				$check = $DB->get_records_select($table, $select);
-				if (count($check) != 0) {
-					$errors['new_skills'] = get_string('psla_exists', 'local_metadata');
-				}
-			}
-		}
-		if (!empty($data['create_attitudes'])) {
-			if(empty($data['new_attitudes'])) {
-				$errors['new_attitudes'] = get_string('mcreate_required', 'local_metadata');
-			} else {
-				$table = 'programobjectives';
-				$select = $DB->sql_compare_text('objectivename')." = '".$data['new_attitudes']."' AND objectivetype = 3";
-				$check = $DB->get_records_select($table, $select);
-				if (count($check) != 0) {
-					$errors['new_attitudes'] = get_string('psla_exists', 'local_metadata');
-				}
-			}
-		}
-	
 		return $errors;
 	}
 	
@@ -249,7 +149,7 @@ class knowledge_form extends moodleform {
 		global $CFG, $DB, $USER;
 		$new_la = new stdClass();
 		$new_la->objectivename = $data->new_knowledge;
-		$new_la->objectivetype = 1;
+		$new_la->parent = 1;
 
 		$insert_newla = $DB->insert_record('programobjectives', $new_la, false);
 	}
@@ -263,7 +163,7 @@ class knowledge_form extends moodleform {
 		global $CFG, $DB, $USER;
 		$new_la = new stdClass ();
 		$new_la->objectivename = $data->new_skills;
-		$new_la->objectivetype = 2;
+		$new_la->parent = 2;
 	
 		$insert_newla = $DB->insert_record ( 'programobjectives', $new_la, false );
 	}
@@ -277,21 +177,21 @@ class knowledge_form extends moodleform {
 		global $CFG, $DB, $USER;
 		$new_la = new stdClass ();
 		$new_la->objectivename = $data->new_attitudes;
-		$new_la->objectivetype = 3;
+		$new_la->parent = 3;
 	
 		$insert_newla = $DB->insert_record ( 'programobjectives', $new_la, false );
 	}
 	
 	/**
-	 * Deletes all selected knowledge program objectives from the DB
+	 * Deletes all selected program objective groups from the DB
 	 * @param $data	form data
 	 * @return void
 	 */
-	public static function delete_knowledge($data) {
+	public static function delete_groups($data) {
 		global $CFG, $DB, $USER;
 
-		foreach ($data->manage_knowledge as $value) {
-			$delete_oldla = $DB->delete_records('programobjectives', array('id'=>$value));
+		foreach ($data->manage_groups as $value) {
+			$delete_oldla = $DB->delete_records('objectivetypes', array('id'=>$value));
 		}
 
 	}

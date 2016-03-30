@@ -25,7 +25,10 @@ class reporting_form extends moodleform {
 		
 		// initialize the form.
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
- 		$mform->addElement('html','<form> <b>generate report:</b><br><br>
+		$mform->addElement('html', '<a name="program_objective_report"></a>'); 
+		$mform->addElement('header', 'programobj_report_header', get_string('programobj_report_header', 
+				'local_metadata'));
+/*  		$mform->addElement('html','<form> <b>generate report:</b><br><br>
  				<ul>
  				<li><b>Program objective report:</b>
 				<br><br>In pdf format:
@@ -37,9 +40,22 @@ class reporting_form extends moodleform {
  				 <li><b>Course report:</b>
 				<br><br>In csv format:
  				<input type="submit" name="coursereportcsv" value="download"/>
-				</form>'); 
-		
-		
+				</form>');  */
+		$mform->addElement('html','<b>In pdf format:</b>
+ 				<input type="submit" name="poreportdisplay" value="preview"/>
+ 				<input type="submit" name="poreportdownload" value="download"/>
+				<br><b>In csv format:</b>
+ 				<input type="submit" name="poreportcsv" value="download"/>');
+ 		$mform->setExpanded('programobj_report_header');
+ 		
+ 		$mform->addElement('html', '<a name="course_objective_report"></a>'); 
+ 		$mform->addElement('header', 'courseobj_report_header', get_string('courseobj_report_header',
+ 				'local_metadata'));
+ 		$mform->addElement('html','<b>In csv format:</b>
+ 				<input type="submit" name="coursereportcsv" value="download"/>
+				</form>');
+ 		$mform->setExpanded('courseobj_report_header');
+ 		
 		if(isset($_POST['poreportdisplay'])){
 
 			$this->generatepdf(1);
@@ -123,6 +139,27 @@ class reporting_form extends moodleform {
 		}
 		$assessmentno = $DB->count_records('courseassessment', array('objectiveid'=>$objid));
 		return $assessmentno;
+	}
+	
+	
+	/**
+	 * Used to get the array of name of the program objectives tag to the course
+	 * through the database with the given course id
+	 *
+	 * @param integer $courseid the course id used to identify which course those
+	 * program objectives tag to
+	 *
+	 * @return array $programobjlist the array of name of the program objectives tag to the course
+	 */
+	function get_program_objective_by_course($courseid){
+		global $DB;
+		$programobjlist = array();
+		$taginfos = $DB->get_records('programpolicytag', array('objectiveid'=>$courseid));
+		foreach ($taginfos as $taginfo){
+			$singleproobj = $DB->get_record('programobjectives', array('id'=>$taginfo->objectiveid));
+			array_push($programobjlist, $singleproobj->objectivename);
+		}
+		return $programobjlist;
 	}
 	
 	/**
@@ -250,13 +287,13 @@ class reporting_form extends moodleform {
 			}	
 			//get objectives
 			$objectives = array();
-			$courseobjs = $DB->get_records('courseobjectives', array('courseid'=>$courseinfo->courseid));
+			$objectives = $this->get_program_objective_by_course($courseinfo->id);
 			//insert into csv file
 			$row = array($shortname,$fullname,$faculty,$category,$instructor);
-			foreach ($courseobjs as $courseobj)
+			//insert program objectives into csv file
+			foreach ($objectives as $objective)
 			{
-				$objinfo = $DB->get_record('learningobjectives', array('id'=>$courseobj->objectiveid));
-				array_push($row, $objinfo->objectivename);
+				array_push($row, $objective->objectivename);
 			}
 			fputcsv($file, $row);
 		}

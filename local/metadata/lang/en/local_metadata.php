@@ -183,8 +183,10 @@ $string['create_attitudes'] = 'Add';
 $string['delete_attitudes'] = 'Delete';
 
 $string['delete_category'] = 'Delete';
+$string['delete_category_help'] = 'By removing a course category here, 
+								 any record corresponding to this category will not be deleted.';
 $string['category_label'] = 'Categories label:';
-$string['sumbit_category'] = 'Submit new category';
+$string['submit_category'] = 'Submit new category';
 
 $string['course_gradatt'] = 'Graduate attributes: ';
 $string['new_gradatt'] = 'New graduate attribute';
@@ -192,7 +194,7 @@ $string['upload_gradatt'] = 'Upload graduate attributes';
 $string['create_gradatt'] = 'Add';
 $string['delete_gradatt'] = 'Delete';
 $string['course_gradatt_help'] = 'By removing a graduate attribute here, 
-								 any record corresponding to this graduate attribute will be removed as well.';
+								 any record corresponding to this graduate attribute will be deleted as well.';
 
 $string['policy_editor'] = 'Faculty Policy: ';
 $string['submit_policy'] = 'Submit';
@@ -215,10 +217,16 @@ $string['admcourse_select'] = 'Select Course: ';
 $string['admselect_course'] = 'Select';
 $string['admobj_select'] = 'Learning Objective: ';
 $string['admselcourse'] = 'Select';
-$string['admpro_select'] = 'Program Objectives: ';
+$string['admpro_select'] = 'Options: ';
 $string['admaddobjective'] = 'Tag Objectives';
 $string['admpro_current'] = 'Current Tags: ';
 $string['admdelobjective'] = 'Remove Tag';
+
+$string['new_group'] = 'Program Objective Group';
+$string['program_grp_header'] = 'Program Groups';
+$string['manage_groups'] = 'Group Names';
+$string['delete_groups'] = 'Delete';
+$string['group_select'] = 'Program Objectives';
 
 // Metadata manager errors
 $string['mcreate_required'] = 'You must enter something.';
@@ -256,3 +264,8 @@ $string['require_uploaded_rubric'] = 'Uploaded rubric:';
 
 $string['next_page'] = 'Next Page';
 $string['previous_page'] = 'Previous Page';
+
+
+// Report items
+$string['programobj_report_header'] = 'Program objective report generation';
+$string['courseobj_report_header'] = 'Course report generation';
