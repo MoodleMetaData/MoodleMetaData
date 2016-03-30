@@ -117,6 +117,10 @@ function get_objective_id() {
 	return optional_param('obj', -1, PARAM_INT);
 }
 
+function get_group_id() {
+	return optional_param('grp', 1, PARAM_INT);
+}
+
 /**
  * Redirects the page to the new added element in repeating element.
  * Will be used while "add button" is clicked.
