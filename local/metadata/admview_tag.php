@@ -32,9 +32,9 @@ $base_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $cou
 $knowledge_url = create_manage_url('knowledge');
 $policy_url = create_manage_url('policy');
 $tag_url = create_manage_url('course');
-$gradatt_url = create_manage_url('gradatt');
 $required_url = create_manage_url('required');
 $reporting_url = create_manage_url('reporting');
+$categories_url = create_manage_url('categories');
 
 $PAGE->set_url($base_url);
 $PAGE->requires->css('/local/metadata/insview_style.css');
@@ -72,7 +72,7 @@ echo $OUTPUT->header();
 	<div class="nav_header">
 		<ul>
 		<li><a href=" <?php echo $knowledge_url; ?> ">Program Objectives</a></li>
-		<li><a href=" <?php echo $gradatt_url; ?> ">Graduate Attribute</a></li>
+		<li><a href=" <?php echo $categories_url; ?> ">Categories</a></li>
 		<li><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
 		<li class="onclick_nav"><a href=" <?php echo $tag_url; ?> ">Tags</a></li>
 		<li><a href=" <?php echo $required_url; ?> ">Required</a></li>

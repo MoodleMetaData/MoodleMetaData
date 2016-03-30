@@ -22,6 +22,8 @@ $string['err_positivenumber']='You must enter a positive number here.';
 // General form elements
 $string['course_code'] = 'Course short name: ';
 $string['course_name'] = 'Course full name: ';
+$string['course_year'] = 'Course year: ';
+$string['course_term'] = 'Course term: ';
 $string['course_description'] = 'Course summary: ';
 $string['course_instructor'] = 'Instructor: ';
 $string['upload_ctype_file'] = 'Upload course type file: ';
@@ -103,7 +105,6 @@ $string['instructor_heading'] = 'Metadata for %s: %s';
 
 $string['add_session'] = 'Add new session';
 $string['session_title'] = 'Title:';
-$string['session_teaching_strategy'] = 'Teaching Strategy:';
 $string['session_guest_teacher'] = 'Guest Lecturer:';
 $string['session_guest_teacher_help'] = 'If there is a different lecturer, write out their full name. Otherwise, leave blank';
 $string['session_type'] = 'Type:';
@@ -122,6 +123,13 @@ $string['upload_sessions_header_help'] = 'To upload course objectives, only .csv
                                         The length should be 50, 80, 110, 140, or 170 followed by minutes. EG: 110 minutes.<br />
                                         The date should be in the form YYYY-MM-DD. EG: 2016-03-17 would be March 17, 2016.';
 $string['upload_sessions'] = 'Upload sessions';
+
+$string['session_teaching_strategy'] = 'Teaching Strategy:';
+$string['session_teaching_strategy_help'] = 'Direct Lecture - explicit teaching of knowledge and skills using lectures or demonstrations - can involve question and answer components.<br />
+Active Learning - students engage in meaningful activities to enhance learning.<br />
+Problem Based Learning - students learn through the experience of solving open-ended problems - primarily a student centred approach.<br />
+Team Based Learning - students learn collaboratively within highly structured modules taught in a three-step cycle: preparation, in-class readiness assurance testing, and application-focused exercise.<br />
+Blended Learning - student learns in part through delivery of content and instruction via digital and online media with some element of student control over time, place, path, or pace.<br />';
 
 $string['learning_objective_Attitude'] = 'Learning Objective: Attitude';
 $string['learning_objective_Knowledge'] = 'Learning Objective: Knowledge';
@@ -174,13 +182,19 @@ $string['new_attitudes'] = 'New Learning Objective';
 $string['create_attitudes'] = 'Add';
 $string['delete_attitudes'] = 'Delete';
 
-$string['course_gradatt'] = 'Graduate Attributes: ';
-$string['new_gradatt'] = 'New Graduate Attribute';
-$string['upload_gradatt'] = 'Upload Graduate Attributes';
+$string['delete_category'] = 'Delete';
+$string['delete_category_help'] = 'By removing a course category here, 
+								 any record corresponding to this category will not be deleted.';
+$string['category_label'] = 'Categories label:';
+$string['submit_category'] = 'Submit new category';
+
+$string['course_gradatt'] = 'Graduate attributes: ';
+$string['new_gradatt'] = 'New graduate attribute';
+$string['upload_gradatt'] = 'Upload graduate attributes';
 $string['create_gradatt'] = 'Add';
 $string['delete_gradatt'] = 'Delete';
 $string['course_gradatt_help'] = 'By removing a graduate attribute here, 
-								 any record corresponding to this graduate attribute will be removed as well.';
+								 any record corresponding to this graduate attribute will be deleted as well.';
 
 $string['policy_editor'] = 'Faculty Policy: ';
 $string['submit_policy'] = 'Submit';
@@ -235,6 +249,14 @@ $string['upload_gradatt_header_help'] = 'To upload graduate attributes, only .cs
 									Enter a new line to create a new entry. <br />
 									<a href="example/graduate_attributes.csv">Download example here.</a><br />
 									You need csv editor or Excel to open this file.';
+$string['category_header'] = 'Course categories';									
+$string['upload_category_header'] = 'Upload course categories';
+$string['upload_category_header_help'] = 'To upload course categories, only .csv file is permitted. <br />
+									The format: [column1] <br />
+									[column1] is a course category name. <br />
+									Enter a new line to create a new entry. <br />
+									<a href="example/course_categories.csv">Download example here.</a><br />
+									You need csv editor or Excel to open this file.';
 
 
 // Specialized items
@@ -242,3 +264,8 @@ $string['require_uploaded_rubric'] = 'Uploaded rubric:';
 
 $string['next_page'] = 'Next Page';
 $string['previous_page'] = 'Previous Page';
+
+
+// Report items
+$string['programobj_report_header'] = 'Program objective report generation';
+$string['courseobj_report_header'] = 'Course report generation';

@@ -100,9 +100,27 @@ function create_manage_url($form) {
 }
 
 function get_teaching_strategies() {
-    return array('First', 'Second', 'Other');
+    return array('Direct Lecture', 'Active Learning', 'Problem Based Learning', 'Team Based Learning', 'Blended Learning', 'Other');
 }
 
+/**
+ * Will return all of the type options
+ *
+ * @return array containing string of all types
+ */
+function get_session_types() {
+    return array('lecture', 'lab', 'seminar');
+}
+    
+/**
+ * Will return all of the length options
+ *
+ * @return array containing string of all types
+ */
+function get_session_lengths() {
+    return array('50 minutes', '80 minutes', '110 minutes', '140 minutes', '170 minutes');
+}
+    
 function get_assessment_type($value){
 	$assessmentTypeArray = array();
 	$assessmentTypeArray[0] = "Exam";

@@ -6,10 +6,15 @@ require_once $CFG->dirroot.'/lib/tcpdf/tcpdf.php';
 require_once 'lib.php';
 
 /**
- * The form to display the tab for generating syllabus.
+ * The form to display the tab for syllubus information.
+ * which will allow the user to preview or download the pdf
+ * format of generated syllabus
  */
 class syllabus_form extends moodleform {
-	
+	/**
+	 * Will set up the form elements
+	 * @see lib/moodleform#definition()
+	 */
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $course, $courseId;
@@ -33,21 +38,19 @@ class syllabus_form extends moodleform {
 
 	}
 
-	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
+    /**
+     * Ensure that the data the user entered is valid
+     *
+     * @see lib/moodleform#validation()
+     */
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
 		global $DB, $CFG, $USER; //Declare them if you need them
 		
 		return $errors;
     }
-	
-	public static function save_data($data) {
-		global $CFG, $DB, $USER; //Declare our globals for use
-		global $course, $courseId;
-	}
-	
-	
-	/*
+		
+	/**
 	 * Used to decoding the Unix stemp format of the date type stored in the database
 	 *
 	 * @param  string $timestamp the Unixstemp format of the date to be transfered
@@ -61,7 +64,7 @@ class syllabus_form extends moodleform {
 	}
 	
 	
-    /*
+    /**
      * Used to generate the course general description area of the syllabus
      *
      * @param string $coursedescription description string to be shown in the syllabus
@@ -77,7 +80,7 @@ class syllabus_form extends moodleform {
 		return $decripthtml;
 	}
 	
-	/*
+	/**
 	 * Used to generate the reading material area of the syllabus
 	 *
 	 * @param integer $readingnumber variable to determine whether the reading 
@@ -103,7 +106,7 @@ class syllabus_form extends moodleform {
 		return $readinghtml;
 	}
 	
-	/*
+	/**
 	 * Used to generate the sub category part of the learning objective area of the syllabus
 	 *
 	 * @param string $objhtml previous html information for the learning objective area in the syllabus
@@ -135,7 +138,7 @@ class syllabus_form extends moodleform {
 		return $objhtml;
 	}
 	
-	/*
+	/**
 	 * Used to generate the learing objective area of the syllabus
 	 *
 	 * @param integer $objectivegnumber variable to determine whether the learing objective
@@ -161,7 +164,7 @@ class syllabus_form extends moodleform {
 		return $objhtml;
 	}
 	
-	/*
+	/**
 	 * Used to generate the assessment grading area of the syllabus
 	 *
 	 * @param integer $assessmentnumber variable to determine whether the assessment
@@ -213,7 +216,7 @@ class syllabus_form extends moodleform {
 		return $assessmenthtml;
 	}
 	
-	/*
+	/**
 	 * Used to generate the session area of the syllabus
 	 *
 	 * @param integer $sessionnumber variable to determine whether the session
@@ -225,19 +228,18 @@ class syllabus_form extends moodleform {
 	function session_part_generation($sessionnumber){
 		global $CFG, $DB, $USER;
 		global $course;
-		$assessmenthtml = '<b><h1>Grading</h1></b><br>';
+		$sessionhtml = '<b><h1>Course Sessions</h1></b><font size="11%">';
 		if ($sessionnumber>0){
-			$coursesessions = $DB->get_records('coursesession', array('courseid'=>$course->id), $sort='sessiondate');
-			$sessionhtml = '<b><h1>Course Sessions</h1></b><font size="11%">';
+			$coursesessions = $DB->get_records('coursesession', array('courseid'=>$course->id), $sort='sessiondate');		
 			$sessionhtml .= '
 		<table border="0.1" cellspacing="0.1" cellpadding="0.1" id="gradingtable">
 		<tr>
 			<th width="15%" align="center"><b>Title</b></th>
-			<th width="15%" align="center"><b>date</b></th>
-			<th width="10%" align="center"><b>length</b></th>
+			<th width="15%" align="center"><b>Date</b></th>
+			<th width="10%" align="center"><b>Length</b></th>
 			<th width="10%" align="center"><b>Type</b></th>
-			<th width="10%" align="center"><b>lecturer</b></th>
-			<th width="40%" align="center"><b>topic</b></th>
+			<th width="10%" align="center"><b>Instructor</b></th>
+			<th width="40%" align="center"><b>Topic</b></th>
 		</tr>';
 			foreach ($coursesessions as $coursesession) {
 				$guestteacher = '';
@@ -267,7 +269,7 @@ class syllabus_form extends moodleform {
 		return $sessionhtml;
 	}	
 	
-	/*
+	/**
 	 * Used to generate the policy area of the syllabus
 	 *
 	 * @return string $policyhtml the corresponding html format of
@@ -291,7 +293,7 @@ class syllabus_form extends moodleform {
 	}
 	
 	
-	/*
+	/**
 	 * Used to generate the pdf format of the syllabus
 	 *
 	 * @param  integer $optionno the option to choose wether(1) display the generated syllabus in the current window
@@ -312,10 +314,15 @@ class syllabus_form extends moodleform {
 		$phonenumber = 0;
 		$instructoremail = 'To be assigned';
 		$coursedescription = '';
+		$courseterm = 'Fall/Winter/Spring/Summer';$courseyear='';
 //collecting relative data from database===============================================================================		
 		if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
 			//$coursetopic = $existCourseInfo->coursetopic;
 			$coursedescription = $existCourseInfo->coursedescription;
+			$courseterm = $existCourseInfo->courseterm;
+			$termarray = array("Spring","Summer","Fall","Winter");
+			$courseterm = $termarray[$courseterm];
+			$courseyear = $existCourseInfo->courseyear;
 			$courseInstructor = $USER->lastname.', '.$USER->firstname;
 			if($existInstructorInfo = $DB->get_record('courseinstructors', array('courseid'=>$existCourseInfo->id, 'userid'=>$USER->id))){
 				$officelocation = $existInstructorInfo->officelocation;
@@ -361,8 +368,9 @@ class syllabus_form extends moodleform {
 		$pdf->Cell(0, 0, '', 0, 0, 'C');
 		$pdf->Ln();
 //put general course information(instructor,officehour,location) into the pdf------------------------------------------
+
 		$courselogistics = <<<EOD
-		Fall/Winter/Spring/Summer<br>
+		$courseterm $courseyear<br>
 		<b>Course Weight</b>: *3
 EOD;
 		$pdf->SetFont('times', '', 12);

@@ -13,7 +13,7 @@ class general_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $course, $courseId;           
-
+		
 		// initialize the form.
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 	
@@ -28,6 +28,7 @@ class general_form extends moodleform {
 			$coursegradattributes = NULL;
 		}
 		$coursecategory = $DB->get_record('course_categories', array('id'=>$course->category));
+		$defcategories =  $DB->get_records('coursecategories', array('categoryid'=>$coursecategory->id));
 		$coursereadings = get_course_readings();
 		$graduateattributes = $DB->get_records('graduateattributes');
 		
@@ -68,7 +69,7 @@ class general_form extends moodleform {
 		} 
 
 		// setup form elements
-		$this->setup_general($mform, $courseinfo, $contactinfo, $coursecategory);		
+		$this->setup_general($mform, $courseinfo, $contactinfo, $coursecategory, $defcategories);		
 		$this->setup_contact($mform, $courseinfo, $contactinfo);
 		$this->setup_description($mform, $courseinfo);
 		$this->setup_upload_req_reading($mform);		
@@ -78,7 +79,7 @@ class general_form extends moodleform {
 		$this->setup_course_obj($mform, 'knowledge', $knowledge_list, 'skill');
 		$this->setup_course_obj($mform, 'skill', $skill_list, 'attitude');
 		$this->setup_course_obj($mform, 'attitude', $attitude_list, 'gradatt');
-		//$this->setup_graduate_attributes($mform, $graduateattributes, $gradatt_list);
+		$this->setup_graduate_attributes($mform, $graduateattributes, $gradatt_list);
 		$this->setup_teaching_assumption($mform, $courseinfo);
  
 		// Add form buttons
@@ -87,12 +88,14 @@ class general_form extends moodleform {
 	
 	/**
 	 * Add form elements for general course information.
-	 * @param object $mform			form definition
+	 * @param object $mform				form definition
 	 * @param object $courseinfo		a record of general information from course info table.
-	 * @param object $contactinfo	a record of contact information from course instructor table.
+	 * @param object $contactinfo		a record of contact information from course instructor table.
+	 * @param object $coursecategory	a record of category information from default course category table.
+	 * @param object $defcategories		a record of defined categories by admin from coursecategories table.
 	 * @return void
 	 */
-	private function setup_general($mform, $courseinfo, $contactinfo, $coursecategory){
+	private function setup_general($mform, $courseinfo, $contactinfo, $coursecategory, $defcategories){
 		global $CFG, $DB, $USER; //Declare our globals for use
         global $course;
 		
@@ -113,11 +116,35 @@ class general_form extends moodleform {
 		$course_faculty_id = $mform->addElement('hidden', 'course_faculty_id', $coursecategory->id);
 		$mform->setType('course_faculty_id', PARAM_INT);
 		
+		// Year
+		$current_year = date('Y');
+		$years = range($current_year, $current_year + 5);
+		$course_year_selection = $mform->addElement('select', 'course_year', get_string('course_year', 'local_metadata'), $years, '');
+		if($courseinfo){
+			$course_year_selection->setSelected($courseinfo->courseyear);
+		}
+		
+		// Term
+		$terms = array(
+					'Fall' => 'Fall',
+					'Winter' => 'Winter',
+					'Spring' => 'Spring',
+					'Summer' => 'Summer'
+				);
+		$course_term_selection = $mform->addElement('select', 'course_term', get_string('course_term', 'local_metadata'), $terms, '');
+		if($courseinfo){
+			$course_term_selection->setSelected($courseinfo->courseterm);
+		}
+		
 		// Courses category
 		$category_list = array();
+		foreach($defcategories as $value){
+			if(!is_null($value->node)){
+				$category_list[$value->id] = $value->categoryname;
+			}
+		}
 		
 		$course_category_selection = $mform->addElement('select', 'course_category', get_string('course_category', 'local_metadata'), $category_list, '');
-		//$mform->addRule('course_category', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		if($courseinfo){
 			//$course_category_selection->setSelected($courseinfo->coursecategory);
 		}
@@ -130,7 +157,6 @@ class general_form extends moodleform {
 		}else{
 			$mform->setDefault('course_instructor', $courseInstructor);
 		}
-		$mform->addRule('course_instructor', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->setType('course_instructor', PARAM_TEXT);
 		
 		$mform->addElement('static', 'h_1', ''); // end of header
@@ -165,7 +191,7 @@ class general_form extends moodleform {
 		} else{
 			$mform->setDefault('course_email', $USER->email);
 		}
-		$mform->addRule('course_email', get_string('err_required', 'local_metadata'), 'required', null, 'client');
+		//$mform->addRule('course_email', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->addRule('course_email', get_string('err_email', 'local_metadata'), 'email', null, 'client');
 		$mform->setType('course_email', PARAM_TEXT);
 
@@ -181,7 +207,7 @@ class general_form extends moodleform {
 		if($contactinfo){
 			$mform->setDefault('course_office', $contactinfo->officelocation);
 		}
-		$mform->addRule('course_office', get_string('err_required', 'local_metadata'), 'required', null, 'client');  
+		//$mform->addRule('course_office', get_string('err_required', 'local_metadata'), 'required', null, 'client');  
 		$mform->setType('course_office', PARAM_TEXT);
 
 		// Office hours
@@ -275,7 +301,7 @@ class general_form extends moodleform {
 			//$mform->setDefault('course_description', $default_description);
 			$course_description_editor->setValue(array('text' => $default_description) );
 		}
-		$mform->addRule('course_description', get_string('err_required', 'local_metadata'), 'required', null, 'client');
+		//$mform->addRule('course_description', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->setType('course_description', PARAM_TEXT);      
 
 		$mform->addElement('static', 'h_3', ''); // end of header
@@ -373,7 +399,7 @@ class general_form extends moodleform {
 		
 		// Assessment
 		$course_assessment = $mform->addElement('text', 'course_assessment', get_string('assessment_counter', 'local_metadata'), '');
-		$mform->addRule('course_assessment', get_string('err_required', 'local_metadata'), 'required', null, 'client');
+		//$mform->addRule('course_assessment', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->addRule('course_assessment', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
 		$courseassessment = $DB->count_records('courseassessment', array('courseid'=>$courseId));
@@ -389,7 +415,7 @@ class general_form extends moodleform {
 
 		// Session
 		$course_assessment = $mform->addElement('text', 'course_session', get_string('session_counter', 'local_metadata'), '');
-		$mform->addRule('course_session', get_string('err_required', 'local_metadata'), 'required', null, 'client');
+		//$mform->addRule('course_session', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$mform->addRule('course_session', get_string('err_numeric', 'local_metadata'), 'numeric', null, 'client');
 
 		$coursesession = $DB->count_records('coursesession', array('courseid'=>$courseId));
@@ -504,14 +530,26 @@ class general_form extends moodleform {
 		$mform->addElement('html', '<a name="graduate_attributes"></a>'); // anchor
 		$mform->addElement('header', 'course_gradatt_header', get_string('course_gradatt_header', 'local_metadata'));
 
-		$gradAtt_array = array();
-
-		$course_gradAtts = array();
-		foreach($graduateattributes as $graduateattribute){
-			$course_gradAtts[$graduateattribute->id] = $graduateattribute->attribute;
-		}		
+		$gradatt_list = array ();
+		$parent_number = 0;
+		$child_number = 1;
 		
-		$gradAtt_array[] = $mform->createElement('select', 'gradAtt_option', get_string('course_gradAtt', 'local_metadata'), $course_gradAtts, '');
+		foreach($graduateattributes as $value) {
+			if(is_null($value->node)){
+				// parent
+				$parent_number += 1;
+				$gradatt_list[$value->id] = '('.$parent_number.') '.$value->attribute;
+				$child_number = 1; // reset child number
+			} else {
+				// child
+				$gradatt_list[$value->id] = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.$parent_number.'.'.$child_number.'. '.$value->attribute;
+				$child_number += 1;
+			}
+			
+		}
+		
+		$gradAtt_array = array();
+		$gradAtt_array[] = $mform->createElement('select', 'gradAtt_option', get_string('course_gradAtt', 'local_metadata'), $gradatt_list, '');
 		$gradAtt_array[] = $mform->createElement('submit', 'delete_gradAtt', get_string('delete_gradAtt_label', 'local_metadata'));
 		$gradAtt_array[] = $mform->createElement('hidden', 'gradAtt_id', -1);
 
@@ -826,9 +864,12 @@ class general_form extends moodleform {
 		$course_info = new stdClass();
 		$course_info->courseid = $courseId;
 		$course_info->coursename = $course->fullname;
+		$course_info->courseyear = $data->course_year;
+		$course_info->courseterm = $data->course_term;
 		$course_info->coursedescription = $data->course_description['text'];
 		$course_info->facultyid = $data->course_faculty_id;
-		//$course_info->coursecategory = $data->course_category;
+		$_category = $DB->get_record('coursecategories', array('id'=>$data->course_category));
+		$course_info->coursecategory = $_category->categoryname;
 		$course_info->assessmentnumber = $data->course_assessment;
 		$course_info->sessionnumber = $data->course_session;
 		if($data->teaching_assumption != NULL){
