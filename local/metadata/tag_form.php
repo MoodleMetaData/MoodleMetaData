@@ -6,7 +6,7 @@ require_once $CFG->dirroot.'/lib/datalib.php';
 class tag_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
-		global $course, $courseId, $objectiveId;
+		global $course, $courseId, $objectiveId, $groupId;
 		
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 		
@@ -23,14 +23,30 @@ class tag_form extends moodleform {
 		$mform->addElement('submit', 'admselcourse', get_string('admselcourse', 'local_metadata'));
 		
 		if($objectiveId != -1) {
+			// Dropdown select for objective groups
+			$objoptions = array();
+			$groupobj = $DB->get_records ( 'objectivegroups', array ());
+			foreach($groupobj as $record) {
+				$objoptions[$record->id] = $record->groupname;
+			}
+			
+			$selectobjectives = $mform->addElement('select', 'group_select', get_string('group_select', 'local_metadata'), $objoptions, '');
+			$mform->setDefault('group_select', $groupId);
+			
+			$mform->addElement('submit', 'groupsel', get_string('admselcourse', 'local_metadata'));
+			
 			//Set defaults
 			$mform->setDefault('admobj_select', $objectiveId);
 			
 			// Multiselect for program objectives
 			$programoptions = array();
-			$progobj = $DB->get_records ( 'programobjectives', array());
+			$progobj = $DB->get_records ( 'programobjectives', array('objectivegroup' => $groupId));
 			foreach($progobj as $record) {
-				$programoptions[$record->id] = $record->objectivename;
+				if($record->parent == '') {
+					$programoptions[$record->id] = $record->objectivename;
+				} else {
+					$programoptions[$record->id] = '- '.$record->objectivename;
+				}
 			}
 			$programobj_select = $mform->addElement('select', 'admpro_select', get_string('admpro_select', 'local_metadata'), $programoptions,'');
 			$programobj_select->setMultiple ( true );
@@ -58,6 +74,16 @@ class tag_form extends moodleform {
 	public static function get_obj($data){
 		global $CFG, $DB, $USER;
 		return $data->admobj_select;
+	}
+	
+	/**
+	 * Grabs the group ID for url param
+	 * @param $data data from the form
+	 * @return objective id
+	 */
+	public static function get_grp($data){
+		global $CFG, $DB, $USER;
+		return $data->group_select;
 	}
 	
 	/**

@@ -217,10 +217,16 @@ $string['admcourse_select'] = 'Select Course: ';
 $string['admselect_course'] = 'Select';
 $string['admobj_select'] = 'Learning Objective: ';
 $string['admselcourse'] = 'Select';
-$string['admpro_select'] = 'Program Objectives: ';
+$string['admpro_select'] = 'Options: ';
 $string['admaddobjective'] = 'Tag Objectives';
 $string['admpro_current'] = 'Current Tags: ';
 $string['admdelobjective'] = 'Remove Tag';
+
+$string['new_group'] = 'Program Objective Group';
+$string['program_grp_header'] = 'Program Groups';
+$string['manage_groups'] = 'Group Names';
+$string['delete_groups'] = 'Delete';
+$string['group_select'] = 'Program Objectives';
 
 // Metadata manager errors
 $string['mcreate_required'] = 'You must enter something.';
