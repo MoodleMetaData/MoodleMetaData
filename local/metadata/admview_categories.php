@@ -42,11 +42,9 @@ $categories_form = new categories_form($categories_url);
 
 // Submitted the data
 if ($data = $categories_form->get_data()) {
-	if (!empty($data->delete_gradatt)) {
-		//categories_form::delete_data($data);
-	} elseif (!empty($data->create_gradatt)) {
-    	//categories_form::save_data($data);
-	} 
+	if (!empty($data->delete_category)) {
+		$categories_form->delete_data($data);
+	}
 	redirect($categories_url);
 } 
 

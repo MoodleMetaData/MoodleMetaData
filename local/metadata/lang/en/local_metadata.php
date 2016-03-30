@@ -177,8 +177,10 @@ $string['create_attitudes'] = 'Add';
 $string['delete_attitudes'] = 'Delete';
 
 $string['delete_category'] = 'Delete';
+$string['delete_category_help'] = 'By removing a course category here, 
+								 any record corresponding to this category will not be deleted.';
 $string['category_label'] = 'Categories label:';
-$string['sumbit_category'] = 'Submit new category';
+$string['submit_category'] = 'Submit new category';
 
 $string['course_gradatt'] = 'Graduate attributes: ';
 $string['new_gradatt'] = 'New graduate attribute';
@@ -186,7 +188,7 @@ $string['upload_gradatt'] = 'Upload graduate attributes';
 $string['create_gradatt'] = 'Add';
 $string['delete_gradatt'] = 'Delete';
 $string['course_gradatt_help'] = 'By removing a graduate attribute here, 
-								 any record corresponding to this graduate attribute will be removed as well.';
+								 any record corresponding to this graduate attribute will be deleted as well.';
 
 $string['policy_editor'] = 'Faculty Policy: ';
 $string['submit_policy'] = 'Submit';

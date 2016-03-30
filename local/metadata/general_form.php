@@ -13,7 +13,7 @@ class general_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $course, $courseId;           
-
+		
 		// initialize the form.
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 	
@@ -28,6 +28,7 @@ class general_form extends moodleform {
 			$coursegradattributes = NULL;
 		}
 		$coursecategory = $DB->get_record('course_categories', array('id'=>$course->category));
+		$defcategories =  $DB->get_records('coursecategories', array('categoryid'=>$coursecategory->id));
 		$coursereadings = get_course_readings();
 		$graduateattributes = $DB->get_records('graduateattributes');
 		
@@ -68,7 +69,7 @@ class general_form extends moodleform {
 		} 
 
 		// setup form elements
-		$this->setup_general($mform, $courseinfo, $contactinfo, $coursecategory);		
+		$this->setup_general($mform, $courseinfo, $contactinfo, $coursecategory, $defcategories);		
 		$this->setup_contact($mform, $courseinfo, $contactinfo);
 		$this->setup_description($mform, $courseinfo);
 		$this->setup_upload_req_reading($mform);		
@@ -87,12 +88,14 @@ class general_form extends moodleform {
 	
 	/**
 	 * Add form elements for general course information.
-	 * @param object $mform			form definition
+	 * @param object $mform				form definition
 	 * @param object $courseinfo		a record of general information from course info table.
-	 * @param object $contactinfo	a record of contact information from course instructor table.
+	 * @param object $contactinfo		a record of contact information from course instructor table.
+	 * @param object $coursecategory	a record of category information from default course category table.
+	 * @param object $defcategories		a record of defined categories by admin from coursecategories table.
 	 * @return void
 	 */
-	private function setup_general($mform, $courseinfo, $contactinfo, $coursecategory){
+	private function setup_general($mform, $courseinfo, $contactinfo, $coursecategory, $defcategories){
 		global $CFG, $DB, $USER; //Declare our globals for use
         global $course;
 		
@@ -122,7 +125,12 @@ class general_form extends moodleform {
 		}
 		
 		// Term
-		$terms = array('Spring', 'Summer', 'Fall', 'Winter');
+		$terms = array(
+					'Fall' => 'Fall',
+					'Winter' => 'Winter',
+					'Spring' => 'Spring',
+					'Summer' => 'Summer'
+				);
 		$course_term_selection = $mform->addElement('select', 'course_term', get_string('course_term', 'local_metadata'), $terms, '');
 		if($courseinfo){
 			$course_term_selection->setSelected($courseinfo->courseterm);
@@ -130,6 +138,11 @@ class general_form extends moodleform {
 		
 		// Courses category
 		$category_list = array();
+		foreach($defcategories as $value){
+			if(!is_null($value->node)){
+				$category_list[$value->id] = $value->categoryname;
+			}
+		}
 		
 		$course_category_selection = $mform->addElement('select', 'course_category', get_string('course_category', 'local_metadata'), $category_list, '');
 		if($courseinfo){
@@ -855,7 +868,8 @@ class general_form extends moodleform {
 		$course_info->courseterm = $data->course_term;
 		$course_info->coursedescription = $data->course_description['text'];
 		$course_info->facultyid = $data->course_faculty_id;
-		//$course_info->coursecategory = $data->course_category;
+		$_category = $DB->get_record('coursecategories', array('id'=>$data->course_category));
+		$course_info->coursecategory = $_category->categoryname;
 		$course_info->assessmentnumber = $data->course_assessment;
 		$course_info->sessionnumber = $data->course_session;
 		if($data->teaching_assumption != NULL){

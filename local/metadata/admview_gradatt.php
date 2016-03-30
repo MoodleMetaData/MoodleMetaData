@@ -43,10 +43,8 @@ $gradatt_form = new gradatt_form($gradatt_url);
 // Submitted the data
 if ($data = $gradatt_form->get_data()) {
 	if (!empty($data->delete_gradatt)) {
-		gradatt_form::delete_data($data);
-	} elseif (!empty($data->create_gradatt)) {
-    	gradatt_form::save_data($data);
-	} 
+		$gradatt_form->delete_data($data);
+	}
 	redirect($gradatt_url);
 } 
 

@@ -3,15 +3,30 @@ require_once '../../config.php';
 require_once $CFG->dirroot . '/lib/formslib.php';
 require_once $CFG->dirroot . '/lib/datalib.php';
 
+/**
+ * The form to display the tab for categories.
+ */
 class categories_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; // Declare our globals for use
 		$mform = $this->_form; // Tell this object to initialize with the properties of the Moodle form.
 		
 		$category_list = array();
-		
+		$category_records = $DB->get_records('coursecategories', null, 'id');
+		foreach($category_records as $value){
+			if(is_null($value->node)){
+				$category_list[$value->id] = $value->categoryname;
+			} else {
+				//$category_list[$value->id] = $value->categoryname;
+			}
+			
+		}
+	
+		$faculty_list = array();
 		$faculty_records = $DB->get_records('course_categories');
-
+		foreach($faculty_records as $value){
+			$faculty_list[$value->id] = $value->name;
+		}
 		
 		$this->setup_categories($mform, $category_list);
 		$this->setup_upload_categories($mform, $faculty_list);
@@ -19,15 +34,16 @@ class categories_form extends moodleform {
 	
 	/**
 	 * Add form elements for displaying course categories uploaded by administrator.
-	 * @param object $mform		form definition
-	 * @param array $list		a list of formatted graduate attribute records
+	 * @param object $mform				form definition
+	 * @param array $category_list		a list of category records	
 	 * @return void
 	 */
-	private function setup_categories($mform, $list){
+	private function setup_categories($mform, $category_list){
 		$mform->addElement('header', 'category_header', get_string('category_header', 'local_metadata'));
 		
-		$gradatt_selection = $mform->addElement ('select', 'course_category', get_string ( 'course_category', 'local_metadata' ), $list);
-		$gradatt_selection->setMultiple(true);
+		$category_selection = $mform->addElement ('select', 'course_category', get_string ( 'course_category', 'local_metadata' ), $category_list);
+		
+		$category_selection->setMultiple(true);
 		
 		// Delete Button
 		$mform->addElement ( 'submit', 'delete_category', get_string ( 'delete_category', 'local_metadata' ) );
@@ -44,73 +60,82 @@ class categories_form extends moodleform {
 		$mform->addHelpButton('upload_category_header', 'upload_category_header', 'local_metadata');
 		
 		$mform->addElement('text', 'category_label', get_string('category_label', 'local_metadata'));
+		$mform->setType('category_label', PARAM_TEXT);
 		
 		$faculty_selection = $mform->addElement ('select', 'course_faculty', get_string ( 'course_faculty', 'local_metadata' ), $faculty_list);
 		
-		$mform->addElement('filepicker', 'temp_gradatt', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
-		$mform->addElement('submit', 'sumbit_category', get_string('submit_category', 'local_metadata'));
+		$mform->addElement('filepicker', 'temp_categories', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
+		$mform->addElement('submit', 'submit_category', get_string('submit_category', 'local_metadata'));
 	}
 	
 	/**
-	 * Upload graduate attributes and insert all entries to graduateattributes table.
+	 * Submit new categories and insert all entries to coursecategories table.
+	 * @param object $data
 	 * @param object $mform		form definition
+	 * @param object $files		the temporary uploaded csv file
 	 * @return void
 	 */
-	private function upload_graduate_attributes($mform){
-		global $DB, $CFG, $USER;
+	private function submit_category($data, $mform, $files){
+		global $CFG, $DB, $USER;
 		
-		$gradatt_was_uploaded = $mform->getSubmitValue('upload_gradatt');
-		if($gradatt_was_uploaded){
-	
-			$files = $this->get_draft_files('temp_gradatt');
-			if(!empty($files)){
-				$file = reset($files); 
-				$content = $file->get_content();
-				$all_rows = explode("\n", $content);
-				
-				$current_parent = 0;
-				foreach($all_rows as $row){
-					$parsed = str_getcsv($row);
-					if(!is_null($parsed[0])){
-						// $parsed[0] is not empty, then it is the main level
-						if($parsed[0] != ''){
-							$parent = new stdClass();
-							$parent->attribute = $parsed[1];
-							$insert_gradatt = $DB->insert_record('graduateattributes', $parent, true, false);
-							$current_parent = $insert_gradatt;
-							
-							$node = new stdClass();
-							$node->attribute = $parsed[3];
-							$node->node = $current_parent;
-							$insert_sub_gradatt = $DB->insert_record('graduateattributes', $node, true, false);
-						} else {
-							$node = new stdClass();
-							$node->attribute = $parsed[3];
-							$node->node = $current_parent;
-							$insert_sub_gradatt = $DB->insert_record('graduateattributes', $node, true, false);
-						}
-					}
+		if(!empty($files)){
+			$file = reset($files); 
+			$content = $file->get_content();
+			$all_rows = explode("\n", $content);
+			
+			$category_label = new stdClass();
+			$category_label->categoryid = $data->course_faculty;
+			$category_label->categoryname = $data->category_label;
+			$insert_category_label = $DB->insert_record('coursecategories', $category_label, true, false);
+			
+			foreach($all_rows as $row){
+				if($row != ''){
+					$category_info = new stdClass();
+					$category_info->categoryname = $row;
+					$category_info->categoryid = $data->course_faculty;
+					$category_info->node = $insert_category_label;
+					$insert_category = $DB->insert_record('coursecategories', $category_info, true, false);
 				}
-				
 			}
+		}
+	}
+
+	/**
+	 * Delete the group(s) of categories.
+	 * @param object $data		data generated by the form
+	 * @return void
+	 */
+	public function delete_data($data){
+		global $CFG, $DB, $USER;
+		
+		foreach ($data->course_category as $value) {
+			$delete_parent_category = $DB->delete_records('coursecategories', array('id'=>$value));
+			$delete_child_category = $DB->delete_records('coursecategories', array('node'=>$value));
 		}
 	}
 	
 	/**
-	 * This function is used for uploading and deleting graduate attributes.
+	 * This function is used for uploading and deleting course categories.
 	 * @return void
 	 */
 	function definition_after_data() {
         parent::definition_after_data();
-		global $general_url;
 		
-        $mform = $this->_form;
+        $mform = $this->_form;	
+		$data = $this->get_data();
 		
-		//$this->delete_graduate_attributes($mform);
-		$this->upload_graduate_attributes($mform);
+		$category_was_uploaded = $mform->getSubmitValue('submit_category');
+		if($category_was_uploaded){
+			$files = $this->get_draft_files('temp_categories');
+			$this->submit_category($data, $mform, $files);
+		}
+		
 	}
 	
-	// If you need to validate your form information, you can override the parent's validation method and write your own.
+	/**
+	 * Ensure that the data the user entered is valid.
+	 * @see lib/moodleform#validation()
+	 */
 	function validation($data, $files) {
 		$errors = parent::validation ( $data, $files );
 		global $DB, $CFG, $USER; // Declare them if you need them
@@ -118,40 +143,6 @@ class categories_form extends moodleform {
 		return $errors;
 	}
 	
-	// Saves data from form to the database. Passed in is the data
-	public static function save_data($data) {
-		global $CFG, $DB, $USER;
-	}
-	
-	// Deletes all selected already existing elements from the database
-	public static function delete_data($data) {
-		global $CFG, $DB, $USER;
-	
-		foreach ($data->course_gradatt as $value) {
-			// TODO : delete parent -> delete children
-			if($getParent = $DB->get_record('graduateattributes', array('id'=>$value))){
-				if(is_null($getParent->node)){
-					// delete the corresponding record in course graduate attribute
-					/*
-					$delete_coursegradatt = $DB->delete_records('coursegradattributes', array('gradattid'=>$value));
-					if($getChildren = $DB->get_records('graduateattributes', array('node'=>$value))){
-						foreach($getChildren as $child){
-							$delete_coursegradatt = $DB->delete_records('coursegradattributes', array('gradattid'=>$child));
-						}
-					}*/
-					// it is parent -> delete parent and its children
-					$delete_parent = $DB->delete_records('graduateattributes', array('id'=>$value));
-					$delete_children = $DB->delete_records('graduateattributes', array('node'=>$value));
-				} else {
-					// it is the child -> delete child
-					$delete_child = $DB->delete_records('graduateattributes', array('id'=>$value));
-					// delete the corresponding record in course graduate attribute
-					$delete_coursegradatt = $DB->delete_records('coursegradattributes', array('gradattid'=>$value));
-				}
-			}
-		}
-	
-	}
 	
 }
 
