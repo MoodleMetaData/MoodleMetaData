@@ -25,13 +25,12 @@ $PAGE->set_heading($heading);
 $knowledge_url = create_manage_url('knowledge');
 $policy_url = create_manage_url('policy');
 $course_url = create_manage_url('course');
-$gradatt_url = create_manage_url('gradatt');
 $required_url = create_manage_url('required');
 $reporting_url = create_manage_url('reporting');
 $categories_url = create_manage_url('categories');
 
 // TODO: Improve how this is done
-$PAGE->set_url($gradatt_url);
+$PAGE->set_url($categories_url);
 $PAGE->requires->css('/local/metadata/insview_style.css');
 
 
@@ -42,11 +41,9 @@ $categories_form = new categories_form($categories_url);
 
 // Submitted the data
 if ($data = $categories_form->get_data()) {
-	if (!empty($data->delete_gradatt)) {
-		//categories_form::delete_data($data);
-	} elseif (!empty($data->create_gradatt)) {
-    	//categories_form::save_data($data);
-	} 
+	if (!empty($data->delete_category)) {
+		$categories_form->delete_data($data);
+	}
 	redirect($categories_url);
 } 
 
@@ -58,7 +55,6 @@ echo $OUTPUT->header();
 		<ul>
 		<li><a href=" <?php echo $knowledge_url; ?> ">Program Objectives</a></li>
 		<li class="onclick_nav"><a href=" <?php echo $categories_url; ?> ">Categories</a></li>
-		<li><a href=" <?php echo $gradatt_url; ?> ">Graduate Attribute</a></li>
 		<li><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
 		<li><a href=" <?php echo $course_url; ?> ">Tags</a></li>
 		<li><a href=" <?php echo $required_url; ?> ">Required</a></li>
