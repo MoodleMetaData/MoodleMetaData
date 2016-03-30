@@ -103,7 +103,6 @@ $string['instructor_heading'] = 'Metadata for %s: %s';
 
 $string['add_session'] = 'Add new session';
 $string['session_title'] = 'Title:';
-$string['session_teaching_strategy'] = 'Teaching Strategy:';
 $string['session_guest_teacher'] = 'Guest Lecturer:';
 $string['session_guest_teacher_help'] = 'If there is a different lecturer, write out their full name. Otherwise, leave blank';
 $string['session_type'] = 'Type:';
@@ -122,6 +121,13 @@ $string['upload_sessions_header_help'] = 'To upload course objectives, only .csv
                                         The length should be 50, 80, 110, 140, or 170 followed by minutes. EG: 110 minutes.<br />
                                         The date should be in the form YYYY-MM-DD. EG: 2016-03-17 would be March 17, 2016.';
 $string['upload_sessions'] = 'Upload sessions';
+
+$string['session_teaching_strategy'] = 'Teaching Strategy:';
+$string['session_teaching_strategy_help'] = 'Direct Lecture - explicit teaching of knowledge and skills using lectures or demonstrations - can involve question and answer components.<br />
+Active Learning - students engage in meaningful activities to enhance learning.<br />
+Problem Based Learning - students learn through the experience of solving open-ended problems - primarily a student centred approach.<br />
+Team Based Learning - students learn collaboratively within highly structured modules taught in a three-step cycle: preparation, in-class readiness assurance testing, and application-focused exercise.<br />
+Blended Learning - student learns in part through delivery of content and instruction via digital and online media with some element of student control over time, place, path, or pace.<br />';
 
 $string['learning_objective_Attitude'] = 'Learning Objective: Attitude';
 $string['learning_objective_Knowledge'] = 'Learning Objective: Knowledge';
