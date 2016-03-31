@@ -261,6 +261,8 @@ $string['upload_category_header_help'] = 'To upload course categories, only .csv
 
 $string['exclude_Course_Description'] = 'Exclude Course Description:';
 $string['exclude_Course_Description_help'] = 'Do not show the course description section in instructor generated syllabus.';
+$string['exclude_Course_Readings'] = 'Exclude Course Readings:';
+$string['exclude_Course_Readings_help'] = 'Do not show the course readings section in instructor generated syllabus.';
 $string['exclude_Course_Objectives'] = 'Exclude Course Objectives:';
 $string['exclude_Course_Objectives_help'] = 'Do not show the course objectives section in instructor generated syllabus.';
 $string['exclude_Grading'] = 'Exclude Grading:';
