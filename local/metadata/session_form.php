@@ -372,8 +372,7 @@ class session_form extends metadata_form {
         
         
         $repeatarray[] = $mform->createElement('submit', 'delete_session', get_string('deletesession', 'local_metadata'));
-        $mform->registerNoSubmitButton('delete_topics');
-        $this->_recurring_nosubmit_buttons[] = 'delete_topics';
+        $this->add_recurring_element_nosubmit_button($mform, 'delete_session');
         
         
         // Add needed hidden elements
@@ -619,8 +618,7 @@ class session_form extends metadata_form {
         
 		// Delete Button
 		$groupitems[] = $mform->createElement('submit', 'delete_topics', get_string('delete'));
-        $this->_recurring_nosubmit_buttons[] = 'create_topic';
-        $mform->registerNoSubmitButton('create_topic');
+        $this->add_recurring_element_nosubmit_button($mform, 'delete_topics');
         
 		$repeatarray[] = $mform->createElement('group', 'manage_topics_group', get_string('manage_topics', 'local_metadata'), $groupitems, null, false);
         
@@ -630,8 +628,7 @@ class session_form extends metadata_form {
         $groupitems = array();
 		$groupitems[] = $mform->createElement('text', 'new_topic');
 		$groupitems[] = $mform->createElement('submit', 'create_topic', get_string('add_topic', 'local_metadata'));
-        $this->_recurring_nosubmit_buttons[] = 'delete_session';
-        $mform->registerNoSubmitButton('delete_session');
+        $this->add_recurring_element_nosubmit_button($mform, 'create_topic');
                 
         $repeatarray[] = $mform->createElement('group', 'add_topic_group', '', $groupitems, null, false);
     }

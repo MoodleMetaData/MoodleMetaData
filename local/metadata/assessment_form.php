@@ -168,8 +168,7 @@ class assessment_form extends metadata_form {
 		/////////////////////////////////////////////////
         
         $elementArray[] = $mform->createElement('submit', 'delete_assessment', get_string('deleteassessment', 'local_metadata'));
-        $mform->registerNoSubmitButton('delete_assessment');
-        $this->_recurring_nosubmit_buttons[] = 'delete_assessment';
+        $this->add_recurring_element_nosubmit_button($mform, 'delete_assessment');
 		
 		$this->repeat_elements($elementArray, $assessmentCount,
             $optionsArray, 'assessment_list', 'assessment_list_add_element', 1, get_string('assessment_add', 'local_metadata'));
