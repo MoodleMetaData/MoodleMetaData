@@ -3,7 +3,7 @@ require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
-/*
+/**
  *
  * This form is to be used to mark which headers should be excluded from the syllabus
  *
@@ -18,8 +18,13 @@ require_once $CFG->dirroot.'/lib/datalib.php';
  *
  */
 class exclude_form extends moodleform {
+    /**
+     * Will set up the form elements
+     *
+     * @see lib/moodleform#definition()
+     */
 	function definition() {
-		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
+		$mform = $this->_form;
 
         $this->setup_header_items($mform);
         
@@ -29,9 +34,9 @@ class exclude_form extends moodleform {
 	}
 	
 	/**
-	 *  Add a checkbox for every item in the general tab
-	 * @param $mform		form definition
-	 * @return void
+	 *  Add a checkbox for every header that this form will allow to be excluded in the general tab
+     *
+	 * @param object $mform Form that will be added to
 	 */
 	private function setup_header_items($mform){
         $mform->addElement('checkbox', 'Course_Description', get_string('exclude_Course_Description', 'local_metadata'));
@@ -54,10 +59,10 @@ class exclude_form extends moodleform {
 	}
     
     /**
-	 * Will set the checkboxes defaults to true iff there is an entry for its form and elementname in the database for the 
-     *   current category
+	 * Will set the checkboxes defaults to true iff there is an entry for it in the excludedelements database table
      *
-	 * @param $mform		form definition
+	 * @param object $mform Form that will be added to
+     *
 	 * @return void
 	 */
 	private function set_excluded_item_defaults($mform) {
@@ -76,6 +81,13 @@ class exclude_form extends moodleform {
         }
 	}
     
+    /**
+     * Will save the given data, that should be from calling the get_data function. Data will be all of the selected headers
+     *
+     *
+     * @param object $data value from calling get_data on this form
+     *
+     */
     public function save_data($data) {
         global $DB;
         
