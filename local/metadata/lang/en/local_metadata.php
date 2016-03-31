@@ -147,7 +147,7 @@ $string['assessment_type'] = 'Type: ';
 $string['assessment_add'] = 'Add Assessment';
 
 $string['assessment_title'] = 'Title: ';
-$string['assessment_prof'] = 'Lecturer: ';
+$string['assessment_prof'] = 'Instructor: ';
 $string['assessment_isexam'] = 'Exam? ';
 $string['knowledge_header'] = 'Knowledge';
 $string['knowledge_text'] = 'At the end of the course the student will be able to: ';
@@ -163,7 +163,7 @@ $string['general_header'] = 'General';
 $string['deleteassessment'] = 'Delete Assessment';
 $string['assessment_filepicker'] = 'Upload Assessments';
 $string['upload_assessments'] = 'Submit';
-$string['assessment_grading_upload'] = 'Upload Grading Description';
+$string['assessment_grading_upload'] = 'Upload Any Rubrik';
 $string['assessment_grading_upload_submit'] = 'Submit';
 
 // Metadata manager strings
