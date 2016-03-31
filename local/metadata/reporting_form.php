@@ -146,7 +146,6 @@ class reporting_form extends moodleform {
 	function get_program_objective_by_course($courseid){
 		global $DB;
 		$programobjlist = array();
-		echo ($courseid);
 		$taginfos = $DB->get_records('programpolicytag', array('courseid'=>$courseid));
 		foreach ($taginfos as $taginfo){
 			$singleproobj = $DB->get_record('programobjectives', array('id'=>$taginfo->objectiveid));
@@ -223,7 +222,7 @@ class reporting_form extends moodleform {
 		$programobjectives = $DB->get_records('programobjectives');
 		//set a clean html
 		ob_start();
-		ob_end_clean();
+		//ob_end_clean();
 		$file = fopen("php://output", "w");
 		// send the column headers
 		fputcsv($file, array('name', 'course', 'session', 'assessment'));
@@ -236,6 +235,7 @@ class reporting_form extends moodleform {
 			$row = array($programobjective->objectivename,$courseno,$sessionno,$assessmentno);
 			fputcsv($file, $row);
 		}
+		
 		// output headers so that the file is downloaded rather than displayed
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=reports.csv');
@@ -244,6 +244,7 @@ class reporting_form extends moodleform {
 		header('Expires: 0');
 		exit();
 		fclose($file);
+		ob_end_flush();
 	}
 	
 	/**
@@ -297,6 +298,7 @@ class reporting_form extends moodleform {
 		header('Expires: 0');
 		exit();
 		fclose($file); 
+		
 	}
 }
 
