@@ -22,7 +22,7 @@ class syllabus_form extends moodleform {
 		// initialize the form.
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 
- 		$mform->addElement('html','<form> generate syllabus: 
+ 		$mform->addElement('html','<form> <b>generate syllabus: </b>
  				<input type="submit" name="syllubusdisplay" value="preview"/>
  				<input type="submit" name="syllubusdownload" value="download"/></form>'); 
 		
@@ -193,7 +193,8 @@ class syllabus_form extends moodleform {
 			<th width="20%" align="center"><b>Type</b></th>
 		</tr>';
 			foreach ($courseassessments as $courseassessment) {
-				$assessmentduedate = $this->GetTimeStamp($courseassessment->assessmentduedate);
+				$assessmentduedate = $courseassessment->assessmentduedate ?
+				$this->GetTimeStamp($courseassessment->assessmentduedate): 'TBD';
 				$assessmenthtml .= '<tr>
 						<td width="30%" align="center">'.$courseassessment->assessmentname.'</td>
 						<td width="20%" align="center">'.$courseassessment->assessmentweight.'%</td>
@@ -254,7 +255,8 @@ class syllabus_form extends moodleform {
 						$topic .= $sessiontopic->topicname.', ';
 					}
 				}
-				$sessiondate = $this->GetTimeStamp($coursesession->sessiondate);
+				$sessiondate = $coursesession->sessiondate ?
+				$this->GetTimeStamp($coursesession->sessiondate): 'TBD';
 				$sessionhtml .= '<tr>
 						<td width="15%" align="center">'.$coursesession->sessiontitle.'</td>
 						<td width="15%" align="center">'.$sessiondate.'</td>
@@ -286,8 +288,8 @@ class syllabus_form extends moodleform {
 		$coursemaininfo = $DB->get_record('course', array('id'=>$course->id));
 		if($facultypolicy = $DB->get_record('syllabuspolicy', array('category'=>$coursemaininfo->category))){
 			//add faculty policy
-			$policyhtml.='<br><h3>Faculty Policy</h3><br>
-				 <font size="11%">'.$facultypolicy->policy.'<font>';
+			$policyhtml.='<br><h3>Faculty Policy</h3>
+				 <font size="10%">'.$facultypolicy->policy.'<font>';
 		}
 		return $policyhtml;
 	}
@@ -308,13 +310,12 @@ class syllabus_form extends moodleform {
 		$objectivegnumber = 0;
 		$assessmentnumber = 0;
 		$instructoremail = 'To be assigned';
-		$officehours = 'By appointment';
-		$officelocation = 'To be assigned';
 		$courseInstructor = 'To be assigned';
-		$phonenumber = 0;
-		$instructoremail = 'To be assigned';
-		$coursedescription = '';
-		$courseyear='';
+		$phonenumber = 'To be assigned';
+		$officelocation = 'To be assigned';
+		$officehours = 'By appointment';
+		$coursedescription = 'To be assigned';
+		$courseyear='';$courseterm = 'Spring';
 //collecting relative data from database===============================================================================		
 		if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
 			//$coursetopic = $existCourseInfo->coursetopic;
@@ -323,25 +324,27 @@ class syllabus_form extends moodleform {
 			$courseyear = $existCourseInfo->courseyear;
 			$courseInstructor = $USER->lastname.', '.$USER->firstname;
 			if($existInstructorInfo = $DB->get_record('courseinstructors', array('courseid'=>$existCourseInfo->id, 'userid'=>$USER->id))){
-				$officelocation = $existInstructorInfo->officelocation;
+				$officelocation = $existInstructorInfo->officelocation ? $existInstructorInfo->officelocation : 'To be assigned';			
 				$officehours = $existInstructorInfo->officehours;
-				$instructoremail =  $existInstructorInfo->email;
-				$phonenumber = $existInstructorInfo->phonenumber;
+				$instructoremail = $existInstructorInfo->email ? $existInstructorInfo->email : 'To be assigned';
+				$phonenumber = $existInstructorInfo->phonenumber ? $existInstructorInfo->phonenumber : 'To be assigned';
 			}
 		}
-		$sessionnumber = $DB->count_records('coursesession', array('courseid'=>$course->id));
-		$readingnumber = $DB->count_records('coursereadings', array('courseid'=>$course->id));	
-		$objectivegnumber = $DB->count_records('courseobjectives', array('courseid'=>$course->id));	
-		$assessmentnumber = $DB->count_records('courseassessment', array('courseid'=>$course->id));
 
+		$excludearray = array();
+		$category = $course->category;
+		$excludeelements = $DB->get_records('excludedelements',array('category'=>$category));
+		foreach ($excludeelements as $excludeelement){
+			array_push($excludearray, $excludeelement->header);
+		}
 		
 //start pdf generation===============================================================================		
 		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-/* 		$pdf->SetCreator(PDF_CREATOR);
-		$pdf->SetAuthor('Olaf Lederer');
+ 		$pdf->SetCreator(PDF_CREATOR);
+		$pdf->SetAuthor($courseInstructor);
 		$pdf->SetTitle('Course Syllabus');
 		$pdf->SetSubject('Syllabus PDF');
-		$pdf->SetKeywords('TCPDF, PDF, Course, Syllubs'); */
+		$pdf->SetKeywords('TCPDF, PDF, Course, Syllubs'); 
 		 
 		// remove default header/footer
 		$pdf->setPrintHeader(false);
@@ -385,48 +388,62 @@ EOD;
 		$pdf->SetFont('times', '', 12);
 		$pdf->writeHTMLCell(0, 0, '', '', $courselogistics, 0, 1, 0, true, 'C', true);
 		$pdf->AddPage();
-	
+
+		
+		
 	
 //put course description information into the pdf------------------------------------------
-		$decripthtml = $this->description_part_generation($coursedescription);
-		$pdf->writeHTML($decripthtml, true, false, true, false, '');
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		if(!in_array("Course_Description", $excludearray)){
+			$decripthtml = $this->description_part_generation($coursedescription);
+			$pdf->writeHTML($decripthtml, true, false, true, false, '');
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		}
 
 //put course reading information into the pdf------------------------------------------
-		$readinghtml = $this->reading_part_generation($readingnumber);
-		$pdf->writeHTML($readinghtml, true, false, true, false, '');
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	
+		if(!in_array("Course_Readings", $excludearray)){
+			$readingnumber = $DB->count_records('coursereadings', array('courseid'=>$course->id));
+			$readinghtml = $this->reading_part_generation($readingnumber);
+			$pdf->writeHTML($readinghtml, true, false, true, false, '');
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		}
 	
 //put course objective information into the pdf------------------------------------------
-		$objhtml = $this->learning_objective_part_generation($objectivegnumber);
-		$pdf->writeHTML($objhtml, true, false, true, false, '');
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		if(!in_array("Course_Objectives", $excludearray)){
+			$objectivegnumber = $DB->count_records('courseobjectives', array('courseid'=>$course->id));
+			$objhtml = $this->learning_objective_part_generation($objectivegnumber);
+			$pdf->writeHTML($objhtml, true, false, true, false, '');
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		}
 	
 	
 //put course grading information into the pdf------------------------------------------
-		$assessmenthtml = $this->grading_part_generation($assessmentnumber);
-		$pdf->writeHTML($assessmenthtml, true, false, true, false, '');
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	
+		if(!in_array("Grading", $excludearray)){
+			$assessmentnumber = $DB->count_records('courseassessment', array('courseid'=>$course->id));
+			$assessmenthtml = $this->grading_part_generation($assessmentnumber);
+			$pdf->writeHTML($assessmenthtml, true, false, true, false, '');
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		}
 	
 //put course session information into the pdf------------------------------------------
-		$sessionhtml = $this->session_part_generation($sessionnumber);
-		$pdf->writeHTML($sessionhtml, true, false, true, false, '');
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	
-	
-	
+		if(!in_array("Course_Sessions", $excludearray)){
+			$sessionnumber = $DB->count_records('coursesession', array('courseid'=>$course->id));
+			$sessionhtml = $this->session_part_generation($sessionnumber);
+			$pdf->writeHTML($sessionhtml, true, false, true, false, '');
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		}
+		
 //put course policy information into the pdf------------------------------------------
-		$policyhtml=$this->policy_part_generation();
-		$pdf->writeHTML($policyhtml, true, false, true, false, '');
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		if(!in_array("Policy", $excludearray)){
+			$policyhtml=$this->policy_part_generation();
+			$pdf->writeHTML($policyhtml, true, false, true, false, '');
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+		}
 
 	
 // terminate with TCPDF output------------------------------------------
