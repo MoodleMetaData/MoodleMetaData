@@ -181,7 +181,7 @@ class syllabus_form extends moodleform {
 			if($assessmentnumber>0){
 				$courseassessments = $DB->get_records('courseassessment', array('courseid'=>$course->id), $sort='assessmentduedate');
 			}
-			$asstype = array('Exam','Assignment','Lab','Lab Exam');
+			$asstype = array('Exam','Assignment','Participation','Other');
 			$assessmenthtml .='<font size="11%"><ul>';	
 			$assdescription = '<b><h3>Specifications</h3></b><font size="11%">';
 			$assessmenthtml .= '
