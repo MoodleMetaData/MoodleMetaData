@@ -355,5 +355,56 @@ class behat_metadata_add extends behat_base {
         
         return $steps;
     }
+	
+    /**
+     * Setup the syllabus policy table with one faculty and university policy record.
+     *
+     * @Given /^the faculty and university policy exist$/
+     *
+     * @return Given[]
+     */	
+	public function the_faculty_and_university_policy_exist(){
+		global $DB;
+		
+		$univ_policy  = new stdClass();
+		$univ_policy->category = -1;
+		$univ_policy->policy = "University policy";
+		$insert_univ_policy = $DB->insert_record('syllabuspolicy', $univ_policy);
+		
+		$faculty_policy  = new stdClass();
+		$faculty_policy->category = 1;
+		$faculty_policy->policy = "Faculty policy";
+		$insert_faculty_policy = $DB->insert_record('syllabuspolicy', $faculty_policy);
+		
+		return array();
+	}
+	
+    /**
+     * Setup the default program objectives.
+     *
+     * @Given /^the default program objectives exist$/
+     *
+     * @return Given[]
+     */	
+	public function the_default_program_objectives_exist(){
+		global $DB;
+		
+		$group = new stdClass();
+		$group->typename = "Group";
+		$group->category = 1;
+		$insert_objectivetypes = $DB->insert_record('objectivetypes', $group, true, false);
+		
+		$main_level  = new stdClass();
+		$main_level->groupname = "1";
+		$main_level->parent = $insert_objectivetypes;
+		$insert_objectivegroups = $DB->insert_record('objectivegroups', $main_level, true, false);
+		
+		$program = new stdClass();
+		$program->objectivename = "1.1";
+		$program->objectivegroup = $insert_objectivetypes;
+		$insert_program = $DB->insert_record('programobjectives', $program, true, false);
+		
+		return array();
+	}
 }
 ?>
