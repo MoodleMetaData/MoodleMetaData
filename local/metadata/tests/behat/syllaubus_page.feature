@@ -15,13 +15,11 @@ Feature: Syllabus tab
   Scenario: Download the generated pdf format of syllabus
   	When I press "syllubusdownload"
   	And I wait to be redirected
- 	Then I should see "generate syllabus: "
  	Then I should see "syllubusdisplay"
  	Then I should see "syllubusdownload"
  
   Scenario: Display the previes of the generated pdf format of syllabus
   	When I press "syllubusdisplay"
   	And I wait to be redirected
-  	Then I should see "generate syllabus: "
   	Then I should see "syllubusdisplay"
   	Then I should see "syllubusdownload"
