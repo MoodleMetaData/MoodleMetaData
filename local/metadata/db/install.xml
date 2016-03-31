@@ -255,12 +255,11 @@
         <KEY NAME="tagid" TYPE="foreign" FIELDS="tagid" REFTABLE="courseobjectives" REFFIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="requiredelements" COMMENT="Elements marked as required by the administrator">
+    <TABLE NAME="excludedelements" COMMENT="Headers that will be excluded from the syllabus for the category">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="category" TYPE="int" LENGTH="20" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="elementname" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="form" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="header" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="id" TYPE="primary" FIELDS="id"/>

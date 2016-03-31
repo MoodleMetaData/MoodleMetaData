@@ -12,7 +12,7 @@ require_login();
 
 //require_capability('local/metadata:ins_view', $context);
 
-require_once($CFG->dirroot.'/local/metadata/required_form.php');
+require_once($CFG->dirroot.'/local/metadata/exclude_form.php');
     
 // Set up page information
 $PAGE->set_context(context_system::instance());
@@ -25,23 +25,23 @@ $PAGE->set_heading($heading);
 $knowledge_url = create_manage_url('knowledge');
 $policy_url = create_manage_url('policy');
 $course_url = create_manage_url('course');
-$required_url = create_manage_url('required');
+$exclude_url = create_manage_url('exclude');
 $reporting_url = create_manage_url('reporting');
 $categories_url = create_manage_url('categories');
 
-$PAGE->set_url($required_url);
+$PAGE->set_url($exclude_url);
 $PAGE->requires->css('/local/metadata/insview_style.css');
 
 
 // Create forms
-$required_form = new required_form($required_url);
+$exclude_form = new exclude_form($exclude_url);
 
 
 // Submit the data
-if ($data = $required_form->get_data()) {
-    $required_form->save_data($data);
+if ($data = $exclude_form->get_data()) {
+    $exclude_form->save_data($data);
     
-	//redirect($required_url);
+	redirect($exclude_url);
 }
 
 echo $OUTPUT->header();
@@ -54,13 +54,13 @@ echo $OUTPUT->header();
 		<li><a href=" <?php echo $categories_url; ?> ">Categories</a></li>
 		<li><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
 		<li><a href=" <?php echo $policy_url; ?>  ">Tags</a></li>
-		<li class="onclick_nav"><a href=" <?php echo $required_url; ?> ">Required</a></li>
+		<li class="onclick_nav"><a href=" <?php echo $exclude_url; ?> ">Syllabus Configuration</a></li>
 		<li><a href=" <?php echo $reporting_url; ?> ">Reporting</a></li>
 		</ul>
 	</div>
 	
 	<div class="form_container">
-		<?php $required_form->display(); ?>
+		<?php $exclude_form->display(); ?>
 	</div>
 </html>
 
