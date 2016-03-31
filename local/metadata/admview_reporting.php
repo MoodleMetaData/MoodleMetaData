@@ -38,13 +38,6 @@ $categories_url = create_manage_url('categories');
 $reporting_form = new reporting_form($base_url);
 
 
-// Submit the data
-if ($data = $reporting_form->get_data()) {
-	$courseid = $reporting_form->get_course_id($data);
-	$tag_url = new moodle_url('/local/metadata/admview_reporting.php', array('id' => $courseid));
-	redirect($tag_url);
-} 
-
 echo $OUTPUT->header();
 ?>
 
