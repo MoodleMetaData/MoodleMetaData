@@ -220,6 +220,9 @@ class assessment_form extends metadata_form {
                 }
             }
         }
+		
+		// navigate to the newest added element
+		if(isset($_POST['assessment_list_add_element'])) redirect_to_anchor('assessment', 'id_assessment_list_add_element', -1000);
     }
 	
 	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
