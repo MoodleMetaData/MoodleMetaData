@@ -259,6 +259,17 @@ $string['upload_category_header_help'] = 'To upload course categories, only .csv
 									You need csv editor or Excel to open this file.';
 
 
+$string['exclude_Course_Description'] = 'Exclude Course Description:';
+$string['exclude_Course_Description_help'] = 'Do not show the course description section in instructor generated syllabus.';
+$string['exclude_Course_Objectives'] = 'Exclude Course Objectives:';
+$string['exclude_Course_Objectives_help'] = 'Do not show the course objectives section in instructor generated syllabus.';
+$string['exclude_Grading'] = 'Exclude Grading:';
+$string['exclude_Grading_help'] = 'Do not show the grading section in instructor generated syllabus.';
+$string['exclude_Course_Sessions'] = 'Exclude Course Sessions:';
+$string['exclude_Course_Sessions_help'] = 'Do not show the sessions section in instructor generated syllabus.';
+$string['exclude_Policy'] = 'Exclude Policy:';
+$string['exclude_Policy_help'] = 'Do not show the policy section in instructor generated syllabus.';
+
 // Specialized items
 $string['require_uploaded_rubric'] = 'Uploaded rubric:';
 

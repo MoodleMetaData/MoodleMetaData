@@ -1,4 +1,4 @@
-@local_metadata @local_metadata_session @c
+@local_metadata @local_metadata_session
 Feature: Session tab
 	In order to use the session tab
 	As an instructor

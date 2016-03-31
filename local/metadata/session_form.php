@@ -114,8 +114,9 @@ class session_form extends metadata_form {
         $data['sessionlength'] = $row[3];
         
         $date = DateTime::createFromFormat(session_form::DATE_FROM_FROM_FILE, $row[4]);
-        print_object(date_get_last_errors());
-        $data['sessiondate'] = $date->getTimestamp();
+        if (is_object($date)) {
+            $data['sessiondate'] = $date->getTimestamp();
+        }
         
         // Then, save the session and get the id
         $id = $DB->insert_record('coursesession', $data);
