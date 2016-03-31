@@ -37,6 +37,9 @@ class exclude_form extends moodleform {
         $mform->addElement('checkbox', 'Course_Description', get_string('exclude_Course_Description', 'local_metadata'));
         $mform->addHelpButton('Course_Description', 'exclude_Course_Description', 'local_metadata');
         
+        $mform->addElement('checkbox', 'Course_Readings', get_string('exclude_Course_Readings', 'local_metadata'));
+        $mform->addHelpButton('Course_Readings', 'exclude_Course_Readings', 'local_metadata');
+        
         $mform->addElement('checkbox', 'Course_Objectives', get_string('exclude_Course_Objectives', 'local_metadata'));
         $mform->addHelpButton('Course_Objectives', 'exclude_Course_Objectives', 'local_metadata');
         
