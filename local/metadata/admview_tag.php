@@ -4,6 +4,7 @@ require_once('../../config.php');
 require_once 'lib.php';
 
 
+
 // Check that they can access
 require_login();
 
@@ -21,11 +22,11 @@ $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
     
 // Set up page information
 $PAGE->set_context(context_system::instance());
+require_capability('moodle/role:manage', $systemcontext);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = 'Program Learning Objectives: '.$course->shortname.': '.$course->fullname;
 $PAGE->set_heading($heading);
-
 
 // Create url
 $base_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId, 'grp' => $groupId));

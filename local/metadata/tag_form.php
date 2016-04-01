@@ -3,6 +3,7 @@ require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
+
 class tag_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
