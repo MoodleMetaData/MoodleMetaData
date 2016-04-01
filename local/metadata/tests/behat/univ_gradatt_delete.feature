@@ -1,4 +1,4 @@
-@local_metadata @local_metadata_university_gradatt
+@local_metadata @local_metadata_university @local_metadata_university_gradatt
 Feature: Admin Moodle Metadata in Site Administration
 	In order to use Admin Moodle Metadata
 	As an administrator
@@ -12,7 +12,7 @@ Feature: Admin Moodle Metadata in Site Administration
     And I log in as "admin"
     And I am on homepage
     And I expand "Site administration" node
-    And I follow "Admin Moodle Metadata"
+    And I follow "Moodle Metadata - University Policy"
     And I follow "Graduate Attributes"
 
   @javascript

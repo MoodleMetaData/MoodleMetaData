@@ -1,4 +1,4 @@
-@local_metadata @local_metadata_university_policy
+@local_metadata @local_metadata_university @local_metadata_university_policy
 Feature: Admin Moodle Metadata in Site Administration
 	In order to use Admin Moodle Metadata
 	As an administrator
@@ -8,7 +8,7 @@ Feature: Admin Moodle Metadata in Site Administration
     Given I log in as "admin"
     And I am on homepage
 	And I expand "Site administration" node
-    Then I follow "Admin Moodle Metadata"
+    Then I follow "Moodle Metadata - University Policy"
 
   @javascript
   Scenario: Filling out university policy.

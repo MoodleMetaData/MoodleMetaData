@@ -8,7 +8,9 @@ Feature: Administrator program objectvies tab
     Given the default program objectives exist
 	And I log in as "admin"
     And I am on homepage
-    And I expand "Site administration" node
+    And I expand "Category administration" node
+	And I follow "My categories"
+	And I follow "Miscellaneous"
     And I follow "Manage Metadata"
 	
   @javascript

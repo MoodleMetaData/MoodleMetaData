@@ -8,7 +8,9 @@ Feature: Administrator Reporting tab
   Background:
     Given I log in as "admin"
     And I am on homepage
-    And I expand "Site administration" node
+    And I expand "Category administration" node
+	And I follow "My categories"
+	And I follow "Miscellaneous"
     And I follow "Manage Metadata"
     And I follow "Reporting"
     

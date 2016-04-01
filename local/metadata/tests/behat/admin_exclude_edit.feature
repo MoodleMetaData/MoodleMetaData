@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-@local_metadata  @local_metadata_admin
-=======
 @local_metadata  @local_metadata_admin @local_metadata_admin_exclude
->>>>>>> f29bbf8e95d9cae6abefecb473e5da5bdfa036a2
 Feature: Administrator exclude tab
 	In order to be able to exclude items from the syllabus
 	As an administrator
@@ -11,7 +7,9 @@ Feature: Administrator exclude tab
   Background:
     Given I log in as "admin"
     And I am on homepage
-    And I expand "Site administration" node
+    And I expand "Category administration" node
+	And I follow "My categories"
+	And I follow "Miscellaneous"
     And I follow "Manage Metadata"
     And I follow "Syllabus Configuration"
     
