@@ -1,0 +1,4 @@
+select[multiple]{
+	max-width: 33%;
+	overflow-x: scroll;
+}

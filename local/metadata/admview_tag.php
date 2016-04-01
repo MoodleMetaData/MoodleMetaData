@@ -40,6 +40,7 @@ $categories_url = create_manage_url('categories', $categoryId);
 
 $PAGE->set_url($base_url);
 $PAGE->requires->css('/local/metadata/insview_style.css');
+$PAGE->requires->css('/local/metadata/admview_style.css');
 
 
 // Create forms
