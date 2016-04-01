@@ -15,27 +15,27 @@ require_login();
 
 require_once($CFG->dirroot.'/local/metadata/tag_form.php');
 
+$categoryId = get_category_id();
 $courseId = get_course_id();
 $objectiveId = get_objective_id();
 $groupId = get_group_id();
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
     
 // Set up page information
-$PAGE->set_context(context_system::instance());
-require_capability('moodle/role:manage', $systemcontext);
+$PAGE->set_context(context_coursecat::instance($categoryId));
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = 'Program Learning Objectives: '.$course->shortname.': '.$course->fullname;
 $PAGE->set_heading($heading);
 
 // Create url
-$base_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId, 'grp' => $groupId));
-$knowledge_url = create_manage_url('knowledge');
-$policy_url = create_manage_url('policy');
-$tag_url = create_manage_url('course');
-$exclude_url = create_manage_url('exclude');
-$reporting_url = create_manage_url('reporting');
-$categories_url = create_manage_url('categories');
+$base_url = new moodle_url('/local/metadata/admview_tag.php', array('categoryid' => $categoryId,'id' => $courseId, 'obj' => $objectiveId, 'grp' => $groupId));
+$knowledge_url = create_manage_url('knowledge', $categoryId);
+$policy_url = create_manage_url('policy', $categoryId);
+$tag_url = create_manage_url('course', $categoryId);
+$exclude_url = create_manage_url('exclude', $categoryId);
+$reporting_url = create_manage_url('reporting', $categoryId);
+$categories_url = create_manage_url('categories', $categoryId);
 
 $PAGE->set_url($base_url);
 $PAGE->requires->css('/local/metadata/insview_style.css');
@@ -48,19 +48,19 @@ $tag_form = new tag_form($base_url);
 if ($data = $tag_form->get_data()) {
 	if(!empty($data->admaddobjective)) {
 		$tag_form->add_tags($data);
-		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId, 'grp' => $groupId));
+		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('categoryid' => $categoryId,'id' => $courseId, 'obj' => $objectiveId, 'grp' => $groupId));
 		redirect($tags_url);
 	} elseif(!empty($data->admselcourse)) {
 		$objid = $tag_form->get_obj($data);
-		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objid, 'grp' => $groupId));
+		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('categoryid' => $categoryId,'id' => $courseId, 'obj' => $objid, 'grp' => $groupId));
 		redirect($tags_url);
 	} elseif(!empty($data->groupsel)) {
 		$grpid = $tag_form->get_grp($data);
-		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId, 'grp' => $grpid));
+		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('categoryid' => $categoryId,'id' => $courseId, 'obj' => $objectiveId, 'grp' => $grpid));
 		redirect($tags_url);
 	} elseif (!empty($data->admdelobjective)) {
 		$tag_form->remove_tags($data);
-		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseId, 'obj' => $objectiveId, 'grp' => $groupId));
+		$tags_url = new moodle_url('/local/metadata/admview_tag.php', array('categoryid' => $categoryId,'id' => $courseId, 'obj' => $objectiveId, 'grp' => $groupId));
 		redirect($tags_url);
 	}
 	
