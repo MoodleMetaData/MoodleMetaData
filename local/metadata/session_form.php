@@ -311,7 +311,7 @@ class session_form extends metadata_form {
     private function add_session_repeat_template($numSessions) {
         global $DB;
         $mform = $this->_form;
-
+		$repeatoptions = array();
         $repeatarray = array();
 	    $repeatarray[] = $mform->createElement('header', 'sessionheader');
         
@@ -351,6 +351,7 @@ class session_form extends metadata_form {
             $learningObjectivesEl = $mform->createElement('select', 'learning_objective_'.$learningObjectiveType, get_string('learning_objective_'.$learningObjectiveType, 'local_metadata'), $options);
             $learningObjectivesEl->setMultiple(true);
             $repeatarray[] = $learningObjectivesEl;
+			$repeatoptions['learning_objective_'.$learningObjectiveType]['helpbutton'] = array('multi_select_help', 'local_metadata');
         }
         
 
@@ -366,7 +367,7 @@ class session_form extends metadata_form {
         $repeatarray[] = $assessmentsEl;
 
         
-        $repeatoptions = array();
+        
         $this->setup_topic_options($mform, $repeatarray, $repeatoptions);
         
         

@@ -2,7 +2,9 @@
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
-
+/**
+* Allows the Administrator to Declare program-level policy to be included into the generated Syllabi.
+*/
 class policy_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER;

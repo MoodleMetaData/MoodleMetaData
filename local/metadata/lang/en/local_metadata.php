@@ -37,6 +37,8 @@ $string['course_gradAtt'] = 'Attribute {no}: ';
 $string['assessment_counter'] = 'Number of graded assessment: ';
 $string['session_counter'] = 'Number of session: <br />(lecture, lab, seminar) ';
 $string['teaching_assumption'] = 'Instructor assumption: ';
+$string['multi_select_help'] = 'To select Multiple Items, Hold down the CTRL key, and Click each item.';
+$string['multi_select_help_help'] = 'To select Multiple Items, Hold down the CTRL key, and Click each item.';
 
 $string['course_reading_desc'] = 'Required reading: ';
 $string['readingname_label'] = 'Title {no}:';
@@ -144,11 +146,16 @@ $string['upload_assessments_header'] = 'Upload All Sessions';
 $string['upload_assessments_header_help'] = 'To upload assessments, only .csv file is permitted. This will overwrite ALL existing sessions.<br />
                                         The format for each line is: title, type, weight, general description, additional grading description<br />
                                         Each line will correspond to a new assessment.
-                                        The type should be Exam, Assignment, Participation, or Other.<br />
-                                        If the type is Exam, then should also write out the instructor followed by exam type on that line.
-                                        Exam type should be Multiple choice, Written, Written and multiple choice, or Other.<br />
-                                        The date should be in the form YYYY-MM-DD. EG: 2016-03-17 would be March 17, 2016.';
+                                        Format is as Follows:</br>
+										Name, Type, Instructor, Exam Type, Weight, Due Date, General Description, Grading Descripion</br>
+										Type is an integer between 0 and 3, where </br>
+										0 = Exam, 1 = Assignment, 2= Participation, 3= Other</br>';
                                         
+$string['assessment_type_help'] = 'By Selecting Anything other than Exam, the Lecturer field will be disabled.';
+$string['assessment_grading_help'] = 'Fill in Some details on the specifics of how you are grading here';
+$string['assessment_grading_help_help'] = 'You can put assignment specific grading information in this box';
+$string['assessmentlecturer_help'] = 'If you select anything other than Exam, this field will be disabled';
+$string['assessmentlecturer_help_help'] = 'If you select anything other than Exam, this field will be disabled';
 $string['new_assessment_header'] = 'New Assessment';
 $string['unnamed_assessment'] = 'Unnamed Assessment';
 

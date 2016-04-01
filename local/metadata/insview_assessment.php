@@ -50,6 +50,13 @@ if ($assessment_form->is_cancelled()) {
 
 // Submitted the data
 if ($data = $assessment_form->get_data()) {
+	if ($assessment_form->rubrik_was_uploaded()){
+		$index = 'gradingDescription_uploaded[0]';
+		$assessment_form->upload_rubrik($index);
+	}
+	if ($assessment_form->assessments_were_uploaded()){
+		$assessment_form->upload_assessments();
+	}
 	$assessment_form -> save_assessment_list($data);
     
     $assessment_page += $assessment_form->get_page_change();
