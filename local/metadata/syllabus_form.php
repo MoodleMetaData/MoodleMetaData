@@ -39,9 +39,9 @@ class syllabus_form extends moodleform {
 		// initialize the form.
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 
- 		$mform->addElement('html','<form> <b>generate syllabus: </b>
- 				<input type="submit" name="syllubusdisplay" value="preview"/>
- 				<input type="submit" name="syllubusdownload" value="download"/></form>'); 
+ 		$mform->addElement('html','<form> <b>Generate Course Syllabus: </b>
+ 				<input type="submit" name="syllubusdisplay" value="Preview"/>
+ 				<input type="submit" name="syllubusdownload" value="Download"/></form>'); 
 		
 		
 		if(isset($_POST['syllubusdownload'])){
