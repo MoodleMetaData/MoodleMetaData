@@ -38,6 +38,7 @@ class categories_form extends moodleform {
 		$mform->addElement('header', 'category_header', get_string('category_header', 'local_metadata'));
 		
 		$category_selection = $mform->addElement ('select', 'course_category', get_string ( 'course_category', 'local_metadata' ), $category_list);
+		$mform->addHelpButton('course_category', 'multi_select', 'local_metadata');
 		
 		$category_selection->setMultiple(true);
 		

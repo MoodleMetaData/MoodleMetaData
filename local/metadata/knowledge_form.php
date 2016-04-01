@@ -38,6 +38,7 @@ class knowledge_form extends moodleform {
 		
 		$course_topic_selection = $mform->addElement('select', 'manage_groups', get_string('manage_groups', 'local_metadata'), $psla_default, '');
 		$course_topic_selection->setMultiple(true);
+		$mform->addHelpButton('manage_groups', 'multi_select', 'local_metadata');
 		
 		// Delete Button
 		$mform->addElement('submit', 'delete_groups', get_string('delete_groups', 'local_metadata'));

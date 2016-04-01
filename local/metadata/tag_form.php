@@ -51,6 +51,7 @@ class tag_form extends moodleform {
 			}
 			$programobj_select = $mform->addElement('select', 'admpro_select', get_string('admpro_select', 'local_metadata'), $programoptions,'');
 			$programobj_select->setMultiple ( true );
+			$mform->addHelpButton('admpro_select', 'multi_select', 'local_metadata');
 			
 			$mform->addElement('submit', 'admaddobjective', get_string('admaddobjective', 'local_metadata'));
 			

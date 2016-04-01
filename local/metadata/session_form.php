@@ -318,6 +318,7 @@ class session_form extends metadata_form {
         $mform = $this->_form;
 
         $repeatarray = array();
+        $repeatoptions = array();
 	    $repeatarray[] = $mform->createElement('header', 'sessionheader');
         
         $repeatarray[] = $mform->createElement('text', 'sessiontitle', get_string('session_title', 'local_metadata'));
@@ -334,6 +335,7 @@ class session_form extends metadata_form {
         $strategies = get_teaching_strategies();
         $teachingStrategyEl = $mform->createElement('select', 'sessionteachingstrategy', get_string('session_teaching_strategy', 'local_metadata'), $strategies, array('size'=>count($strategies)));
         $teachingStrategyEl->setMultiple(true);
+		$repeatoptions['sessionteachingstrategy']['helpbutton'] = array('multi_select', 'local_metadata');
         
         $repeatarray[] = $teachingStrategyEl;
 
@@ -353,8 +355,10 @@ class session_form extends metadata_form {
                 $options = $learningObjectivesList[$learningObjectiveType];
             }
             
-            $learningObjectivesEl = $mform->createElement('select', 'learning_objective_'.$learningObjectiveType, get_string('learning_objective_'.$learningObjectiveType, 'local_metadata'), $options);
+            $element_name = 'learning_objective_'.$learningObjectiveType;
+            $learningObjectivesEl = $mform->createElement('select', $element_name, get_string('learning_objective_'.$learningObjectiveType, 'local_metadata'), $options);
             $learningObjectivesEl->setMultiple(true);
+            $repeatoptions[$element_name]['helpbutton'] = array('multi_select', 'local_metadata');
             $repeatarray[] = $learningObjectivesEl;
         }
         
@@ -368,10 +372,10 @@ class session_form extends metadata_form {
         }
         $assessmentsEl = $mform->createElement('select', 'assessments', get_string('related_assessments', 'local_metadata'), $assessmentsList);
         $assessmentsEl->setMultiple(true);
+		$repeatoptions['assessments']['helpbutton'] = array('multi_select', 'local_metadata');
         $repeatarray[] = $assessmentsEl;
 
         
-        $repeatoptions = array();
         $this->setup_topic_options($mform, $repeatarray, $repeatoptions);
         
         
@@ -619,6 +623,7 @@ class session_form extends metadata_form {
         $course_topic_selection = $mform->createElement('select', 'all_topics');
         $course_topic_selection->setMultiple(true);
         $groupitems[] = $course_topic_selection;
+		$repeatoptions['all_topics']['helpbutton'] = array('multi_select', 'local_metadata');
         
         
 		// Delete Button
