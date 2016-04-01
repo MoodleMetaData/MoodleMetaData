@@ -246,8 +246,6 @@ class assessment_form extends metadata_form {
 	*This function deals with deleting the data after the form element is deleted
 	*It is necessary to deal with removing elements so that they don't show up again
 	*/
-
-
      function definition_after_data() {
         parent::definition_after_data();
         $mform = $this->_form;
@@ -317,7 +315,6 @@ class assessment_form extends metadata_form {
      * @return array of "element_name"=>"error_description" if there are errors,
      *         or an empty array if everything is OK (true allowed for backwards compatibility too).
      */
-
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
 		return $errors;
@@ -391,7 +388,6 @@ class assessment_form extends metadata_form {
 	*Changes the page, part of the user story that paginates the assessments
 	*
 	*/
-
     public function get_page_change() {
         if ($this->_form->getSubmitValue('previousPage') !== null) {
             return -1;
@@ -441,7 +437,6 @@ class assessment_form extends metadata_form {
      *
      *
      */
-
 	function populate_from_db($assessments){
 		$mform = $this->_form;
 		$key = 0;
@@ -482,7 +477,6 @@ class assessment_form extends metadata_form {
      *  @param object $assessment The database tuple for the current assessment
      *
      */
-
 	function setup_data_from_database_for_assessment($mform, $index, $assessment) {
         global $DB;
         // Load the learning objectives for the assessment
