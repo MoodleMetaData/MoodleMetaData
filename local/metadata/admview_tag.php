@@ -16,6 +16,7 @@ require_login();
 require_once($CFG->dirroot.'/local/metadata/tag_form.php');
 
 $categoryId = get_category_id();
+$PAGE->set_category_by_id($categoryId);
 $courseId = get_course_id();
 $objectiveId = get_objective_id();
 $groupId = get_group_id();

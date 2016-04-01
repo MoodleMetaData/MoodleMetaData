@@ -2,9 +2,9 @@
 function local_metadata_extends_settings_navigation($settingsnav, $context) {
     global $CFG, $PAGE, $USER;
  	
-    if (!$PAGE->category) {
-    	return;
-    } else {
+    if (is_null($PAGE->course)) {
+    	//return;
+    } else  {
     if($categorynode = $settingsnav->find('categorysettings', null)) {
 	    $url = new moodle_url('/local/metadata/admview_knowledge.php', array('categoryid' => $PAGE->category->id));
 	    	

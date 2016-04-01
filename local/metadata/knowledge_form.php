@@ -165,7 +165,24 @@ class knowledge_form extends moodleform {
 		global $CFG, $DB, $USER;
 
 		foreach ($data->manage_groups as $value) {
-			$delete_oldla = $DB->delete_records('objectivetypes', array('id'=>$value));
+			$group_records = array();
+			
+			// grab groups to delete
+			$group_records = $DB->get_records('objectivegroups', array ('parent' => $value));
+			
+			foreach ($group_records as $group) {
+				// grab all members of groups to delete
+				$program_records = array();
+				$program_records = $DB->get_records('programobjectives', array('objectivegroup' => $group->id));
+				foreach ($program_records as $program) {
+					//delete all tagged program policies
+					//print_r($program);
+					$DB->delete_records('programpolicytag', array('tagid' => $program->id));
+					$DB->delete_records('programobjectives', array('id' => $program->id));
+				}
+				$DB->delete_records('objectivegroups', array('id' => $group->id));
+			}
+			$DB->delete_records('objectivetypes', array('id'=>$value));
 		}
 
 	}

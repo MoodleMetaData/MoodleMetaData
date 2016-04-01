@@ -16,6 +16,7 @@ require_once($CFG->dirroot.'/local/metadata/reporting_form.php');
     
 // Set up page information
 $categoryId = get_category_id();
+$PAGE->set_category_by_id($categoryId);
 
 $PAGE->set_context(context_coursecat::instance($categoryId));
 $PAGE->set_pagelayout('standard');
