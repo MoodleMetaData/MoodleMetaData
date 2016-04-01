@@ -1,4 +1,9 @@
 <?php
+/**
+* Sets up the main navigation
+* @param settingsnav $settingsnav navigation settings object
+* @param context $context Context of the form
+*/
 function local_metadata_extends_settings_navigation($settingsnav, $context) {
     global $CFG, $PAGE, $USER;
  	
@@ -129,6 +134,8 @@ function get_days() {
 }
 /**
 * Creates the insview URL
+* @param form $form the form
+* @param courseID $courseID ID of the course that you want to generate
 * @return moodle_url of insview + courseID
 */
 function create_insview_url($form, $courseId) {
@@ -136,6 +143,8 @@ function create_insview_url($form, $courseId) {
 }
 /**
 *	Creates the admin form URLs
+* 	@param form $form the form
+* 	@param courseID $courseID ID of the course that you want to generate
 *	@return moodle_url connected to the admin pages.
 */
 function create_manage_url($form, $categoryId) {
