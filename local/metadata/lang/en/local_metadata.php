@@ -7,6 +7,11 @@ $string['admin_pluginname'] = 'Moodle Metadata - University Policy';
 $string['manage_pluginname'] = 'Manage Metadata';
 $string['admview_pluginname'] = 'Administrator Moodle Metadata';
 
+$string['multi_select'] = 'Muli-select help';
+$string['multi_select_help'] = 'To select one item, click it.<br />
+                                To select additional items, use control-click.<br />
+                                To de-select an item, use control-click.';
+
 // Error messages
 $string['err_alphanumeric']='You must enter only letters or numbers here.';
 $string['err_email']='You must enter a valid email address here.';
@@ -209,7 +214,8 @@ $string['upload_gradatt'] = 'Upload graduate attributes';
 $string['create_gradatt'] = 'Add';
 $string['delete_gradatt'] = 'Delete';
 $string['course_gradatt_help'] = 'By removing a graduate attribute here, 
-								 any record corresponding to this graduate attribute will be deleted as well.';
+								 any record corresponding to this graduate attribute will be deleted as well.<br />'
+                                 .$string['multi_select_help'];
 
 $string['policy_editor'] = 'Faculty Policy: ';
 $string['submit_policy'] = 'Submit';
