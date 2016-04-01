@@ -106,12 +106,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">180</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">79</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">24</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">16</span>
                                 </a>
                             </li>
                             <li>
@@ -136,24 +136,26 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-2027988509"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-2069133994"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-2027988509" class="accordion-body collapse in">
+            <div id="namespace-2069133994" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
                     <ul>
                                                                                                     <li class="class"><a href="../classes/assessment_form.html">assessment_form</a></li>
                                                     <li class="class"><a href="../classes/behat_metadata_add.html">behat_metadata_add</a></li>
+                                                    <li class="class"><a href="../classes/categories_form.html">categories_form</a></li>
                                                     <li class="class"><a href="../classes/course_select_form.html">course_select_form</a></li>
+                                                    <li class="class"><a href="../classes/exclude_form.html">exclude_form</a></li>
                                                     <li class="class"><a href="../classes/general_form.html">general_form</a></li>
                                                     <li class="class"><a href="../classes/gradatt_form.html">gradatt_form</a></li>
-                                                    <li class="class"><a href="../classes/knowledge_form.html">knowledge_form</a></li>
                                                     <li class="class"><a href="../classes/knowledge_form.html">knowledge_form</a></li>
                                                     <li class="class"><a href="../classes/metadata_form.html">metadata_form</a></li>
                                                     <li class="class"><a href="../classes/policy_form.html">policy_form</a></li>
                                                     <li class="class"><a href="../classes/recurring_element_parser.html">recurring_element_parser</a></li>
+                                                    <li class="class"><a href="../classes/reporting_form.html">reporting_form</a></li>
                                                     <li class="class"><a href="../classes/session_form.html">session_form</a></li>
                                                     <li class="class"><a href="../classes/syllabus_form.html">syllabus_form</a></li>
                                                     <li class="class"><a href="../classes/tag_form.html">tag_form</a></li>
@@ -176,12 +178,9 @@
                     <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
 
                     <h1><small>\</small>assessment_form</h1>
-                    <p><em>The form to display the tab for sessions</em></p>
-                    <p>Requires the argument 'sessions', which should be the array of sessions
+                    <p><em>The form to display the tab for assessments</em></p>
+                    <p>Requires the argument 'assessments', which should be the array of assessments
 for the current course loaded from the database</p>
-<p>For an example, see how it is instantiated in insview.php</p>
-<p>To look at how deleting a recurring element is done, see definition_after_data and save_data.
-As well, see the elements was_deleted and deleteSession (the delete button) in add_session_repeat_template</p>
                     
                                         
                     <section id="summary">
@@ -201,14 +200,15 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                             <section class="span4">
                                                                     <a href="../classes/assessment_form.html#method_definition" class="">definition()</a><br />
                                                                     <a href="../classes/metadata_form.html#method_no_submit_button_pressed" class="">no_submit_button_pressed()</a><br />
-                                                                    <a href="../classes/assessment_form.html#method_sessions_were_uploaded" class="">sessions_were_uploaded()</a><br />
+                                                                    <a href="../classes/assessment_form.html#method_assessments_were_uploaded" class="">assessments_were_uploaded()</a><br />
                                                                     <a href="../classes/assessment_form.html#method_upload_assessments" class="">upload_assessments()</a><br />
+                                                                    <a href="../classes/assessment_form.html#method_rubrik_was_uploaded" class="">rubrik_was_uploaded()</a><br />
+                                                                    <a href="../classes/assessment_form.html#method_upload_rubrik" class="">upload_rubrik()</a><br />
                                                                     <a href="../classes/assessment_form.html#method_add_assessment_template" class="">add_assessment_template()</a><br />
                                                                     <a href="../classes/assessment_form.html#method_definition_after_data" class="">definition_after_data()</a><br />
                                                                     <a href="../classes/assessment_form.html#method_validation" class="">validation()</a><br />
                                                                     <a href="../classes/assessment_form.html#method_save_assessment_list" class="">save_assessment_list()</a><br />
                                                                     <a href="../classes/assessment_form.html#method_get_page_change" class="">get_page_change()</a><br />
-                                                                    <a href="../classes/assessment_form.html#method_get_knowledge" class="">get_knowledge()</a><br />
                                                                     <a href="../classes/assessment_form.html#method_populate_from_db" class="">populate_from_db()</a><br />
                                                                     <a href="../classes/assessment_form.html#method_setup_data_from_database_for_assessment" class="">setup_data_from_database_for_assessment()</a><br />
                                                                     <a href="../classes/assessment_form.html#method_add_upload" class="">add_upload()</a><br />
@@ -218,14 +218,15 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                                                             </section>
                             <section class="span4">
                                                                     <a href="../classes/assessment_form.html#constant_NUM_PER_PAGE" class="">NUM_PER_PAGE</a><br />
+                                                                    <a href="../classes/assessment_form.html#constant_DATE_FROM_FROM_FILE" class="">DATE_FROM_FROM_FILE</a><br />
                                                             </section>
                         </section>
                         <section class="row-fluid protected">
                             <section class="span4">
-                                                                    <em>No protected methods found</em>
+                                                                    <a href="../classes/metadata_form.html#method_add_recurring_element_nosubmit_button" class="">add_recurring_element_nosubmit_button()</a><br />
                                                             </section>
                             <section class="span4">
-                                                                    <a href="../classes/metadata_form.html#property__recurring_nosubmit_buttons" class="">$_recurring_nosubmit_buttons</a><br />
+                                                                    <em>No protected properties found</em>
                                                             </section>
                             <section class="span4">
                                 <em>N/A</em>
@@ -233,11 +234,12 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                         </section>
                         <section class="row-fluid private">
                             <section class="span4">
-                                                                    <a href="../classes/assessment_form.html#method_parse_and_save_session_row" class="">parse_and_save_session_row()</a><br />
+                                                                    <a href="../classes/assessment_form.html#method_parse_and_save_assessment_row" class="">parse_and_save_assessment_row()</a><br />
+                                                                    <a href="../classes/assessment_form.html#method_delete_all_relations_to_assessment" class="">delete_all_relations_to_assessment()</a><br />
                                                                     <a href="../classes/assessment_form.html#method_add_page_buttons" class="">add_page_buttons()</a><br />
                                                             </section>
                             <section class="span4">
-                                                                    <em>No private properties found</em>
+                                                                    <a href="../classes/metadata_form.html#property__recurring_nosubmit_buttons" class="">$_recurring_nosubmit_buttons</a><br />
                                                             </section>
                             <section class="span4">
                                 <em>N/A</em>
@@ -303,6 +305,27 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
         </aside>
     </div>
 
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_DATE_FROM_FROM_FILE" name="constant_DATE_FROM_FROM_FILE" class="anchor"></a>
+            <article id="constant_DATE_FROM_FROM_FILE" class="constant">
+                <h3 class="">DATE_FROM_FROM_FILE</h3>
+                <pre class="signature">DATE_FROM_FROM_FILE</pre>
+                <p><em></em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
                             
                                     <a id="properties" name="properties"></a>
             <div class="row-fluid">
@@ -312,18 +335,18 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                 <aside class="span4 detailsbar"></aside>
             </div>
 
-                                                    <div class="row-fluid">
+                                                                    <div class="row-fluid">
         <div class="span8 content class">
             <a id="property__recurring_nosubmit_buttons" name="property__recurring_nosubmit_buttons" class="anchor"></a>
             <article class="property">
-                <h3 class="protected ">$_recurring_nosubmit_buttons</h3>
-                <pre class="signature">$_recurring_nosubmit_buttons : </pre>
+                <h3 class="private ">$_recurring_nosubmit_buttons</h3>
+                <pre class="signature">$_recurring_nosubmit_buttons : array</pre>
                 <p><em></em></p>
                 
 
                                 <h4>Type</h4>
-                
-                                            </article>
+                array
+                &mdash; _recurring_nosubmit_buttons button ids of all recurring nosubmit buttons                            </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
@@ -338,7 +361,7 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
         </aside>
     </div>
 
-                                            
+                            
                                     <a id="methods" name="methods"></a>
             <div class="row-fluid">
                 <div class="span8 content class"><h2>Methods</h2></div>
@@ -352,7 +375,7 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                 <h3 class="public ">definition()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">definition() </pre>
-                <p><em></em></p>
+                <p><em>Will set up the form elements</em></p>
                 
 
                 
@@ -363,7 +386,9 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
                                                             <dl>
-                                                                            </dl>
+                                                                                            <dt>See also</dt>
+                                                                <dd><a href=""><span class="namespace-wrapper"></span></a></dd>
+                                                                </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
                                     <tr><td colspan="2"><em>None found</em></td></tr>
@@ -378,11 +403,10 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                 <h3 class="public ">no_submit_button_pressed()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">no_submit_button_pressed() : boolean</pre>
-                <p><em>Checks if button pressed is not for submitting the form
-  This overrides moodleform, and is a hack to fix the issue where recurring element buttons
-    will be stored as an array, rather than a single item, in the url
-    which causes a warning and causes our tests to fail</em></p>
-                
+                <p><em>Checks if button pressed is not for submitting the form</em></p>
+                <p>This overrides moodleform, and is a hack to fix the issue where recurring element buttons
+will be stored as an array, rather than a single item, in the url which causes a warning and causes our tests to fail</p>
+<p>Most of the code was copied from moodleform, with the addition of the in_array check</p>
 
                 
                 
@@ -413,17 +437,20 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
 
                                     <div class="row-fluid">
         <div class="span8 content class">
-            <a id="method_sessions_were_uploaded" name="method_sessions_were_uploaded" class="anchor"></a>
+            <a id="method_assessments_were_uploaded" name="method_assessments_were_uploaded" class="anchor"></a>
             <article class="method">
-                <h3 class="public ">sessions_were_uploaded()</h3>
+                <h3 class="public ">assessments_were_uploaded()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">sessions_were_uploaded() </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">assessments_were_uploaded() : boolean</pre>
+                <p><em>Will determine if the assessments were uploaded</em></p>
                 
 
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>for if use wanted to upload file</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
@@ -444,9 +471,70 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                 <h3 class="public ">upload_assessments()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">upload_assessments() </pre>
-                <p><em></em></p>
+                <p><em>Will use the csv file submitted by the instructor to create all of the assessments
+  Note that it does clear all existing data in the assessment related tables first</em></p>
                 
 
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_rubrik_was_uploaded" name="method_rubrik_was_uploaded" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">rubrik_was_uploaded()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">rubrik_was_uploaded() </pre>
+                <p><em>Detects if a rubrik was uploaded</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_upload_rubrik" name="method_upload_rubrik" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">upload_rubrik()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">upload_rubrik(  <span class="argument">$index</span>) </pre>
+                <p><em>Handles adding the rubrik to the stored files. Adds it to the filemanger so it can be made available to the instructor</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$index </td>
+                                <td></td>
+                            </tr>
+                                            </table>
                 
                 
                 				
@@ -469,16 +557,16 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
             <article class="method">
                 <h3 class="public ">add_assessment_template()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">add_assessment_template(  <span class="argument">$assessmentCount</span>) </pre>
-                <p><em></em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">add_assessment_template(integer  <span class="argument">$assessmentCount</span>) </pre>
+                <p><em>Will set up a repeating template, with elements for each piece of required data</em></p>
+                <p>Does not set defaults for the elements.</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$assessmentCount </td>
-                                <td></td>
+                                <td><p>number of assessments that have been created for the course</p></td>
                             </tr>
                                             </table>
                 
@@ -504,7 +592,8 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                 <h3 class="public ">definition_after_data()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">definition_after_data() </pre>
-                <p><em></em></p>
+                <p><em>This function deals with deleting the data after the form element is deleted
+It is necessary to deal with removing elements so that they don&#039;t show up again</em></p>
                 
 
                 
@@ -529,32 +618,38 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
             <article class="method">
                 <h3 class="public ">validation()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">validation(  <span class="argument">$data</span>,   <span class="argument">$files</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">validation(array  <span class="argument">$data</span>, array  <span class="argument">$files</span>) : array</pre>
+                <p><em>Ensure that the data the user entered is valid</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$data </td>
-                                <td></td>
+                                <td><p>array of (&quot;fieldname&quot;=&gt;value) of submitted data</p></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>array</td>
                                 <td>$files </td>
-                                <td></td>
+                                <td><p>array of uploaded files &quot;element_name&quot;=&gt;tmp_file_path</p></td>
                             </tr>
                                             </table>
                 
                 
-                				
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>of &quot;element_name&quot;=&gt;&quot;error_description&quot; if there are errors,
+or an empty array if everything is OK (true allowed for backwards compatibility too).</p>
+                                    				
                             </article>
         </div>
         <aside class="span4 detailsbar">
             <h1><i class="icon-arrow-down"></i></h1>
                                                             <dl>
-                                                                            </dl>
+                                                                                            <dt>See also</dt>
+                                                                <dd><a href=""><span class="namespace-wrapper"></span></a></dd>
+                                                                </dl>
             <h2>Tags</h2>
             <table class="table table-condensed">
                                     <tr><td colspan="2"><em>None found</em></td></tr>
@@ -568,16 +663,16 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
             <article class="method">
                 <h3 class="public ">save_assessment_list()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">save_assessment_list(  <span class="argument">$data</span>) </pre>
-                <p><em></em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">save_assessment_list(object  <span class="argument">$data</span>) </pre>
+                <p><em>Will save the given data, that should be from calling the get_data function. Data will be all of the assessments in the course</em></p>
+                <p>Also handles removing elements that should be deleted from the form.</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>object</td>
                                 <td>$data </td>
-                                <td></td>
+                                <td><p>value from calling get_data on this form</p></td>
                             </tr>
                                             </table>
                 
@@ -603,33 +698,7 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                 <h3 class="public ">get_page_change()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
                 <pre class="signature" style="margin-right: 54px;">get_page_change() </pre>
-                <p><em></em></p>
-                
-
-                
-                
-                				
-                            </article>
-        </div>
-        <aside class="span4 detailsbar">
-            <h1><i class="icon-arrow-down"></i></h1>
-                                                            <dl>
-                                                                            </dl>
-            <h2>Tags</h2>
-            <table class="table table-condensed">
-                                    <tr><td colspan="2"><em>None found</em></td></tr>
-                            </table>
-        </aside>
-    </div>
-
-                                    <div class="row-fluid">
-        <div class="span8 content class">
-            <a id="method_get_knowledge" name="method_get_knowledge" class="anchor"></a>
-            <article class="method">
-                <h3 class="public ">get_knowledge()</h3>
-                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">get_knowledge() </pre>
-                <p><em></em></p>
+                <p><em>Changes the page, part of the user story that paginates the assessments</em></p>
                 
 
                 
@@ -654,16 +723,16 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
             <article class="method">
                 <h3 class="public ">populate_from_db()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">populate_from_db(  <span class="argument">$assessments</span>) </pre>
-                <p><em></em></p>
+                <pre class="signature" style="margin-right: 54px;">populate_from_db(object  <span class="argument">$assessments</span>) </pre>
+                <p><em>Will set up the data for each of the elements in the repeat_elements</em></p>
                 
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>object</td>
                                 <td>$assessments </td>
-                                <td></td>
+                                <td><p>The array containing all of the assessments that was loaded from the database</p></td>
                             </tr>
                                             </table>
                 
@@ -688,16 +757,18 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
             <article class="method">
                 <h3 class="public ">setup_data_from_database_for_assessment()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">setup_data_from_database_for_assessment(  <span class="argument">$mform</span>,   <span class="argument">$index</span>,   <span class="argument">$assessment</span>) </pre>
-                <p><em></em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">setup_data_from_database_for_assessment(integer  <span class="argument">$mform</span>,   <span class="argument">$index</span>,   <span class="argument">$assessment</span>) </pre>
+                <p><em>For the current assessment, will populate the learning objectives, related assessments, and topics from the database</em></p>
+                <p>Stolen from assessment_form</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$mform </td>
-                                <td></td>
+                                <td><p>Form that will be added to
+@param string $index Index that must be used to access form elements for the current assessment
+@param object $assessment The database tuple for the current assessment</p></td>
                             </tr>
                                                     <tr>
                                 <td></td>
@@ -732,15 +803,15 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
             <article class="method">
                 <h3 class="public ">add_upload()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">add_upload(  <span class="argument">$maxbytes</span>) </pre>
-                <p><em></em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">add_upload(  <span class="argument">$num_assessments</span>) </pre>
+                <p><em>Add form elements for uploading all assessments</em></p>
+                <p>@param int $num_assessments number of assessments saved in the database</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td></td>
-                                <td>$maxbytes </td>
+                                <td>$num_assessments </td>
                                 <td></td>
                             </tr>
                                             </table>
@@ -760,13 +831,93 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
         </aside>
     </div>
 
-                                                                    <div class="row-fluid">
+                                                    <div class="row-fluid">
         <div class="span8 content class">
-            <a id="method_parse_and_save_session_row" name="method_parse_and_save_session_row" class="anchor"></a>
+            <a id="method_add_recurring_element_nosubmit_button" name="method_add_recurring_element_nosubmit_button" class="anchor"></a>
             <article class="method">
-                <h3 class="private ">parse_and_save_session_row()</h3>
+                <h3 class="protected ">add_recurring_element_nosubmit_button()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">parse_and_save_session_row(  <span class="argument">$row</span>,   <span class="argument">$courseid</span>) </pre>
+                <pre class="signature" style="margin-right: 54px;">add_recurring_element_nosubmit_button(  <span class="argument">$form</span>, string  <span class="argument">$button_id</span>) </pre>
+                <p><em>Mark the given button as being a recurring element nosubmit button</em></p>
+                <p>@param object $form form that the button was added to</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$form </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$button_id </td>
+                                <td><p>the id of the button that was added</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/metadata_form.html"><div class="path-wrapper">\metadata_form</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_parse_and_save_assessment_row" name="method_parse_and_save_assessment_row" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">parse_and_save_assessment_row()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">parse_and_save_assessment_row(string  <span class="argument">$row</span>, integer  <span class="argument">$courseid</span>) </pre>
+                <p><em>Will use given line csv file submitted by the instructor to create an assessment</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$row </td>
+                                <td><p>The current row of the csv file being operated on</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$courseid </td>
+                                <td><p>The id for the course this assessment will be added to</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_delete_all_relations_to_assessment" name="method_delete_all_relations_to_assessment" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">delete_all_relations_to_assessment()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">delete_all_relations_to_assessment(  <span class="argument">$assessmentid</span>) </pre>
                 <p><em></em></p>
                 
 
@@ -774,12 +925,7 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                     <table class="table table-condensed table-hover">
                                                     <tr>
                                 <td></td>
-                                <td>$row </td>
-                                <td></td>
-                            </tr>
-                                                    <tr>
-                                <td></td>
-                                <td>$courseid </td>
+                                <td>$assessmentid </td>
                                 <td></td>
                             </tr>
                                             </table>
@@ -805,9 +951,9 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
             <article class="method">
                 <h3 class="private ">add_page_buttons()</h3>
                 <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
-                <pre class="signature" style="margin-right: 54px;">add_page_buttons(  <span class="argument">$page_num</span>,   <span class="argument">$num_assessments</span>) </pre>
-                <p><em>Will add the buttons on the bottom</em></p>
-                
+                <pre class="signature" style="margin-right: 54px;">add_page_buttons(  <span class="argument">$page_num</span>, integer  <span class="argument">$num_assessments</span>) </pre>
+                <p><em>Will add the buttons for changing the current page</em></p>
+                <p>@param int $page_num Current page that the form is on</p>
 
                                     <h4>Parameters</h4>
                     <table class="table table-condensed table-hover">
@@ -817,9 +963,9 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                                 <td></td>
                             </tr>
                                                     <tr>
-                                <td></td>
+                                <td>integer</td>
                                 <td>$num_assessments </td>
-                                <td></td>
+                                <td><p>The number of assessments that there are in total</p></td>
                             </tr>
                                             </table>
                 
@@ -887,7 +1033,7 @@ As well, see the elements was_deleted and deleteSession (the delete button) in a
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on March 18th, 2016 at 17:45.
+                    on March 31st, 2016 at 22:27.
                 </section>
             </section>
         </section>

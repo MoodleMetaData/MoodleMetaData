@@ -1,61 +1,329 @@
 <?php
+/**
+ * 
+ * syllabus_form for local_metadata
+ *
+ *@copyright 2016 
+ *@license see the license file in the same folder
+ *@package local_metadata
+ * 
+ * The form to display the tab for syllubus information.
+ * which will allow the user to preview or download the pdf
+ * format of generated syllabus
+ */
+
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
-require_once $CFG->dirroot.'\lib\tcpdf\tcpdf.php';
+require_once $CFG->dirroot.'/lib/tcpdf/tcpdf.php';
 require_once 'lib.php';
 
+
+
 /**
- * The form to display the tab for general information.
+ * This is the syllabus form class
+ *
+ *@copyright 2016
+ *@license see the license file in the same folder
+ *
  */
 class syllabus_form extends moodleform {
-	
+	/**
+	 * Will set up the form elements
+	 * @see lib/moodleform#definition()
+	 */
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $course, $courseId;
 		
 		// initialize the form.
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
-		
-		
-		$mform->registerNoSubmitButton('syllubusgenerate');
 
- 		$mform->addElement('html','<form> generate syllabus: 
- 				<input type="submit" name="syllubusdisplay" value="preview"/>
- 				<input type="submit" name="syllubusdownload" value="download"/></form>'); 
+ 		$mform->addElement('html','<form> <b>Generate Course Syllabus: </b>
+ 				<input type="submit" name="syllubusdisplay" value="Preview"/>
+ 				<input type="submit" name="syllubusdownload" value="Download"/></form>'); 
 		
 		
 		if(isset($_POST['syllubusdownload'])){
 
-			$filename = $this->do_generate(2);
+			$this->do_generate(2);
 		}
 		if(isset($_POST['syllubusdisplay'])){
 		
-			$filename = $this->do_generate(1);
+			$this->do_generate(1);
 		}
 
-		
-		$this->add_action_buttons(true, "done generation");
 	}
 
-	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
+	 /**
+     * Ensure that the data the user entered is valid
+     *
+     * @param object $data data object for validation
+     * @param object $files file object for validation
+     * 
+     * @see lib/moodleform#validation()
+     * 
+     * @return $errors error message
+     */
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
 		global $DB, $CFG, $USER; //Declare them if you need them
 		
 		return $errors;
     }
-	
-	public static function save_data($data) {
-		global $CFG, $DB, $USER; //Declare our globals for use
-		global $course, $courseId;
-	}
-	
+		
+	/**
+	 * Used to decoding the Unix stemp format of the date type stored in the database
+	 *
+	 * @param  string $timestamp the Unixstemp format of the date to be transfered
+	 * 
+	 * @return string $displaydate the final format of the date that can be displayed in the syllabus
+	 */
 	function GetTimeStamp($timestamp)
 	{
-		return  gmdate("Y-m-d", $timestamp);
+		$displaydate = gmdate("Y-m-d", $timestamp);
+		return  $displaydate;
 	}
 	
+	
+    /**
+     * Used to generate the course general description area of the syllabus
+     *
+     * @param string $coursedescription description string to be shown in the syllabus
+     *
+     * @return string $decripthtml the corresponding html format of 
+     * desctiption area to be shown in the syllabus
+     */
+	function description_part_generation($coursedescription){
+		$decripthtml =  '<h1>Course description</h1>';
+		if($coursedescription != ''){
+			$decripthtml.='<font size="11%">'.$coursedescription.'<font>';
+		}
+		return $decripthtml;
+	}
+	
+	/**
+	 * Used to generate the reading material area of the syllabus
+	 *
+	 * @param integer $readingnumber variable to determine whether the reading 
+	 * information is empty for this course
+	 *
+	 * @return string $readinghtml the corresponding html format of
+	 * reading  area to be shown in the syllabus
+	 */
+	function reading_part_generation($readingnumber){
+		global $CFG, $DB, $USER;
+		global $course;
+		$readinghtml = '<b><h1>Course Readings</h1></b>';
+		if($readingnumber>0){
+			$coursereadings = $DB->get_records('coursereadings', array('courseid'=>$course->id));
+			$readinghtml.='<ul>';
+			foreach ($coursereadings as $coursereading) {
+				$readinghtml.= '<font size="11%"><li>
+					'.$coursereading->readingname.'<br>
+					<a href="url">'.$coursereading->readingurl.'</a></li></font><br>';
+			}
+			$readinghtml.='</ul>';
+		}	
+		return $readinghtml;
+	}
+	
+	/**
+	 * Used to generate the sub category part of the learning objective area of the syllabus
+	 *
+	 * @param string $objhtml previous html information for the learning objective area in the syllabus
+	 * @param string $subcategory variable to determine which category it is
+	 * @param object $courseobjectives database records that contains all the learning objectives of this course
+	 * 
+	 * @return string $objhtml the corresponding html format of
+	 * sub category part of the learning objective area to be shown in the syllabus
+	 */
+	function sub_learning_objective_part($objhtml,$subcategory,$courseobjectives){
+		global $CFG, $DB, $USER;
+		global $course;
+		$count =0;
+		$subobj = '<b><h3>'.$subcategory.'</h3><br>
+						<h4>Students who successfully complete this course will be able to:</h4></b>
+						<br><font size="11%"><ul>';
+		foreach ($courseobjectives as $courseobjective) {
+			if($thisobj = $DB->get_record('learningobjectives', array('id'=>$courseobjective->objectiveid))){
+				if($thisobj->objectivetype == $subcategory){
+					$count++ ;
+					$subobj.='<li>'.$thisobj->objectivename.'</li>';
+				}
+			}
+		}
+		if($count>0){
+			$objhtml.=$subobj;
+			$objhtml.='</ul><font><br>';
+		}
+		return $objhtml;
+	}
+	
+	/**
+	 * Used to generate the learing objective area of the syllabus
+	 *
+	 * @param integer $objectivegnumber variable to determine whether the learing objective
+	 * information is empty for this course
+	 *
+	 * @return string $objhtml the corresponding html format of
+	 * learing objective area to be shown in the syllabus
+	 */
+	function learning_objective_part_generation($objectivegnumber){
+		global $CFG, $DB, $USER;
+		global $course;
+		$objhtml = '<b><h1>Course Objectives</h1></b>';
+		if($objectivegnumber>0){
+			$courseobjectives = $DB->get_records('courseobjectives', array('courseid'=>$course->id));
+			$objhtml .= '<font size="11%">The course is designed to develop the following knowledge, skills and attitudes:</font>';		
+			//Knowledge learning objectives ===========================================================================================
+			$objhtml = $this->sub_learning_objective_part($objhtml,'Knowledge',$courseobjectives);
+			//Skill learning objectives ===========================================================================================
+			$objhtml = $this->sub_learning_objective_part($objhtml,'Skill',$courseobjectives);
+			//attitude learning objectives ===========================================================================================
+			$objhtml = $this->sub_learning_objective_part($objhtml,'Attitude',$courseobjectives);
+		}
+		return $objhtml;
+	}
+	
+	/**
+	 * Used to generate the assessment grading area of the syllabus
+	 *
+	 * @param integer $assessmentnumber variable to determine whether the assessment
+	 * information is empty for this course
+	 *
+	 * @return string $assessmenthtml the corresponding html format of
+	 * assessment grading area to be shown in the syllabus
+	 */
+	function grading_part_generation($assessmentnumber){
+		global $CFG, $DB, $USER;
+		global $course;
+		$assessmenthtml = '<b><h1>Grading</h1></b><br>';
+		if ($assessmentnumber>0){
+			if($assessmentnumber>0){
+				$courseassessments = $DB->get_records('courseassessment', array('courseid'=>$course->id), $sort='assessmentduedate');
+			}
+			$asstype = array('Exam','Assignment','Participation','Other');
+			$assessmenthtml .='<font size="11%"><ul>';	
+			$assdescription = '<b><h3>Specifications</h3></b><font size="11%">';
+			$assessmenthtml .= '
+		<table border="0.1" cellspacing="0.1" cellpadding="0.1" id="gradingtable">
+		<tr>
+			<th width="30%" align="center"><b>Title</b></th>
+			<th width="20%" align="center"><b>Weight</b></th>
+			<th width="30%" align="center"><b>Date</b></th>
+			<th width="20%" align="center"><b>Type</b></th>
+		</tr>';
+			foreach ($courseassessments as $courseassessment) {
+				$assessmentduedate = $courseassessment->assessmentduedate ?
+				$this->GetTimeStamp($courseassessment->assessmentduedate): 'TBD';
+				$assessmenthtml .= '<tr>
+						<td width="30%" align="center">'.$courseassessment->assessmentname.'</td>
+						<td width="20%" align="center">'.$courseassessment->assessmentweight.'%</td>
+						<td width="30%" align="center">'.$assessmentduedate.'</td>
+						<td width="20%" align="center">'.$asstype[(int)$courseassessment->type].'</td>
+						</tr>';
+				if($courseassessment->description != ''){
+					$assdescription .= '<li><b><h3>'.$courseassessment->assessmentname.'
+							</h3>Description</b>:'.$courseassessment->description.'<br>';
+				}
+				if($courseassessment->gdescription != ''){
+					$assdescription .= '<b>Grading</b>:'.$courseassessment->gdescription.'';
+				}
+				$assdescription .= '</li>';
+			}
+			$assdescription .='</ul><font>';
+			$assessmenthtml .= '</table></font>';
+			$assessmenthtml .= '<br>'.$assdescription.'';
+		}
+		return $assessmenthtml;
+	}
+	
+	/**
+	 * Used to generate the session area of the syllabus
+	 *
+	 * @param integer $sessionnumber variable to determine whether the session
+	 * information is empty for this course
+	 *
+	 * @return string $sessionhtml the corresponding html format of
+	 * session area to be shown in the syllabus
+	 */
+	function session_part_generation($sessionnumber){
+		global $CFG, $DB, $USER;
+		global $course;
+		$sessionhtml = '<b><h1>Course Sessions</h1></b><font size="11%">';
+		if ($sessionnumber>0){
+			$coursesessions = $DB->get_records('coursesession', array('courseid'=>$course->id), $sort='sessiondate');		
+			$sessionhtml .= '
+		<table border="0.1" cellspacing="0.1" cellpadding="0.1" id="gradingtable">
+		<tr>
+			<th width="15%" align="center"><b>Title</b></th>
+			<th width="15%" align="center"><b>Date</b></th>
+			<th width="10%" align="center"><b>Length</b></th>
+			<th width="10%" align="center"><b>Type</b></th>
+			<th width="10%" align="center"><b>Instructor</b></th>
+			<th width="40%" align="center"><b>Topic</b></th>
+		</tr>';
+			foreach ($coursesessions as $coursesession) {
+				$guestteacher = '';
+				$guestteacher = $coursesession->sessionguestteacher;
+				if($guestteacher == ''){
+					$guestteacher = $USER->lastname.', '.$USER->firstname;
+				}
+				$topic = '';
+				$sessiontopics = $DB->get_records('sessiontopics', array('sessionid'=>$coursesession->id));
+				foreach ($sessiontopics as $sessiontopic) {
+					if($sessiontopic->topicname!=''){
+						$topic .= $sessiontopic->topicname.', ';
+					}
+				}
+				$sessiondate = $coursesession->sessiondate ?
+				$this->GetTimeStamp($coursesession->sessiondate): 'TBD';
+				$sessionhtml .= '<tr>
+						<td width="15%" align="center">'.$coursesession->sessiontitle.'</td>
+						<td width="15%" align="center">'.$sessiondate.'</td>
+						<td width="10%" align="center">'.$coursesession->sessionlength.'</td>
+						<td width="10%" align="center">'.$coursesession->sessiontype.'</td>
+						<td width="10%" align="center">'.$guestteacher.'</td>
+						<td width="40%" align="center">'.$topic.'</td>
+						</tr>';
+			}
+			$sessionhtml .= '</table></font>';
+		}
+		return $sessionhtml;
+	}	
+	
+	/**
+	 * Used to generate the policy area of the syllabus
+	 *
+	 * @return string $policyhtml the corresponding html format of
+	 * policy area to be shown in the syllabus
+	 */
+	function policy_part_generation(){
+		global $CFG, $DB, $USER;
+		global $course;	
+		$policyhtml = '<b><h1>Policy</h1></b>';
+		//add school policy
+		if($Universitypolicy = $DB->get_record('syllabuspolicy', array('category'=>-1))){
+			$policyhtml.='<h3>School Policy</h3><br><font size="10%">'.$Universitypolicy->policy.'<font>';
+		}	
+		$coursemaininfo = $DB->get_record('course', array('id'=>$course->id));
+		if($facultypolicy = $DB->get_record('syllabuspolicy', array('category'=>$coursemaininfo->category))){
+			//add faculty policy
+			$policyhtml.='<br><h3>Faculty Policy</h3>
+				 <font size="10%">'.$facultypolicy->policy.'<font>';
+		}
+		return $policyhtml;
+	}
+	
+	
+	/**
+	 * Used to generate the pdf format of the syllabus
+	 *
+	 * @param  integer $optionno the option to choose wether(1) display the generated syllabus in the current window
+	 * or(2) showing the user a download window directly for downloading the pdf file.
+	 * 
+	 */
 	function do_generate($optionno){
 		global $CFG, $DB, $USER;
 		global $course;
@@ -64,53 +332,41 @@ class syllabus_form extends moodleform {
 		$objectivegnumber = 0;
 		$assessmentnumber = 0;
 		$instructoremail = 'To be assigned';
-		$officehours = 'To be assigned';
-		$officelocation = 'To be assigned';
 		$courseInstructor = 'To be assigned';
-		$phonenumber = 0;
-		$instructoremail = 'To be assigned';
-		$coursedescription = '';
+		$phonenumber = 'To be assigned';
+		$officelocation = 'To be assigned';
+		$officehours = 'By appointment';
+		$coursedescription = 'To be assigned';
+		$courseyear='';$courseterm = 'Spring';
 //collecting relative data from database===============================================================================		
 		if($existCourseInfo = $DB->get_record('courseinfo', array('courseid'=>$course->id))){
-			$coursetopic = $existCourseInfo->coursetopic;
+			//$coursetopic = $existCourseInfo->coursetopic;
 			$coursedescription = $existCourseInfo->coursedescription;
+			$courseterm = $existCourseInfo->courseterm;
+			$courseyear = $existCourseInfo->courseyear;
 			$courseInstructor = $USER->lastname.', '.$USER->firstname;
 			if($existInstructorInfo = $DB->get_record('courseinstructors', array('courseid'=>$existCourseInfo->id, 'userid'=>$USER->id))){
-				$officelocation = $existInstructorInfo->officelocation;
+				$officelocation = $existInstructorInfo->officelocation ? $existInstructorInfo->officelocation : 'To be assigned';			
 				$officehours = $existInstructorInfo->officehours;
-				$instructoremail =  $existInstructorInfo->email;
-				$phonenumber = $existInstructorInfo->phonenumber;
+				$instructoremail = $existInstructorInfo->email ? $existInstructorInfo->email : 'To be assigned';
+				$phonenumber = $existInstructorInfo->phonenumber ? $existInstructorInfo->phonenumber : 'To be assigned';
 			}
 		}
-		$sessionnumber = $DB->count_records('coursesession', array('courseid'=>$course->id));
-		if($sessionnumber>0){
-			$coursesessions = $DB->get_records('coursesession', array('courseid'=>$course->id), $sort='sessiondate');
-		}
-			
-		$readingnumber = $DB->count_records('coursereadings', array('courseid'=>$course->id));
-		if($readingnumber>0){
-			$coursereadings = $DB->get_records('coursereadings', array('courseid'=>$course->id));
-		}
-			
-		$objectivegnumber = $DB->count_records('courseobjectives', array('courseid'=>$course->id));
-		if($objectivegnumber>0){
-			$courseobjectives = $DB->get_records('courseobjectives', array('courseid'=>$course->id));
-		}
-			
-		$assessmentnumber = $DB->count_records('courseassessment', array('courseid'=>$course->id));
-		if($assessmentnumber>0){
-			$courseassessments = $DB->get_records('courseassessment', array('courseid'=>$course->id), $sort='assessmentduedate');
-		}
-		
 
+		$excludearray = array();
+		$category = $course->category;
+		$excludeelements = $DB->get_records('excludedelements',array('category'=>$category));
+		foreach ($excludeelements as $excludeelement){
+			array_push($excludearray, $excludeelement->header);
+		}
 		
 //start pdf generation===============================================================================		
 		$pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-/* 		$pdf->SetCreator(PDF_CREATOR);
-		$pdf->SetAuthor('Olaf Lederer');
+ 		$pdf->SetCreator(PDF_CREATOR);
+		$pdf->SetAuthor($courseInstructor);
 		$pdf->SetTitle('Course Syllabus');
 		$pdf->SetSubject('Syllabus PDF');
-		$pdf->SetKeywords('TCPDF, PDF, Course, Syllubs'); */
+		$pdf->SetKeywords('TCPDF, PDF, Course, Syllubs'); 
 		 
 		// remove default header/footer
 		$pdf->setPrintHeader(false);
@@ -135,8 +391,9 @@ class syllabus_form extends moodleform {
 		$pdf->Cell(0, 0, '', 0, 0, 'C');
 		$pdf->Ln();
 //put general course information(instructor,officehour,location) into the pdf------------------------------------------
+
 		$courselogistics = <<<EOD
-		Fall/Winter/Spring/Summer<br>
+		$courseterm $courseyear<br>
 		<b>Course Weight</b>: *3
 EOD;
 		$pdf->SetFont('times', '', 12);
@@ -153,96 +410,31 @@ EOD;
 		$pdf->SetFont('times', '', 12);
 		$pdf->writeHTMLCell(0, 0, '', '', $courselogistics, 0, 1, 0, true, 'C', true);
 		$pdf->AddPage();
+
+		
+		
 	
-	
-	
-//put course overview information into the pdf------------------------------------------
-		if($coursedescription != ''){
-			$decripthtml =  '<h1>Course description</h1>
-					<font size="11%">'.$coursedescription.'<font>';
+//put course description information into the pdf------------------------------------------
+		if(!in_array("Course_Description", $excludearray)){
+			$decripthtml = $this->description_part_generation($coursedescription);
 			$pdf->writeHTML($decripthtml, true, false, true, false, '');
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 		}
 
 //put course reading information into the pdf------------------------------------------
-		if($readingnumber>0){
-			$readinghtml = '<b><h1>Course Readings</h1></b><ul>';
-			foreach ($coursereadings as $coursereading) {
-				$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-				$readinghtml.= '<font size="11%"><li>
-				'.$coursereading->readingname.'<br>
-				<a href="url">'.$coursereading->readingurl.'</a></li></font>';
-			}
+		if(!in_array("Course_Readings", $excludearray)){
+			$readingnumber = $DB->count_records('coursereadings', array('courseid'=>$course->id));
+			$readinghtml = $this->reading_part_generation($readingnumber);
 			$pdf->writeHTML($readinghtml, true, false, true, false, '');
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 		}
-
-	
 	
 //put course objective information into the pdf------------------------------------------
-		if(isset($courseobjectives)){
-			$objhtml = '<b><h1>Course Objectives</h1></b>
-					<font size="11%">The course is designed to develop the following knowledge, skills and attitudes:</font>';
-			
-			
-	//Knowledge learning objectives ===========================================================================================
-			$count =0;
-			$kobj = '<b><h3>Knowledge</h3><br>
-					<h4>Students who successfully complete this course will be able to:</h4></b>
-					<br><font size="11%"><ul>';
-			foreach ($courseobjectives as $courseobjective) {
-				if($thisobj = $DB->get_record('learningobjectives', array('id'=>$courseobjective->objectiveid))){
-					if($thisobj->objectivetype == 'Knowledge'){
-						$count++ ;
-						$kobj.='<li>'.$thisobj->objectivename.'</li>';
-					}
-				}
-			}
-			if($count>0){
-				$objhtml.=$kobj;
-				$objhtml.='</ul><font><br>';
-			}
-
-	
-	//Skill learning objectives ===========================================================================================
-			$count =0;
-			$sobj = '<b><h3>Skill</h3><br>
-					<h4>Students who successfully complete this course will be able to:</h4></b>
-					<br><font size="11%"><ul>';
-			foreach ($courseobjectives as $courseobjective) {
-				if($thisobj = $DB->get_record('learningobjectives', array('id'=>$courseobjective->objectiveid))){
-					if($thisobj->objectivetype == 'Skill'){
-						$count++ ;
-						$sobj.='<li>'.$thisobj->objectivename.'</li>';
-					}
-				}
-			}
-			if($count>0){
-				$objhtml.=$sobj;
-				$objhtml.='</ul><font><br>';
-			}
-
-	
-	
-	//attitude learning objectives ===========================================================================================
-			$count =0;
-			$aobj = '<b><h3>Atittude</h3><br>
-					<h4>Students who successfully complete this course will be able to:</h4></b>
-					<br><font size="11%"><ul>';
-			foreach ($courseobjectives as $courseobjective) {
-				if($thisobj = $DB->get_record('learningobjectives', array('id'=>$courseobjective->objectiveid))){
-					if($thisobj->objectivetype == 'Atittude'){
-						$count++ ;
-						$aobj.='<li>'.$thisobj->objectivename.'</li>';
-					}
-				}
-			}
-			if($count>0){
-					$objhtml.=$aobj;
-					$objhtml.='</ul><font>';
-			}
+		if(!in_array("Course_Objectives", $excludearray)){
+			$objectivegnumber = $DB->count_records('courseobjectives', array('courseid'=>$course->id));
+			$objhtml = $this->learning_objective_part_generation($objectivegnumber);
 			$pdf->writeHTML($objhtml, true, false, true, false, '');
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
@@ -250,86 +442,33 @@ EOD;
 	
 	
 //put course grading information into the pdf------------------------------------------
-		if (isset($courseassessments)){
-			$asstype = array('Exam','Assignment','Lab','Lab Exam');
-			$assessmenthtml = '<b><h1>Grading</h1></b><br><font size="11%">';
-			$assessmenthtml .= '
-		<table border="0.1" cellspacing="0.1" cellpadding="0.1" id="gradingtable">
-		<tr>
-			<th width="17%" align="center"><b>Title</b></th>
-			<th width="10%" align="center"><b>Weight</b></th>
-			<th width="16%" align="center"><b>Date</b></th>
-			<th width="17%" align="center"><b>Type</b></th>
-			<th width="40%" align="center"><b>Description</b></th>
-		</tr>';	
-			foreach ($courseassessments as $courseassessment) {
-				$assessmentduedate = $this->GetTimeStamp($courseassessment->assessmentduedate);
-				$assessmenthtml .= '<tr>
-						<td width="17%">'.$courseassessment->assessmentname.'</td>
-						<td width="10%" align="center">'.$courseassessment->assessmentweight.'%</td>
-						<td width="16%" align="center">'.$assessmentduedate.'</td>
-						<td width="17%" align="center">'.$asstype[(int)$courseassessment->type].'</td>	
-						<td width="40%">'.$courseassessment->description.'</td>	
-						</tr>';
-			}
-			$assessmenthtml .= '</table></font>';
+		if(!in_array("Grading", $excludearray)){
+			$assessmentnumber = $DB->count_records('courseassessment', array('courseid'=>$course->id));
+			$assessmenthtml = $this->grading_part_generation($assessmentnumber);
 			$pdf->writeHTML($assessmenthtml, true, false, true, false, '');
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 		}
 	
-	
 //put course session information into the pdf------------------------------------------
-		if($sessionnumber>0){
-			$sessionhtml = '<b><h1>Course Sessions</h1></b>';
-			$sessionno = 1;
-			foreach ($coursesessions as $coursesession) {
-				$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-				$guestteacher = '';
-				$guestteacher = $coursesession->sessionguestteacher;
-				if($guestteacher == ''){
-					$guestteacher = 'to be assigned';
-				}
-				$sessiondate = $this->GetTimeStamp($coursesession->sessiondate);
-				$sessionhtml.= '
-				<font size="12%"><b>'.$sessionno.'</b>:'. $coursesession->sessiontitle.'</font>
-				<hr>
-				<font size="11%"><b>Date</b>:'. $sessiondate.' <br>
-				<b>Length</b>:'. $coursesession->sessionlength .'<br>
-				<b>Type</b>:'. $coursesession->sessiontype .'<br>
-				<b>Description</b>:<br>'. $coursesession->sessiondescription .'<br>
-				<b>Guest teacher</b>:'. $guestteacher .'<hr></font>';
-				$sessionno ++;
-			}
+		if(!in_array("Course_Sessions", $excludearray)){
+			$sessionnumber = $DB->count_records('coursesession', array('courseid'=>$course->id));
+			$sessionhtml = $this->session_part_generation($sessionnumber);
 			$pdf->writeHTML($sessionhtml, true, false, true, false, '');
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 		}
-	
-	
-	
+		
 //put course policy information into the pdf------------------------------------------
-		$policyhtml = '<b><h1>Policy</h1></b>';
-		//add school policy	
-		if($Universitypolicy = $DB->get_record('syllabuspolicy', array('category'=>-1))){
-			$policyhtml.='<h3>School Policy</h3><br><font size="10%">'.$Universitypolicy->policy.'<font>';
+		if(!in_array("Policy", $excludearray)){
+			$policyhtml=$this->policy_part_generation();
+			$pdf->writeHTML($policyhtml, true, false, true, false, '');
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
+			$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
 		}
-		
-		$coursemaininfo = $DB->get_record('course', array('id'=>$course->id));
-		if($facultypolicy = $DB->get_record('syllabuspolicy', array('category'=>$coursemaininfo->category))){
-		//add faculty policy	
-			 $policyhtml.='<br><h3>Faculty Policy</h3><br>
-			 <font size="11%">'.$facultypolicy->policy.'<font>';
-		}
-		
-		$pdf->writeHTML($policyhtml, true, false, true, false, '');
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-		$pdf->Cell(0, 0, '', 0, 0, 'C');	$pdf->Ln();
-	
-	
 
 	
-// terminat$courseInstructorur file with TCPDF output------------------------------------------
+// terminate with TCPDF output------------------------------------------
 		if ($optionno == 1){
 			$pdf->Output('syllubus.pdf', 'I'); 
 		}else if ($optionno == 2){
@@ -340,3 +479,4 @@ EOD;
 }
 
 ?>
+

@@ -1,8 +1,22 @@
 <?php
+/**
+ * Generates the fom for the creation and maitnence of University specific policy to be added
+ * to the end of generated syllabi.
+ */
 require_once '../../config.php';
 require_once $CFG->dirroot . '/lib/formslib.php';
 require_once $CFG->dirroot . '/lib/datalib.php';
+
+/**
+ * Generates the form.
+ * @author Owner
+ *
+ */
 class university_form extends moodleform {
+	/**
+	 * Defines the form
+	 * @return void
+	 */
 	function definition() {
 		global $CFG, $DB, $USER;
 		$pform = $this->_form;
@@ -16,6 +30,7 @@ class university_form extends moodleform {
 		$pform->addElement('editor', 'university_editor', get_string('university_editor', 'local_metadata'))->setValue( array('text' => $defaulttext));
 		//$pform->addRule('university_editor', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$pform->setType('university_editor', PARAM_RAW);
+		$pform->addHelpButton('university_editor', 'university_editor', 'local_metadata');
 		
 		//Save Changes Button
 		$pform->addElement('submit', 'submit_policy', get_string('submit_policy', 'local_metadata'));
@@ -28,7 +43,11 @@ class university_form extends moodleform {
 		return $errors;
 	} */
 	
-	
+	/**
+	 * Save the policy from the form into the database
+	 * @param object $data the data from the form
+	 * @return void
+	 */
 	public static function save_data($data) {
 		global $DB, $CFG, $USER;
 		$policyInfo = new stdClass();

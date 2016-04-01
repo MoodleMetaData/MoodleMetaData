@@ -16,16 +16,8 @@ require_once($CFG->dirroot.'/local/metadata/session_form.php');
 
 // Define global variable for DB result
 $course = $DB->get_record('course', array('id' => $courseId), '*', MUST_EXIST);
+$session_page = optional_param('page', 0, PARAM_INT);
 
-// Create url
-$base_url = create_insview_url('session', $courseId);
-$general_url = create_insview_url('general', $courseId);
-$assessment_url = create_insview_url('assessment', $courseId);
-$session_url = create_insview_url('session', $courseId);
-$syllabus_url = create_insview_url('syllabus', $courseId);
-$page = optional_param('page', 0, PARAM_INT);
-
-$session_url->param('page', $page);
     
 // Set up page information
 $PAGE->set_context($context);
@@ -34,8 +26,15 @@ $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->shortname, $course->fullname);
 $PAGE->set_heading($heading);
 
-// TODO: Improve how this is done
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_session.php', array('id' => $courseId, 'page' => $page));
+// Create urls
+$general_url = create_insview_url('general',$courseId);
+$assessment_url = create_insview_url('assessment', $courseId);
+$session_url = create_insview_url('session', $courseId);
+$syllabus_url = create_insview_url('syllabus',$courseId);
+
+$session_url->param('page', $session_page);
+
+$PAGE->set_url($session_url);
 $PAGE->requires->css('/local/metadata/insview_style.css');
 $PAGE->requires->css('/local/metadata/session_element_style.css');
 
@@ -57,8 +56,8 @@ if ($data = $session_form->get_data()) {
         $session_form->save_data($data);
     }
     
-    $page += $session_form->get_page_change();
-    $session_url->param('page', $page);
+    $session_page += $session_form->get_page_change();
+    $session_url->param('page', $session_page);
     
     redirect($session_url);
 }
@@ -71,7 +70,7 @@ echo $OUTPUT->header();
         <ul>
         <li><a href=" <?php echo $general_url; ?> ">General</a></li>
         <li><a href=" <?php echo $assessment_url; ?> ">Assessment</a></li>
-        <li class="onclick_nav"><a href=" <?php echo $base_url; ?> ">Session</a></li>
+        <li class="onclick_nav"><a href=" <?php echo $session_url; ?> ">Session</a></li>
         <li><a href=" <?php echo $syllabus_url; ?> ">Syllabus</a></li>
         </ul>
     </div>

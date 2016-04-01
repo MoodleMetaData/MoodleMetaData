@@ -1,23 +1,38 @@
 <?php
+/**
+ * Generates the form for uploading faculty specific policy for syllabus generation.
+ */
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
+/**
+ * Generates the form.
+ * @author Owner
+ *
+ */
 class policy_form extends moodleform {
+	/**
+	 * Defines the parameters of the form
+	 * @return void
+	 */
 	function definition() {
 		global $CFG, $DB, $USER;
+		global $categoryId;
+		
 		$pform = $this->_form;
 		
 		//Form Elements
 		// Rich text editor
 		$defaulttext = '';
-		if($exists = $DB->get_record('syllabuspolicy', array ('category' => 1))) {
+		if($exists = $DB->get_record('syllabuspolicy', array ('category' => $categoryId))) {
 			$defaulttext = $exists->policy;
 		}
 		
 		$pform->addElement('editor', 'policy_editor', get_string('policy_editor', 'local_metadata'))->setValue( array('text' => $defaulttext));
 		//$pform->addRule('policy_editor', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$pform->setType('policy_editor', PARAM_RAW);
+		$pform->addHelpButton('policy_editor', 'policy_editor', 'local_metadata');
 		
 		//Save Changes Button
 		$pform->addElement('submit', 'submit_policy', get_string('submit_policy', 'local_metadata'));
@@ -31,11 +46,18 @@ class policy_form extends moodleform {
 	} */
 	
 	
+	/**
+	 * Save the policy from the form into the database
+	 * @param object $data the data from the form
+	 * @return void
+	 */
 	public static function save_data($data) {
 		global $DB, $CFG, $USER;
+		global $categoryId;
+		
 		$policyInfo = new stdClass();
 		
-		$policyInfo->category = 1;
+		$policyInfo->category = $categoryId;
 		$policyInfo->policy = $data->policy_editor['text'];
 		
 		if ($existsRecord = $DB->get_record('syllabuspolicy', array('category' => $policyInfo->category))) {

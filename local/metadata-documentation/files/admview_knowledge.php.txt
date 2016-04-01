@@ -1,4 +1,7 @@
 <?php
+/**
+ * This page allows for the upload and maitnence of sets of program objectives.
+ */
 global $PAGE, $CFG, $DB, $USER;
 require_once('../../config.php');
 require_once 'lib.php';
@@ -15,41 +18,34 @@ require_login();
 require_once($CFG->dirroot.'/local/metadata/knowledge_form.php');
     
 // Set up page information
-$PAGE->set_context(context_system::instance());
+$categoryId = get_category_id();
+$PAGE->set_category_by_id($categoryId);
+
+$PAGE->set_context(context_coursecat::instance($categoryId));
 $PAGE->set_pagelayout('standard');
-$PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
+$PAGE->set_title(get_string('admview_pluginname', 'local_metadata'));
 $heading = "Learning Objectives Management";
 $PAGE->set_heading($heading);
 
-// TODO: Improve how this is done
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/admview_knowledge.php');
+// Create url
+$knowledge_url = create_manage_url('knowledge', $categoryId);
+$policy_url = create_manage_url('policy', $categoryId);
+$course_url = create_manage_url('course', $categoryId);
+$exclude_url = create_manage_url('exclude', $categoryId);
+$reporting_url = create_manage_url('reporting', $categoryId);
+$categories_url = create_manage_url('categories', $categoryId);
+
+$PAGE->set_url($knowledge_url);
 $PAGE->requires->css('/local/metadata/insview_style.css');
 
-// Create url
-$base_url = create_manage_url('knowledge');
-$knowledge_url = create_manage_url('knowledge');
-$policy_url = create_manage_url('policy');
-$course_url = create_manage_url('course');
-$gradatt_url = create_manage_url('gradatt');
-
 // Create forms
-$knowledge_form = new knowledge_form($base_url);
+$knowledge_form = new knowledge_form($knowledge_url);
 
 // Submitted the data
 if ($data = $knowledge_form->get_data()) {
-	if (!empty($data->delete_knowledge)) {
-		knowledge_form::delete_knowledge($data);
-	} elseif (!empty($data->create_knowledge)) {
-    	knowledge_form::save_knowledge($data);
-	} elseif (!empty($data->create_skills)) {
-		knowledge_form::save_skills($data);
-	} elseif (!empty($data->delete_skills)) {
-		knowledge_form::delete_skills($data);
-	} elseif (!empty($data->create_attitudes)) {
-		knowledge_form::save_attitudes($data);
-	} elseif (!empty($data->delete_attitudes)) {
-		knowledge_form::delete_attitudes($data);
-	}
+	if (!empty($data->delete_groups)) {
+		knowledge_form::delete_groups($data);
+	} 
 	redirect($knowledge_url);
 } 
 
@@ -60,9 +56,11 @@ echo $OUTPUT->header();
 	<div class="nav_header">
 		<ul>
 		<li class="onclick_nav"><a href=" <?php echo $knowledge_url; ?> ">Program Objectives</a></li>
-		<li><a href=" <?php echo $gradatt_url; ?> ">Graduate Attribute</a></li>
+		<li><a href=" <?php echo $categories_url; ?> ">Categories</a></li>
 		<li><a href=" <?php echo $policy_url; ?> ">Policy</a></li>
 		<li><a href=" <?php echo $course_url; ?> ">Tags</a></li>
+		<li><a href=" <?php echo $exclude_url; ?> ">Syllabus Configuration</a></li>
+		<li><a href=" <?php echo $reporting_url; ?> ">Reporting</a></li>
 		</ul>
 	</div>
 	

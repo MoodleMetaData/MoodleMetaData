@@ -1,7 +1,34 @@
 <?php
+/**
+* Sets up the main navigation
+* @param settingsnav $settingsnav navigation settings object
+* @param context $context Context of the form
+*/
 function local_metadata_extends_settings_navigation($settingsnav, $context) {
     global $CFG, $PAGE, $USER;
- 
+ 	
+    // Setup navigation for Admin metadata
+    if (is_null($PAGE->course)) {
+    	//return;
+    } else  {
+    if($categorynode = $settingsnav->find('categorysettings', null)) {
+	    $url = new moodle_url('/local/metadata/admview_knowledge.php', array('categoryid' => $PAGE->category->id));
+	    	
+	    $foonode = navigation_node::create(
+	    		get_string('manage_pluginname', 'local_metadata'),
+	    		$url,
+	    		navigation_node::NODETYPE_LEAF,
+	    		'metadata',
+	    		'metadata',
+	    		new pix_icon('i/report', ''));
+	    if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
+	    	$foonode->make_active();
+	    }
+	    $categorynode->add_node($foonode);
+    	//$categorynode->add(get_string('manage_pluginname', 'local_metadata'), $url, self::TYPE_SETTING, null, 'permissions', new pix_icon('i/permissions', ''));
+	}
+    }
+    
     // Only add this settings item on non-site course pages.
     if (!$PAGE->course or $PAGE->course->id == 1) {
         return;
@@ -33,10 +60,18 @@ function local_metadata_extends_settings_navigation($settingsnav, $context) {
 
 }
 
+/**
+ * Will return the paramater for course id
+ *
+ * @return int course id
+ */
 function get_course_id() {
     return required_param('id', PARAM_INT);
 }
-
+/**
+*	Returns the course learning objectives for a given courseid
+*	@return array of learning objectives
+*/
 function get_course_learning_objectives() {
     global $DB;
 
@@ -50,7 +85,10 @@ function get_course_learning_objectives() {
     
     return $DB->get_records_list('learningobjectives', 'id', $wantedIds);
 }
-
+/**
+* Returns an array of readings that are connected to the course. 
+* @return array of course reading objects
+*/
 function get_course_readings() {
     global $DB;
 
@@ -64,7 +102,11 @@ function get_course_readings() {
     
     return $DB->get_records_list('coursereadings', 'id', $wantedIds);
 }
-
+/**
+* grabs the table named $table and returns it as an array. 
+* @param string $table Name of the table that you need returned. 
+* @return array containing the required table
+*/
 function get_table_data_for_course($table) {
     global $DB;
 
@@ -82,26 +124,126 @@ function get_learning_objective_types() {
     return array('Attitude', 'Knowledge', 'Skill');
 }
 
+/**
+ * Will return the days
+ *
+ * @return array containing string of all days
+ */
+function get_days() {
+    return array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
+}
+/**
+* Creates the insview URL
+* @param form $form the form
+* @param courseID $courseID ID of the course that you want to generate
+* @return moodle_url of insview + courseID
+*/
 function create_insview_url($form, $courseId) {
     return new moodle_url('/local/metadata/insview_'.$form.'.php', array('id' => $courseId));
 }
-
-function create_manage_url($form) {
-	return new moodle_url('/local/metadata/admview_'.$form.'.php');
+/**
+*	Creates the admin form URLs
+* 	@param form $form the form
+* 	@param courseID $courseID ID of the course that you want to generate
+*	@return moodle_url connected to the admin pages.
+*/
+function create_manage_url($form, $categoryId) {
+	return new moodle_url('/local/metadata/admview_'.$form.'.php', array('categoryid' => $categoryId));
+}
+/**
+* Gets the teaching strategies
+* @return array containing the types of teaching strategies
+*/
+function get_teaching_strategies() {
+    return array('Direct Lecture', 'Active Learning', 'Problem Based Learning', 'Team Based Learning', 'Blended Learning', 'Other');
 }
 
-function get_assessment_type($value){
-	$assessmentTypeArray = array();
-	$assessmentTypeArray[0] = "Exam";
-	$assessmentTypeArray[1] = "Assignment";
-	$assessmentTypeArray[2] = "Lab";
-	$assessmentTypeArray[3] = "Lab Exam";
-	
-	return $assessmentTypeArray[$value];
+/**
+ * Will return all of the type options
+ *
+ * @return array containing string of all types
+ */
+function get_session_types() {
+    return array('lecture', 'lab', 'seminar');
 }
 
+/**
+ * Will return all of the length options
+ *
+ * @return array containing string of all types
+ */
+function get_session_lengths() {
+    return array('50 minutes', '80 minutes', '110 minutes', '140 minutes', '170 minutes');
+}
+/**
+* Will return all of the different types of Assessments
+* @return array of assessment types. 
+*/
+function get_assessment_types() {
+    return array('Exam', 'Assignment', 'Participation', 'Other');
+}
+/**
+* Will return all of the types of Exams for assessments
+* @return array containing string of exam types.
+*/
+function get_exam_types() {
+    return array('Multiple choice', 'Written', 'Written and multiple choice', 'Other');
+}
+
+/**
+ * Will return the paramater for objective id
+ * 
+ * @return int objective id
+ */
 function get_objective_id() {
 	return optional_param('obj', -1, PARAM_INT);
+}
+
+/**
+ * Will return the paramater for group id
+ *
+ * @return int group id
+ */
+function get_group_id() {
+	return optional_param('grp', -1, PARAM_INT);
+}
+
+/**
+ * Will return the paramater for program id
+ *
+ * @return int program id
+ */
+function get_program_id() {
+	return required_param('program', PARAM_INT);
+}
+
+/**
+ * Redirects the page to the new added element in repeating element.
+ * Will be used while "add button" is clicked.
+ * @param string $anchorname 	the name of an anchor
+ * @param string $nextelement	the id of the next element in the form
+ * @param integer $Y			the offset in pixels to scroll vertically	
+ * @return void
+ */
+function redirect_to_anchor($anchorname, $nextelement, $Y){
+	echo ' <script type="text/javascript">
+			window.onload = function load(){
+				var newAnchor = document.createElement("a");
+				newAnchor.setAttribute("name", "'.$anchorname.'");
+				var getNextElement = document.getElementById("'.$nextelement.'");
+				getNextElement.parentNode.insertBefore(newAnchor, getNextElement);
+				
+				window.location.hash="'.$anchorname.'";
+				window.scrollBy(0, '.$Y.');
+			};
+			</script>';
+}
+/**
+* Will return the category ID
+* @return required_param of caregory ID and PARAM_INT
+*/
+function get_category_id() {
+	return required_param('categoryid', PARAM_INT);
 }
 ?>
 

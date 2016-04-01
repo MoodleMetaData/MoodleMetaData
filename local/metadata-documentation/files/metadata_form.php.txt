@@ -6,39 +6,53 @@ require_once 'lib.php';
 
 
 /**
- * The form to display the tab for sessions
+ * A form to work around a bug in moodle, where a warning will occur for a nosubmit button which is in a recurring element.
  *
- * Requires the argument 'sessions', which should be the array of sessions
- *   for the current course loaded from the database
- *
- * For an example, see how it is instantiated in insview.php
- *
- * To look at how deleting a recurring element is done, see definition_after_data and save_data.
- *   As well, see the elements was_deleted and deleteSession (the delete button) in add_session_repeat_template
+ * For the implementation, the warning occurs when calling the function no_submit_button_pressed, since a recurring element
+ *  button will be set as an array, rather than as a single variable when submitted in the POST data.
  *
  *
  */
- 
 class metadata_form extends moodleform {
+    /**
+     * @var array _recurring_nosubmit_buttons button ids of all recurring nosubmit buttons
+     */
+    private $_recurring_nosubmit_buttons;
     
-    protected $_recurring_nosubmit_buttons;
-    
-    
+    /**
+     * Will set up form internal state
+     *
+     * @see lib/moodleform#definition()
+     */
     function definition() {
         $this->_recurring_nosubmit_buttons = array();
+    }
+    
+    /**
+     *  Mark the given button as being a recurring element nosubmit button
+     *
+     *  @param object $form form that the button was added to
+     *  @param string $button_id the id of the button that was added
+     */
+    protected function add_recurring_element_nosubmit_button($form, $button_id) {
+        $form->registerNoSubmitButton($button_id);
+        $this->_recurring_nosubmit_buttons[] = $button_id;
     }
     
     
     /**
      * Checks if button pressed is not for submitting the form
+     *
      *   This overrides moodleform, and is a hack to fix the issue where recurring element buttons
-     *     will be stored as an array, rather than a single item, in the url
-     *     which causes a warning and causes our tests to fail
+     *     will be stored as an array, rather than a single item, in the url which causes a warning and causes our tests to fail
+     *
+     *   Most of the code was copied from moodleform, with the addition of the in_array check 
+     *
      *
      * @staticvar bool $nosubmit keeps track of no submit button
      * @return bool
      */
-    function no_submit_button_pressed(){
+    function no_submit_button_pressed() {
         static $nosubmit = null; // one check is enough
         if (!is_null($nosubmit)){
             return $nosubmit;

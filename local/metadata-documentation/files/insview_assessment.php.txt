@@ -16,8 +16,9 @@ require_once($CFG->dirroot.'/local/metadata/assessment_form.php');
 
 // Define global variable for DB result
 $course = $DB->get_record('course', array('id'=>$courseId), '*', MUST_EXIST);
-$page = optional_param('page', 0, PARAM_INT);
-    
+$assessment_page = optional_param('page', 0, PARAM_INT);
+
+
 // Set up page information
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
@@ -25,19 +26,18 @@ $PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
 $heading = sprintf(get_string('instructor_heading', 'local_metadata'), $course->shortname, $course->fullname);
 $PAGE->set_heading($heading);
 
-// TODO: Improve how this is done
-$PAGE->set_url($CFG->wwwroot.'/local/metadata/insview_assessment.php', array('id' => $courseId, 'page' => $page));
-$PAGE->requires->css('/local/metadata/insview_style.css');
-$PAGE->requires->css('/local/metadata/assessment_element_style.css');
-
-// Create url
-$base_url = create_insview_url('assessment', $courseId);
+// Create urls
 $general_url = create_insview_url('general',$courseId);
 $assessment_url = create_insview_url('assessment', $courseId);
 $session_url = create_insview_url('session', $courseId);
 $syllabus_url = create_insview_url('syllabus',$courseId);
 
-$assessment_url->param('page', $page);
+$assessment_url->param('page', $assessment_page);
+
+$PAGE->set_url($assessment_url);
+$PAGE->requires->css('/local/metadata/insview_style.css');
+$PAGE->requires->css('/local/metadata/assessment_element_style.css');
+
 
 // Create forms
 $assessments = get_table_data_for_course('courseassessment');
@@ -50,10 +50,17 @@ if ($assessment_form->is_cancelled()) {
 
 // Submitted the data
 if ($data = $assessment_form->get_data()) {
+	if ($assessment_form->rubrik_was_uploaded()){
+		$index = 'gradingDescription_uploaded[0]';
+		$assessment_form->upload_rubrik($index);
+	}
+	if ($assessment_form->assessments_were_uploaded()){
+		$assessment_form->upload_assessments();
+	}
 	$assessment_form -> save_assessment_list($data);
     
-    $page += $assessment_form->get_page_change();
-    $assessment_url->param('page', $page);
+    $assessment_page += $assessment_form->get_page_change();
+    $assessment_url->param('page', $assessment_page);
     
     redirect($assessment_url);
 } 
