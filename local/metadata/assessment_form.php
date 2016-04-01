@@ -164,8 +164,10 @@ class assessment_form extends metadata_form {
 		//Set the options
 		$optionsArray['assessmentname']['type'] = PARAM_TEXT;
 		$optionsArray['assessmentprof']['type'] = PARAM_TEXT;
+		$optionsArray['assessmentprof']['helpbutton'] = array('assessmentlecturer_help', 'local_metadata');
 		$optionsArray['description']['type'] = PARAM_TEXT;
 		$optionsArray['gradingDesc']['type'] = PARAM_TEXT;
+		$optionsArray['gdescription']['helpbutton'] = array('assessment_grading_help', 'local_metadata');
 		$optionsArray['assessmentweight']['type'] = PARAM_TEXT;
         
         // If is not an exam, should disable these two
@@ -228,6 +230,7 @@ class assessment_form extends metadata_form {
             $learningObjectivesEl = $mform->createElement('select', 'learning_objective_'.$learningObjectiveType, get_string('learning_objective_'.$learningObjectiveType, 'local_metadata'), $options);
             $learningObjectivesEl->setMultiple(true);
             $elementArray[] = $learningObjectivesEl;
+			$optionsArray['learning_objective_'.$learningObjectiveType]['helpbutton'] = array('multi_select_help', 'local_metadata');
         }
 		/////////////////////////////////////////////////
         

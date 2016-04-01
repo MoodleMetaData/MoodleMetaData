@@ -37,6 +37,8 @@ $string['course_gradAtt'] = 'Attribute {no}: ';
 $string['assessment_counter'] = 'Number of graded assessment: ';
 $string['session_counter'] = 'Number of session: <br />(lecture, lab, seminar) ';
 $string['teaching_assumption'] = 'Instructor assumption: ';
+$string['multi_select_help'] = 'To select Multiple Items, Hold down the CTRL key, and Click each item.';
+$string['multi_select_help_help'] = 'To select Multiple Items, Hold down the CTRL key, and Click each item.';
 
 $string['course_reading_desc'] = 'Required reading: ';
 $string['readingname_label'] = 'Title {no}:';
@@ -149,6 +151,11 @@ $string['upload_assessments_header_help'] = 'To upload assessments, only .csv fi
 										Type is an integer between 0 and 3, where </br>
 										0 = Exam, 1 = Assignment, 2= Participation, 3= Other</br>';
                                         
+$string['assessment_type_help'] = 'By Selecting Anything other than Exam, the Lecturer field will be disabled.';
+$string['assessment_grading_help'] = 'Fill in Some details on the specifics of how you are grading here';
+$string['assessment_grading_help_help'] = 'You can put assignment specific grading information in this box';
+$string['assessmentlecturer_help'] = 'If you select anything other than Exam, this field will be disabled';
+$string['assessmentlecturer_help_help'] = 'If you select anything other than Exam, this field will be disabled';
 $string['new_assessment_header'] = 'New Assessment';
 $string['unnamed_assessment'] = 'Unnamed Assessment';
 
