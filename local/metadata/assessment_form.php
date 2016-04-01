@@ -120,10 +120,14 @@ class assessment_form extends metadata_form {
         $data = array();
         $data['courseid'] = $courseid;
         $data['assessmentname'] = $row[0];
-        $data['type'] = $row[1];
-		$data['assessmentweight'] = $row[2];
-        $data['description'] = $row[3];
-        $data['gdescription'] = $row[4];
+		$data['type'] = $row[1];
+        $data['assessmentprof'] = $row[2];
+		$data['assessmentexamtype'] = $row[3];
+        $data['assessmentweight'] = $row[4];
+        $data['assessmentduedate'] = $row[5];
+		$data['description'] = $row[6];
+		$data['gdescription'] = $row[7];
+
         
         $date = DateTime::createFromFormat(assessment_form::DATE_FROM_FROM_FILE, $row[5]);
         if (is_object($date)) {
@@ -171,6 +175,7 @@ class assessment_form extends metadata_form {
 		$optionsArray['assessment_knowledge']['setmultiple'] = true;
 		$optionsArray['courseassessment_id']['type'] = PARAM_TEXT;
 		$optionsArray['was_deleted']['type'] = PARAM_TEXT;
+		
 		
         $optionsArray['assessment_header']['default'] = get_string('new_assessment_header', 'local_metadata');
 
@@ -292,7 +297,13 @@ class assessment_form extends metadata_form {
 		if(isset($_POST['assessment_list_add_element'])) redirect_to_anchor('assessment', 'id_assessment_list_add_element', -1000);
     }
 	
+    private function delete_all_relations_to_assessment($assessmentid) {
+        global $DB;
+        
+        $DB->delete_records('assessmentobjectives', array('assessmentid'=>$assessmentid));
+        $DB->delete_records('session_related_assessment', array('sessionid'=>$assessmentid));
 
+    }
 	/**
      * Ensure that the data the user entered is valid
      *
@@ -440,7 +451,7 @@ class assessment_form extends metadata_form {
             } else {
                 $mform->setDefault('assessment_header'.$index, $assessment->assessmentname);
             }
-            
+            //set up the defaults
 			$mform->setDefault('assessmentname'.$index, $assessment->assessmentname);
 			$mform->setDefault('assessmentweight'.$index, $assessment->assessmentweight);
 			$mform->setDefault('type'.$index, array_search($assessment->type, get_assessment_types()));
