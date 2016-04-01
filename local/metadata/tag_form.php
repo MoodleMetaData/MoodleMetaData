@@ -7,7 +7,7 @@ require_once $CFG->dirroot.'/lib/datalib.php';
 class tag_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
-		global $course, $courseId, $objectiveId, $groupId;
+		global $course, $courseId, $objectiveId, $groupId, $programId;
 		
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 		
@@ -26,7 +26,7 @@ class tag_form extends moodleform {
 		if($objectiveId != -1) {
 			// Dropdown select for objective groups
 			$objoptions = array();
-			$groupobj = $DB->get_records ( 'objectivegroups', array ());
+			$groupobj = $DB->get_records ( 'objectivegroups', array ('parent' => $programId));
 			foreach($groupobj as $record) {
 				$objoptions[$record->id] = $record->groupname;
 			}

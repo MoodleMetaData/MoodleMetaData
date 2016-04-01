@@ -40,8 +40,8 @@ $course_form = new course_select_form($course_url);
 
 // Submit the data
 if ($data = $course_form->get_data()) {
-	$courseid = $course_form->get_course_id($data);
-	$tag_url = new moodle_url('/local/metadata/admview_tag.php', array('categoryid' => $categoryId,'id' => $courseid));
+	$id = $course_form->get_course_id($data);
+	$tag_url = new moodle_url('/local/metadata/admview_tag.php', array('categoryid' => $categoryId,'id' => $id['course'], 'program' => $id['group']));
 	redirect($tag_url);
 } 
 

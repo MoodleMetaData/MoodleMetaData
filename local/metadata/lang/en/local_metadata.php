@@ -242,6 +242,7 @@ $string['program_grp_header'] = 'Program Groups';
 $string['manage_groups'] = 'Group Names';
 $string['delete_groups'] = 'Delete';
 $string['group_select'] = 'Program Objectives';
+$string['admgrp_select'] = 'Program Group';
 
 // Metadata manager errors
 $string['mcreate_required'] = 'You must enter something.';

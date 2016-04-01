@@ -55,6 +55,11 @@ function local_metadata_extends_settings_navigation($settingsnav, $context) {
 
 }
 
+/**
+ * Will return the paramater for course id
+ *
+ * @return int course id
+ */
 function get_course_id() {
     return required_param('id', PARAM_INT);
 }
@@ -151,12 +156,31 @@ function get_exam_types() {
     return array('Multiple choice', 'Written', 'Written and multiple choice', 'Other');
 }
 
+/**
+ * Will return the paramater for objective id
+ * 
+ * @return int objective id
+ */
 function get_objective_id() {
 	return optional_param('obj', -1, PARAM_INT);
 }
 
+/**
+ * Will return the paramater for group id
+ *
+ * @return int group id
+ */
 function get_group_id() {
 	return optional_param('grp', 1, PARAM_INT);
+}
+
+/**
+ * Will return the paramater for program id
+ *
+ * @return int program id
+ */
+function get_program_id() {
+	return required_param('program', PARAM_INT);
 }
 
 /**

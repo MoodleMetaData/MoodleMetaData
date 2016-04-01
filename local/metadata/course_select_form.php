@@ -18,7 +18,16 @@ class course_select_form extends moodleform {
 			$courselist[$record->courseid] = $record->coursename;
 		}
 		
+		// Pull all groupings of program objectives
+		$groupall = $DB->get_records('objectivetypes', array('category' => $categoryId));
+		$grouplist = array();
+		foreach($groupall as $record) {
+			$grouplist[$record->id] = $record->typename;
+		}
+		
+		// Set form elements
 		$course_selection = $mform->addElement('select', 'admcourse_select', get_string('admcourse_select', 'local_metadata'), $courselist, '');
+		$objective_selection = $mform->addElement('select', 'admgrp_select', get_string('admgrp_select', 'local_metadata'), $grouplist, '');
 		
 		$mform->addElement('submit', 'admselect_course', get_string('admselect_course', 'local_metadata'));
 	}
@@ -34,6 +43,9 @@ class course_select_form extends moodleform {
 			if(empty($data['admcourse_select'])) {
 				$errors['admcourse_select'] = get_string('err_required', 'local_metadata');
 			}
+			if(empty($data['admgrp_select'])) {
+				$errors['admgrp_select'] = get_string('err_required', 'local_metadata');
+			}
 		}
 		
 		return $errors;
@@ -46,7 +58,11 @@ class course_select_form extends moodleform {
 	 */
 	public static function get_course_id($data) {
 		global $CFG, $DB, $USER;
-		return $data->admcourse_select;
+		
+		$id = array();
+		$id['course'] = $data->admcourse_select;
+		$id['group'] = $data->admgrp_select;
+		return $id;
 	}
 	
 }
