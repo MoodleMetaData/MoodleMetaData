@@ -203,9 +203,9 @@ class reporting_form extends moodleform {
 		<table border="0.1" cellspacing="0.1" cellpadding="0.1" id="gradingtable">
 		<tr>
 			<th width="25%" align="center"><b>Objective Name</b></th>
-			<th width="25%" align="center"><b>Tag times for Course</b></th>
-			<th width="25%" align="center"><b>Tag times for Session</b></th>
-			<th width="25%" align="center"><b>Tag times for Assessment</b></th>
+			<th width="25%" align="center"><b>Times Tagged in Courses</b></th>
+			<th width="25%" align="center"><b>Times Tagged In Sessions</b></th>
+			<th width="25%" align="center"><b>Times Tagged in Assessments</b></th>
 		</tr>';
 		if($programobjectives){
 			foreach ($programobjectives as $programobjective) {
@@ -228,9 +228,9 @@ class reporting_form extends moodleform {
 		
 		// terminate with TCPDF output------------------------------------------
 		if ($optionno == 1){
-			$pdf->Output('syllubus.pdf', 'I'); 
+			$pdf->Output('ProgramObjectiveReport.pdf', 'I'); 
 		}else if ($optionno == 2){
-			$pdf->Output('syllubus.pdf', 'D');
+			$pdf->Output('ProgramObjectiveReport.pdf', 'D');
 		}
 	}
 	
