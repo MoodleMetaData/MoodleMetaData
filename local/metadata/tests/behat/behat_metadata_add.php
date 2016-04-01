@@ -389,19 +389,22 @@ class behat_metadata_add extends behat_base {
 	public function the_default_program_objectives_exist(){
 		global $DB;
 		
+		// objective type
 		$group = new stdClass();
 		$group->typename = "Group";
 		$group->category = 1;
 		$insert_objectivetypes = $DB->insert_record('objectivetypes', $group, true, false);
 		
+		// objective group
 		$main_level  = new stdClass();
 		$main_level->groupname = "1";
 		$main_level->parent = $insert_objectivetypes;
 		$insert_objectivegroups = $DB->insert_record('objectivegroups', $main_level, true, false);
 		
+		// program objectives
 		$program = new stdClass();
-		$program->objectivename = "1.1";
-		$program->objectivegroup = $insert_objectivetypes;
+		$program->objectivename = "Parent";
+		$program->objectivegroup = $insert_objectivegroups;
 		$insert_program = $DB->insert_record('programobjectives', $program, true, false);
 		
 		return array();
