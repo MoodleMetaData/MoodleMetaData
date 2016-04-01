@@ -46,18 +46,18 @@ class reporting_form extends moodleform {
 		$mform->addElement('html', '<a name="program_objective_report"></a>'); 
 		$mform->addElement('header', 'programobj_report_header', get_string('programobj_report_header', 
 				'local_metadata'));
-		$mform->addElement('html','<b>In pdf format:</b>
- 				<input type="submit" name="poreportdisplay" value="preview"/>
- 				<input type="submit" name="poreportdownload" value="download"/>
-				<br><b>In csv format:</b>
- 				<input type="submit" name="poreportcsv" value="download"/>');
+		$mform->addElement('html','<b>In .PDF Format:</b>
+ 				<input type="submit" name="poreportdisplay" value="Preview"/>
+ 				<input type="submit" name="poreportdownload" value="Download"/>
+				<br><b>In .CSV Format:</b>
+ 				<input type="submit" name="poreportcsv" value="Download"/>');
  		$mform->setExpanded('programobj_report_header');
  		//course information report
  		$mform->addElement('html', '<a name="course_objective_report"></a>'); 
  		$mform->addElement('header', 'courseobj_report_header', get_string('courseobj_report_header',
  				'local_metadata'));
- 		$mform->addElement('html','<b>In csv format:</b>
- 				<input type="submit" name="coursereportcsv" value="download"/>
+ 		$mform->addElement('html','<b>In .CSV Format:</b>
+ 				<input type="submit" name="coursereportcsv" value="Download"/>
 				</form>');
  		$mform->setExpanded('courseobj_report_header');
  		
@@ -77,6 +77,8 @@ class reporting_form extends moodleform {
 		
 			$this->generatecocsv();
 		}
+		
+		
 	}
 
 	 /**
@@ -200,10 +202,10 @@ class reporting_form extends moodleform {
 		$reporthtml .= '
 		<table border="0.1" cellspacing="0.1" cellpadding="0.1" id="gradingtable">
 		<tr>
-			<th width="25%" align="center"><b>objective name</b></th>
-			<th width="25%" align="center"><b>tag times for course</b></th>
-			<th width="25%" align="center"><b>tag times for session</b></th>
-			<th width="25%" align="center"><b>tag times for assessment</b></th>
+			<th width="25%" align="center"><b>Objective Name</b></th>
+			<th width="25%" align="center"><b>Times Tagged in Courses</b></th>
+			<th width="25%" align="center"><b>Times Tagged In Sessions</b></th>
+			<th width="25%" align="center"><b>Times Tagged in Assessments</b></th>
 		</tr>';
 		if($programobjectives){
 			foreach ($programobjectives as $programobjective) {
@@ -219,15 +221,16 @@ class reporting_form extends moodleform {
 			<th width="25%" align="center">'.$assessmentno.'</th>
 						</tr>';
 			}
+			
 		}
 		$reporthtml .= '</table></font>';
 		$pdf->writeHTML($reporthtml, true, false, true, false, '');
 		
 		// terminate with TCPDF output------------------------------------------
 		if ($optionno == 1){
-			$pdf->Output('syllubus.pdf', 'I'); 
+			$pdf->Output('ProgramObjectiveReport.pdf', 'I'); 
 		}else if ($optionno == 2){
-			$pdf->Output('syllubus.pdf', 'D');
+			$pdf->Output('ProgramObjectiveReport.pdf', 'D');
 		}
 	}
 	
@@ -321,6 +324,8 @@ class reporting_form extends moodleform {
 		fclose($file); 
 		
 	}
+	
+	
 }
 
 ?>

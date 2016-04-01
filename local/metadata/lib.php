@@ -63,7 +63,10 @@ function local_metadata_extends_settings_navigation($settingsnav, $context) {
 function get_course_id() {
     return required_param('id', PARAM_INT);
 }
-
+/**
+*	Returns the course learning objectives for a given courseid
+*	@return array of learning objectives
+*/
 function get_course_learning_objectives() {
     global $DB;
 
@@ -77,7 +80,10 @@ function get_course_learning_objectives() {
     
     return $DB->get_records_list('learningobjectives', 'id', $wantedIds);
 }
-
+/**
+* Returns an array of readings that are connected to the course. 
+* @return array of course reading objects
+*/
 function get_course_readings() {
     global $DB;
 
@@ -91,7 +97,11 @@ function get_course_readings() {
     
     return $DB->get_records_list('coursereadings', 'id', $wantedIds);
 }
-
+/**
+* grabs the table named $table and returns it as an array. 
+* @param string $table Name of the table that you need returned. 
+* @return array containing the required table
+*/
 function get_table_data_for_course($table) {
     global $DB;
 
@@ -117,15 +127,24 @@ function get_learning_objective_types() {
 function get_days() {
     return array('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun');
 }
-
+/**
+* Creates the insview URL
+* @return moodle_url of insview + courseID
+*/
 function create_insview_url($form, $courseId) {
     return new moodle_url('/local/metadata/insview_'.$form.'.php', array('id' => $courseId));
 }
-
+/**
+*	Creates the admin form URLs
+*	@return moodle_url connected to the admin pages.
+*/
 function create_manage_url($form, $categoryId) {
 	return new moodle_url('/local/metadata/admview_'.$form.'.php', array('categoryid' => $categoryId));
 }
-
+/**
+* Gets the teaching strategies
+* @return array containing the types of teaching strategies
+*/
 function get_teaching_strategies() {
     return array('Direct Lecture', 'Active Learning', 'Problem Based Learning', 'Team Based Learning', 'Blended Learning', 'Other');
 }
@@ -147,11 +166,17 @@ function get_session_types() {
 function get_session_lengths() {
     return array('50 minutes', '80 minutes', '110 minutes', '140 minutes', '170 minutes');
 }
-
+/**
+* Will return all of the different types of Assessments
+* @return array of assessment types. 
+*/
 function get_assessment_types() {
     return array('Exam', 'Assignment', 'Participation', 'Other');
 }
-
+/**
+* Will return all of the types of Exams for assessments
+* @return array containing string of exam types.
+*/
 function get_exam_types() {
     return array('Multiple choice', 'Written', 'Written and multiple choice', 'Other');
 }
@@ -204,7 +229,10 @@ function redirect_to_anchor($anchorname, $nextelement, $Y){
 			};
 			</script>';
 }
-
+/**
+* Will return the category ID
+* @return required_param of caregory ID and PARAM_INT
+*/
 function get_category_id() {
 	return required_param('categoryid', PARAM_INT);
 }

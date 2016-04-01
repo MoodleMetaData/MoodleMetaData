@@ -92,3 +92,4 @@ Feature: Assessment tab
       Given I set the field "type[0]" to "Other"
       When I take focus off "type[0]" "select"
       And the "assessmentexamtype[0]" "select" should be disabled
+
