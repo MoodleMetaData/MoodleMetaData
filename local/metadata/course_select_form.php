@@ -24,6 +24,22 @@ class course_select_form extends moodleform {
 	}
 	
 	/**
+	 * Ensure that the data the user entered is valid.
+	 * @see lib/moodleform#validation()
+	 */
+	function validation($data, $files) {
+		$errors = parent::validation($data, $files);
+		
+		if (!empty($data['admselect_course'])) {
+			if(empty($data['admcourse_select'])) {
+				$errors['admcourse_select'] = get_string('err_required', 'local_metadata');
+			}
+		}
+		
+		return $errors;
+	}
+	
+	/**
 	 * Returns the course ID of the selected element
 	 * @param $data  the data from the form
 	 * @return the course ID from course selected

@@ -33,6 +33,11 @@ class policy_form extends moodleform {
 	} */
 	
 	
+	/**
+	 * Save the policy from the form into the database
+	 * @param object $data the data from the form
+	 * @return void
+	 */
 	public static function save_data($data) {
 		global $DB, $CFG, $USER;
 		global $categoryId;

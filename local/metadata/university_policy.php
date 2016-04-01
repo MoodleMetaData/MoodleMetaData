@@ -28,7 +28,11 @@ class university_form extends moodleform {
 		return $errors;
 	} */
 	
-	
+	/**
+	 * Save the policy from the form into the database
+	 * @param object $data the data from the form
+	 * @return void
+	 */
 	public static function save_data($data) {
 		global $DB, $CFG, $USER;
 		$policyInfo = new stdClass();

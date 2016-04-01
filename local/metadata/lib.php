@@ -2,6 +2,7 @@
 function local_metadata_extends_settings_navigation($settingsnav, $context) {
     global $CFG, $PAGE, $USER;
  	
+    // Setup navigation for Admin metadata
     if (is_null($PAGE->course)) {
     	//return;
     } else  {

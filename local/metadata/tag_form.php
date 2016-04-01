@@ -68,6 +68,34 @@ class tag_form extends moodleform {
 	}
 	
 	/**
+	 * Ensure that the data the user entered is valid.
+	 * @see lib/moodleform#validation()
+	 */
+	function validation($data, $files) {
+		$errors = parent::validation($data, $files);
+	
+		if (!empty($data['admselcourse'])) {
+			if(empty($data['admobj_select'])) {
+				$errors['admobj_select'] = get_string('err_required', 'local_metadata');
+			}
+		} else if (!empty($data['group_sel'])) {
+			if(empty($data['group_select'])) {
+				$errors['group_select'] = get_string('err_required', 'local_metadata');
+			}
+		} else if (!empty($data['admaddobjective'])) {
+			if(empty($data['admpro_select'])) {
+				$errors['admpro_select'] = get_string('err_required', 'local_metadata');
+			}
+		} else if (!empty($data['admdelobjective'])) {
+			if(empty($data['admpro_current'])) {
+				$errors['admpro_current'] = get_string('err_required', 'local_metadata');
+			}
+		}
+	
+		return $errors;
+	}
+	
+	/**
 	 * Grabs the objective ID for url param
 	 * @param $data data from the form
 	 * @return objective id

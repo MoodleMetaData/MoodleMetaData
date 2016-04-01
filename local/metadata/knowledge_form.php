@@ -152,7 +152,16 @@ class knowledge_form extends moodleform {
 	 */
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
-	
+		
+		if (!empty($data['delete_groups'])) {
+			if(empty($data['manage_groups'])) {
+				$errors['manage_groups'] = get_string('err_required', 'local_metadata');
+			} 
+		} else {
+			if(empty($data['new_group'])) {
+				$errors['new_group'] = get_string('err_required', 'local_metadata');
+			}
+		}
 		return $errors;
 	}
 	
