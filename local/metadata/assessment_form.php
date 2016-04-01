@@ -66,12 +66,14 @@ class assessment_form extends metadata_form {
 /** Detects if a rubrik was uploaded
  */
 	public function rubrik_was_uploaded(){
-		return $this->_form->getSubmitValue(gradingDescription_uploaded) !== null;
+		return $this->_form->getSubmitValue('gradingDescription_uploaded') !== null;
 	}
     /** Handles adding the rubrik to the stored files. Adds it to the filemanger so it can be made available to the instructor
 	*/
-	public function upload_rubrik(){
-		$file = $this -> save_stored_file('gradingDescription_uploaded');
+    public function upload_rubrik($index){
+		$fullpath = 'system/assignments/$courseId';
+		$override = true;
+		$file = $this->save_file($index, $fullpath, $override);
 		
 	}
 	/**	Parses and saves the sessions row by row, deals with uploading assessments. 
@@ -197,7 +199,7 @@ class assessment_form extends metadata_form {
 	*This function deals with deleting the data after the form element is deleted
 	*It is necessary to deal with removing elements so that they don't show up again
 	*/
-    
+
      function definition_after_data() {
         parent::definition_after_data();
         $mform = $this->_form;
