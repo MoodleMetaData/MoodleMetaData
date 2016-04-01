@@ -1,4 +1,19 @@
 <?php
+/**
+ * reporting_form for local_metadata
+ *
+ *@copyright 2016 
+ *@license see the license file in the same folder
+ *@package local_metadata
+ *
+ * which will allow the user to preview or download the pdf
+ * format of generated program objective report
+ * Or
+ * allow the user to download the csv
+ * format of generated program objective report
+ * and course general information(plus all the related learning objectives) report
+ */
+
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
@@ -6,13 +21,14 @@ require_once $CFG->dirroot.'/lib/tcpdf/tcpdf.php';
 require_once 'lib.php';
 
 /**
- * The form to display the tab for report information.
- * which will allow the user to preview or download the pdf
- * format of generated program objective report
- * Or
- * allow the user to download the csv
- * format of generated program objective report
- * and course general information(plus all the related learning objectives) report
+ * This is the report form class
+ * 
+ *@copyright 2016
+ *@license see the license file in the same folder
+ *
+ * reporting_form class works as the main class for display the report page and
+ * include all the functions of generating report in pdf, csv format
+ * 
  */
 class reporting_form extends moodleform {
 	/**
@@ -66,7 +82,12 @@ class reporting_form extends moodleform {
 	 /**
      * Ensure that the data the user entered is valid
      *
+     * @param object $data data object for validation
+     * @param object $files file object for validation
+     * 
      * @see lib/moodleform#validation()
+     * 
+     * @return $errors error message
      */
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
