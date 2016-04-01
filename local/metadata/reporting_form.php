@@ -1,4 +1,19 @@
 <?php
+/**
+ * reporting_form for local_metadata
+ *
+ *@copyright 2016 
+ *@license see the license file in the same folder
+ *@package local_metadata
+ *
+ * which will allow the user to preview or download the pdf
+ * format of generated program objective report
+ * Or
+ * allow the user to download the csv
+ * format of generated program objective report
+ * and course general information(plus all the related learning objectives) report
+ */
+
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
@@ -6,13 +21,14 @@ require_once $CFG->dirroot.'/lib/tcpdf/tcpdf.php';
 require_once 'lib.php';
 
 /**
- * The form to display the tab for report information.
- * which will allow the user to preview or download the pdf
- * format of generated program objective report
- * Or
- * allow the user to download the csv
- * format of generated program objective report
- * and course general information(plus all the related learning objectives) report
+ * This is the report form class
+ * 
+ *@copyright 2016
+ *@license see the license file in the same folder
+ *
+ * reporting_form class works as the main class for display the report page and
+ * include all the functions of generating report in pdf, csv format
+ * 
  */
 class reporting_form extends moodleform {
 	/**
@@ -66,7 +82,12 @@ class reporting_form extends moodleform {
 	 /**
      * Ensure that the data the user entered is valid
      *
+     * @param object $data data object for validation
+     * @param object $files file object for validation
+     * 
      * @see lib/moodleform#validation()
+     * 
+     * @return $errors error message
      */
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
@@ -146,7 +167,6 @@ class reporting_form extends moodleform {
 	function get_program_objective_by_course($courseid){
 		global $DB;
 		$programobjlist = array();
-		echo ($courseid);
 		$taginfos = $DB->get_records('programpolicytag', array('courseid'=>$courseid));
 		foreach ($taginfos as $taginfo){
 			$singleproobj = $DB->get_record('programobjectives', array('id'=>$taginfo->objectiveid));
@@ -223,7 +243,7 @@ class reporting_form extends moodleform {
 		$programobjectives = $DB->get_records('programobjectives');
 		//set a clean html
 		ob_start();
-		ob_end_clean();
+		//ob_end_clean();
 		$file = fopen("php://output", "w");
 		// send the column headers
 		fputcsv($file, array('name', 'course', 'session', 'assessment'));
@@ -236,6 +256,7 @@ class reporting_form extends moodleform {
 			$row = array($programobjective->objectivename,$courseno,$sessionno,$assessmentno);
 			fputcsv($file, $row);
 		}
+		
 		// output headers so that the file is downloaded rather than displayed
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=reports.csv');
@@ -244,6 +265,7 @@ class reporting_form extends moodleform {
 		header('Expires: 0');
 		exit();
 		fclose($file);
+		ob_end_flush();
 	}
 	
 	/**
@@ -297,6 +319,7 @@ class reporting_form extends moodleform {
 		header('Expires: 0');
 		exit();
 		fclose($file); 
+		
 	}
 }
 

@@ -1,4 +1,4 @@
-@local_metadata  @local_metadata_admin
+@local_metadata  @local_metadata_admin @local_metadata_admin_exclude
 Feature: Administrator exclude tab
 	In order to be able to exclude items from the syllabus
 	As an administrator
@@ -7,7 +7,9 @@ Feature: Administrator exclude tab
   Background:
     Given I log in as "admin"
     And I am on homepage
-    And I expand "Site administration" node
+    And I expand "Category administration" node
+	And I follow "My categories"
+	And I follow "Miscellaneous"
     And I follow "Manage Metadata"
     And I follow "Syllabus Configuration"
     
@@ -22,6 +24,7 @@ Feature: Administrator exclude tab
     And I press "Cancel"
     Then the following fields match these values:
         | Course_Description | 1 |
+        | Course_Readings | 0 |
         | Course_Objectives | 0 |
         | Grading | 1 |
         | Course_Sessions | 0 |

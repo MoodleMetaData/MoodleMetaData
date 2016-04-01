@@ -9,10 +9,12 @@ require_once $CFG->dirroot . '/lib/datalib.php';
 class categories_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; // Declare our globals for use
+		global $categoryId;
+		
 		$mform = $this->_form; // Tell this object to initialize with the properties of the Moodle form.
 		
 		$category_list = array();
-		$category_records = $DB->get_records('coursecategories', null, 'id');
+		$category_records = $DB->get_records('coursecategories', array('categoryid' => $categoryId));
 		foreach($category_records as $value){
 			if(is_null($value->node)){
 				$category_list[$value->id] = $value->categoryname;
@@ -21,15 +23,9 @@ class categories_form extends moodleform {
 			}
 			
 		}
-	
-		$faculty_list = array();
-		$faculty_records = $DB->get_records('course_categories');
-		foreach($faculty_records as $value){
-			$faculty_list[$value->id] = $value->name;
-		}
 		
 		$this->setup_categories($mform, $category_list);
-		$this->setup_upload_categories($mform, $faculty_list);
+		$this->setup_upload_categories($mform);
 	}
 	
 	/**
@@ -55,14 +51,15 @@ class categories_form extends moodleform {
 	 * @param object $mform		form definition
 	 * @return void
 	 */
-	private function setup_upload_categories($mform, $faculty_list){
+	private function setup_upload_categories($mform){
 		$mform->addElement('header', 'upload_category_header', get_string('upload_category_header', 'local_metadata'));
 		$mform->addHelpButton('upload_category_header', 'upload_category_header', 'local_metadata');
 		
 		$mform->addElement('text', 'category_label', get_string('category_label', 'local_metadata'));
 		$mform->setType('category_label', PARAM_TEXT);
+		//$mform->addRule('category_label', get_string('err_required'), 'required', null, 'server');
 		
-		$faculty_selection = $mform->addElement ('select', 'course_faculty', get_string ( 'course_faculty', 'local_metadata' ), $faculty_list);
+		//$faculty_selection = $mform->addElement ('select', 'course_faculty', get_string ( 'course_faculty', 'local_metadata' ), $faculty_list);
 		
 		$mform->addElement('filepicker', 'temp_categories', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
 		$mform->addElement('submit', 'submit_category', get_string('submit_category', 'local_metadata'));
@@ -77,6 +74,7 @@ class categories_form extends moodleform {
 	 */
 	private function submit_category($data, $mform, $files){
 		global $CFG, $DB, $USER;
+		global $categoryId;
 		
 		if(!empty($files)){
 			$file = reset($files); 
@@ -84,7 +82,7 @@ class categories_form extends moodleform {
 			$all_rows = explode("\n", $content);
 			
 			$category_label = new stdClass();
-			$category_label->categoryid = $data->course_faculty;
+			$category_label->categoryid = $categoryId;
 			$category_label->categoryname = $data->category_label;
 			$insert_category_label = $DB->insert_record('coursecategories', $category_label, true, false);
 			
@@ -92,7 +90,7 @@ class categories_form extends moodleform {
 				if($row != ''){
 					$category_info = new stdClass();
 					$category_info->categoryname = $row;
-					$category_info->categoryid = $data->course_faculty;
+					$category_info->categoryid = $categoryId;
 					$category_info->node = $insert_category_label;
 					$insert_category = $DB->insert_record('coursecategories', $category_info, true, false);
 				}

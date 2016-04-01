@@ -3,10 +3,11 @@ require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
+
 class tag_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
-		global $course, $courseId, $objectiveId, $groupId;
+		global $course, $courseId, $objectiveId, $groupId, $programId;
 		
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 		
@@ -25,7 +26,7 @@ class tag_form extends moodleform {
 		if($objectiveId != -1) {
 			// Dropdown select for objective groups
 			$objoptions = array();
-			$groupobj = $DB->get_records ( 'objectivegroups', array ());
+			$groupobj = $DB->get_records ( 'objectivegroups', array ('parent' => $programId));
 			foreach($groupobj as $record) {
 				$objoptions[$record->id] = $record->groupname;
 			}
@@ -64,6 +65,34 @@ class tag_form extends moodleform {
 				
 			$mform->addElement('submit', 'admdelobjective', get_string('admdelobjective', 'local_metadata'));
 		}
+	}
+	
+	/**
+	 * Ensure that the data the user entered is valid.
+	 * @see lib/moodleform#validation()
+	 */
+	function validation($data, $files) {
+		$errors = parent::validation($data, $files);
+	
+		if (!empty($data['admselcourse'])) {
+			if(empty($data['admobj_select'])) {
+				$errors['admobj_select'] = get_string('err_required', 'local_metadata');
+			}
+		} else if (!empty($data['group_sel'])) {
+			if(empty($data['group_select'])) {
+				$errors['group_select'] = get_string('err_required', 'local_metadata');
+			}
+		} else if (!empty($data['admaddobjective'])) {
+			if(empty($data['admpro_select'])) {
+				$errors['admpro_select'] = get_string('err_required', 'local_metadata');
+			}
+		} else if (!empty($data['admdelobjective'])) {
+			if(empty($data['admpro_current'])) {
+				$errors['admpro_current'] = get_string('err_required', 'local_metadata');
+			}
+		}
+	
+		return $errors;
 	}
 	
 	/**

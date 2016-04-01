@@ -12,19 +12,21 @@ require_once 'lib.php';
  *       Will have the value be -1
  *
  *  NOTE: THE PRIMARY KEY CANNOT BE STORED AS ID IN THE FORM. Instead, should be $tableName.'_id'
- *       EG: coursesession_id
- *       Will be loaded into 'id' for each element
+ *       - EG: coursesession_id, which will be loaded into 'id' for each element
  *
  *  For an example, see session_form::save_data
  *
  */
 class recurring_element_parser {
     /**
-     * @param string $tableName should be the table 
-     * @param string $repeatedHiddenName should be the name given to the repeating group. Stores the number of elements
-     * @param array $allChangedAttributes array containing the ids of all elements that the user is able to edit. Do not need to be saved by this parser, but will be loaded from the given data
+     * Constructs the class
+     *
+     * @param string $tableName table name 
+     * @param string $repeatedHiddenName name given to the repeating group. Stores the number of elements
+     * @param array $allChangedAttributes array containing the ids of all elements that the user is able to edit. Do not need to be saved by this parser, but will be loaded from the given data.
      *      NOTE: If the table can be deleted, include the value that will store that
-     * @param array $convertedAttributes optional dictionary. Is to 
+     * @param array $convertedAttributes optional array that should map from an element to a function that should be performed on that element.
+     *      An example would be for 
      *
      */
     function __construct($tableName, $repeatedHiddenName, $allChangedAttributes, $convertedAttributes=array()) {
@@ -36,7 +38,7 @@ class recurring_element_parser {
         $this->convertedAttributes = $convertedAttributes;
     }
 
-    /*
+    /**
      * Will parse the data given to the constructor (from a form), and return tuples for elements from data
      *
      * @param object $data value returned by the related form. Must NOT be null
@@ -84,7 +86,7 @@ class recurring_element_parser {
         return $sessions;
     }
 
-    /*
+    /**
      * If the given tuple is in the database, it will be removed. Otherwise, will not do any action
      *
      * @param object $tuple tuple that is to be removed from database.
@@ -98,7 +100,7 @@ class recurring_element_parser {
         }
     }
 
-    /*
+    /**
      * Save all of the given tuples to the database
      *      For new elements, will update their ['id'] with the index they are inserted into
      *
@@ -126,11 +128,12 @@ class recurring_element_parser {
         }
     }
     
-    /*
+    /**
      * Checks to see if the tuple is in the database. According to the assumptions listed in the class, expects a value to not
      *  be in the database if the value 'id' is null or equal to -1
      *
      * @param object $tuple tuple to check and see if it is in the database
+     * @return boolean if the tuple is in the database, based on the id being set to a valid value
      *
      */
     private function isInDatabase($tuple) {

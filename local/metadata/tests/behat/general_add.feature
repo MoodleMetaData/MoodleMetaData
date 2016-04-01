@@ -8,6 +8,14 @@ Feature: General tab
     Given the following "courses" exist:
       | fullname | shortname | category |
       | Course 1 | C_shortname | 0 |
+	And I create the following course categories for faculty "Miscellaneous":
+	  | categoryname |
+	  | Category 1 |
+	  | Category 2 |
+	And I create the following graduate attributes:
+	  | attribute |
+	  | At1 |
+	  | At2 |
 	And I log in as "admin"
     And I am on homepage
     And I follow "Course 1"
@@ -16,11 +24,13 @@ Feature: General tab
 	
   Scenario: Filling out all required and optional fields.
 	Given I set the following fields to these values:
-	  | course_faculty | Some faculty |
+	  | course_category | Category 1 |
+	  | course_year | 2018 |
+	  | course_term | Fall |
 	  | course_email | someone@ualberta.ca |
 	  | course_phone | 7809999999 |
 	  | course_office | CAB 411 |
-	  | course_officeh | 3:00pm-4:00pm |
+	  | default_officeh | "" |
 	  | course_description[text] | This is a new description |
 	  | course_assessment | 1 |
 	  | course_session | 2 |
@@ -41,11 +51,13 @@ Feature: General tab
 	When I press "Save general information"
 	And I wait to be redirected
 	Then the following fields match these values:
-	  | course_faculty | Some faculty |
+	  | course_category | Category 1 |
+	  | course_year | 2018 |
+	  | course_term | Fall |
 	  | course_email | someone@ualberta.ca |
 	  | course_phone | 7809999999 |
 	  | course_office | CAB 411 |
-	  | course_officeh | 3:00pm-4:00pm |
+	  | default_officeh |  |
 	  | course_description[text] | This is a new description |
 	  | course_assessment | 1 |
 	  | course_session | 2 |

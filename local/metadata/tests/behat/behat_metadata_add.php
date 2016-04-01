@@ -7,14 +7,81 @@ use Behat\Gherkin\Node\TableNode as TableNode;
     
 class behat_metadata_add extends behat_base {
     
+	/**
+     * Creates course categories.
+     *
+     * @Given /^I create the following course categories for faculty "([^"]*)":$/
+     *
+     * @param TableNode $data Each row will be a course category information. Write out:
+	 * 		| categoryname |
+	 * 		| Course category name |
+     * @param string $faculty_name The name from course_categories table
+     *
+     * @return Given[]
+     */
+	public function i_create_course_categories_for_faculty($faculty_name, TableNode $table){
+		global $DB;
+		
+		if (!$faculty_id = $DB->get_field('course_categories', 'id', array('name' => $faculty_name))) {
+            throw new Exception('The specified course category with name "' .$faculty_name. '" does not exist');
+        }
+        
+		$initrecord = new stdClass();
+		$initrecord->categoryid = $faculty_id;
+		$initrecord->categoryname = 'Group';
+		$parent_id = $DB->insert_record('coursecategories', $initrecord, true, false);
+		
+        foreach ($table->getHash() as $category_info) {
+            $record = array();
+			$record['categoryid'] = $faculty_id;
+			$record['categoryname'] = $category_info['categoryname'];
+			$record['node'] = $parent_id;
+			
+            // Add to coursecategories
+            $id = $DB->insert_record('coursecategories', $record);
+        }
+        
+        return array();
+	}
+
+	/**
+     * Creates graduate attributes for specific course info.
+     *
+     * @Given /^I create the following graduate attributes:$/
+     *
+     * @param TableNode $data Each row will be a graduate attribute information. Write out:
+	 * 		| attribute |
+	 * 		| Graduate attribute name |
+     *
+     * @return Given[]
+     */
+	public function i_create_graduate_attributes(TableNode $table){
+		global $DB;
+        
+		$initrecord = new stdClass();
+		$initrecord->attribute = 'Group';
+		$parent_id = $DB->insert_record('graduateattributes', $initrecord, true, false);
+		
+        foreach ($table->getHash() as $gradatt_info) {
+            $record = array();
+			$record['attribute'] = $gradatt_info['attribute'];
+			$record['node'] = $parent_id;
+			
+            // Add to graduateattributes
+            $id = $DB->insert_record('graduateattributes', $record);
+        }
+        
+        return array();
+	}
+	
     /**
      * Creates general course information.
      *
      * @Given /^I create the following general info for course "([^"]*)":$/
      *
      * @param TableNode $data Each row will be a course information. Write out:
-	 * 		| categoryid | coursedescription | teachingassumption | coursefaculty | assessmentnumber | sessionnumber |
-	 * 		| Category id | Description | Teaching assumption | Faculty name | number | number |
+	 * 		| teachingassumption | courseterm | courseyear | assessmentnumber | sessionnumber | coursedescription |
+	 * 		| Teaching Assumption | Course Term | Course Year | Number of assessment | Number of session | Course Description |
      * @param string $course_short The short name of the course
      *
      * @return Given[]
@@ -22,20 +89,32 @@ class behat_metadata_add extends behat_base {
 	public function i_create_general_info_for_course($course_short, TableNode $table){
 		global $DB;
 		
-		if (!$course_id = $DB->get_field('course', 'id', array('shortname' => $course_short))) {
+		if (!$course = $DB->get_record('course', array('shortname' => $course_short))) {
             throw new Exception('The specified course with shortname "' . $course_short . '" does not exist');
         }
+		
+		if (!$categories = $DB->get_records('coursecategories')) {
+            throw new Exception('No record in coursecategories table.');
+        }
         
+		$cat = 0;
+		foreach($categories as $value){
+			$cat = $value->id;
+		}
+		
         foreach ($table->getHash() as $course_info) {
             $record = array();
-            $record['courseid'] = $course_id;
+            $record['courseid'] = $course->id;
             $record['coursename'] = $course_short;
-			$record['categoryid'] = $course_info['categoryid'];
-			$record['coursedescription'] = $course_info['coursedescription'];
+			$record['coursecategory'] = $cat;
 			$record['teachingassumption'] = $course_info['teachingassumption'];
-            $record['coursefaculty'] = $course_info['coursefaculty'];
+			$record['courseterm'] = $course_info['courseterm'];
+			$record['courseyear'] = $course_info['courseyear'];
 			$record['assessmentnumber'] = $course_info['assessmentnumber'];
 			$record['sessionnumber'] = $course_info['sessionnumber'];
+			$record['coursedescription'] = $course_info['coursedescription'];
+            $record['facultyid'] = $course->category;
+
 			
             // Add to courseinfo
             $id = $DB->insert_record('courseinfo', $record);
@@ -276,5 +355,59 @@ class behat_metadata_add extends behat_base {
         
         return $steps;
     }
+	
+    /**
+     * Setup the syllabus policy table with one faculty and university policy record.
+     *
+     * @Given /^the faculty and university policy exist$/
+     *
+     * @return Given[]
+     */	
+	public function the_faculty_and_university_policy_exist(){
+		global $DB;
+		
+		$univ_policy  = new stdClass();
+		$univ_policy->category = -1;
+		$univ_policy->policy = "University policy";
+		$insert_univ_policy = $DB->insert_record('syllabuspolicy', $univ_policy);
+		
+		$faculty_policy  = new stdClass();
+		$faculty_policy->category = 1;
+		$faculty_policy->policy = "Faculty policy";
+		$insert_faculty_policy = $DB->insert_record('syllabuspolicy', $faculty_policy);
+		
+		return array();
+	}
+	
+    /**
+     * Setup the default program objectives.
+     *
+     * @Given /^the default program objectives exist$/
+     *
+     * @return Given[]
+     */	
+	public function the_default_program_objectives_exist(){
+		global $DB;
+		
+		// objective type
+		$group = new stdClass();
+		$group->typename = "Group";
+		$group->category = 1;
+		$insert_objectivetypes = $DB->insert_record('objectivetypes', $group, true, false);
+		
+		// objective group
+		$main_level  = new stdClass();
+		$main_level->groupname = "1";
+		$main_level->parent = $insert_objectivetypes;
+		$insert_objectivegroups = $DB->insert_record('objectivegroups', $main_level, true, false);
+		
+		// program objectives
+		$program = new stdClass();
+		$program->objectivename = "Parent";
+		$program->objectivegroup = $insert_objectivegroups;
+		$insert_program = $DB->insert_record('programobjectives', $program, true, false);
+		
+		return array();
+	}
 }
 ?>

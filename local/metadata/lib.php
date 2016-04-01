@@ -1,7 +1,29 @@
 <?php
 function local_metadata_extends_settings_navigation($settingsnav, $context) {
     global $CFG, $PAGE, $USER;
- 
+ 	
+    // Setup navigation for Admin metadata
+    if (is_null($PAGE->course)) {
+    	//return;
+    } else  {
+    if($categorynode = $settingsnav->find('categorysettings', null)) {
+	    $url = new moodle_url('/local/metadata/admview_knowledge.php', array('categoryid' => $PAGE->category->id));
+	    	
+	    $foonode = navigation_node::create(
+	    		get_string('manage_pluginname', 'local_metadata'),
+	    		$url,
+	    		navigation_node::NODETYPE_LEAF,
+	    		'metadata',
+	    		'metadata',
+	    		new pix_icon('i/report', ''));
+	    if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
+	    	$foonode->make_active();
+	    }
+	    $categorynode->add_node($foonode);
+    	//$categorynode->add(get_string('manage_pluginname', 'local_metadata'), $url, self::TYPE_SETTING, null, 'permissions', new pix_icon('i/permissions', ''));
+	}
+    }
+    
     // Only add this settings item on non-site course pages.
     if (!$PAGE->course or $PAGE->course->id == 1) {
         return;
@@ -33,6 +55,11 @@ function local_metadata_extends_settings_navigation($settingsnav, $context) {
 
 }
 
+/**
+ * Will return the paramater for course id
+ *
+ * @return int course id
+ */
 function get_course_id() {
     return required_param('id', PARAM_INT);
 }
@@ -95,8 +122,8 @@ function create_insview_url($form, $courseId) {
     return new moodle_url('/local/metadata/insview_'.$form.'.php', array('id' => $courseId));
 }
 
-function create_manage_url($form) {
-	return new moodle_url('/local/metadata/admview_'.$form.'.php');
+function create_manage_url($form, $categoryId) {
+	return new moodle_url('/local/metadata/admview_'.$form.'.php', array('categoryid' => $categoryId));
 }
 
 function get_teaching_strategies() {
@@ -111,7 +138,7 @@ function get_teaching_strategies() {
 function get_session_types() {
     return array('lecture', 'lab', 'seminar');
 }
-    
+
 /**
  * Will return all of the length options
  *
@@ -120,23 +147,40 @@ function get_session_types() {
 function get_session_lengths() {
     return array('50 minutes', '80 minutes', '110 minutes', '140 minutes', '170 minutes');
 }
-    
-function get_assessment_type($value){
-	$assessmentTypeArray = array();
-	$assessmentTypeArray[0] = "Exam";
-	$assessmentTypeArray[1] = "Assignment";
-	$assessmentTypeArray[2] = "Lab";
-	$assessmentTypeArray[3] = "Lab Exam";
-	
-	return $assessmentTypeArray[$value];
+
+function get_assessment_types() {
+    return array('Exam', 'Assignment', 'Participation', 'Other');
 }
 
+function get_exam_types() {
+    return array('Multiple choice', 'Written', 'Written and multiple choice', 'Other');
+}
+
+/**
+ * Will return the paramater for objective id
+ * 
+ * @return int objective id
+ */
 function get_objective_id() {
 	return optional_param('obj', -1, PARAM_INT);
 }
 
+/**
+ * Will return the paramater for group id
+ *
+ * @return int group id
+ */
 function get_group_id() {
 	return optional_param('grp', 1, PARAM_INT);
+}
+
+/**
+ * Will return the paramater for program id
+ *
+ * @return int program id
+ */
+function get_program_id() {
+	return required_param('program', PARAM_INT);
 }
 
 /**
@@ -161,4 +205,7 @@ function redirect_to_anchor($anchorname, $nextelement, $Y){
 			</script>';
 }
 
+function get_category_id() {
+	return required_param('categoryid', PARAM_INT);
+}
 ?>

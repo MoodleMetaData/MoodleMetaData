@@ -15,33 +15,33 @@ require_login();
 require_once($CFG->dirroot.'/local/metadata/course_select_form.php');
     
 // Set up page information
-$PAGE->set_context(context_system::instance());
+$categoryId = get_category_id();
+$PAGE->set_category_by_id($categoryId);
+
+$PAGE->set_context(context_coursecat::instance($categoryId));
 $PAGE->set_pagelayout('standard');
-$PAGE->set_title(get_string('ins_pluginname', 'local_metadata'));
+$PAGE->set_title(get_string('admview_pluginname', 'local_metadata'));
 $heading = "Program Learning Assessment";
 $PAGE->set_heading($heading);
 
 // Create url
-$knowledge_url = create_manage_url('knowledge');
-$policy_url = create_manage_url('policy');
-$course_url = create_manage_url('course');
-$exclude_url = create_manage_url('exclude');
-$reporting_url = create_manage_url('reporting');
-$categories_url = create_manage_url('categories');
+$knowledge_url = create_manage_url('knowledge', $categoryId);
+$policy_url = create_manage_url('policy', $categoryId);
+$course_url = create_manage_url('course', $categoryId);
+$exclude_url = create_manage_url('exclude', $categoryId);
+$reporting_url = create_manage_url('reporting', $categoryId);
+$categories_url = create_manage_url('categories', $categoryId);
 
 $PAGE->set_url($course_url);
 $PAGE->requires->css('/local/metadata/insview_style.css');
 
-
-
 // Create forms
 $course_form = new course_select_form($course_url);
 
-
 // Submit the data
 if ($data = $course_form->get_data()) {
-	$courseid = $course_form->get_course_id($data);
-	$tag_url = new moodle_url('/local/metadata/admview_tag.php', array('id' => $courseid));
+	$id = $course_form->get_course_id($data);
+	$tag_url = new moodle_url('/local/metadata/admview_tag.php', array('categoryid' => $categoryId,'id' => $id['course'], 'program' => $id['group']));
 	redirect($tag_url);
 } 
 

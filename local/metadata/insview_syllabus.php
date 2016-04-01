@@ -37,17 +37,6 @@ $PAGE->requires->css('/local/metadata/insview_style.css');
 // Create forms
 $syllabus_form = new syllabus_form($syllabus_url);
 
-// Case where they cancelled the form. Just redirect to it, to reset values
-if ($syllabus_form->is_cancelled()) {
-    redirect($syllabus_url);
-}
-
-// Submitted the data
-if ($data = $syllabus_form->get_data()) {
-    //syllabus_form::save_data($data);
-    //print_object($data);
-    //redirect($syllabus_url);
-}
 
 echo $OUTPUT->header();
 ?>

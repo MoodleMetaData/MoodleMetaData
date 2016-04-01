@@ -6,12 +6,14 @@ require_once $CFG->dirroot.'/lib/datalib.php';
 class policy_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER;
+		global $categoryId;
+		
 		$pform = $this->_form;
 		
 		//Form Elements
 		// Rich text editor
 		$defaulttext = '';
-		if($exists = $DB->get_record('syllabuspolicy', array ('category' => 1))) {
+		if($exists = $DB->get_record('syllabuspolicy', array ('category' => $categoryId))) {
 			$defaulttext = $exists->policy;
 		}
 		
@@ -31,11 +33,18 @@ class policy_form extends moodleform {
 	} */
 	
 	
+	/**
+	 * Save the policy from the form into the database
+	 * @param object $data the data from the form
+	 * @return void
+	 */
 	public static function save_data($data) {
 		global $DB, $CFG, $USER;
+		global $categoryId;
+		
 		$policyInfo = new stdClass();
 		
-		$policyInfo->category = 1;
+		$policyInfo->category = $categoryId;
 		$policyInfo->policy = $data->policy_editor['text'];
 		
 		if ($existsRecord = $DB->get_record('syllabuspolicy', array('category' => $policyInfo->category))) {
