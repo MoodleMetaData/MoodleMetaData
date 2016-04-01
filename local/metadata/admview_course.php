@@ -1,4 +1,8 @@
 <?php
+/**
+ * This is the page that allows administrators and managers to select the
+ * course that they wish to tag with progam objectives.
+ */
 global $PAGE, $CFG, $DB, $USER;
 require_once('../../config.php');
 require_once 'lib.php';

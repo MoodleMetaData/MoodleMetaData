@@ -1,8 +1,16 @@
 <?php
+/**
+ * Creates the form for uploading and maintaining sets of program objectives
+ */
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
+/**
+ * Generates the form.
+ * @author Owner
+ * 
+ */
 class knowledge_form extends moodleform {
 	/**
 	 * The form to display the tab for program objectives.
@@ -64,7 +72,7 @@ class knowledge_form extends moodleform {
 	
 	/**
 	 * Upload program objectives.
-	 * @param $mform	form definition
+	 * @param object $mform	form definition
 	 * @return void
 	 */
 	private function upload_program_obj($mform){

@@ -1,9 +1,22 @@
-<?php 
+<?php
+/**
+ * Generates the form to allow for the selection of course and program objective sets
+ * to be tagged by the administrator or manager.
+ */
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
+/**
+ * Generates the form.
+ * @author Owner
+ * 
+ */
 class course_select_form extends moodleform {
+	/**
+	 * Defines the form
+	 * @return void
+	 */
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $categoryId;
@@ -53,8 +66,8 @@ class course_select_form extends moodleform {
 	
 	/**
 	 * Returns the course ID of the selected element
-	 * @param $data  the data from the form
-	 * @return the course ID from course selected
+	 * @param object $data  the data from the form
+	 * @return int the course ID from course selected
 	 */
 	public static function get_course_id($data) {
 		global $CFG, $DB, $USER;

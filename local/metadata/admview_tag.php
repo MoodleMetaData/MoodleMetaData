@@ -1,16 +1,15 @@
 <?php
+/**
+ * This page allows for the tagging of program objectives to course objectives.
+ */
 global $PAGE, $CFG, $DB, $USER;
 require_once('../../config.php');
 require_once 'lib.php';
-
-
 
 // Check that they can access
 require_login();
 
 // TODO: Get permissions working
-
-
 //require_capability('local/metadata:ins_view', $context);
 
 require_once($CFG->dirroot.'/local/metadata/tag_form.php');

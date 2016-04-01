@@ -1,13 +1,22 @@
 <?php 
+/**
+ * Allows Administrators to tag program specific learning objectives to learning objectives that Instructors have posted. 
+* You must tag objectives before you are able to generate reports. 
+ */
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
 /**
-* Allows Administrators to tag program specific learning objectives to learning objectives that Instructors have posted. 
-* You must tag objectives before you are able to generate reports. 
-*/
+ * Generates the form.
+ * @author Owner
+ *
+ */
 class tag_form extends moodleform {
+	/**
+	 * Defines the form
+	 * @return void
+	 */
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		global $course, $courseId, $objectiveId, $groupId, $programId;
@@ -105,9 +114,9 @@ class tag_form extends moodleform {
 	}
 	
 	/**
-	 * Grabs the objective ID for url param
-	 * @param $data data from the form
-	 * @return objective id
+	 * Returns the objective ID for url param
+	 * @param object $data data from the form
+	 * @return int
 	 */
 	public static function get_obj($data){
 		global $CFG, $DB, $USER;
@@ -115,9 +124,9 @@ class tag_form extends moodleform {
 	}
 	
 	/**
-	 * Grabs the group ID for url param
-	 * @param $data data from the form
-	 * @return objective id
+	 * Returns the group ID for url param
+	 * @param object $data data from the form
+	 * @return int
 	 */
 	public static function get_grp($data){
 		global $CFG, $DB, $USER;
@@ -126,7 +135,7 @@ class tag_form extends moodleform {
 	
 	/**
 	 * Saves the program objective links to the course learning objectives
-	 * @param $data form data
+	 * @param object $data form data
 	 * @return null
 	 */
 	public static function add_tags($data) {
@@ -145,7 +154,7 @@ class tag_form extends moodleform {
 	
 	/**
 	 * Removes program objective links from course learning objectives
-	 * @param $data form data
+	 * @param object $data form data
 	 * @return null
 	 */
 	public static function remove_tags($data){

@@ -1,8 +1,22 @@
 <?php
+/**
+ * Generates the fom for the creation and maitnence of University specific policy to be added
+ * to the end of generated syllabi.
+ */
 require_once '../../config.php';
 require_once $CFG->dirroot . '/lib/formslib.php';
 require_once $CFG->dirroot . '/lib/datalib.php';
+
+/**
+ * Generates the form.
+ * @author Owner
+ *
+ */
 class university_form extends moodleform {
+	/**
+	 * Defines the form
+	 * @return void
+	 */
 	function definition() {
 		global $CFG, $DB, $USER;
 		$pform = $this->_form;

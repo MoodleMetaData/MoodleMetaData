@@ -1,4 +1,7 @@
 <?php
+/**
+ * Renders the page for the creation of Univeristy specific policy
+ */
 global $PAGE, $CFG, $DB, $USER;
 require_once('../../config.php');
 require_once 'lib.php';

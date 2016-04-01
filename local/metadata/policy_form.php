@@ -1,11 +1,21 @@
 <?php
+/**
+ * Generates the form for uploading faculty specific policy for syllabus generation.
+ */
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
+
 /**
-* Allows the Administrator to Declare program-level policy to be included into the generated Syllabi.
-*/
+ * Generates the form.
+ * @author Owner
+ *
+ */
 class policy_form extends moodleform {
+	/**
+	 * Defines the parameters of the form
+	 * @return void
+	 */
 	function definition() {
 		global $CFG, $DB, $USER;
 		global $categoryId;

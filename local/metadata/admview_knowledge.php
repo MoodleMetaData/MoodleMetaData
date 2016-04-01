@@ -1,4 +1,7 @@
 <?php
+/**
+ * This page allows for the upload and maitnence of sets of program objectives.
+ */
 global $PAGE, $CFG, $DB, $USER;
 require_once('../../config.php');
 require_once 'lib.php';

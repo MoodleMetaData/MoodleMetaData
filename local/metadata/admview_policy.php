@@ -1,4 +1,8 @@
 <?php
+/**
+ * This page allows for the creation and maitnence of faculty policy to be appended to the end
+ * of generated syllabi.
+ */
 global $PAGE, $CFG, $DB, $USER;
 require_once('../../config.php');
 require_once 'lib.php';
