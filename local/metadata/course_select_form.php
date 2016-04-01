@@ -6,17 +6,12 @@ require_once $CFG->dirroot.'/lib/datalib.php';
 class course_select_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
+		global $categoryId;
+		
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
 		
-		// Set course category
-		//$coursecategory = 1;
-		
 		// Pull all courses in category
-		/*
-		$table = 'courseinfo';
-		$select = $DB->sql_compare_text('categoryid')." = '".$coursecategory."'";
-		$courseall = $DB->get_records_select($table, $select); */
-		$courseall = $DB->get_records('courseinfo', array());
+		$courseall = $DB->get_records('courseinfo', array('facultyid' => $categoryId));
 		
 		$courselist = array();
 		foreach($courseall as $record) {

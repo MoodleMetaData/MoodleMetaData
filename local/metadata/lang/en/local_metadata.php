@@ -5,6 +5,7 @@ $string['menuoption'] = 'Moodle Metadata';
 $string['ins_pluginname'] = 'Instructor Moodle Metadata';
 $string['admin_pluginname'] = 'Moodle Metadata - University Policy';
 $string['manage_pluginname'] = 'Manage Metadata';
+$string['admview_pluginname'] = 'Administrator Moodle Metadata';
 
 // Error messages
 $string['err_alphanumeric']='You must enter only letters or numbers here.';

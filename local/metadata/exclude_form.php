@@ -67,9 +67,9 @@ class exclude_form extends moodleform {
 	 */
 	private function set_excluded_item_defaults($mform) {
         global $DB;
+        global $categoryId;
         
-		// TODO: Properly get the category
-        $category_id = 1;
+        $category_id = $categoryId;
         
         if ($requiredItems = $DB->get_records("excludedelements", array('category'=>$category_id), '', 'id, header')) {
             
@@ -90,9 +90,9 @@ class exclude_form extends moodleform {
      */
     public function save_data($data) {
         global $DB;
+        global $categoryId;
         
-        // TODO: Properly get the category
-        $category_id = 1;
+        $category_id = $categoryId;
         
         // Clear the table for the category
         $DB->delete_records('excludedelements', array('category'=>$category_id));
