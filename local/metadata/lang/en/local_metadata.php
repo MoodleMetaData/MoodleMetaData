@@ -1,9 +1,9 @@
 <?php
 
 $string['pluginname'] = 'Moodle Metadata';
-$string['menuoption'] = 'Extra Plug-in';
+$string['menuoption'] = 'Moodle Metadata';
 $string['ins_pluginname'] = 'Instructor Moodle Metadata';
-$string['admin_pluginname'] = 'Admin Moodle Metadata';
+$string['admin_pluginname'] = 'Moodle Metadata - University Policy';
 $string['manage_pluginname'] = 'Manage Metadata';
 
 // Error messages

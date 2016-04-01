@@ -6,6 +6,9 @@ require_once 'lib.php';
 
 // Check that they can access
 require_login();
+if(!is_siteadmin()) {
+	print_error('nopermissions', 'error', '', '');
+}
 
 require_once($CFG->dirroot.'/local/metadata/university_policy.php');
 
