@@ -7,9 +7,29 @@ require_once 'lib.php';
 require_once 'metadata_form.php';
 require_once 'recurring_element_parser.php';
 
+/**
+ * The form to display the tab for assessments
+ *
+ * Requires the argument 'assessments', which should be the array of assessments
+ *   for the current course loaded from the database
+ *
+ *
+ */
 class assessment_form extends metadata_form {
+    /**
+     * @var int NUM_PER_PAGE Number of assessments to be displayed per page
+     */
     const NUM_PER_PAGE = 10;
+    /**
+     * @var int DATE_FROM_FROM_FILE Format used when parsing the data from upload
+     */
+    const DATE_FROM_FROM_FILE = 'Y-m-d';
     
+    /**
+     * Will set up the form elements
+     *
+     * @see lib/moodleform#definition()
+     */
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
 		$mform = $this->_form; //Tell this object to initialize with the properties of the Moodle form.
@@ -20,7 +40,7 @@ class assessment_form extends metadata_form {
         $assessmentCount = count($assessments);
         $displayed_count = count($subset_included);
         
-		$this -> add_upload(200, $assessmentCount);
+		$this -> add_upload($assessmentCount);
 		$this -> add_assessment_template($displayed_count);
         
         $this->add_page_buttons($page_num, $assessmentCount);
@@ -29,15 +49,22 @@ class assessment_form extends metadata_form {
 		$this->populate_from_db($subset_included);
 		
 	}
-	    /*
-     * Will determine if the sessions were uploaded
+	
+    /**
+     * Will determine if the assessments were uploaded
      *
      * @return boolean for if use wanted to upload file
      */
-    public function sessions_were_uploaded() {
+    public function assessments_were_uploaded() {
         return $this->_form->getSubmitValue('upload_assessments') !== null;
     }
-	    public function upload_assessments() {
+    
+	/**
+     * Will use the csv file submitted by the instructor to create all of the assessments
+     *   Note that it does clear all existing data in the assessment related tables first
+     *
+     */
+    public function upload_assessments() {
 		global $course, $DB;
 		
         $files = $this->get_draft_files('uploaded_assessments');
@@ -48,9 +75,9 @@ class assessment_form extends metadata_form {
             $all_rows = explode("\n", $content);
             
             $courseid = get_course_id();
-            // Need to delete everything related to course sessions, and each session
+            // Need to delete everything related to course assessments, and each assessment
             foreach ($this->_customdata['assessments'] as $assessment) {
-                $this->delete_all_relations_to_session($assessment->id);
+                $this->delete_all_relations_to_assessment($assessment->id);
             }
             
             $DB->delete_records('courseassessment', array('courseid'=>$courseid));
@@ -58,20 +85,37 @@ class assessment_form extends metadata_form {
             
             foreach ($all_rows as $row) {
                 if ($row != "") {
-                    $this->parse_and_save_session_row($row, $courseid);
+                    $this->parse_and_save_assessment_row($row, $courseid);
                 }
             }
         }
     }
     
-	public function rubrik_was_uploaded(){
+    /**
+     * Will determine if the rubric were uploaded
+     *
+     * @return boolean for if user wanted to upload file
+     */
+	public function rubric_was_uploaded(){
 		return $this->_form->getSubmitValue(gradingDescription_uploaded) !== null;
 	}
-	public function upload_rubrik(){
+    
+    /**
+     * Will save the file the user added for the rubric
+     *
+     */
+	public function upload_rubric(){
 		$file = $this -> save_stored_file('gradingDescription_uploaded');
-		
 	}
-    private function parse_and_save_session_row($row, $courseid) {
+    
+    /**
+     * Will use given line csv file submitted by the instructor to create an assessment
+     *
+     * @param string $row The current row of the csv file being operated on
+     * @param integer $courseid The id for the course this assessment will be added to
+     *
+     */
+    private function parse_and_save_assessment_row($row, $courseid) {
         global $DB;
         // Parse the row
         $row = str_getcsv($row);
@@ -84,7 +128,7 @@ class assessment_form extends metadata_form {
         $data['description'] = $row[3];
         $data['gdescription'] = $row[4];
         
-        $date = DateTime::createFromFormat(session_form::DATE_FROM_FROM_FILE, $row[5]);
+        $date = DateTime::createFromFormat(assessment_form::DATE_FROM_FROM_FILE, $row[5]);
         if (is_object($date)) {
             $data['assessmentduedate'] = $date->getTimestamp();
         }
@@ -95,11 +139,18 @@ class assessment_form extends metadata_form {
         }
         
         
-        // Then, save the session and get ids
+        // Then, save the assessment and get ids
         $id = $DB->insert_record('courseassessment', $data);
         
     }
     
+    /**
+     *  Will set up a repeating template, with elements for each piece of required data
+     *
+     *  Does not set defaults for the elements.
+     *
+     *  @param int $assessmentCount number of assessments that have been created for the course
+     */
 	function add_assessment_template($assessmentCount){
 		
 		$mform = $this->_form;
@@ -131,7 +182,6 @@ class assessment_form extends metadata_form {
 		$elementArray[] = $mform -> createElement('text', 'assessmentname', get_string('assessment_title', 'local_metadata'));
 		
 		
-		//$elementArray[] = $mform ->createElement('selectyesno', 'isexam', get_string('assessment_isexam', 'local_metadata'));
 		$elementArray[] = $mform -> createElement('select','type', get_string('assessment_type','local_metadata'), get_assessment_types(), '');
 		$elementArray[] = $mform -> createElement('text', 'assessmentprof', get_string('assessment_prof', 'local_metadata'));
         
@@ -146,13 +196,6 @@ class assessment_form extends metadata_form {
 		
 		
 		$elementArray[] = $mform->createElement('textarea', 'description', get_string('assessment_description', 'local_metadata'));
-		//$mform->addRule('description', get_string('required'),'required', null, 'client');
-		
-				// For Testing Purposes, Probably should be replaced with db calls
-
-		//REPLACE WITH DB CALLS
-
-		
 	
 		
 		$elementArray[] = $mform -> createElement('filepicker', 'gradingDescription_uploaded', get_string('assessment_grading_upload', 'local_metadata'), null, array('maxbytes' => 2000, 'accepted_types' => '*'));
@@ -195,13 +238,17 @@ class assessment_form extends metadata_form {
 		
 	}
     
+    /**
+     *  This function is used for deleteing an assessment.
+     *
+     */
      function definition_after_data() {
         parent::definition_after_data();
         $mform = $this->_form;
         
         $numRepeated = $mform->getElementValue('assessment_list');
         
-        // Go through each session, and delete elements for ones that should be deleted
+        // Go through each assessment, and delete elements for ones that should be deleted
         for ($key = 0; $key < $numRepeated; ++$key) {
             $index = '['.$key.']';
             $deleted = $mform->getSubmitValue('delete_assessment'.$index);
@@ -247,12 +294,29 @@ class assessment_form extends metadata_form {
 		if(isset($_POST['assessment_list_add_element'])) redirect_to_anchor('assessment', 'id_assessment_list_add_element', -1000);
     }
 	
-	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
+	/**
+     * Ensure that the data the user entered is valid
+     *
+     * @see lib/moodleform#validation()
+     *
+     * @param array $data array of ("fieldname"=>value) of submitted data
+     * @param array $files array of uploaded files "element_name"=>tmp_file_path
+     * @return array of "element_name"=>"error_description" if there are errors,
+     *         or an empty array if everything is OK (true allowed for backwards compatibility too).
+     */
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
 		return $errors;
 	}
 	
+    /**
+     * Will save the given data, that should be from calling the get_data function. Data will be all of the assessments in the course
+     *
+     * Also handles removing elements that should be deleted from the form.
+     *
+     * @param object $data value from calling get_data on this form
+     *
+     */
 	function save_assessment_list($data){
 		global $DB;
         
@@ -308,6 +372,11 @@ class assessment_form extends metadata_form {
 		
 	}
     
+    /**
+     * Determine what change should be done to the page number
+     *
+     * @return integer page change amount
+     */
     public function get_page_change() {
         if ($this->_form->getSubmitValue('previousPage') !== null) {
             return -1;
@@ -317,15 +386,12 @@ class assessment_form extends metadata_form {
             return 0;
         }
     }
-    
-	function get_knowledge(){
-		global $DB;
-
-	}
 	
     /**
-     *  Will add the buttons on the bottom
-     *  
+     *  Will add the buttons for changing the current page
+     *
+     *  @param int $page_num Current page that the form is on
+     *  @param int $num_assessments The number of assessments that there are in total
      *
      */
     private function add_page_buttons($page_num, $num_assessments) {
@@ -352,6 +418,13 @@ class assessment_form extends metadata_form {
         $mform->addGroup($page_change_links, 'buttonarray', '', array(' '), false);
     }
     
+    /**
+     *  Will set up the data for each of the elements in the repeat_elements
+     *  
+     * @param object $assessments The array containing all of the assessments that was loaded from the database
+     *
+     *
+     */
 	function populate_from_db($assessments){
 		$mform = $this->_form;
 		$key = 0;
@@ -381,8 +454,16 @@ class assessment_form extends metadata_form {
 		
 	}
 	
-	//Stolen from Session_form
-	
+	/**
+     *  For the current assessment, will populate the learning objectives, related assessments, and topics from the database
+     *
+	 *  Stolen from assessment_form
+     *
+     *  @param int $mform Form that will be added to
+     *  @param string $index Index that must be used to access form elements for the current assessment
+     *  @param object $assessment The database tuple for the current assessment
+     *
+     */
 	function setup_data_from_database_for_assessment($mform, $index, $assessment) {
         global $DB;
         // Load the learning objectives for the assessment
@@ -396,7 +477,13 @@ class assessment_form extends metadata_form {
         }
 	}
     
-	function add_upload($maxbytes, $num_assessments){
+    /**
+	 * Add form elements for uploading all assessments
+     *
+     *  @param int $num_assessments number of assessments saved in the database
+     *
+	 */
+	function add_upload($num_assessments){
 		$mform = $this -> _form;
         
 		$mform->addElement('header', 'upload_assessments_header', get_string('upload_assessments_header', 'local_metadata'));
@@ -404,7 +491,7 @@ class assessment_form extends metadata_form {
         $mform->setExpanded('upload_assessments_header', $num_assessments === 0);
 		$mform->closeHeaderBefore('assessment_list_add_elements');
 		
-		$mform->addElement('filepicker', 'uploaded_assessments', get_string('assessment_filepicker', 'local_metadata'), null, array('maxbytes' => $maxbytes, 'accepted_types' => '.csv'));
+		$mform->addElement('filepicker', 'uploaded_assessments', get_string('assessment_filepicker', 'local_metadata'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
 		$mform->addElement('submit', 'upload_assessments', get_string('upload_assessments', 'local_metadata'));
 	}
 }
