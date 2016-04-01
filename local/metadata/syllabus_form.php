@@ -1,14 +1,31 @@
 <?php
+/**
+ * 
+ * syllabus_form for local_metadata
+ *
+ *@copyright 2016 
+ *@license see the license file in the same folder
+ *@package local_metadata
+ * 
+ * The form to display the tab for syllubus information.
+ * which will allow the user to preview or download the pdf
+ * format of generated syllabus
+ */
+
 require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 require_once $CFG->dirroot.'/lib/tcpdf/tcpdf.php';
 require_once 'lib.php';
 
+
+
 /**
- * The form to display the tab for syllubus information.
- * which will allow the user to preview or download the pdf
- * format of generated syllabus
+ * This is the syllabus form class
+ *
+ *@copyright 2016
+ *@license see the license file in the same folder
+ *
  */
 class syllabus_form extends moodleform {
 	/**
@@ -38,10 +55,15 @@ class syllabus_form extends moodleform {
 
 	}
 
-    /**
+	 /**
      * Ensure that the data the user entered is valid
      *
+     * @param object $data data object for validation
+     * @param object $files file object for validation
+     * 
      * @see lib/moodleform#validation()
+     * 
+     * @return $errors error message
      */
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
@@ -181,7 +203,7 @@ class syllabus_form extends moodleform {
 			if($assessmentnumber>0){
 				$courseassessments = $DB->get_records('courseassessment', array('courseid'=>$course->id), $sort='assessmentduedate');
 			}
-			$asstype = array('Exam','Assignment','Lab','Lab Exam');
+			$asstype = array('Exam','Assignment','Participation','Other');
 			$assessmenthtml .='<font size="11%"><ul>';	
 			$assdescription = '<b><h3>Specifications</h3></b><font size="11%">';
 			$assessmenthtml .= '

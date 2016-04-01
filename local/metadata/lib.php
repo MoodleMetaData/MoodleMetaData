@@ -2,6 +2,23 @@
 function local_metadata_extends_settings_navigation($settingsnav, $context) {
     global $CFG, $PAGE, $USER;
  
+    if($categorynode = $settingsnav->find('categorysettings', null)) {
+    	$url = new moodle_url('/local/metadata/admview_knowledge.php', array('categoryid' => $PAGE->category->id));
+    	
+    	$foonode = navigation_node::create(
+    			get_string('manage_pluginname', 'local_metadata'),
+    			$url,
+    			navigation_node::NODETYPE_LEAF,
+    			'metadata',
+    			'metadata',
+    			new pix_icon('i/report', ''));
+    	if ($PAGE->url->compare($url, URL_MATCH_BASE)) {
+    		$foonode->make_active();
+    	}
+    	$categorynode->add_node($foonode);
+    	//$categorynode->add(get_string('manage_pluginname', 'local_metadata'), $url, self::TYPE_SETTING, null, 'permissions', new pix_icon('i/permissions', ''));
+	}
+    
     // Only add this settings item on non-site course pages.
     if (!$PAGE->course or $PAGE->course->id == 1) {
         return;
