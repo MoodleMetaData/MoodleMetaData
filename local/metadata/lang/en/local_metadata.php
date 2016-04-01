@@ -144,10 +144,10 @@ $string['upload_assessments_header'] = 'Upload All Sessions';
 $string['upload_assessments_header_help'] = 'To upload assessments, only .csv file is permitted. This will overwrite ALL existing sessions.<br />
                                         The format for each line is: title, type, weight, general description, additional grading description<br />
                                         Each line will correspond to a new assessment.
-                                        The type should be Exam, Assignment, Participation, or Other.<br />
-                                        If the type is Exam, then should also write out the instructor followed by exam type on that line.
-                                        Exam type should be Multiple choice, Written, Written and multiple choice, or Other.<br />
-                                        The date should be in the form YYYY-MM-DD. EG: 2016-03-17 would be March 17, 2016.';
+                                        Format is as Follows:</br>
+										Name, Type, Instructor, Exam Type, Weight, Due Date, General Description, Grading Descripion</br>
+										Type is an integer between 0 and 3, where </br>
+										0 = Exam, 1 = Assignment, 2= Participation, 3= Other</br>';
                                         
 $string['new_assessment_header'] = 'New Assessment';
 $string['unnamed_assessment'] = 'Unnamed Assessment';
