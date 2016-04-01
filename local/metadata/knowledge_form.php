@@ -176,8 +176,7 @@ class knowledge_form extends moodleform {
 				$program_records = $DB->get_records('programobjectives', array('objectivegroup' => $group->id));
 				foreach ($program_records as $program) {
 					//delete all tagged program policies
-					//print_r($program);
-					$DB->delete_records('programpolicytag', array('tagid' => $program->id));
+					$DB->delete_records('programpolicytag', array('objectiveid' => $program->id));
 					$DB->delete_records('programobjectives', array('id' => $program->id));
 				}
 				$DB->delete_records('objectivegroups', array('id' => $group->id));
