@@ -1,4 +1,4 @@
-@local_metadata
+@local_metadata @local_metadata_assessment @local_metadata_assessment_edit
 Feature: Assessment Tab
 	In order to use the assessment tab
 	As an instructor
@@ -9,69 +9,29 @@ Feature: Assessment Tab
           | fullname | shortname | category |
           | Course 1 | C_shortname | 0 |
         #** Should add some learning objectives and link most to the course.
-        And I log in as "admin"
-        And I am on homepage
-        And I follow "Course 1"
-        And I follow "Instructor Moodle Metadata"
-        And I follow "Assessment"
-	
+		And I log in as "admin"
+		And I am on homepage
+		And I follow "Course 1"
+		And I follow "Instructor Moodle Metadata"
+		And I follow "Assessment"
+		
 	
 	@javascript
 	Scenario: Filling in General Assessment Info
-        Given I am on "local/metadata/insview.php?id=2#tab=1"
+        Given I create 1 assessments with name "Title %s"
         And I set the following fields to these values:
-        |assessment_title | "Testdata"|
-        |assessment_prof  | "Norris, Chuck" |
-        |isexam | "yes"|
-        |assessment_duration | "60" |
-        |assessment_description | "TESTTESTTESTTEST" |
-        When I press "Save Changes"
-        Then I wait to be redirected
-        And the following fields will match these values:
-        |assessment_title | "Testdata"|
-        |assessment_prof  | "Norris, Chuck" |
-        |isexam | "yes"|
-        |assessment_duration | "60" |
-        |assessment_description | "TESTTESTTESTTEST" |
-	
-	
-	
-	@javascript:
-	Scenario: Adding a Knowledge Objective
-        Given I press "knowledge_add_fields"
-        And I set the following fields to these values:
-        |knowledge_text | "Learn to Use Git" |
+        |assessmentname[0] | "Testdata"|
+		|type[0] |Assignment|
+        |assessmentprof[0]| "Norris, Chuck" |
+        |assessmentweight[0] | 10|
+		|description[0]|"TEST"|
+		|gdescription[0]|"TESTGDESC"|
         When I press "Save changes"
         Then I wait to be redirected
-        And the following fields will match these values:
-        |knowledge_text| "Learn to Use Git"|
-        
-		
-	@javascript:
-	Scenario: Adding a Skills Objective
-        Given I press "skills_add_fields"
-        And I set the following fields to these values:
-        |skills_text[0] | "Learn to Use Git" |
-        When I press "Save changes"
-        Then I wait to be redirected
-        And the following fields will match these values:
-        |knowledge_text[0]| "Learn to Use Git"|
-	
-
-	
-	@javascript:
-	Scenario: Adding an Attitudes Objective
-        Given I press "attitudes_add_fields"
-        And I set the following fields to these values:
-        |attitudes_text[0] | "Learn to Use Git" |
-        When I press "Save changes"
-        Then I wait to be redirected
-        And the following fields will match these values:
-        |attitudes_text[0]| "Learn to Use Git"|
-
-	
-	
-	@javascript:
-	Scenario: Filling in a Grading Forms
-	
-	
+        Then the following fields match these values:
+        |assessmentname[0] | "Testdata"|
+		|type[0] |Assignment|
+        |assessmentprof[0]| "Norris, Chuck" |
+        |assessmentweight[0] | 10|
+		|description[0]|"TEST"|
+		|gdescription[0]|"TESTGDESC"|

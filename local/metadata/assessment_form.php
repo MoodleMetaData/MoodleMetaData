@@ -41,7 +41,7 @@ class assessment_form extends metadata_form {
 		global $course, $DB;
 		
         $files = $this->get_draft_files('uploaded_assessments');
-        
+     
         if (!empty($files)) {
             $file = reset($files); 
             $content = $file->get_content();
@@ -63,14 +63,22 @@ class assessment_form extends metadata_form {
             }
         }
     }
-    
+/** Detects if a rubrik was uploaded
+ */
 	public function rubrik_was_uploaded(){
 		return $this->_form->getSubmitValue(gradingDescription_uploaded) !== null;
 	}
+    /** Handles adding the rubrik to the stored files. Adds it to the filemanger so it can be made available to the instructor
+	*/
 	public function upload_rubrik(){
 		$file = $this -> save_stored_file('gradingDescription_uploaded');
 		
 	}
+	/**	Parses and saves the sessions row by row, deals with uploading assessments. 
+	* 	takes in Row and Courseid
+	* 	@param string 	$row
+	*	@param int		$courseid
+	*/
     private function parse_and_save_session_row($row, $courseid) {
         global $DB;
         // Parse the row
@@ -93,7 +101,9 @@ class assessment_form extends metadata_form {
         $id = $DB->insert_record('courseassessment', $data);
         
     }
-    
+    /** Main logic for building the form as required. Builds the form for each assessment. Call this function to add n = $assessmentcount objects
+	* 	to mForm as required. 
+	*/
 	function add_assessment_template($assessmentCount){
 		
 		$mform = $this->_form;
@@ -145,7 +155,7 @@ class assessment_form extends metadata_form {
 		
 	
 		
-		$elementArray[] = $mform -> createElement('filepicker', 'gradingDescription_uploaded', get_string('assessment_grading_upload', 'local_metadata', null, array('maxbytes' => 2000, 'accepted_types' => '*')));
+		$elementArray[] = $mform -> createElement('filepicker', 'gradingDescription_uploaded', get_string('assessment_grading_upload', 'local_metadata'), null, array('maxbytes' => 2000, 'accepted_types' => '*'));
 		$elementArray[] = $mform -> createElement('submit', 'gradingDescription_upload', get_string('assessment_grading_upload_submit', 'local_metadata'));
 		$elementArray[] = $mform -> createElement('textarea', 'gdescription', get_string('assessment_grading_desc', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
 
@@ -183,6 +193,10 @@ class assessment_form extends metadata_form {
             $optionsArray, 'assessment_list', 'assessment_list_add_element', 1, get_string('assessment_add', 'local_metadata'));
 		
 	}
+	/**
+	*This function deals with deleting the data after the form element is deleted
+	*It is necessary to deal with removing elements so that they don't show up again
+	*/
     
      function definition_after_data() {
         parent::definition_after_data();
@@ -230,12 +244,15 @@ class assessment_form extends metadata_form {
         }
     }
 	
-	//If you need to validate your form information, you can override  the parent's validation method and write your own.	
+		/** Deals with making sure that the data is correct. Currently just returns all errors
+		*/
 	function validation($data, $files) {
 		$errors = parent::validation($data, $files);
 		return $errors;
 	}
-	
+	/** Takes in the Data, and saves it to the database
+	*	@param data $data
+	*/
 	function save_assessment_list($data){
 		global $DB;
 		$changed = array('assessmentname', 'type', 'assessmentprof', 'description', 'gdescription', 'assessmentweight', 'was_deleted');
@@ -284,7 +301,10 @@ class assessment_form extends metadata_form {
 		
 		
 	}
-    
+    /**
+	*Changes the page, part of the user story that paginates the assessments
+	*
+	*/
     public function get_page_change() {
         if ($this->_form->getSubmitValue('previousPage') !== null) {
             return -1;
@@ -328,7 +348,10 @@ class assessment_form extends metadata_form {
         
         $mform->addGroup($page_change_links, 'buttonarray', '', array(' '), false);
     }
-    
+    /**
+	*	Populates the assessment form with data from the database. 
+	*	@param array $assessments
+	*/
 	function populate_from_db($assessments){
 		$mform = $this->_form;
 		$key = 0;
@@ -352,7 +375,12 @@ class assessment_form extends metadata_form {
 	}
 	
 	//Stolen from Session_form
-	
+	/**
+	*	Fills in the data that we grabbed from the database, and fills it into the form.
+	*	@param mform $mform		The form context 
+	*	@param int	$index		Where you are in the form, as an integer
+	*	@param assessment	$assessment	The assessment 
+	*/
 	function setup_data_from_database_for_assessment($mform, $index, $assessment) {
         global $DB;
         // Load the learning objectives for the assessment
@@ -365,6 +393,10 @@ class assessment_form extends metadata_form {
             
         }
 	}
+	/**
+	*	Adds the upload button to the form
+	*	@param int $maxbytes maximum bytes that the user is allowed to upload. 
+	*/
 	function add_upload($maxbytes){
 		$mform = $this -> _form;
 		
