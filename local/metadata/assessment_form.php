@@ -113,7 +113,7 @@ class assessment_form extends metadata_form {
 		$optionsArray['assessmentprof']['type'] = PARAM_TEXT;
 		$optionsArray['description']['type'] = PARAM_TEXT;
 		$optionsArray['gradingDesc']['type'] = PARAM_TEXT;
-		$optionsArray['assessmentweight']['type'] = PARAM_TEXT;
+		$optionsArray['assessmentweight']['type'] = PARAM_INT;
         
         // If is not an exam, should disable these two
 		$optionsArray['assessmentprof']['disabledif'] = array('type', 'neq', 0); 
