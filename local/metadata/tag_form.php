@@ -3,7 +3,10 @@ require_once '../../config.php';
 require_once $CFG->dirroot.'/lib/formslib.php';
 require_once $CFG->dirroot.'/lib/datalib.php';
 
-
+/**
+* Allows Administrators to tag program specific learning objectives to learning objectives that Instructors have posted. 
+* You must tag objectives before you are able to generate reports. 
+*/
 class tag_form extends moodleform {
 	function definition() {
 		global $CFG, $DB, $USER; //Declare our globals for use
