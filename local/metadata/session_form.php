@@ -617,7 +617,6 @@ class session_form extends metadata_form {
         $course_topic_selection = $mform->createElement('select', 'all_topics');
         $course_topic_selection->setMultiple(true);
         $groupitems[] = $course_topic_selection;
-		$repeatoptions['all_topics']['helpbutton'] = array('multi_select', 'local_metadata');
         
         
 		// Delete Button
