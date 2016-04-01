@@ -14,8 +14,11 @@ body#page-local-metadata-insview_assessment div[id^="fitem_id_"][id*="assessment
 /* Middle */
 body#page-local-metadata-insview_assessment div[id^="fitem_id_"][id*="type_"],
 body#page-local-metadata-insview_assessment div[id^="fitem_id_"][id*="assessmentprof_"],
+body#page-local-metadata-insview_assessment div[id^="fitem_id_"][id*="assessmentexamtype_"],
 body#page-local-metadata-insview_assessment div[id^="fitem_id_"][id*="assessmentduedate_"],
 body#page-local-metadata-insview_assessment div[id^="fitem_id_"][id*="description_"],
+body#page-local-metadata-insview_assessment div[id^="fitem_id_"][id*="gradingDescription_uploaded_"],
+body#page-local-metadata-insview_assessment div[id^="fitem_id_"][id*="gradingDescription_upload_"],
 body#page-local-metadata-insview_assessment div[id^="fitem_id_"][id*="gdescription_"],
 body#page-local-metadata-insview_assessment div[id^="fitem_id_"][id*="assessmentweight_"],
 body#page-local-metadata-insview_assessment div[id^="fitem_id_"][id*="learning_objective_Attitude"],

@@ -275,7 +275,7 @@ class session_form extends metadata_form {
         $subset_included = array_slice($sessions, $page_num * self::NUM_PER_PAGE, self::NUM_PER_PAGE);
         $displayed_count = count($subset_included);
         
-        $this->setup_upload_sessions();
+        $this->setup_upload_sessions(count($sessions));
         $this->add_session_repeat_template($displayed_count);
         
 
@@ -289,16 +289,21 @@ class session_form extends metadata_form {
     
     /**
 	 * Add form elements for uploading all sessions
+     *
+     *  @param int $num_sessions number of sessions saved in the database
+     *
 	 */
-	private function setup_upload_sessions(){
+	private function setup_upload_sessions($num_sessions){
         $mform = $this->_form;
         
 		$mform->addElement('header', 'upload_sessions_header', get_string('upload_sessions_header', 'local_metadata'));
-        
 		$mform->addHelpButton('upload_sessions_header', 'upload_sessions_header', 'local_metadata');
+        
+        $mform->setExpanded('upload_sessions_header', $num_sessions === 0);
+		$mform->closeHeaderBefore('sessions_list_add_element');
+        
 		$mform->addElement('filepicker', 'uploaded_sessions', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
 		$mform->addElement('submit', 'upload_sessions', get_string('upload_sessions', 'local_metadata'));
-		$mform->closeHeaderBefore('sessions_list_add_element');
 	}
 
     /**
@@ -372,8 +377,7 @@ class session_form extends metadata_form {
         
         
         $repeatarray[] = $mform->createElement('submit', 'delete_session', get_string('deletesession', 'local_metadata'));
-        $mform->registerNoSubmitButton('delete_topics');
-        $this->_recurring_nosubmit_buttons[] = 'delete_topics';
+        $this->add_recurring_element_nosubmit_button($mform, 'delete_session');
         
         
         // Add needed hidden elements
@@ -619,8 +623,7 @@ class session_form extends metadata_form {
         
 		// Delete Button
 		$groupitems[] = $mform->createElement('submit', 'delete_topics', get_string('delete'));
-        $this->_recurring_nosubmit_buttons[] = 'create_topic';
-        $mform->registerNoSubmitButton('create_topic');
+        $this->add_recurring_element_nosubmit_button($mform, 'delete_topics');
         
 		$repeatarray[] = $mform->createElement('group', 'manage_topics_group', get_string('manage_topics', 'local_metadata'), $groupitems, null, false);
         
@@ -630,8 +633,7 @@ class session_form extends metadata_form {
         $groupitems = array();
 		$groupitems[] = $mform->createElement('text', 'new_topic');
 		$groupitems[] = $mform->createElement('submit', 'create_topic', get_string('add_topic', 'local_metadata'));
-        $this->_recurring_nosubmit_buttons[] = 'delete_session';
-        $mform->registerNoSubmitButton('delete_session');
+        $this->add_recurring_element_nosubmit_button($mform, 'create_topic');
                 
         $repeatarray[] = $mform->createElement('group', 'add_topic_group', '', $groupitems, null, false);
     }

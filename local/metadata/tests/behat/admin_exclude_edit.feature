@@ -1,4 +1,4 @@
-@local_metadata  @local_metadata_admin @local_metadata_admin_exclude
+@local_metadata  @local_metadata_admin
 Feature: Administrator exclude tab
 	In order to be able to exclude items from the syllabus
 	As an administrator
