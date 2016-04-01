@@ -178,7 +178,7 @@ $string['general_header'] = 'General';
 $string['deleteassessment'] = 'Delete Assessment';
 $string['assessment_filepicker'] = 'Upload Assessments';
 $string['upload_assessments'] = 'Submit';
-$string['assessment_grading_upload'] = 'Upload Any Rubrik';
+$string['assessment_grading_upload'] = 'Upload Any rubric';
 $string['assessment_grading_upload_submit'] = 'Submit';
 
 // Metadata manager strings

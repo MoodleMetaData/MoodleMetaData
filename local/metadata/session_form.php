@@ -14,11 +14,6 @@ require_once 'recurring_element_parser.php';
  * Requires the argument 'sessions', which should be the array of sessions
  *   for the current course loaded from the database
  *
- * For an example, see how it is instantiated in insview.php
- *
- * To look at how deleting a recurring element is done, see definition_after_data and save_data.
- *   As well, see the elements was_deleted and delete_session (the delete button) in add_session_repeat_template
- *
  *
  */
 class session_form extends metadata_form {
@@ -55,7 +50,7 @@ class session_form extends metadata_form {
     /**
      * Will determine if the sessions were uploaded
      *
-     * @return boolean for if use wanted to upload file
+     * @return boolean for if user wanted to upload file
      */
     public function sessions_were_uploaded() {
         return $this->_form->getSubmitValue('upload_sessions') !== null;
@@ -95,7 +90,7 @@ class session_form extends metadata_form {
     }
     
     /**
-     * Will use the csv file submitted by the instructor to create all of the sessions
+     * Will use the given line from the csv file submitted by the instructor to create all of the sessions
      *
      * @param string $row The current row of the csv file being operated on
      * @param integer $courseid The id for the course this session will be added to
@@ -535,9 +530,8 @@ class session_form extends metadata_form {
     
     
     /**
-     *  This function is used for deleteing a session, and interacting with topics.
+     *  This function is used for deleting a session, and interacting with topics.
      *      Both displaying and editing the topic list
-     *  
      *
      */
     function definition_after_data() {
