@@ -138,7 +138,10 @@ $string['related_assessments'] = 'Related Assessments';
 $string['deletesession'] = 'Delete Session';
 
 //assessment strings
-$string['assessment_description'] = 'Description: ';
+$string['new_assessment_header'] = 'New Assessment';
+$string['unnamed_assessment'] = 'Unnamed Assessment';
+
+$string['assessment_description'] = 'General Description: ';
 $string['learning_objective_selection_description']= 'Learning Objective(s): ';
 $string['assessment_type'] = 'Type of Assessment: ';
 $string['grade_weight'] = 'Weight: ';
@@ -148,13 +151,14 @@ $string['assessment_add'] = 'Add Assessment';
 
 $string['assessment_title'] = 'Title: ';
 $string['assessment_prof'] = 'Instructor: ';
+$string['assessment_examtype'] = 'Exam Type: ';
 $string['assessment_isexam'] = 'Exam? ';
 $string['knowledge_header'] = 'Knowledge';
 $string['knowledge_text'] = 'At the end of the course the student will be able to: ';
 $string['skills_header'] = 'Skills';
 $string['attitudes_header'] ='Attitudes';
 $string['grading_header'] = 'Grading';
-$string['assessment_grading_desc'] = 'Grading Description: ';
+$string['assessment_grading_desc'] = 'Additional Grading Description: ';
 $string['assessment_prof_default'] = 'First, Last';
 $string['assessment_due'] = 'Date: ';
 $string['assessment_duration'] = 'Duration: ';

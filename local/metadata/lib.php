@@ -111,7 +111,7 @@ function get_teaching_strategies() {
 function get_session_types() {
     return array('lecture', 'lab', 'seminar');
 }
-    
+
 /**
  * Will return all of the length options
  *
@@ -120,15 +120,13 @@ function get_session_types() {
 function get_session_lengths() {
     return array('50 minutes', '80 minutes', '110 minutes', '140 minutes', '170 minutes');
 }
-    
-function get_assessment_type($value){
-	$assessmentTypeArray = array();
-	$assessmentTypeArray[0] = "Exam";
-	$assessmentTypeArray[1] = "Assignment";
-	$assessmentTypeArray[2] = "Lab";
-	$assessmentTypeArray[3] = "Lab Exam";
-	
-	return $assessmentTypeArray[$value];
+
+function get_assessment_types() {
+    return array('Exam', 'Assignment', 'Participation', 'Other');
+}
+
+function get_exam_types() {
+    return array('Multiple choice', 'Written', 'Written and multiple choice', 'Other');
 }
 
 function get_objective_id() {
