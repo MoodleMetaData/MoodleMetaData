@@ -36,6 +36,7 @@ class knowledge_form extends moodleform {
 			$psla_default[$value->id] = $value->typename;
 		}
 		
+		$mform->addHelpButton('program_grp_header', 'program_grp_header', 'local_metadata');
 		$course_topic_selection = $mform->addElement('select', 'manage_groups', get_string('manage_groups', 'local_metadata'), $psla_default, '');
 		$course_topic_selection->setMultiple(true);
 		

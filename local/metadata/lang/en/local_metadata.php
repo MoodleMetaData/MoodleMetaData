@@ -222,27 +222,39 @@ $string['program_attitudes_header'] = 'Program Objective: Attitudes';
 $string['program_obj_header'] = 'Upload Program Objectives';
 $string['program_obj_header_help'] = 'To upload program objectives, only .csv file is permitted. <br />
 									The format is: [column1],[column2],[column3] <br />
-									[column1] is the program objective: knowledge. <br />
-									[column2] is the program objective: skill. <br />
-									[column3] is the program objective: attitude. <br />
+									[column1] is the program objective header. <br />
+									[column2] is the program objective. <br />
+									[column3] is the program sub objective (if applicable). <br />
+									Example: [Care Provider][1.0 Objective][1.0.1 Sub-Objective] <br />
 									Enter a new line to create a new entry.';
+$string['program_grp_header_help'] = 'A list of already uploaded sets of program objectives<br />
+											To delete, select the set and click the delete button<br /><br />
+											WARNING: Deleting a set will remove all tags associated with it.';
+$string['university_editor_help'] = 'Enter Univeristy specific policy in text format. <br />
+									This information will be displayed at the bottom of all instructor generated syllabi.';
+$string['policy_editor_help'] = 'Enter Faculty specific policy in text format. <br />
+									This information will be displayed at the bottom of all instructor generated syllabi.';
+$string['admobj_select_help'] = 'The learning objective you wish to tag with a program objective.';
+$string['admpro_select_help'] = 'The program objectives you wish to associate with the learning objective. <br />
+							Multiple may be selected at once by holding down the CTRL key while clicking on a program objective.';
+$string['admpro_current_help'] = 'The list of program objectives currently associated with the selected learning objective.';
 $string['upload_program_obj'] = 'Upload';
 
 $string['admcourse_select'] = 'Select Course: ';
 $string['admselect_course'] = 'Select';
-$string['admobj_select'] = 'Learning Objective: ';
+$string['admobj_select'] = 'Select Learning Objective: ';
 $string['admselcourse'] = 'Select';
-$string['admpro_select'] = 'Options: ';
+$string['admpro_select'] = 'Select Options: ';
 $string['admaddobjective'] = 'Tag Objectives';
 $string['admpro_current'] = 'Current Tags: ';
 $string['admdelobjective'] = 'Remove Tag';
 
-$string['new_group'] = 'Program Objective Group';
+$string['new_group'] = 'Program Objective Group Name: ';
 $string['program_grp_header'] = 'Program Groups';
 $string['manage_groups'] = 'Group Names';
 $string['delete_groups'] = 'Delete';
-$string['group_select'] = 'Program Objectives';
-$string['admgrp_select'] = 'Program Group';
+$string['group_select'] = 'Select Program Objective: ';
+$string['admgrp_select'] = 'Select Program Group: ';
 
 // Metadata manager errors
 $string['mcreate_required'] = 'You must enter something.';

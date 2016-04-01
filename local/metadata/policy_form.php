@@ -20,6 +20,7 @@ class policy_form extends moodleform {
 		$pform->addElement('editor', 'policy_editor', get_string('policy_editor', 'local_metadata'))->setValue( array('text' => $defaulttext));
 		//$pform->addRule('policy_editor', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$pform->setType('policy_editor', PARAM_RAW);
+		$pform->addHelpButton('policy_editor', 'policy_editor', 'local_metadata');
 		
 		//Save Changes Button
 		$pform->addElement('submit', 'submit_policy', get_string('submit_policy', 'local_metadata'));

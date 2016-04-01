@@ -171,7 +171,7 @@ function get_objective_id() {
  * @return int group id
  */
 function get_group_id() {
-	return optional_param('grp', 1, PARAM_INT);
+	return optional_param('grp', -1, PARAM_INT);
 }
 
 /**

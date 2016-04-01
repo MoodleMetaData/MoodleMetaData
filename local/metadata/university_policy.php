@@ -16,6 +16,7 @@ class university_form extends moodleform {
 		$pform->addElement('editor', 'university_editor', get_string('university_editor', 'local_metadata'))->setValue( array('text' => $defaulttext));
 		//$pform->addRule('university_editor', get_string('err_required', 'local_metadata'), 'required', null, 'client');
 		$pform->setType('university_editor', PARAM_RAW);
+		$pform->addHelpButton('university_editor', 'university_editor', 'local_metadata');
 		
 		//Save Changes Button
 		$pform->addElement('submit', 'submit_policy', get_string('submit_policy', 'local_metadata'));

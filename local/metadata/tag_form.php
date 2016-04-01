@@ -20,7 +20,7 @@ class tag_form extends moodleform {
 		}
 		
 		$selectobjectives = $mform->addElement('select', 'admobj_select', get_string('admobj_select', 'local_metadata'), $objoptions, '');
-		
+		$mform->addHelpButton('admobj_select', 'admobj_select', 'local_metadata');
 		$mform->addElement('submit', 'admselcourse', get_string('admselcourse', 'local_metadata'));
 		
 		if($objectiveId != -1) {
@@ -51,6 +51,7 @@ class tag_form extends moodleform {
 			}
 			$programobj_select = $mform->addElement('select', 'admpro_select', get_string('admpro_select', 'local_metadata'), $programoptions,'');
 			$programobj_select->setMultiple ( true );
+			$mform->addHelpButton('admpro_select', 'admpro_select', 'local_metadata');
 			
 			$mform->addElement('submit', 'admaddobjective', get_string('admaddobjective', 'local_metadata'));
 			
@@ -60,8 +61,13 @@ class tag_form extends moodleform {
 				$objective = $DB->get_record ( 'programobjectives', array ('id' => $record->objectiveid));
 				$currentoptions[$record->id] = $objective->objectivename;
 			}
+			
+			// Sort the array
+			asort($currentoptions);
+			
 			$programobj_select = $mform->addElement('select', 'admpro_current', get_string('admpro_current', 'local_metadata'), $currentoptions,'');
 			$programobj_select->setMultiple ( true );
+			$mform->addHelpButton('admpro_current', 'admpro_current', 'local_metadata');
 				
 			$mform->addElement('submit', 'admdelobjective', get_string('admdelobjective', 'local_metadata'));
 		}
