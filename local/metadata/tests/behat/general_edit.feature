@@ -8,12 +8,20 @@ Feature: General tab
     Given the following "courses" exist:
       | fullname | shortname | category |
       | Course 1 | C_shortname | 0 |
+	And I create the following course categories for faculty "Miscellaneous":
+	  | categoryname |
+	  | Category 1 |
+	  | Category 2 |
+	And I create the following graduate attributes:
+	  | attribute |
+	  | At1 |
+	  | At2 |
 	And I create the following general info for course "C_shortname":
-	  | categoryid | coursedescription | teachingassumption | coursefaculty | assessmentnumber | sessionnumber |
-	  | 1 | Description 1 | Teaching assumption 1 | Faculty 1 | 1 | 1 |
+	  | teachingassumption | courseterm | courseyear | assessmentnumber | sessionnumber | coursedescription |
+	  | Teaching assumption here | Spring | 2018 | 1 | 1 | Description here |
 	And I create the following instructor info for course "C_shortname" and user "admin":
 	  | name | officelocation | officehours | email | phonenumber |
-	  | Instructor 1 | Office 1 | W 1:00 pm | instructor@i.com | 111-111-1111 |
+	  | Instructor 1 | Office 1 | By appointment | instructor@i.com | 111-111-1111 |
 	And I create the following required readings for course "C_shortname":
 	  | readingname | readingurl |
 	  | Reading A | http://a.com |
@@ -31,27 +39,27 @@ Feature: General tab
 	
 	Scenario: Modifying general course information
 	Given I set the following fields to these values:
-	  | course_instructor | New instructor |
-	  | course_faculty | New faculty |
+	  | course_year | 2018 |
+	  | course_term | Fall |
 	When I press "Save general information"
 	And I wait to be redirected
-	Then the following fields match these values:  
-	  | course_instructor | New instructor |
-	  | course_faculty | New faculty |
+	Then the following fields match these values:
+	  | course_year | 2018 |
+	  | course_term | Fall |
 
 	Scenario: Modifying contact information
 	Given I set the following fields to these values:
+	  | course_instructor | New instructor |
 	  | course_email | newemail@a.com |
 	  | course_phone | 777-777-7777 |
 	  | course_office | New office |
-	  | course_officeh | New hours |
 	When I press "Save general information"
 	And I wait to be redirected
-	Then the following fields match these values:  
+	Then the following fields match these values:
+	  | course_instructor | New instructor |
 	  | course_email | newemail@a.com |
 	  | course_phone | 777-777-7777 |
 	  | course_office | New office |
-	  | course_officeh | New hours |
 
 	Scenario: Modifying course description
 	Given I set the field "course_description[text]" to "This is a new description"

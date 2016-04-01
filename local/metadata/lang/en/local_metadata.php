@@ -147,7 +147,7 @@ $string['assessment_type'] = 'Type: ';
 $string['assessment_add'] = 'Add Assessment';
 
 $string['assessment_title'] = 'Title: ';
-$string['assessment_prof'] = 'Lecturer: ';
+$string['assessment_prof'] = 'Instructor: ';
 $string['assessment_isexam'] = 'Exam? ';
 $string['knowledge_header'] = 'Knowledge';
 $string['knowledge_text'] = 'At the end of the course the student will be able to: ';
@@ -163,7 +163,7 @@ $string['general_header'] = 'General';
 $string['deleteassessment'] = 'Delete Assessment';
 $string['assessment_filepicker'] = 'Upload Assessments';
 $string['upload_assessments'] = 'Submit';
-$string['assessment_grading_upload'] = 'Upload Grading Description';
+$string['assessment_grading_upload'] = 'Upload Any Rubrik';
 $string['assessment_grading_upload_submit'] = 'Submit';
 
 // Metadata manager strings
@@ -261,6 +261,8 @@ $string['upload_category_header_help'] = 'To upload course categories, only .csv
 
 $string['exclude_Course_Description'] = 'Exclude Course Description:';
 $string['exclude_Course_Description_help'] = 'Do not show the course description section in instructor generated syllabus.';
+$string['exclude_Course_Readings'] = 'Exclude Course Readings:';
+$string['exclude_Course_Readings_help'] = 'Do not show the course readings section in instructor generated syllabus.';
 $string['exclude_Course_Objectives'] = 'Exclude Course Objectives:';
 $string['exclude_Course_Objectives_help'] = 'Do not show the course objectives section in instructor generated syllabus.';
 $string['exclude_Grading'] = 'Exclude Grading:';

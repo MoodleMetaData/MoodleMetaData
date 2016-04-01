@@ -61,6 +61,7 @@ class categories_form extends moodleform {
 		
 		$mform->addElement('text', 'category_label', get_string('category_label', 'local_metadata'));
 		$mform->setType('category_label', PARAM_TEXT);
+		//$mform->addRule('category_label', get_string('err_required'), 'required', null, 'server');
 		
 		$faculty_selection = $mform->addElement ('select', 'course_faculty', get_string ( 'course_faculty', 'local_metadata' ), $faculty_list);
 		

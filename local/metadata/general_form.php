@@ -119,7 +119,11 @@ class general_form extends moodleform {
 		// Year
 		$current_year = date('Y');
 		$years = range($current_year, $current_year + 5);
-		$course_year_selection = $mform->addElement('select', 'course_year', get_string('course_year', 'local_metadata'), $years, '');
+		$year_list = array();
+		foreach($years as $y){
+			$year_list[$y] = $y;
+		}
+		$course_year_selection = $mform->addElement('select', 'course_year', get_string('course_year', 'local_metadata'), $year_list, '');
 		if($courseinfo){
 			$course_year_selection->setSelected($courseinfo->courseyear);
 		}
@@ -868,8 +872,12 @@ class general_form extends moodleform {
 		$course_info->courseterm = $data->course_term;
 		$course_info->coursedescription = $data->course_description['text'];
 		$course_info->facultyid = $data->course_faculty_id;
-		$_category = $DB->get_record('coursecategories', array('id'=>$data->course_category));
-		$course_info->coursecategory = $_category->categoryname;
+
+		if(!empty($data->course_category)){
+			$_category = $DB->get_record('coursecategories', array('id'=>$data->course_category));
+			$course_info->coursecategory = $_category->categoryname;
+		}
+		
 		$course_info->assessmentnumber = $data->course_assessment;
 		$course_info->sessionnumber = $data->course_session;
 		if($data->teaching_assumption != NULL){

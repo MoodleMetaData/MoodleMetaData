@@ -8,12 +8,20 @@ Feature: General tab
     Given the following "courses" exist:
       | fullname | shortname | category |
       | Course 1 | C_shortname | 0 |
+	And I create the following course categories for faculty "Miscellaneous":
+	  | categoryname |
+	  | Category 1 |
+	  | Category 2 |
+	And I create the following graduate attributes:
+	  | attribute |
+	  | At1 |
+	  | At2 |
 	And I create the following general info for course "C_shortname":
-	  | categoryid | coursedescription | teachingassumption | coursefaculty | assessmentnumber | sessionnumber |
-	  | 1 | Description 1 | Teaching assumption 1 | Faculty 1 | 1 | 1 |
+	  | teachingassumption | courseterm | courseyear | assessmentnumber | sessionnumber | coursedescription |
+	  | Teaching assumption here | Spring | 2018 | 1 | 1 | Description here |
 	And I create the following instructor info for course "C_shortname" and user "admin":
 	  | name | officelocation | officehours | email | phonenumber |
-	  | Instructor 1 | Office 1 | W 1:00 pm | instructor@i.com | 111-111-1111 |
+	  | Instructor 1 | Office 1 | By appointment | instructor@i.com | 111-111-1111 |
 	And I create the following required readings for course "C_shortname":
 	  | readingname | readingurl |
 	  | Reading A | http://a.com |
@@ -32,7 +40,7 @@ Feature: General tab
 	Scenario: Deleting a required reading before saving
 	Given I press "delete_req_reading[0]"
 	Then "readingname_option[0]" "text" should not exist
-
+	
 	Scenario: Deleting the phone number after saving
 	Given I set the field "course_phone" to ""
 	When I press "Save general information"

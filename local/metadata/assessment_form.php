@@ -64,6 +64,13 @@ class assessment_form extends metadata_form {
         }
     }
     
+	public function rubrik_was_uploaded(){
+		return $this->_form->getSubmitValue(gradingDescription_uploaded) !== null;
+	}
+	public function upload_rubrik(){
+		$file = $this -> save_stored_file('gradingDescription_uploaded');
+		
+	}
     private function parse_and_save_session_row($row, $courseid) {
         global $DB;
         // Parse the row
@@ -95,8 +102,8 @@ class assessment_form extends metadata_form {
 		$type_array = array();
 		$type_array[0] = 'Exam';
 		$type_array[1] = 'Assignment';
-		$type_array[2] = 'Lab';
-		$type_array[3] = 'Lab Exam';
+		$type_array[2] = 'Participation';
+		$type_array[3] = 'Other';
 		//DUMMY DATA
 		
 		$elementArray = array();
@@ -124,6 +131,7 @@ class assessment_form extends metadata_form {
 		//$elementArray[] = $mform ->createElement('selectyesno', 'isexam', get_string('assessment_isexam', 'local_metadata'));
 		$elementArray[] = $mform -> createElement('select','type', get_string('assessment_type','local_metadata'), $type_array, '');
 		$elementArray[] = $mform -> createElement('text', 'assessmentprof', get_string('assessment_prof', 'local_metadata'));
+		$elementArray[] = $mform-> createElement('text','assessmentweight',get_string('grade_weight','local_metadata'));
 		$elementArray[] = $mform -> createElement('date', 'assessmentduedate', get_string('assessment_due', 'local_metadata'));
 		
 		
@@ -140,7 +148,7 @@ class assessment_form extends metadata_form {
 		$elementArray[] = $mform -> createElement('filepicker', 'gradingDescription_uploaded', get_string('assessment_grading_upload', 'local_metadata', null, array('maxbytes' => 2000, 'accepted_types' => '*')));
 		$elementArray[] = $mform -> createElement('submit', 'gradingDescription_upload', get_string('assessment_grading_upload_submit', 'local_metadata'));
 		$elementArray[] = $mform -> createElement('textarea', 'gdescription', get_string('assessment_grading_desc', 'local_metadata'), 'wrap="virtual" rows="10" cols="70"');
-		$elementArray[] = $mform-> createElement('text','assessmentweight',get_string('grade_weight','local_metadata'));
+
 		
 		        // Add needed hidden elements
         // Stores the id for each element
@@ -220,6 +228,9 @@ class assessment_form extends metadata_form {
                 }
             }
         }
+		
+		// navigate to the newest added element
+		if(isset($_POST['assessment_list_add_element'])) redirect_to_anchor('assessment', 'id_assessment_list_add_element', -1000);
     }
 	
 	//If you need to validate your form information, you can override  the parent's validation method and write your own.	

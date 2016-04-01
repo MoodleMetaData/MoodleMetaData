@@ -397,6 +397,7 @@ class session_form extends metadata_form {
         // Add the repeating elements to the form
         $this->repeat_elements($repeatarray, $numSessions,
             $repeatoptions, 'sessions_list', 'sessions_list_add_element', 1, get_string('add_session', 'local_metadata'));
+			
     }
 
     /**
@@ -586,6 +587,9 @@ class session_form extends metadata_form {
                 
             }
         }
+		
+		// navigate to the newest added element
+		if(isset($_POST['sessions_list_add_element'])) redirect_to_anchor('session', 'id_sessions_list_add_element', -700);
     }
 
     
