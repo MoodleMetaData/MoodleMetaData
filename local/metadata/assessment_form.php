@@ -20,7 +20,7 @@ class assessment_form extends metadata_form {
         $assessmentCount = count($assessments);
         $displayed_count = count($subset_included);
         
-		$this -> add_upload(200);
+		$this -> add_upload(200, $assessmentCount);
 		$this -> add_assessment_template($displayed_count);
         
         $this->add_page_buttons($page_num, $assessmentCount);
@@ -78,16 +78,22 @@ class assessment_form extends metadata_form {
         
         $data = array();
         $data['courseid'] = $courseid;
-        $data['assessmenttitle'] = $row[0];
-        $data['assessmenttype'] = $row[1];
-        $data['assessmentprof'] = $row[2];
-        $data['assessmentdescription'] = $row[3];
-        $data['assessmentexamtype'] = $row[4];
-		$data['assessmentweight'] = $row[5];
-		
+        $data['assessmentname'] = $row[0];
+        $data['type'] = $row[1];
+		$data['assessmentweight'] = $row[2];
+        $data['description'] = $row[3];
+        $data['gdescription'] = $row[4];
         
-        $date = DateTime::createFromFormat(session_form::DATE_FROM_FROM_FILE, $row[6]);
-        $data['assessmentduedate'] = $date->getTimestamp();
+        $date = DateTime::createFromFormat(session_form::DATE_FROM_FROM_FILE, $row[5]);
+        if (is_object($date)) {
+            $data['assessmentduedate'] = $date->getTimestamp();
+        }
+        
+        if ($data['type'] == 'Exam') {
+            $data['assessmentprof'] = $row[6];
+            $data['assessmentexamtype'] = $row[7];
+        }
+        
         
         // Then, save the session and get ids
         $id = $DB->insert_record('courseassessment', $data);
@@ -388,11 +394,13 @@ class assessment_form extends metadata_form {
         }
 	}
     
-	function add_upload($maxbytes){
+	function add_upload($maxbytes, $num_assessments){
 		$mform = $this -> _form;
         
-		//$mform->addElement('header', 'upload_assessments_header', get_string('upload_assessments_header', 'local_metadata'));
-		//$mform->addHelpButton('upload_assessments_header', 'upload_assessments_header', 'local_metadata');
+		$mform->addElement('header', 'upload_assessments_header', get_string('upload_assessments_header', 'local_metadata'));
+		$mform->addHelpButton('upload_assessments_header', 'upload_assessments_header', 'local_metadata');
+        $mform->setExpanded('upload_assessments_header', $num_assessments === 0);
+		$mform->closeHeaderBefore('assessment_list_add_elements');
 		
 		$mform->addElement('filepicker', 'uploaded_assessments', get_string('assessment_filepicker', 'local_metadata'), null, array('maxbytes' => $maxbytes, 'accepted_types' => '.csv'));
 		$mform->addElement('submit', 'upload_assessments', get_string('upload_assessments', 'local_metadata'));

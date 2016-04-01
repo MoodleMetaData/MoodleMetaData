@@ -275,7 +275,7 @@ class session_form extends metadata_form {
         $subset_included = array_slice($sessions, $page_num * self::NUM_PER_PAGE, self::NUM_PER_PAGE);
         $displayed_count = count($subset_included);
         
-        $this->setup_upload_sessions();
+        $this->setup_upload_sessions(count($sessions));
         $this->add_session_repeat_template($displayed_count);
         
 
@@ -289,16 +289,21 @@ class session_form extends metadata_form {
     
     /**
 	 * Add form elements for uploading all sessions
+     *
+     *  @param int $num_sessions number of sessions saved in the database
+     *
 	 */
-	private function setup_upload_sessions(){
+	private function setup_upload_sessions($num_sessions){
         $mform = $this->_form;
         
 		$mform->addElement('header', 'upload_sessions_header', get_string('upload_sessions_header', 'local_metadata'));
-        
 		$mform->addHelpButton('upload_sessions_header', 'upload_sessions_header', 'local_metadata');
+        
+        $mform->setExpanded('upload_sessions_header', $num_sessions === 0);
+		$mform->closeHeaderBefore('sessions_list_add_element');
+        
 		$mform->addElement('filepicker', 'uploaded_sessions', get_string('file'), null, array('maxbytes' => 0, 'accepted_types' => '.csv'));
 		$mform->addElement('submit', 'upload_sessions', get_string('upload_sessions', 'local_metadata'));
-		$mform->closeHeaderBefore('sessions_list_add_element');
 	}
 
     /**
