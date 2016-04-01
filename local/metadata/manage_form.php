@@ -25,6 +25,7 @@ class knowledge_form extends moodleform {
 		
 		$course_topic_selection = $mform->addElement('select', 'manage_knowledge', get_string('manage_knowledge', 'local_metadata'), $psla_default, '');
 		$course_topic_selection->setMultiple(true);
+		$mform->addHelpButton('manage_knowledge', 'multi_select', 'local_metadata');
 		
 		// Delete Button
 		$mform->addElement('button', 'delete_knowledge', get_string('delete_knowledge', 'local_metadata'));
