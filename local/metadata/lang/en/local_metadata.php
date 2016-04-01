@@ -116,8 +116,9 @@ $string['new_session_header'] = 'New Session';
 $string['unnamed_session'] = 'Unnamed Session';
 
 $string['upload_sessions_header'] = 'Upload All Sessions';
-$string['upload_sessions_header_help'] = 'To upload course objectives, only .csv file is permitted. This will overwrite ALL existing sessions.<br />
+$string['upload_sessions_header_help'] = 'To upload sessions, only .csv file is permitted. This will overwrite ALL existing sessions.<br />
                                         The format for each line is: title, description, guest teacher, type, length, date, first topic, second topic...<br />
+                                        Each line will correspond to a new session.
                                         If there is no guest teacher, leave it blank.<br />
                                         The type should be lecture, lab, or seminar. Will default to lecture.<br />
                                         The length should be 50, 80, 110, 140, or 170 followed by minutes. EG: 110 minutes.<br />
@@ -138,7 +139,19 @@ $string['related_assessments'] = 'Related Assessments';
 $string['deletesession'] = 'Delete Session';
 
 //assessment strings
-$string['assessment_description'] = 'Description: ';
+$string['upload_assessments_header'] = 'Upload All Sessions';
+$string['upload_assessments_header_help'] = 'To upload assessments, only .csv file is permitted. This will overwrite ALL existing sessions.<br />
+                                        The format for each line is: title, type, weight, general description, additional grading description<br />
+                                        Each line will correspond to a new assessment.
+                                        The type should be Exam, Assignment, Participation, or Other.<br />
+                                        If the type is Exam, then should also write out the instructor followed by exam type on that line.
+                                        Exam type should be Multiple choice, Written, Written and multiple choice, or Other.<br />
+                                        The date should be in the form YYYY-MM-DD. EG: 2016-03-17 would be March 17, 2016.';
+                                        
+$string['new_assessment_header'] = 'New Assessment';
+$string['unnamed_assessment'] = 'Unnamed Assessment';
+
+$string['assessment_description'] = 'General Description: ';
 $string['learning_objective_selection_description']= 'Learning Objective(s): ';
 $string['assessment_type'] = 'Type of Assessment: ';
 $string['grade_weight'] = 'Weight: ';
@@ -148,13 +161,14 @@ $string['assessment_add'] = 'Add Assessment';
 
 $string['assessment_title'] = 'Title: ';
 $string['assessment_prof'] = 'Instructor: ';
+$string['assessment_examtype'] = 'Exam Type: ';
 $string['assessment_isexam'] = 'Exam? ';
 $string['knowledge_header'] = 'Knowledge';
 $string['knowledge_text'] = 'At the end of the course the student will be able to: ';
 $string['skills_header'] = 'Skills';
 $string['attitudes_header'] ='Attitudes';
 $string['grading_header'] = 'Grading';
-$string['assessment_grading_desc'] = 'Grading Description: ';
+$string['assessment_grading_desc'] = 'Additional Grading Description: ';
 $string['assessment_prof_default'] = 'First, Last';
 $string['assessment_due'] = 'Date: ';
 $string['assessment_duration'] = 'Duration: ';
