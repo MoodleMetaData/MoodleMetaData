@@ -142,7 +142,7 @@ $string['related_assessments'] = 'Related Assessments';
 $string['deletesession'] = 'Delete Session';
 
 //assessment strings
-$string['upload_assessments_header'] = 'Upload All Sessions';
+$string['upload_assessments_header'] = 'Upload All Assessments';
 $string['upload_assessments_header_help'] = 'To upload assessments, only .csv file is permitted. This will overwrite ALL existing sessions.<br />
                                         The format for each line is: title, type, weight, general description, additional grading description<br />
                                         Each line will correspond to a new assessment.
